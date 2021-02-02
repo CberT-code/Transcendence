@@ -1,3 +1,4 @@
 Rails.application.routes.draw do
-	get '/test/', to: 'IndexController#test'
+	root to: 'pages#home'
+	get '/bonjour(/:name)', to: 'pages#salut', as: 'salut'
 end
