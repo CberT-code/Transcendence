@@ -4,7 +4,9 @@ services:
     build: "./ruby"
     ports:
       - "80:80"
+    volumes:
+      - /Users/cyrillebertola/42/Transcendance/ruby/Pong/:/Pong
   sql:
-    build: "./sql"
+    build: "./PostGresSql"
     ports:
       - "5432:5432"
