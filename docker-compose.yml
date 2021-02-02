@@ -1,0 +1,10 @@
+version: "2.2"
+services:
+  web:
+    build: "./ruby"
+    ports:
+      - "80:80"
+  sql:
+    build: "./sql"
+    ports:
+      - "5432:5432"
