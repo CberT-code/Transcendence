@@ -5,6 +5,8 @@ RUN apt update && apt -y upgrade && apt install -y screen nodejs yarn && apt ins
 RUN gem install rails
 RUN gem install http
 RUN gem install oauth2
+RUN gem install devise
+RUN gem install devise-omniauth
 RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
 CMD bash
 ENTRYPOINT cd /Pong ; bundle install; yarn install --check-files; rails s -b 0.0.0.0 -p 80;
