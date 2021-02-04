@@ -3,10 +3,12 @@ services:
   web:
     build: "./ruby"
     ports:
-      - "80:80"
+      - "1080:1080"
     volumes:
-      - /Users/cyrillebertola/42/Transcendance/WebSite/Pong/:/Pong
+      - /Users/hbaudet/Documents/Cursus42/Transcendance/WebSite/Pong:/Pong
+    restart: always
   sql:
     build: "./PostGresSql"
     ports:
       - "5432:5432"
+    restart: always
