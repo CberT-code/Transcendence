@@ -5,7 +5,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - /Users/cyrillebertola/42/Transcendance/ruby/Pong/:/Pong
+      - /Users/cyrillebertola/42/Transcendance/WebSite/Pong/:/Pong
   sql:
     build: "./PostGresSql"
     ports:
