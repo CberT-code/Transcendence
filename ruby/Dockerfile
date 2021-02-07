@@ -6,4 +6,4 @@ RUN gem install rails
 RUN gem install http
 RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
 CMD bash
-ENTRYPOINT cd /Pong ; bundle install; bundle update; yarn install --check-files; sleep infinity; #rails s -b 0.0.0.0 -p 80;
+ENTRYPOINT cd /Pong ; bundle install; bundle update; yarn install --check-files; rails s -b 0.0.0.0 -p 1080;
