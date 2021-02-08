@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.1'
+ruby '2.7.2'
 
 gem 'oauth2'
 gem 'devise'
@@ -60,3 +60,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'figaro'
+<<<<<<< HEAD
+=======
+gem 'wdm', '>= 0.1.0'
+>>>>>>> refs/remotes/origin/hbaudet
