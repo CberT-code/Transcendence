@@ -30,35 +30,35 @@ document.addEventListener('keypress', logKey);
 document.addEventListener('keyup', releaseKey);
 
 function logKey(e) {
-    if (e.key == 'a') {
+    if (e.key == 'q') {
         flags[0] = 1;
     }
-    else if (e.key == 'q') {
+    else if (e.key == 'a') {
         flags[1] = 1;
     }
-    else if (e.key == 'p') {
+    else if (e.key == 'o') {
         flags[2] = 1;
     }
-    else if (e.key == 'm') {
+    else if (e.key == 'l') {
         flags[3] = 1;
     }
 }
 function releaseKey(e) {
-    if (e.key == 'a') {
+    if (e.key == 'q') {
         flags[0] = 0;
     }
-    else if (e.key == 'q') {
+    else if (e.key == 'a') {
         flags[1] = 0;
     }
-    else if (e.key == 'p') {
+    else if (e.key == 'o') {
         flags[2] = 0;
     }
-    else if (e.key == 'm') {
+    else if (e.key == 'l') {
         flags[3] = 0;
     }
 }
 
-function key_log() {
+function player_move() {
     if (flags[0] == 1) {
         user_h -= 10;
     }
@@ -129,7 +129,7 @@ function display() {
 
 function move() {
     if (end) {
-        key_log();
+        player_move();
         height_limit();
         ball_move_x();
         ball_move_y();

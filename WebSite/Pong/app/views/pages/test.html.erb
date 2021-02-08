@@ -1,1 +1,13 @@
-Test page magle!
+<%= stylesheet_link_tag "game.css" %>
+<div id="game">
+    <div class="goal"></div>
+    <div id="user" class="player"></div>
+    <div id="ball"></div>
+    <div class="goal" style='left: calc(var(--game_width) - var(--player_width)'></div>
+    <div id="opponent" class="player"></div>
+</div>
+<div>
+    <center><h2 id="score">0 - 0</h2></center>
+</div>
+
+<%= javascript_pack_tag 'game' %>
