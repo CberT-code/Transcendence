@@ -5,7 +5,8 @@ ruby '2.7.1'
 
 gem 'oauth2'
 gem 'devise'
-# gem 'devise-omniauth'
+gem 'omniauth'
+gem 'omniauth-marvin', '~> 1.0.2'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.1'
 # Use sqlite3 as the database for Active Record
@@ -57,3 +58,5 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+gem 'figaro'
