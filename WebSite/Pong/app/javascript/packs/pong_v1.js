@@ -127,9 +127,30 @@ function display() {
     oppo.style.top = oppo_h + "px";
 }
 
+function testing_ajax() {
+    var xhttp = new XMLHttpRequest();
+    let pos = [user_h, oppo_h, ball_pos[0], ball_pos[1], end ];
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+       document.getElementById("demo").innerHTML = this.responseText;
+      }
+    };
+    xhttp.open("POST", "/pong", true);
+    xhttp.send(JSON.stringify(
+        {'keys': flags,
+         'pos': [user_h, oppo_h],
+         'ball': ball_pos,
+         'status': end
+        }
+        ));
+  }
+
+
+
 function move() {
+    testing_ajax();
     if (end) {
-        player_move();
+        // player_move();
         height_limit();
         ball_move_x();
         ball_move_y();
@@ -166,4 +187,4 @@ function check_end(ball_y, p_y, dir) {
     return 0;
 }
 
-setInterval(move, inter);
+setInterval(move, 1000);
