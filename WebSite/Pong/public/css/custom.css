@@ -75,3 +75,20 @@ header #right button:hover {
     opacity: 0.7;
     transition-duration: 0.5s;
 }
+header #right #sign_out{
+	margin-left: auto;
+}
+header #right #sign_out a{
+	text-decoration: none;
+	color: #231f20;
+}
+button #sign_in{
+	margin-left: auto;
+}
+button #sign_int a{
+	text-decoration: none;
+	color: #231f20;
+}
+#not_signed{
+	text-align: center;
+}

@@ -4,9 +4,9 @@ window.app.ApplicationRouter = Backbone.Router.extend({
     "lol": "lol",
     "": "test",
   },
-
   test: function(id) {
-    console.log("TEST");
+	console.log("TEST");
+	// $("#divname").html(content);
   },
 
   lol: function(pattern) {
