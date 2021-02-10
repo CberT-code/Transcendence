@@ -3,14 +3,31 @@
   <head>
     <title>Pong</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
+	<link rel="stylesheet" href="/css/custom.css">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-	<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+	<header>
+		<div id="left">
+			<h1>PongGame</h1>
+		</div>
+		<div id="right">
+			<button>Home</button>
+			<button>Play</button>
+			<button>Account</button>
+		</div>
+		</header>
+		<% if user_signed_in? %>
+			<%= yield %><br>
+			<p><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></p>
+		<% else %>
+			<p><%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path %></p>
+			<%= yield %><br>
+    <% end %>
   </body>
 </html>

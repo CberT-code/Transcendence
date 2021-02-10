@@ -1,9 +1,26 @@
+@font-face {
+    font-family: "Roboto-Thin";
+    src: url("/css/fonts/Roboto-Thin.ttf");
+}
+@font-face {
+    font-family: "Roboto-Medium";
+    src: url("/css/fonts/Roboto-Medium.ttf");
+}
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("/css/fonts/Roboto-Bold.ttf");
+}
+@font-face {
+    font-family: "Roboto-BoldItalic";
+    src: url("/css/fonts/Roboto-BoldItalic.ttf");
+}
 body {
     height: 100%;
     width: 100%;
     overflow: hidden;
     position: relative;
     margin: 0px;
+    font-family: 'Roboto-Thin';
 }
 html {
     height: 100%;
@@ -12,4 +29,49 @@ html {
     position: relative;
     margin: 0px;
     background-color: #f4f2f2;
+}
+header {
+    width: 100%;
+    height: 55px;
+    overflow: hidden;
+    background-color: white;
+    color: #231f20;
+    border-bottom: solid 2px #e1e1e1;
+    display: flex;
+}
+header #left {
+    height: 100%;
+    width: 25%;
+    display: flex;
+    overflow: hidden;
+}
+header #left h1 {
+    margin: auto;
+    text-transform: uppercase;
+    font-family: "Roboto-BoldItalic";
+    font-size: 125%;
+}
+header #right {
+    height: 100%;
+    width: 75%;
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+header #right button {
+    margin-left: 15px;
+    margin-right: 15px;
+    text-transform: uppercase;
+    font-size: 115%;
+    font-family: "Roboto-Medium";
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition-duration: 0.5s;
+}
+header #right button:hover {
+    opacity: 0.7;
+    transition-duration: 0.5s;
 }
