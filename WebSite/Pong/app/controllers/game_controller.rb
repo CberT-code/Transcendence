@@ -1,23 +1,43 @@
 class GameController < ApplicationController
-	protect_from_forgery with: :null_session
+	skip_before_action :verify_authenticity_token
 	
 	def positions
-		bod = request.body
 
 		json_data = JSON.parse(request.body.read)
-		keys = json_data['keys']
-		players = json_data['pos']
-		ball = json_data['ball']
-		status = json_data['status']
+		uu = json_data['UU'].to_i
+		ud = json_data['UD'].to_i
+		ou = json_data['OU'].to_i
+		od = json_data['OD'].to_i
+		pos_u = json_data['pos_u'].to_i
+		pos_o = json_data['pos_o'].to_i
+		ball_x = json_data['ball_x'].to_i
+		ball_y = json_data['bal_y'].to_i
+		status = json_data['status'].to_i
 
-		# if keys[0]
-		# 	players[0] += 10
-		# end
-		# if keys[1]
-		# 	players[0] -= 10
-		# end
+		if (uu != 0)
+			pos_u += 10
+		end
+		if (ud != 0)
+			pos_u -= 10
+		end
+		if (ou != 0)
+			pos_o += 10
+		end
+		if (od != 0)
+			pos_o -= 10
+		end
 
-		render :json => {:keys => keys, :position => players, :ball => ball, :status => status, :type => keys.is_a?(String)}
+		render :json => {
+		'UU': uu,
+		'UD': ud,
+		'OU': ou,
+		'OD': od,
+		'pos_u': pos_u,
+		'pos_o': pos_o,
+		'ball_x': ball_x,
+		'ball_y': ball_y,
+		'status': status
+	}
 	   
 	   end
 end

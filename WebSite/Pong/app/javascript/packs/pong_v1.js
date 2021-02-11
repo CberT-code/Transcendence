@@ -25,9 +25,11 @@ var step = (width - p_width * 2) * inter / phase;
 var ball_max_x = width - p_width - ball_w;
 var ball_min_x = p_width;
 var end = 1;
+let pause_status = 0;
 
 document.addEventListener('keypress', logKey);
 document.addEventListener('keyup', releaseKey);
+document.getElementById("pause").addEventListener ("click", ft_pause, false);
 
 function logKey(e) {
     if (e.key == 'q') {
@@ -55,6 +57,9 @@ function releaseKey(e) {
     }
     else if (e.key == 'l') {
         flags[3] = 0;
+    }
+    else if (e.key == 't') {
+        pause_status = (pause_status + 1) % 2;
     }
 }
 
@@ -127,20 +132,32 @@ function display() {
     oppo.style.top = oppo_h + "px";
 }
 
+function update_pos(obj) {
+    user_h = obj.pos_u;
+    oppo_h = obj.pos_o;
+    status = obj.status;
+}
+
 function testing_ajax() {
     var xhttp = new XMLHttpRequest();
     let pos = [user_h, oppo_h, ball_pos[0], ball_pos[1], end ];
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
        document.getElementById("demo").innerHTML = this.responseText;
+       update_pos(JSON.parse(this.responseText));
       }
     };
     xhttp.open("POST", "/pong", true);
     xhttp.send(JSON.stringify(
-        {'keys': flags,
-         'pos': [user_h, oppo_h],
-         'ball': ball_pos,
-         'status': end
+        {   'UD': flags[0], // User Up
+            'UU': flags[1], // User Down
+            'OD': flags[2], // Opponent Up
+            'OU': flags[3], // Opponent Down
+            'pos_u': user_h,
+            'pos_o': oppo_h,
+            'ball_x': ball_pos[0],
+            'ball_y': ball_pos[1],
+            'status': end
         }
         ));
   }
@@ -148,9 +165,11 @@ function testing_ajax() {
 
 
 function move() {
+    if (pause_status)
+        return ;
     testing_ajax();
     if (end) {
-        // player_move();
+        player_move();
         height_limit();
         ball_move_x();
         ball_move_y();
@@ -187,4 +206,12 @@ function check_end(ball_y, p_y, dir) {
     return 0;
 }
 
-setInterval(move, 1000);
+
+function ft_pause() {
+    if (pause_status)
+        pause_status = 0;
+    else
+        pause_status = 1;
+}
+
+setInterval(move, inter);
