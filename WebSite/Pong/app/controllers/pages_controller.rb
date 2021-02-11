@@ -3,6 +3,10 @@ class PagesController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
+	def salut
+		@name = params[:name]
+	end
+	def connexion
 	end
 	def home
 	end

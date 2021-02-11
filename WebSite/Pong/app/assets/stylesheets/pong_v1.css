@@ -1,0 +1,58 @@
+:root {
+    --player_width: 20px;
+    --game_width: 500px;
+    --game_height: 400px;
+    --ball_width: 10px;
+    --player_height: 100px;
+    --phase: 3000ms;
+}
+
+#game{
+    width: var(--game_width);
+    height: var(--game_height);
+    border: 1px solid grey;
+    background-color: black;
+    position: relative;
+    margin: auto;
+    z-index: 0;
+}
+
+.player{
+    width: var(--player_width);
+    height: var(--player_height);
+    top: calc((var(--game_height) - var(--player_height)) / 2 );
+    position: absolute;
+    background-color: purple;
+    z-index: 3;
+}
+
+#user{
+    background-color: red;
+    left: 0px;
+}
+
+#opponent{
+    background-color: green;
+    left: calc(var(--game_width) - var(--player_width))
+}
+
+#ball{
+    width: var(--ball_width);
+    height: var(--ball_width);
+    background-color: white;
+    position: absolute;
+    top: calc(var(--game_height) / 3);
+    border-radius: 500px;
+    left: 0px;
+    z-index: 2;
+}
+
+.goal {
+    height: var(--game_height);
+    width: 1px;
+    background-color: red;
+    top: 0px;
+    left: var(--player_width);
+    position: absolute;
+    z-index: 1;
+}
