@@ -1,2 +1,2 @@
 FROM postgres:12.1
-CMD bash
+COPY srcs/init.sql /docker-entrypoint-initdb.d/

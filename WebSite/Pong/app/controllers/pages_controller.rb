@@ -1,12 +1,8 @@
 class PagesController < ApplicationController
-	if $token.expired?
-		$client = OAuth2::Client.new(UID, SECRET, site: "https://api.intra.42.fr")
-		$token = $client.client_credentials.get_token
-	end
-	def salut
-		@name = params[:name]
-	end
-	def connexion
+	before_action do |sign_n_out|
+		if !user_signed_in?
+			render 'pages/not_authentificate', :status => :unauthorized
+		end
 	end
 	def home
 	end
