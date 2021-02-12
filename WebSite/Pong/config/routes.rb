@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     	delete "sign_out", :to => "devise/sessions#destroy", :as => :destroy_user_session_path
 	end
 	get "/account", to: "pages#account"
+	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
-	get "/guild", to: "pages#guild"
+	get "/guilds", to: "pages#guilds"
+	get "/tournaments", to: "pages#tournaments"
 end
