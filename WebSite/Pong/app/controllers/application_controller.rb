@@ -1,3 +1,3 @@
 class ApplicationController < ActionController::Base
-	ENV['RACK_MINI_PROFILER'] = 'off'
+	ENV['RACK_MINI_PROFILER'] = 'disable'
 end
