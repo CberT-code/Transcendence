@@ -18,17 +18,17 @@
 			<h1>PongGame</h1>
 		</div>
 		<div id="right">
-			<button>Account</button>
-			<button>T'Chat</button>
-			<button>Play</button>
-			<button>Guilds</button>
-			<button>Tournaments</button>
+			<button><a href="/#account">Account</a></button>
+			<button><a href="/#chat">Chat</a></button>
+			<button><a href="/#play">Play</a></button>
+			<button><a href="/#guild"Guilds</a></button>
+			<button><a href="/#tournament">Tournaments</a></button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 
 		</div>
 		</header>
 	<% end %>
-	<div class="content">
+	<div id="content">
 		<%= yield %><br>
 	</div>
   </body>
