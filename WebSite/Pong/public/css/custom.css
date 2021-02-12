@@ -59,6 +59,7 @@ header #right {
     flex-wrap: wrap;
     justify-content: center;
     align-content: center;
+    position: relative;
 }
 header #right button {
     margin-left: 15px;
@@ -77,18 +78,15 @@ header #right button:hover {
 }
 header #right #sign_out{
 	margin-left: auto;
-}
-header #right #sign_out a{
-	text-decoration: none;
-	color: #231f20;
+    position: absolute;
 }
 button #sign_in{
 	margin-left: auto;
 }
-button #sign_int a{
-	text-decoration: none;
-	color: #231f20;
-}
 #not_signed{
 	text-align: center;
+}
+header a {
+    text-decoration: none;
+	color: #231f20;
 }
