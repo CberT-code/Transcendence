@@ -1,0 +1,22 @@
+version: "2.2"
+services:
+  web:
+    build: "./ruby"
+    environment:
+      PONG_DATABASE_PASSWORD: password
+      TZ: Europe/Paris
+      FT_UID: eda6adb82931c26dbd5380defcf580d98ddc861b2892d86960abab3adc4f75c9
+      FT_SECRET: 2c6edb43028a06220cb42a2ea9256a011f81443c76457818eb2b2d75e4125039
+    ports:
+      - "80:80"
+    volumes:
+      - C:/Users/Nakusu/Desktop/42/Transendance/WebSite/Pong:/Pong
+  postgresql:
+    build: "./PostGresSql"
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      TZ: Europe/Paris
