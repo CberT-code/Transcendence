@@ -1,6 +1,6 @@
 window.app.ApplicationRouter = Backbone.Router.extend({
   routes: {
-    "": "home",
+    // "": "home",
     "guild": "guild",
     "play": "play",
     "account": "account",
