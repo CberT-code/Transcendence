@@ -139,27 +139,43 @@ function update_pos(obj) {
 }
 
 function testing_ajax() {
-    var xhttp = new XMLHttpRequest();
-    let pos = [user_h, oppo_h, ball_pos[0], ball_pos[1], end ];
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) {
-       document.getElementById("demo").innerHTML = this.responseText;
-       update_pos(JSON.parse(this.responseText));
-      }
-    };
-    xhttp.open("POST", "/pong", true);
-    xhttp.send(JSON.stringify(
-        {   'UD': flags[0], // User Up
-            'UU': flags[1], // User Down
-            'OD': flags[2], // Opponent Up
-            'OU': flags[3], // Opponent Down
-            'pos_u': user_h,
-            'pos_o': oppo_h,
-            'ball_x': ball_pos[0],
-            'ball_y': ball_pos[1],
-            'status': end
-        }
-        ));
+    $.post('/pong', 
+            {   UD: flags[0], // User Up
+                UU: flags[1], // User Down
+                OD: flags[2], // Opponent Up
+                OU: flags[3], // Opponent Down
+                pos_u: user_h,
+                pos_o: oppo_h,
+                ball_x: ball_pos[0],
+                ball_y: ball_pos[1],
+                status: end
+            },
+        function (data) {
+            $('#dev').html(JSON.parse(data));
+            console.log(data);
+        },
+        'json');
+    // var xhttp = new XMLHttpRequest();
+    // let pos = [user_h, oppo_h, ball_pos[0], ball_pos[1], end ];
+    // xhttp.onreadystatechange = function() {
+    //   if (this.readyState == 4 && this.status == 200) {
+    //    document.getElementById("demo").innerHTML = this.responseText;
+    //    update_pos(JSON.parse(this.responseText));
+    //   }
+    // };
+    // xhttp.open("POST", "/pong", true);
+    // xhttp.send(JSON.stringify(
+    //     {   'UD': flags[0], // User Up
+    //         'UU': flags[1], // User Down
+    //         'OD': flags[2], // Opponent Up
+    //         'OU': flags[3], // Opponent Down
+    //         'pos_u': user_h,
+    //         'pos_o': oppo_h,
+    //         'ball_x': ball_pos[0],
+    //         'ball_y': ball_pos[1],
+    //         'status': end
+    //     }
+    //     ));
   }
 
 
@@ -169,7 +185,7 @@ function move() {
         return ;
     testing_ajax();
     if (end) {
-        player_move();
+        // player_move();
         height_limit();
         ball_move_x();
         ball_move_y();

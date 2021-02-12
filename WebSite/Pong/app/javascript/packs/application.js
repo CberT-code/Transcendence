@@ -11,6 +11,7 @@ import "jquery"
 const _ = require("libs/underscore.js")
 require("libs/backbone.js")
 require("backbone/index.js")
+require('jquery')
 
 Rails.start()
 Turbolinks.start()
