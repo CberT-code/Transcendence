@@ -6,11 +6,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
     "account": "account",
   },
   account: function() {
-    console.log("account")
     $.get("/account").then(function(data){
-      alert(data);
-      alert($(data).html()); // Now it Works too
-      //$("#content").html($(data).find("content").text());
+		$("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
     });
   },
   test: function() {
