@@ -18,12 +18,12 @@
 			<h1>PongGame</h1>
 		</div>
 		<div id="right">
-			<button><a href="/#account">Account</a></button>
-			<button><a href="/#chat">Chat</a></button>
-			<button><a href="/#play">Play</a></button>
-			<button><a href="/#guild"Guilds</a></button>
-			<button><a href="/#tournament">Tournaments</a></button>
-			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
+			<button onClick="window.location='/#account'" >Account</button>
+			<button onClick="window.location='/#chat'">Chat</button>
+			<button onClick="window.location='/#play'" >Play</button>
+			<button onClick="window.location='/#guilds'">Guilds</button>
+			<button onClick="window.location='/#tournament'">Tournaments</button>
+			<button  id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 
 		</div>
 		</header>

@@ -10,7 +10,7 @@ services:
     ports:
       - "80:80"
     volumes:
-       - C:/Users/Nakusu/Desktop/42/Transcendance/WebSite/Pong/:/Pong
+       - /Users/cyrillebertola/42/Transcendance/WebSite/Pong/:/Pong
   postgresql:
     build: "./PostGresSql"
     ports:
