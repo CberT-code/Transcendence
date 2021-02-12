@@ -3,13 +3,21 @@ window.app.ApplicationRouter = Backbone.Router.extend({
     "test": "test",
     "lol": "lol",
     "": "test",
+    "account": "account",
   },
-  test: function(id) {
-	console.log("TEST");
-	// $("#divname").html(content);
+  account: function() {
+    console.log("account")
+    $.get("/account").then(function(data){
+      alert(data);
+      alert($(data).html()); // Now it Works too
+      //$("#content").html($(data).find("content").text());
+    });
+  },
+  test: function() {
+	  console.log("TEST");
   },
 
-  lol: function(pattern) {
+  lol: function() {
     console.log("LOL");
   }
 });
