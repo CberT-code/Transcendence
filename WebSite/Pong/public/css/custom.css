@@ -70,6 +70,7 @@ header #right button {
     border: none;
     background-color: transparent;
     cursor: pointer;
+    outline: none;
     transition-duration: 0.5s;
 }
 header #right button:hover {
@@ -78,6 +79,7 @@ header #right button:hover {
 }
 header #right #sign_out{
 	margin-left: auto;
+    right: 0px;
     position: absolute;
 }
 button #sign_in{
@@ -89,4 +91,39 @@ button #sign_in{
 header a {
     text-decoration: none;
 	color: #231f20;
+}
+#content-account {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+#content-account #title {
+    width: 100%;
+    height: 55px;
+    overflow: hidden;
+    display: flex;
+    background-color: #ccc;
+}
+#content-account #title h1 {
+    margin: auto;
+    text-transform: uppercase;
+    font-size: 120%;
+    font-family: "Roboto-Thin";
+    letter-spacing: 2px;
+}
+#content-account #corp {
+    width: 100%;
+    height: calc(100% - 55px);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+}
+#content-account #corp #element {
+    height: 400px;
+    width: 400px;
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
 }
