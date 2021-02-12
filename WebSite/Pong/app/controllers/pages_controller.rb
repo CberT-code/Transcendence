@@ -5,5 +5,7 @@ class PagesController < ApplicationController
 		end
 	end
 	def home
+		@session = session["devise.marvin_data"]
+		
 	end
 end
