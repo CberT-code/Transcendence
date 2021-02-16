@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "game_types", force: :cascade do |t|
+  create_table "games", force: :cascade do |t|
     t.string "type_name", default: "", null: false
     t.string "description", default: "", null: false
     t.datetime "created_at", precision: 6, null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "histories", force: :cascade do |t|
+  create_table "historys", force: :cascade do |t|
     t.integer "target_type", default: -1, null: false
     t.integer "target_1", default: -1, null: false
     t.integer "target_2", default: -1, null: false
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
     t.integer "tournament", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["victory"], name: "index_stats_on_victory"
   end
 
   create_table "users", force: :cascade do |t|
