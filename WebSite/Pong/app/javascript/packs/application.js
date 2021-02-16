@@ -19,3 +19,8 @@ Turbolinks.start()
 ActiveStorage.start()
 
 Backbone.history.start()
+
+window.jQuery = $;
+window.$ = $;
+window.underscore = _;
+window._ = _;
