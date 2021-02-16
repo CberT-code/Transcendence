@@ -14,6 +14,7 @@ DeleteAccount = Backbone.View.extend({
             },
             function (data) {
                 console.log(data)
+                
             },
             'text'
         );
