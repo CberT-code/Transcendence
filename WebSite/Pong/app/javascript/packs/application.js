@@ -17,7 +17,6 @@ require("backbone/index.js")
 Rails.start()
 Turbolinks.start()
 ActiveStorage.start()
-
 Backbone.history.start()
 
 window.jQuery = $;
