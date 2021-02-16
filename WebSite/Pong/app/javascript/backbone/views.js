@@ -4,10 +4,19 @@ DeleteAccount = Backbone.View.extend({
 		console.log("INIT")
 	},
 	events: {
-	  'click .DeleteAccount': 'update'
+		'click .delete': 'deleteAccount'
 	},
-	update: function () {
-	  console.log("update !");
-	  alert(1);
+	deleteAccount: function () {
+		$.post(
+			'/account/delete',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content')
+			},
+			function (data) {
+				console.log(data)
+				
+			},
+			'text'
+		);
 	}
-  });
+});
