@@ -19,7 +19,7 @@
 			</div>
 			<div id="container">
 				<div id="line">
-					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= Stat.find(current_user.id_stats).victory + Stat.find(current_user.id_stats).defeat %></p>
+					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= (Stat.find(current_user.id_stats).victory + Stat.find(current_user.id_stats).defeat) %></p>
 				</div>
 				<div id="line">
 					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> <%= Stat.find(current_user.id_stats).victory %></p>
