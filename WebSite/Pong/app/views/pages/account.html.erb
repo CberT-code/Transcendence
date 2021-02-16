@@ -7,7 +7,7 @@
 			<div id="right">
 				<div id="name">
 					<h1><%= current_user.nickname %></h1>
-					<h3>guigu</h3>
+					<h3><%= current_user.id_guild == -1 ? "NO GUILD" : Guild.find(current_user.id_guild).name %></h3>
 				</div>
 			</div>
 		</div>
@@ -19,16 +19,16 @@
 			</div>
 			<div id="container">
 				<div id="line">
-					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> 15</p>
+					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= Stat.find(current_user.id_stats).victory + Stat.find(current_user.id_stats).defeat %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> 8</p>
+					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> <%= Stat.find(current_user.id_stats).victory %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defaites :</span> 7</p>
+					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defaites :</span> <%= Stat.find(current_user.id_stats).defeat %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournois gagnés :</span> 2</p>
+					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournois gagnés :</span> <%= Stat.find(current_user.id_stats).tournament %></p>
 				</div>
 			</div>
 		</div>

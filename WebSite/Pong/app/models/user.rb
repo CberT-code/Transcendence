@@ -11,8 +11,11 @@ class User < ApplicationRecord
 		user.password = Devise.friendly_token[0,20]
 		user.nickname = auth.info.nickname
 		user.image = auth.info.image
-		# @stat = stats.create
-		# user.id_stats = stat.id
+
+		@stat = Stat.new
+		@stat.save
+		user.id_stats = @stat.id
+
 	  end
 	end
   end
