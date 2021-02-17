@@ -4,11 +4,20 @@ class PagesController < ApplicationController
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
+	
 	def salut
 		@name = params[:name]
 	end
+
 	def connexion
 	end
+
 	def home
+		@test_me = current_user.uid
+	end
+
+	def test
+		@me = current_user
+		@me.status = 'LFO' # Looking For Opponent
 	end
 end

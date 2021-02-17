@@ -1,4 +1,10 @@
 <%= stylesheet_link_tag "pong_v1.css" %>
+<style>
+    #game {
+        background-image: url(<%= @me.picture_url %>);
+    }
+</style>
+<%= content_tag :div, '', id: 'user_data', data: { source: @me } %>
 <div id="game">
     <div class="goal"></div>
     <div id="user" class="player"></div>
@@ -9,11 +15,9 @@
 <div>
     <center><h2 id="score">0 - 0</h2></center>
 </div>
-<button id="pause">PAUSE</button>
+<center><button id="pause">PAUSE</button></center>
 <div>
     <p>TESTING : </p>
-    <p><div id="demo"></div></p>
-    <p>This is the dev div<div id="dev">||</div>|This is the end of the dev div</p>
 </div>
 
 <%= javascript_pack_tag 'pong_v1' %>

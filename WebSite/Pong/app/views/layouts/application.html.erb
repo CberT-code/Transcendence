@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+  	<%= action_cable_meta_tag %>
     <title>Pong</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="/css/custom.css">
@@ -20,7 +21,7 @@
 		<div id="right">
 			<button>Account</button>
 			<button>T'Chat</button>
-			<button><%= link_to "Play", '/test' %></button>
+			<button><%= link_to "Play", '/test/' %></button>
 			<button>Guilds</button>
 			<button>Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
@@ -28,6 +29,7 @@
 		</div>
 		</header>
 	<% end %>
-		<%= yield %><br>
+	<p>ME : <%= @test_me %>|</p>
+	<%= yield %><br>
   </body>
 </html>
