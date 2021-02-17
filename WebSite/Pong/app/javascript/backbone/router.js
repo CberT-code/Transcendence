@@ -15,9 +15,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
   account: function() {
     $.get("/account").then(function(data){
 	  $("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
-	  new DeleteAccount();
     });
-    new DeleteAccount();
+    new ViewAccount();
   },
   tchat: function() {
     $.get("/tchat").then(function(data){

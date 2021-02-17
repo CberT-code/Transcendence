@@ -10,9 +10,11 @@ services:
     ports:
       - "80:80"
     volumes:
-      - C:/Users/Nakusu/Desktop/42/Transendance/WebSite/Pong:/Pong
+      - ./WebSite/Pong/:/Pong
   postgresql:
     build: "./PostGresSql"
+    volumes:
+      - ./PostGresSql/srcs/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: always

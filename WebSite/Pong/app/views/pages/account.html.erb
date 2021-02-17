@@ -6,7 +6,12 @@
 			</div>
 			<div id="right">
 				<div id="name">
-					<h1><%= current_user.nickname %></h1>
+					<h1 class="username"><%= current_user.nickname %> <i class="fas fa-pen"></i></i></h1>
+					<div id="container">
+						<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
+						<i class="fas fa-check"></i>
+						<i class="fas fa-times fa-times-switch"></i>
+					</div>
 					<h3><%= current_user.id_guild == -1 ? "NO GUILD" : Guild.find(current_user.id_guild).name %></h3>
 				</div>
 			</div>
@@ -38,6 +43,7 @@
 			</div>
 			<div class="display-flex" id="container">
 				<button class="delete" ><i class="fas fa-trash-alt"></i> Delete your account</button>
+				<button class="test" ><i class="fas fa-trash-alt"></i> test</button>
 			</div>
 		</div>
 	</div>

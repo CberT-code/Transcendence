@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "historys", force: :cascade do |t|
+  create_table "histories", force: :cascade do |t|
     t.integer "target_type", default: -1, null: false
     t.integer "target_1", default: -1, null: false
     t.integer "target_2", default: -1, null: false
