@@ -8,4 +8,4 @@ RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
 CMD bash
 ENTRYPOINT cd /Pong ; bundle install ; bundle update ; npm i underscore ;\
 			yarn add jquery ; yarn add underscore; yarn install --check-files;\
-			rake db:migrate; sleep infinity #rails s -b 0.0.0.0 -p 1080;
+			rake db:migrate; echo "READY TO BOOT SERVER"; sleep infinity #rails s -b 0.0.0.0 -p 1080;

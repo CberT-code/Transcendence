@@ -1,16 +1,15 @@
 <%= stylesheet_link_tag "pong_v1.css" %>
-<style>
-    #game {
-        background-image: url(<%= @me.picture_url %>);
-    }
-</style>
 <%= content_tag :div, '', id: 'user_data', data: { source: @me } %>
-<div id="game">
-    <div class="goal"></div>
-    <div id="user" class="player"></div>
-    <div id="ball"></div>
-    <div class="goal" style='left: calc(var(--game_width) - var(--player_width)'></div>
-    <div id="opponent" class="player"></div>
+<div id="wrapper">
+    <div class='profile_pic' id='left_PP'></div>
+    <div id="game">
+        <div class="goal"></div>
+        <div id="user" class="player"></div>
+        <div id="ball"></div>
+        <div class="goal" style='left: calc(var(--game_width) - var(--player_width)'></div>
+        <div id="opponent" class="player"></div>
+    </div>
+    <div class='profile_pic' id='right_PP'></div>
 </div>
 <div>
     <center><h2 id="score">0 - 0</h2></center>
@@ -18,6 +17,7 @@
 <center><button id="pause">PAUSE</button></center>
 <div>
     <p>TESTING : </p>
+    <p id='dev'></p>
 </div>
 
 <%= javascript_pack_tag 'pong_v1' %>
