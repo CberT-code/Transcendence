@@ -10,4 +10,5 @@ Rails.application.routes.draw do
 	get "/guilds", to: "pages#guilds"
 	get "/tournaments", to: "pages#tournaments"
 	post "/account/delete", to: "post#deleteAccount"
+	post "/account/history", to: "post#historyAccount"
 end
