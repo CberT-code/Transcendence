@@ -82,7 +82,7 @@ ViewAccount = Backbone.View.extend({
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 			},
 			function (data) {
-				console.log("test");
+				console.log(data);
 				alert(data);
 			},
 			'text'

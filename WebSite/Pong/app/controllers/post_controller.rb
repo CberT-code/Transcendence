@@ -19,20 +19,7 @@ class PostController < ApplicationController
 		end
 	end
 	def HistoryUser
-		# @History = History.new
-		# @History.target_1 = 1;
-		# @History.target_2 = 3;
-		# @History.score_target_1 = 14;
-		# @History.score_target_2 = 0;
-		# @History.save
-		# @History2 = History.new
-		# @History2.target_1 = 2;
-		# @History2.target_2 = 1;
-		# @History2.score_target_1 = 16;
-		# @History2.score_target_2 = 4;
-		# @History2.save
 		@tab = History.where('(target_1 = ? or target_2 = ?) and target_type = ?', current_user.id, current_user.id, 1);
-		# @tab = @tab.select(:target_1, :target_2, :score_target_1, :score_target_2);
 		@tab = @tab.as_json(only: [:target_1, :target_2, :score_target_1, :score_target_2])
 		@tab.each do |ta|
 			@name = User.find_by_id(ta["target_1"]);
@@ -40,6 +27,31 @@ class PostController < ApplicationController
 			ta["target_1"] = @name.nickname;
 			ta["target_2"] = @name2.nickname;
 		end
+		render json: @tab
+	end
+	def ListGuilds
+		# @Guild = Guild.new
+		# @Guild.name = "anatal";
+		# @Guild.description = "c'est la guerre";
+		# @Guild.id_stats = 3;
+		# @Guild.save
+		# @Guild2 = Guild.new
+		# @Guild2.name = "banal";
+		# @Guild2.description = "c'est la guerre mouhahaa";
+		# @Guild2.id_stats = 4;
+		# @Guild2.save
+		# @Guild3 = Guild.new
+		# @Guild3.name = "frontal";
+		# @Guild3.description = "c'est mouhahaa";
+		# @Guild3.id_stats = 5;
+		# @Guild3.save
+		# @Guild4 = Guild.new
+		# @Guild4.name = "choral";
+		# @Guild4.description = "chanton ensemble";
+		# @Guild4.id_stats = 6;
+		# @Guild4.save
+		@tab = Guild.order(:name);
+		@tab = @tab.as_json(only: [:name, :description, :id_stats])
 		render json: @tab
 	end
 end

@@ -12,4 +12,5 @@ Rails.application.routes.draw do
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"
 	post "/account/history", to: "post#HistoryUser"
+	post "/guilds/listguilds", to: "post#ListGuilds"
 end
