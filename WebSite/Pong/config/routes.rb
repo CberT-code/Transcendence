@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
 	get "/guilds", to: "pages#guilds"
+	get "/guilds_new", to: "pages#guilds_new"
 	get "/tournaments", to: "pages#tournaments"
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"

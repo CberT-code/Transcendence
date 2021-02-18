@@ -32,7 +32,6 @@ ViewAccount = Backbone.View.extend({
             },
             function (data) {
                 window.location = "/";
-                
             },
             'text'
         );

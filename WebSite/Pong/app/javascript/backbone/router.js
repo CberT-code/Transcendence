@@ -5,6 +5,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
     "tchat": "tchat",
     "play": "play",
     "guilds": "guilds",
+    "guilds_new": "guilds_new",
     "tournaments": "tournaments",
   },
   home: function() {
@@ -31,6 +32,11 @@ window.app.ApplicationRouter = Backbone.Router.extend({
   guilds: function() {
     $.get("/guilds").then(function(data){
 	  $("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
+    });
+  },
+  guilds_new: function() {
+    $.get("/guilds_new").then(function(data){
+	  $("#content").html("<div id='content-guilds-new'>" + ($(data).find("#content-guilds-new").html()) + "</div>");
     });
   },
   tournaments: function() {

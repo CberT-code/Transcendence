@@ -361,3 +361,31 @@ header a {
 	font-family: "Roboto-Thin";
 	font-size: 110%;
 }
+#content-guilds-new #form {
+	width: 100%;
+	padding-top: 40px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-guilds-new #form #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-guilds-new #form #guildName{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 100px;
+	padding-left: 100px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
