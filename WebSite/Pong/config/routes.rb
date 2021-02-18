@@ -11,6 +11,6 @@ Rails.application.routes.draw do
 	get "/tournaments", to: "pages#tournaments"
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"
-	get "/account/history", to: "post#HistoryUser"
+	post "/account/history", to: "post#HistoryUser"
 	post "/guilds/listguilds", to: "post#ListGuilds"
 end
