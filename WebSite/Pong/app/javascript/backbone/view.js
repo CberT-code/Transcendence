@@ -13,12 +13,11 @@ ViewAccount = Backbone.View.extend({
             headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
             type: "POST",
             success: function(response) {
-				console.log("sucess");
-			},
-            error: function(err) {
-                console.log("error");
-                console.log(err);
-            }
+				console.log(response);
+				for(var k in response.responseJSON) {
+					console.log(k, datas[k].target_1);
+				 }
+			}
         });
     },
     events: {
