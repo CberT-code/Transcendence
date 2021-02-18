@@ -292,3 +292,72 @@ header a {
 .display-flex {
 	display: flex;
 }
+#content-guilds #action {
+	width: 100%;
+	padding-top: 25px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-guilds #action #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-guilds #action #left {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	padding-left: 45px;
+	padding-right: 45px;
+}
+#content-guilds #action #left button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-guilds #action #left #create_guild{
+	display: block;
+	background-color: #7BE12E;
+}
+#content-guilds #action #left #quit_guild{
+	display: block;
+	background-color: #c51515;
+}
+#content-guilds #action #right {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#content-guilds #action #right input{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	font-family: "Roboto-Thin";
+	font-size: 110%;
+}

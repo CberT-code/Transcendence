@@ -30,7 +30,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
   },
   guilds: function() {
     $.get("/guilds").then(function(data){
-      $("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
+	  $("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
     });
   },
   tournaments: function() {

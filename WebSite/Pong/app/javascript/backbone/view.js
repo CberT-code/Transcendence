@@ -10,6 +10,7 @@ ViewAccount = Backbone.View.extend({
 		console.log("INIT")
 		this.model = new AccountModel();
         this.model.fetch({
+			headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
             type: "post",
             success: function(data) {
                 alert(data);
@@ -78,7 +79,7 @@ ViewAccount = Backbone.View.extend({
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 			},
 			function (data) {
-				console.log("test");
+				console.log(data);
 				alert(data);
 			},
 			'text'
