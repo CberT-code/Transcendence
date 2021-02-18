@@ -35,6 +35,10 @@ then
 		print_msg $ERROR "Transcendence is stopped"
 	else print_msg $INFORMATION "Transcendence is already stopped"
 	fi
+elif [[ $1 == "save" ]]
+then
+		tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
+		print_msg $ERROR "Database is saved"
 
 elif [[ $1 == "restart" ]]
 then
