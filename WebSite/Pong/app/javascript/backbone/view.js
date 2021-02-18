@@ -7,14 +7,17 @@ function notification(typef, textf) {
 ViewAccount = Backbone.View.extend({
     el: $(document),
     initialize: function () {
-		console.log("INIT")
-		this.model = new AccountModel();
+        console.log("TOKEN " + $('meta[name=csrf-token]').attr('content'));
+        this.model = new AccountModel();
         this.model.fetch({
-			headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
-            type: "post",
-            success: function(data) {
-                alert(data);
-            }
+            headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
+            type: "POST",
+            success: function(response) {
+				console.log(response);
+				for(var k in response.responseJSON) {
+					console.log(k, datas[k].target_1);
+				 }
+			}
         });
     },
     events: {
@@ -31,7 +34,7 @@ ViewAccount = Backbone.View.extend({
                 'authenticity_token': $('meta[name=csrf-token]').attr('content')
             },
             function (data) {
-                window.location = "/";
+                console.log(data)
             },
             'text'
         );
