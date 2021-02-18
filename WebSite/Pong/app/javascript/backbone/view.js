@@ -4,6 +4,7 @@ DeleteAccount = Backbone.View.extend({
         console.log("TOKEN " + $('meta[name=csrf-token]').attr('content'));
         this.model = new AccountModel();
         this.model.fetch({
+            headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
             type: "POST",
             success: function(response) {
 				console.log("sucess");
