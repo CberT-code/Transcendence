@@ -145,14 +145,6 @@ function move() {
     step *= 1.0005;
 }
 
-function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-}
-
 function check_end(ball_y, p_y, dir) {
     if (ball_y > p_y + p_height || p_y > ball_y + ball_w) {
         var sens = -(dir * 2 - 1);
@@ -164,7 +156,6 @@ function check_end(ball_y, p_y, dir) {
     return 0;
 }
 
-
 function ft_pause() {
     if (pause_status)
         pause_status = 0;
@@ -172,19 +163,29 @@ function ft_pause() {
         pause_status = 1;
 }
 
-var ready = 0;
-while (!ready)
-{
-    $.post('/pong/setup', 
-            {   // name: value //send
-            },
-        function (data) {
-            //return 
-        },
-        'json'); //type
-    sleep(1000);
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
 }
-$("#left_PP").css("background-image", data['Left_pp']);
-$("#right_PP").css("background-image", data['Right_pp']);
+
+// var ready = 0;
+// while (!ready)
+// {
+//     $.post('/pong/setup', 
+//             {   // name: value //send
+//                 status: 'are_you_ok_ani';
+//             },
+//         function (data) {
+//             //return 
+//             $('#dev').html(JSON.stringify(data));
+//         },
+//         'json'); //type
+//     sleep(5000);
+// }
+// $("#left_PP").css("background-image", data['Left_pp']);
+// $("#right_PP").css("background-image", data['Right_pp']);
 
 setInterval(move, inter);

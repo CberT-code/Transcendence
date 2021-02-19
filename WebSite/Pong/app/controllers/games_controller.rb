@@ -1,7 +1,12 @@
 class GameController < ApplicationController
 	skip_before_action :verify_authenticity_token
 
+	def home
+		@me  = current_user
+	end
+
 	def positions
+		raise
 		@me = current_user
 
 		if (params['UD'].to_i != 0)
@@ -31,6 +36,12 @@ class GameController < ApplicationController
 	   end
 
 	def setup
+		@me = current_user
+		if (find_game() == 'NO')
 		render :json => { 'Ready': "No", 'Hotel?': "Trivago"}
+	end
+
+	def new
+		
 	end
 end

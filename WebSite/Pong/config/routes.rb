@@ -4,9 +4,10 @@ Rails.application.routes.draw do
 	root to: 'pages#home'
 	get '/test', to: 'pages#test', as: 'PONGv1'
 	get '/bonjour(/:name)', to: 'pages#salut', as: 'salut'
-	post '/pong/loop' =>'game#positions'
-	pos '/pong/setup' =>'game#setup'
+	post '/pong/loop' =>'games#positions'
+	post '/pong/setup' =>'games#setup'
 	devise_scope :user do
 		delete 'sign_out', :to => 'devise/sessions#destroy', :as => :destroy_user_session_path
 	  end
+	post '/game/new' => 'games#new'
 end
