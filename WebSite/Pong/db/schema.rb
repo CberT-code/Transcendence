@@ -76,6 +76,8 @@ ActiveRecord::Schema.define(version: 2021_02_23_094601) do
     t.string "uid"
     t.citext "nickname"
     t.string "image"
+    t.string "name"
+    t.string "picture_url"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id_guild"], name: "index_users_on_id_guild"
     t.index ["id_stats"], name: "index_users_on_id_stats", unique: true

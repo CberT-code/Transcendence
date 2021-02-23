@@ -7,9 +7,12 @@ Rails.application.routes.draw do
 	get "/account", to: "pages#account"
 	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
+	#get '/play', to: 'histories#matchmaking', as 'PONGv1'
 	get "/guilds", to: "pages#guilds"
 	get "/guilds_new", to: "pages#guilds_new"
 	get "/tournaments", to: "pages#tournaments"
+	get '/test', to: 'pages#test', as: 'PONGv1' #to be removed
+	#resources :histories
 
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"

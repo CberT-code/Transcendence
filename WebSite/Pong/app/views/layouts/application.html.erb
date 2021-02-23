@@ -22,7 +22,7 @@
 		<div id="right">
 			<button onClick="window.location='/#account'" >Account</button>
 			<button onClick="window.location='/#tchat'">Chat</button>
-			<button onClick="window.location='/#play'" >Play</button>
+			<button><%= link_to "Play", '/test/' %></button>
 			<button onClick="window.location='/#guilds'">Guilds</button>
 			<button onClick="window.location='/#tournaments'">Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
@@ -30,6 +30,7 @@
 		</div>
 		</header>
 	<% end %>
+	<p>ME : <%= @test_me %>|</p>
 	<div id="content">
 		<%= yield %><br>
 	</div>

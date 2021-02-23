@@ -10,10 +10,12 @@ import "core-js/stable"
 import "regenerator-runtime/runtime"
 require("channels")
 require("jquery")
+import "jquery"
 const _ = require("libs/underscore.js")
 require("backbone/custom.js")
 require("libs/backbone.js")
 require("backbone/index.js")
+require('jquery')
 
 Rails.start()
 Turbolinks.start()
