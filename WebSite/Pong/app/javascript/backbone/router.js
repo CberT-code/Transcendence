@@ -14,8 +14,14 @@ window.app.ApplicationRouter = Backbone.Router.extend({
   },
   account: function() {
     $.get("/account").then(function(data){
-	  $("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
+	    $("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
     });
+    // this.model = new AccountModel();
+    // this.model.set({content: $("#content").html()})
+    //   this.model.fetch({
+    //       headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
+    //       type: "POST",
+    //   });
     new ViewAccount();
   },
   tchat: function() {

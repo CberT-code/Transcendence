@@ -5,28 +5,36 @@ function notification(typef, textf) {
 }
 
 ViewAccount = Backbone.View.extend({
-    el: $(document),
-    initialize: function () {
-        console.log("TOKEN " + $('meta[name=csrf-token]').attr('content'));
-        this.model = new AccountModel();
-        this.model.fetch({
-            headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
-            type: "POST",
-            success: function(response) {
-				console.log(response);
-				for(var k in response.responseJSON) {
-					console.log(k, datas[k].target_1);
-				 }
-			}
-        });
+	HistoryListUser: function () {
+		console.log("Parse !");
+		this.model = new AccountModel();
+      	this.model.fetch({
+          headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
+          type: "POST",
+      	});
     },
+	el: $(document),
+	initialize: function() {
+		console.log("INIT !");
+		this.template = _.template($(document).html());
+		this.render();
+	},
+	render: function() {
+		console.log("RENDER");
+		this.$el.html(this.template());
+		this.HistoryListUser();
+		return this;
+		// console.log("END INIT !");
+		// this.HistoryListUser();
+	},
     events: {
+		load: 'HistoryListUser',
 		'click .delete': 'deleteAccount',
 		'click .fa-pen': 'SwitchInputOn',
 		'click .fa-times-switch': 'SwitchInputOff',
 		'click .fa-check': 'EditUsername',
-		'click .test': 'HistoryListUser'
-    },
+		'click .test': 'HistoryListUser',
+    }, 
     deleteAccount: function () {
         $.post(
             '/account/delete',
@@ -73,18 +81,5 @@ ViewAccount = Backbone.View.extend({
 			);
 		else
 			notification("error", "Please complete the form...");
-    },
-	HistoryListUser: function () {
-		$.post(
-			'/account/history',
-			{
-				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-			},
-			function (data) {
-				console.log(data);
-				alert(data);
-			},
-			'text'
-		);
     }
 });
