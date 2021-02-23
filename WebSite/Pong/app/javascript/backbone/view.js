@@ -72,19 +72,6 @@ ViewAccount = Backbone.View.extend({
 			);
 		else
 			notification("error", "Please complete the form...");
-    },
-	HistoryListUser: function () {
-		$.post(
-			'/account/history',
-			{
-				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-			},
-			function (data) {
-				console.log(data);
-				alert(data);
-			},
-			'text'
-		);
     }
 });
 

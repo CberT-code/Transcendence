@@ -10,7 +10,8 @@ import "core-js/stable"
 import "regenerator-runtime/runtime"
 require("channels")
 require("jquery")
-const _ = require("libs/underscore.js")
+require("libs/lodash.js")
+_ = require("libs/underscore.js")
 require("backbone/custom.js")
 require("libs/backbone.js")
 require("backbone/index.js")
