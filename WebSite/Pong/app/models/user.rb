@@ -12,9 +12,6 @@ class User < ApplicationRecord
 		user.uid = auth.uid
 		user.password = Devise.friendly_token[0,20]
 		user.name = user.email.split('@')[0]
-		user.opponent = 0
-		user.status = 'idle'
-		user.position = 0
 		user.picture_url = 'https://cdn.intra.42.fr/users/large_' + user.name + '.jpg'
 		user.save!
 		# user.nickname = auth.info.nickname

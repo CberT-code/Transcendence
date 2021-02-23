@@ -18,7 +18,7 @@ class PagesController < ApplicationController
 
 	def test
 		@me = current_user
-		@me.status = 'LFO' # Looking For Opponent
-		raise
+		# @me.status = 'LFO' # Looking For Opponent
+		# raise
 	end
 end
