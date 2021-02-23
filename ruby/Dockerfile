@@ -4,6 +4,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -;\
 RUN apt update && apt -y upgrade && apt install -y screen nodejs yarn && apt install -y build-essential;
 RUN gem install rails
 RUN gem install http
+RUN gem install json
 RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
 CMD bash
 ENTRYPOINT cd /Pong ; bundle install ; bundle update ; npm i underscore ;\

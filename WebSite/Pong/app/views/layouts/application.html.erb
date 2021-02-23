@@ -4,6 +4,8 @@
     <title>Pong</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
 	<link rel="stylesheet" href="/css/custom.css">
+	<link rel="stylesheet" href="/css/notifs.css">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -15,20 +17,23 @@
    <% if user_signed_in? %>
 	<header>
 		<div id="left">
-			<h1>PongGame</h1>
+			<h1 onClick="window.location='/#'">PongGame</h1>
 		</div>
 		<div id="right">
-			<button>Account</button>
-			<button>T'Chat</button>
+			<button onClick="window.location='/#account'" >Account</button>
+			<button onClick="window.location='/#tchat'">Chat</button>
 			<button><%= link_to "Play", '/test/' %></button>
-			<button>Guilds</button>
-			<button>Tournaments</button>
+			<button onClick="window.location='/#guilds'">Guilds</button>
+			<button onClick="window.location='/#tournaments'">Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 
 		</div>
 		</header>
 	<% end %>
 	<p>ME : <%= @test_me %>|</p>
-	<%= yield %><br>
+	<div id="content">
+		<%= yield %><br>
+	</div>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
   </body>
 </html>

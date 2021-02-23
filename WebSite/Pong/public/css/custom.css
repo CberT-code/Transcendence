@@ -1,94 +1,437 @@
 @font-face {
-    font-family: "Roboto-Thin";
-    src: url("/css/fonts/Roboto-Thin.ttf");
+	font-family: "Roboto-Thin";
+	src: url("/css/fonts/Roboto-Thin.ttf");
 }
 @font-face {
-    font-family: "Roboto-Medium";
-    src: url("/css/fonts/Roboto-Medium.ttf");
+	font-family: "Roboto-Medium";
+	src: url("/css/fonts/Roboto-Medium.ttf");
 }
 @font-face {
-    font-family: "Roboto-Bold";
-    src: url("/css/fonts/Roboto-Bold.ttf");
+	font-family: "Roboto-MediumItalic";
+	src: url("/css/fonts/Roboto-MediumItalic.ttf");
 }
 @font-face {
-    font-family: "Roboto-BoldItalic";
-    src: url("/css/fonts/Roboto-BoldItalic.ttf");
+	font-family: "Roboto-Bold";
+	src: url("/css/fonts/Roboto-Bold.ttf");
+}
+@font-face {
+	font-family: "Roboto-BoldItalic";
+	src: url("/css/fonts/Roboto-BoldItalic.ttf");
 }
 body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    margin: 0px;
-    font-family: 'Roboto-Thin';
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	margin: 0px;
+	font-family: 'Roboto-Thin';
 }
 html {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-    margin: 0px;
-    background-color: #f4f2f2;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	margin: 0px;
+	background-color: #f4f2f2;
 }
 header {
-    width: 100%;
-    height: 55px;
-    overflow: hidden;
-    background-color: white;
-    color: #231f20;
-    border-bottom: solid 2px #e1e1e1;
-    display: flex;
+	width: 100%;
+	height: 55px;
+	overflow: hidden;
+	background-color: white;
+	color: #231f20;
+	border-bottom: solid 2px #e1e1e1;
+	display: flex;
 }
 header #left {
-    height: 100%;
-    width: 25%;
-    display: flex;
-    overflow: hidden;
+	height: 100%;
+	width: 25%;
+	display: flex;
+	overflow: hidden;
 }
 header #left h1 {
-    margin: auto;
-    text-transform: uppercase;
-    font-family: "Roboto-BoldItalic";
-    font-size: 125%;
+	margin: auto;
+	text-transform: uppercase;
+	font-family: "Roboto-BoldItalic";
+	font-size: 125%;
 }
 header #right {
-    height: 100%;
-    width: 75%;
-    overflow: hidden;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: center;
+	height: 100%;
+	width: 75%;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+	position: relative;
 }
 header #right button {
-    margin-left: 15px;
-    margin-right: 15px;
-    text-transform: uppercase;
-    font-size: 115%;
-    font-family: "Roboto-Medium";
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    transition-duration: 0.5s;
+	margin-left: 15px;
+	margin-right: 15px;
+	text-transform: uppercase;
+	font-size: 115%;
+	font-family: "Roboto-Medium";
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	outline: none;
+	transition-duration: 0.5s;
 }
 header #right button:hover {
-    opacity: 0.7;
-    transition-duration: 0.5s;
+	opacity: 0.7;
+	transition-duration: 0.5s;
 }
 header #right #sign_out{
 	margin-left: auto;
-}
-header #right #sign_out a{
-	text-decoration: none;
-	color: #231f20;
+	right: 0px;
+	position: absolute;
 }
 button #sign_in{
 	margin-left: auto;
 }
-button #sign_int a{
+#not_signed{
+	text-align: center;
+}
+header a {
 	text-decoration: none;
 	color: #231f20;
 }
-#not_signed{
+#content-account {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#content-account #title {
+	width: 100%;
+	height: 110px;
+	overflow: hidden;
+	display: flex;
+	background-color: #ccc;
+}
+#content-account #title #center {
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+}
+#content-account #title #center #left {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#content-account #title #center #left img{
+	margin: auto;
+	height: 95px;
+	border-radius: 100%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-account #title #center #left img:hover{
+	transition-duration: 0.5s;
+	opacity: 0.7;
+}
+#content-account #title #center #right {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#content-account #title #center #right #name {
+	height: min-content;
+	width: max-content;
+	overflow: hidden;
+	margin: auto;
 	text-align: center;
+}
+#content-account #title #center #right #name h1 {
+	margin-bottom: 2px;
+	font-size: 140%;
+	font-family: "Roboto-MediumItalic";
+	letter-spacing: 2px;
+	border-bottom: solid 2px #231f20;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#content-account #title #center #right #name i {
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-account #title #center #right #name i:hover {
+	transition-duration: 0.5s;
+	opacity: 0.7;
+}
+#content-account #title #center #right #name #container {
+	display: flex;
+	height: min-content;
+	width: max-content;
+}
+#content-account #title #center #right #name input {
+	display: none;
+	border: none;
+	outline: none;
+	border-bottom: solid 2px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 8px;
+	padding-left: 8px;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+}
+#content-account #title #center #right #name input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+	color: #231f20;
+	opacity: 1;
+}
+#content-account #title #center #right #name #container i {
+	display: none;
+	margin-left: 5px;
+}
+#content-account #title #center #right h3 {
+	margin: 0px;
+	text-transform: uppercase;
+	font-size: 115%;
+	font-family: "Roboto-Thin";
+	letter-spacing: 2px;
+}
+#content-account #corp {
+	width: 100%;
+	height: calc(100% - 155px);
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+	padding-top: 50px;
+}
+#content-account #corp #element {
+	height: 400px;
+	width: 400px;
+	border-radius: 9px;
+	background-color: white;
+	border: solid 1px #e1e1e1;
+	margin-left: 25px;
+	margin-right: 25px;
+	margin-bottom: 25px;
+	padding-top: 10px;
+}
+#content-account #corp #element #name {
+	height: 15%;
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-account #corp #element #name h2{
+	font-size: 115%;
+	margin: auto;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px ;
+	padding-left: 15px;
+}
+#content-account #corp #element #container {
+	height: 85%;
+	width: 100%;
+	overflow: hidden;
+}
+#content-account #corp #element #container #line {
+	width: 100%;
+	height: min-content;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+#content-account #corp #element #container #line p {
+	font-family: "Roboto-Thin";
+	font-size: 115%;
+	color: #231f20;
+}
+#content-account #corp #element #container button {
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	background-color: #c51515;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-account #corp #element #container button:hover{
+	transition-duration: 0.5s;
+	opacity: 0.7;
+}
+.text-bold {
+	font-family: "Roboto-Medium";
+}
+.text-green {
+	color: #7BE12B ;
+}
+.text-red {
+	color: #c51515 ;
+}
+.text-gold {
+	color: #fab50c ;
+}
+.display-flex {
+	display: flex;
+}
+#content-guilds #action {
+	width: 100%;
+	padding-top: 25px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-guilds #action #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-guilds #action #left {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	padding-left: 45px;
+	padding-right: 45px;
+}
+#content-guilds #action #left button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-guilds #action #left #create_guild{
+	display: block;
+	background-color: #7BE12E;
+}
+#content-guilds #action #left .quit_guild{
+	display: block;
+	background-color: #c51515;
+}
+#content-guilds #action #right {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#content-guilds #action #right input{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	font-family: "Roboto-Thin";
+	font-size: 110%;
+}
+#content-guilds-new .element {
+	width: 100%;
+	padding-top: 40px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-guilds-new .element .center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-guilds-new .element .center #guildName{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 40px;
+	padding-left: 40px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-guilds-new .element .center label{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-guilds-new .element .center select{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+	outline: none;
+}
+#content-guilds-new .element .center button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	background-color: #7BE12E;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-guilds-new .element .center textarea{
+	color: #231f20;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 80%;
+	resize: none;
+}
+#content-guilds-new #response{
+	display: none;
 }

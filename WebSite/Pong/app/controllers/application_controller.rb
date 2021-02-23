@@ -1,4 +1,4 @@
 class ApplicationController < ActionController::Base
-	ENV['RACK_MINI_PROFILER'] = 'off'
-	
+	protect_from_forgery with: :exception
 end
+

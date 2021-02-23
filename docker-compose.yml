@@ -10,9 +10,11 @@ services:
     ports:
       - "1080:1080"
     volumes:
-      - /Users/hbaudet/Documents/Cursus42/Transcendance/WebSite/Pong/:/Pong
+      - ./WebSite/Pong/:/Pong
   postgresql:
     build: "./PostGresSql"
+    volumes:
+      - ./PostGresSql/srcs/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: always
