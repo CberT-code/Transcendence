@@ -151,7 +151,6 @@ header a {
 }
 #content-account #title #center #right #name h1 {
 	margin-bottom: 2px;
-	text-transform: uppercase;
 	font-size: 140%;
 	font-family: "Roboto-MediumItalic";
 	letter-spacing: 2px;
@@ -228,7 +227,6 @@ header a {
 	display: flex;
 }
 #content-account #corp #element #name h2{
-	text-transform: uppercase;
 	font-size: 115%;
 	margin: auto;
 	color: #231f20;
@@ -336,7 +334,7 @@ header a {
 	display: block;
 	background-color: #7BE12E;
 }
-#content-guilds #action #left #quit_guild{
+#content-guilds #action #left .quit_guild{
 	display: block;
 	background-color: #c51515;
 }
@@ -361,7 +359,7 @@ header a {
 	font-family: "Roboto-Thin";
 	font-size: 110%;
 }
-#content-guilds-new #form {
+#content-guilds-new .element {
 	width: 100%;
 	padding-top: 40px;
 	height: max-content;
@@ -369,7 +367,7 @@ header a {
 	display: flex;
 	margin: auto;
 }
-#content-guilds-new #form #center{
+#content-guilds-new .element .center{
 	margin: auto;
 	height: 100%;
 	overflow: hidden;
@@ -377,15 +375,63 @@ header a {
 	width: max-content;
 
 }
-#content-guilds-new #form #guildName{
+#content-guilds-new .element .center #guildName{
 	border: none;
 	outline: none;
 	border-bottom: solid 1px #231f20;
 	color: #231f20;
 	text-align: center;
 	background-color: transparent;
-	padding-right: 100px;
-	padding-left: 100px;
+	padding-right: 40px;
+	padding-left: 40px;
 	font-family: "Roboto-Thin";
 	font-size: 150%;
+}
+#content-guilds-new .element .center label{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-guilds-new .element .center select{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+	outline: none;
+}
+#content-guilds-new .element .center button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	background-color: #7BE12E;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-guilds-new .element .center textarea{
+	color: #231f20;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 80%;
+	resize: none;
+}
+#content-guilds-new #response{
+	display: none;
 }

@@ -11,8 +11,8 @@ class PostController < ApplicationController
 		render html: "1"
 	end
 	def ChangeUsername
-		if (!User.find_by_nickname(params[:username].downcase))
-			User.find_by_id(current_user.id).update({"nickname": params[:username].downcase})
+		if (!User.find_by_nickname(params[:username]))
+			User.find_by_id(current_user.id).update({"nickname": params[:username]})
 			render html: "1"
 		else
 			render html: "2"
@@ -30,28 +30,43 @@ class PostController < ApplicationController
 		render json: @tab
 	end
 	def ListGuilds
-		# @Guild = Guild.new
-		# @Guild.name = "anatal";
-		# @Guild.description = "c'est la guerre";
-		# @Guild.id_stats = 3;
-		# @Guild.save
-		# @Guild2 = Guild.new
-		# @Guild2.name = "banal";
-		# @Guild2.description = "c'est la guerre mouhahaa";
-		# @Guild2.id_stats = 4;
-		# @Guild2.save
-		# @Guild3 = Guild.new
-		# @Guild3.name = "frontal";
-		# @Guild3.description = "c'est mouhahaa";
-		# @Guild3.id_stats = 5;
-		# @Guild3.save
-		# @Guild4 = Guild.new
-		# @Guild4.name = "choral";
-		# @Guild4.description = "chanton ensemble";
-		# @Guild4.id_stats = 6;
-		# @Guild4.save
 		@tab = Guild.order(:name);
 		@tab = @tab.as_json(only: [:name, :description, :id_stats])
 		render json: @tab
+	end
+	def GuildsCreate
+		if (params[:guildname] == "")
+			render html: 2;
+		elsif (params[:guildstory] == "")
+			render html: 3;
+		elsif (params[:maxmember] != '5' && params[:maxmember] != '10' && params[:maxmember] != '15' )
+			render html: 4;
+		elsif (Guild.find_by_name(params[:guildname]))
+			render html: 5;
+		elsif (params[:guildstory].length > 250 )
+			render html: 6;
+		else
+			@guild = Guild.new;
+			@stat = Stat.new;
+			@stat.save;
+			@guild.update({name: params[:guildname], description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember]});
+			@guild.nbmember = 1;
+			@guild.save;
+			User.find_by_id(current_user.id).update({"id_guild": @guild.id});
+			render html: 1;
+		end
+	end
+	def GuildQuit
+		@user = User.find_by_id(current_user.id);
+		@guild = Guild.find_by_id(@user.id_guild);
+		if (@guild.nbmember == 1) then
+			@stat = Stat.find_by_id(@guild.id_stats);
+			@stat.destroy();
+			@guild.destroy();
+		else
+			@guild.update(nbmember: @guild.nbmember - 1);
+		end
+		@user.update({"id_guild": '-1'});
+		render html: 1;
 	end
 end

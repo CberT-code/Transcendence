@@ -1,5 +1,9 @@
 window.app.ApplicationRouter = Backbone.Router.extend({
-  routes: {
+	initialize: function() {
+		this.ViewAccount = new ViewAccount(document= $(document));
+		this.ViewGuilds = new ViewGuilds();
+	},
+	routes: {
     "": "home",
     "account": "account",
     "tchat": "tchat",
@@ -17,7 +21,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
     $.get("/account").then(function(data){
 	  $("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
     });
-    new ViewAccount();
+    this.ViewAccount;
   },
   tchat: function() {
     $.get("/tchat").then(function(data){
@@ -32,11 +36,12 @@ window.app.ApplicationRouter = Backbone.Router.extend({
   guilds: function() {
     $.get("/guilds").then(function(data){
 	  $("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
-    });
-  },
-  guilds_new: function() {
-    $.get("/guilds_new").then(function(data){
-	  $("#content").html("<div id='content-guilds-new'>" + ($(data).find("#content-guilds-new").html()) + "</div>");
+	});
+	this.ViewGuilds;
+},
+guilds_new: function() {
+	$.get("/guilds_new").then(function(data){
+		$("#content").html("<div id='content-guilds-new'>" + ($(data).find("#content-guilds-new").html()) + "</div>");
     });
   },
   tournaments: function() {

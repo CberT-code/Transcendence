@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_15_160141) do
+ActiveRecord::Schema.define(version: 2021_02_23_094601) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "citext"
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
@@ -23,12 +24,14 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
   end
 
   create_table "guilds", force: :cascade do |t|
-    t.string "name", default: "", null: false
+    t.citext "name", default: "", null: false
     t.string "description", default: "", null: false
     t.datetime "creation"
     t.integer "id_stats", default: -1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "maxmember"
+    t.integer "nbmember"
   end
 
   create_table "histories", force: :cascade do |t|
@@ -42,6 +45,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
     t.integer "id_type", default: -1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "statut"
   end
 
   create_table "stats", force: :cascade do |t|
@@ -70,7 +74,7 @@ ActiveRecord::Schema.define(version: 2021_02_15_160141) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "provider"
     t.string "uid"
-    t.string "nickname"
+    t.citext "nickname"
     t.string "image"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id_guild"], name: "index_users_on_id_guild"

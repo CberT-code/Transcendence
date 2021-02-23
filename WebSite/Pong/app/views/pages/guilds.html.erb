@@ -5,7 +5,7 @@
 				 <% if User.find(current_user.id).id_guild == -1 %>
 					<button id="create_guild" onClick="window.location='/#guilds_new'">Create your guild</button>
 				<% else %>
-					<button id="quit_guild">Quit your guild</button>
+					<button class="quit_guild">Quit your guild</button>
 				<% end %>
 			</div>
 			<div id="right">
