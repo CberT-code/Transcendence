@@ -11,6 +11,7 @@
 
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
   </head>
 
   <body>
@@ -22,7 +23,7 @@
 		<div id="right">
 			<button onClick="window.location='/#account'" >Account</button>
 			<button onClick="window.location='/#tchat'">Chat</button>
-			<button><%= link_to "Play", '/test/' %></button>
+			<button><%= link_to "Play", '/histories' %></button>
 			<button onClick="window.location='/#guilds'">Guilds</button>
 			<button onClick="window.location='/#tournaments'">Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
@@ -34,6 +35,5 @@
 	<div id="content">
 		<%= yield %><br>
 	</div>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
   </body>
 </html>

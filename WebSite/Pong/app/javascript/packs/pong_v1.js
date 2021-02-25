@@ -104,17 +104,17 @@ function display() {
 }
 
 function testing_ajax() {
-    $.post('/pong/loop', 
-            {   UD: flags[0], // User Up
-                UU: flags[1], // User Down
-                height: height - p_height//game height
-            },
-        function (data) {
-            $('#dev').html(JSON.stringify(data));
-            user_h = data['User'];
-            oppo_h = dat['Oppo'];
-        },
-        'json');
+    // $.post('/pong/loop', 
+    //         {   UD: flags[0], // User Up
+    //             UU: flags[1], // User Down
+    //             height: height - p_height//game height
+    //         },
+    //     function (data) {
+    //         $('#dev').html(JSON.stringify(data));
+    //         user_h = data['User'];
+    //         oppo_h = dat['Oppo'];
+    //     },
+    //     'json');
   }
 
 function move() {
@@ -188,4 +188,6 @@ function sleep(milliseconds) {
 // $("#left_PP").css("background-image", data['Left_pp']);
 // $("#right_PP").css("background-image", data['Right_pp']);
 
-setInterval(move, inter);
+move();
+
+// setInterval(move, inter);
