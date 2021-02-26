@@ -7,18 +7,6 @@ function notification(typef, textf) {
 
 ViewAccount = Backbone.View.extend({
 	el: $(document),
-	initialize: function () {
-		console.log(document);
-		$(document).find("#container-history").append("<p>1</p>");
-		// console.log($(document).html());
-		this.model = new AccountModel();
-		this.model.fetch({
-			headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
-			type: "POST",
-			success: function(response) {
-			}
-		});
-	},
 	events: {
 		'click .delete': 'deleteAccount',
 		'click .fa-pen': 'SwitchInputOn',
@@ -37,6 +25,7 @@ ViewAccount = Backbone.View.extend({
 			},
 			'text'
 		);
+		window.location.href = "#home";
 	},
 	SwitchInputOn: function () {
 		$(".fa-pen").css("display", "none");
@@ -78,11 +67,12 @@ ViewAccount = Backbone.View.extend({
 ViewGuilds = Backbone.View.extend({
     el: $(document),
     initialize: function () {
-
     },
     events: {
-		'click .create': 'CreateGuild',
-		'click .quit_guild': 'GuildQuit'
+		'click #create': 'CreateGuild',
+		'click #quit_guild': 'GuildQuit',
+		'click #join_guild': 'JoinGuild',
+		'click #declare_war': 'declare_war',
     },
 	CreateGuild: function () {
 		console.log("testouillet");
@@ -92,42 +82,66 @@ ViewGuilds = Backbone.View.extend({
 			notification("error", "Please complete the description...");
 		else {
 			$.post(
-				'/guilds/guildcreate',
+				'/guilds',
 				{
 					'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-					"guildname": $("#guildName").val(),
-					"guildstory": $("#guildStory").val(),
-					"maxmember": $("#maxMember").val(),
+					"guildname": $("#guild_name").val(),
+					"guildstory": $("#guild_description").val(),
+					"maxmember": $("#guild_maxmember").val(),
 				},
 				function (data) {
-					if (data == 1){
-						window.location.href = "#guilds";
-					}
-					else if (data == 2)
+					if (data == 'error-1')
 						notification("error", "Please complete the guild name...");
-					else if (data == 3)
+					else if (data == 'error-2')
 						notification("error", "Please complete the description...");
-					else if (data == 4)
+					else if (data == 'error-3')
 						notification("error", "Wrong, max number of member...");
-					else if (data == 5)
+					else if (data == 'error-4')
 						notification("error", "This name is already used...");
-					else if (data == 6)
+					else if (data == 'error-5')
 						notification("error", "Oversize description...");
+					else{
+						$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
+						window.location.href = "#show_guild/" + data ;
+					}
 			},
 			'text'
 			);
 		}
 	},
 	GuildQuit: function () {
+		$.ajax(
+			{
+				url: '/guilds/0',
+				type: 'DELETE',
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				success: function (data) {
+					$('#header-guild').attr('onClick',"window.location='/#guilds'")
+					window.location.href = "#guilds";
+				},
+			},
+		);
+	 },
+	 JoinGuild: function () {
 		$.post(
-			'/guilds/guildquit',
+			'/guilds/join',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#id").val(),
 			},
 			function (data) {
-				location.reload();
+				if (data == 'error_max')
+					notification("error", "Please complete the guild name...");
+				$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
+				window.location.href = "#guilds";
 			},
 			'text'
 		);
-	 }
+	 },
+	 declare_war: function () {
+		// if ($("#line-war").style.display == 'none')
+			$("#line-war").toggle();
+		// else
+			// $("#line-war").css("display", "none");
+	 },
 });

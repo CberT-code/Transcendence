@@ -23,7 +23,11 @@
 			<button onClick="window.location='/#account'" >Account</button>
 			<button onClick="window.location='/#tchat'">Chat</button>
 			<button onClick="window.location='/#play'" >Play</button>
-			<button onClick="window.location='/#guilds'">Guilds</button>
+			<% if User.find_by_id(current_user.id).id_guild == -1 %>
+				<button id="header-guild" onClick="window.location='/#guilds'">Guilds</button>
+			<% else %>
+				<button id="header-guild" onClick="window.location='/#show_guild/<%= User.find_by_id(current_user.id).id_guild %>'">Guilds</button>
+			<% end %>
 			<button onClick="window.location='/#tournaments'">Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 

@@ -5,11 +5,9 @@ class PagesController < ApplicationController
 		end
 	end
 	def home
-		@session = session["devise.marvin_data"]
+		@session = session["devise.marvin_data"]	
 	end
-	def guilds_new
-		if (User.find_by_id(current_user.id).id_guild != -1) then
-			render 'pages/not_authentificate', :status => :unauthorized
-		end
+	def account
+		@histories = History.where('(target_1 = ? or target_2 = ?) and target_type = ?', current_user.id, current_user.id, 1);
 	end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_23_094601) do
+ActiveRecord::Schema.define(version: 2021_02_26_172946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 2021_02_23_094601) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maxmember"
     t.integer "nbmember"
+    t.integer "id_admin"
   end
 
   create_table "histories", force: :cascade do |t|

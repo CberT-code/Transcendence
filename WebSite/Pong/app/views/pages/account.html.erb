@@ -43,10 +43,30 @@
 			</div>
 			<div class="display-flex" id="container">
 				<button class="delete" ><i class="fas fa-trash-alt"></i> Delete your account</button>
-				<button class="test" ><i class="fas fa-trash-alt"></i> test</button>
 			</div>
 		</div>
 		<div id="container-history">
+			<table>
+				<thead>
+					<tr>
+						<td>ID</td>
+						<td>Target 1</td>
+						<td>Target 2</td>
+						<td>Score</td>
+					</tr>
+				</thead>
+				<tbody>
+				<% @i = 0%>
+					<% @histories.each do |history| %>
+						<tr>
+							<td><%= @i += 1 %></td>
+							<td><%= User.find_by_id(history.target_1).nickname %></td>
+							<td><%= User.find_by_id(history.target_2).nickname %></td>
+							<td><%= history.score_target_1 %> / <%= history.score_target_2 %></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </div>

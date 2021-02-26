@@ -7,14 +7,16 @@ Rails.application.routes.draw do
 	get "/account", to: "pages#account"
 	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
-	get "/guilds", to: "pages#guilds"
-	get "/guilds_new", to: "pages#guilds_new"
+	# get "/guilds", to: "pages#guilds"
+	# get "/guilds_new", to: "pages#guilds_new"
 	get "/tournaments", to: "pages#tournaments"
 
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"
 	post "/account/history", to: "post#HistoryUser"
-	post "/guilds/listguilds", to: "post#ListGuilds"
+	# post "/guilds/listguilds", to: "post#ListGuilds"
 	post "/guilds/guildcreate", to: "post#GuildsCreate"
-	post "/guilds/guildquit", to: "post#GuildQuit"
+	post "/guilds/join", to: "guilds#join"
+
+	resources :guilds
 end

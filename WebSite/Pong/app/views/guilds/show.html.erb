@@ -1,0 +1,108 @@
+<div id="content-guild">
+	<div id="line">
+		<div id="element">
+			<div id="element-line">
+				<h1 id="guild_name"><%= @guild.name %></h1>
+			</div>
+			<div id="element-line">
+				<p><%= @guild.description %></p>
+			</div>
+		</div>
+		<div id="element">
+			<div id="element-line">
+				<h1><%= @guild.nbmember %> / <%= @guild.maxmember %></h1>
+			</div>
+			<div id="element-line">
+				<% if @my_guild == 1%>
+					<button class="red_button" id="quit_guild">Leave guild</button>
+				<% elsif @user_guild == -1 %>
+					<button class="green_button" id="join_guild">join this guild</button>
+				<% end %>
+			</div>
+			<div id="element-line">
+				<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
+				<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>" >
+			</div>
+			<% if @admin == 1 %>
+			<div id="element-line">
+				<button class="green_button" id="declare_war">Declare War</button>
+			</div>
+			<% end %>
+		</div>
+	</div>
+	<% if @admin == 1 %>
+	<div id="line-war">
+		<div id="big-element">
+			<div id="element-line">
+				<h1>List users</h1>
+			</div>
+			<div id="element-line">
+				<%= form_with(url: "/search", method: "get", remote: true) do %>
+					<%= text_field :name, maxlength: 20, size: 24, placeholder: "Search a guild for the war..." %>
+					<%= submit_tag("Search") %>
+				<% end %>
+			</div>
+		</div>
+	</div>
+	<% end %>
+	<div id="line">
+		<div id="big-element">
+			<div id="element-line">
+				<h1>List users</h1>
+			</div>
+			<div id="element-line">
+				<table>
+					<thead>
+						<tr>
+							<td>ID</td>
+							<td>User</td>
+						</tr>
+					</thead>
+					<tbody>
+						<% @i = 0%>
+						<% @list_users.each do |user| %>
+							<tr>
+								<td><%= @i += 1 %></td>
+								<td><%= user.nickname %></td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div id="line">
+		<div id="big-element">
+			<div id="element-line">
+				<h1>Last wars</h1>
+			</div>
+			<div id="element-line">
+				<table>
+					<thead>
+						<tr>
+							<td>ID</td>
+							<td>target 1 / target 2</td>
+						</tr>
+					</thead>
+					<tbody>
+						<% @i = 0%>
+						<% @wars_histories.each do |wars_history| %>
+							<% @color1 = wars_history.score_target_1 > wars_history.score_target_2 ? "green" : "red"; %>
+							<% @color2 = wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red"; %>
+							<tr>
+								<td><%= @i += 1 %></td>
+								<td>
+									<span><%= Guild.find_by_id(wars_history.target_1).name %></span>
+									<span id="<%= @color1 %>"><%= wars_history.score_target_1 %></span>
+									/
+									<span id="<%= @color2 %>"><%= wars_history.score_target_2 %></span>
+									<span><%= Guild.find_by_id(wars_history.target_2).name %></span>
+								</td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
