@@ -123,7 +123,7 @@ function move() {
     //     return ;
     // }
     // else
-        $('#game').css('visibility', 'visible');
+        // $('#game').css('visibility', 'visible');
     if (pause_status)
         return ;
     testing_ajax();

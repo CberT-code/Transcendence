@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_23_094601) do
+ActiveRecord::Schema.define(version: 2021_03_03_135003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -46,6 +46,10 @@ ActiveRecord::Schema.define(version: 2021_02_23_094601) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "statut"
+    t.bigint "host_id"
+    t.bigint "opponent_id"
+    t.index ["host_id"], name: "index_histories_on_host_id"
+    t.index ["opponent_id"], name: "index_histories_on_opponent_id"
   end
 
   create_table "stats", force: :cascade do |t|
@@ -74,10 +78,10 @@ ActiveRecord::Schema.define(version: 2021_02_23_094601) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "provider"
     t.string "uid"
-    t.citext "nickname"
-    t.string "image"
     t.string "name"
     t.string "picture_url"
+    t.citext "nickname"
+    t.string "image"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id_guild"], name: "index_users_on_id_guild"
     t.index ["id_stats"], name: "index_users_on_id_stats", unique: true
