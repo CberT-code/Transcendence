@@ -6,7 +6,10 @@ class HistoriesController < ApplicationController
 	end
 	
 	def index
-		@me = current_user
+		@me = current_user # to be removed ?
+
+		@history = @me.hosted_games.all
+		@history_bis = @me.foreign_games.all
 	end
 
 	def show
@@ -16,11 +19,14 @@ class HistoriesController < ApplicationController
 	def new
 		@me = current_user
 		game_found = "no"
-		History.all do |target|
+		History.all.each do |target|
 			if target.host != @me && target.statut == 0
 				@game = target
 				@game.opponent = @me
+				@game.statut = 1
+				@game.save!
 				game_found = "ok"
+				redirect_to @game
 				break
 			end
 		end

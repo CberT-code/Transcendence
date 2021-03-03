@@ -18,7 +18,7 @@ var ball_pos = [(width - ball_w) / 2, height / 2];
 var score = [0, 0];
 var direction_x = 1;
 var y_coef = Math.random() * 4 - 2;
-var inter = 33;
+var inter = 3000;
 var step = (width - p_width * 2) * inter / 5000;
 var ball_max_x = width - p_width - ball_w;
 var ball_min_x = p_width;
@@ -118,31 +118,36 @@ function testing_ajax() {
   }
 
 function move() {
+    if ($('#user_data').data('source').statut == "1") {
+        $('#game').css('visibility', 'visible');
+
+        inter = 33;
+    }
     // if ($('#user_data').data('source').status == 'LFO') {
     //     $('#score').html('Waiting for opponent ... ');
     //     return ;
     // }
     // else
         // $('#game').css('visibility', 'visible');
-    if (pause_status)
-        return ;
-    testing_ajax();
-    if (end) {
-        height_limit();
-        ball_move_x();
-        ball_move_y();
-        display();
-    }
-    else {
-        display();
-        sleep(1000);
-        y_coef = Math.random() * 4 - 2;
-        end = 1;
-        ball_pos[0] = (width - ball_w) / 2;
-        ball_pos[1] = height / 2;
-        display();
-    }
-    step *= 1.0005;
+    // if (pause_status)
+    //     return ;
+    // testing_ajax();
+    // if (end) {
+    //     height_limit();
+    //     ball_move_x();
+    //     ball_move_y();
+    //     display();
+    // }
+    // else {
+    //     display();
+    //     sleep(1000);
+    //     y_coef = Math.random() * 4 - 2;
+    //     end = 1;
+    //     ball_pos[0] = (width - ball_w) / 2;
+    //     ball_pos[1] = height / 2;
+    //     display();
+    // }
+    // step *= 1.0005;
 }
 
 function check_end(ball_y, p_y, dir) {
@@ -188,6 +193,6 @@ function sleep(milliseconds) {
 // $("#left_PP").css("background-image", data['Left_pp']);
 // $("#right_PP").css("background-image", data['Right_pp']);
 
-move();
+// move();
 
-// setInterval(move, inter);
+setInterval(move, inter);

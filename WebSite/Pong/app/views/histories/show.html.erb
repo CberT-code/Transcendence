@@ -1,5 +1,5 @@
 <%= stylesheet_link_tag "pong_v1.css" %>
-<%= content_tag :div, '', id: 'user_data', data: { source: @me } %>
+<%= content_tag :div, '', id: 'user_data', data: { source: @game } %>
 <div id="wrapper">
     <div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>")'></div>
     <div id="game">
@@ -15,16 +15,14 @@
     <center><h2 id="score">
     <% if @game.statut == 0 %>
         Waiting For Opponent
-    <% else %>
-        0 - 0
     <% end %>
     </h2></center>
 </div>
 <center><button id="pause">PAUSE</button></center>
 <div>
     <p>TESTING : </p>
-    <p><%= @game.id %></p>
-    <p><%= @game.statut %></p>
+    <p>ID : <%= @game.id %></p>
+    <p>STATUS : <%= @game.statut %></p>
     <p id='dev'></p>
 </div>
 
