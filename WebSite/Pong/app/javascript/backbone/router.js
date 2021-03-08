@@ -2,24 +2,26 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	initialize: function() {
 		this.ViewAccount = new ViewAccount();
 		this.ViewGuilds = new ViewGuilds();
+		this.ViewTournaments = new ViewTournaments();
 	},
 	routes: {
-	"": "home",
-	"account": "account",
+	"": "show_account",
+	"show_account/:id": "show_account",
 	"tchat": "tchat",
 	"play": "play",
 	"guilds": "guilds",
 	"new_guild": "new_guild",
 	"show_guild/:id": "show_guild",
 	"tournaments": "tournaments",
+	"new_tournament": "new_tournament",
 },
-home: function() {
-	$.get("/").then(function(data){
-	$("#content").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
-	});
-},
-account: function() {
-	$.get("/account").then(function(data){
+// home: function() {
+// 	$.get("/").then(function(data){
+// 	$("#content").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
+// 	});
+// },
+show_account: function(id) {
+	$.get("/users/" +  id, { id: id}).then(function(data){
 		$("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
 	});
 },
@@ -53,5 +55,10 @@ tournaments: function() {
 	$.get("/tournaments").then(function(data){
 		$("#content").html("<div id='content-tournaments'>" + ($(data).find("#content-tournaments").html()) + "</div>");
 	});
+	},
+new_tournament: function() {
+		$.get("/tournaments/new").then(function(data){
+			$("#content").html("<div id='content-new_tournament'>" + ($(data).find("#content-new_tournament").html()) + "</div>");
+		});
 	},
 });

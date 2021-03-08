@@ -10,12 +10,4 @@ class PostController < ApplicationController
 		destroy_user_session_path
 		render html: "1"
 	end
-	def ChangeUsername
-		if (!User.find_by_nickname(params[:username]))
-			User.find_by_id(current_user.id).update({"nickname": params[:username]})
-			render html: "1"
-		else
-			render html: "2"
-		end
-	end
 end

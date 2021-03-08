@@ -38,26 +38,43 @@ class GuildsController < ApplicationController
 	end
 	def show
 		@guild = Guild.find_by_id(params[:id]);
+		@user = User.find_by_id(current_user.id);
 		@user_guild = User.find_by_id(current_user.id).id_guild;
 		@my_guild = @guild.id == @user_guild ? 1 : 0;
 		@wars_histories = History.where('(target_1 = ? or target_2 = ?) and target_type = ?', @guild.id, @guild.id, 2);
 		@list_users = User.where('id_guild = ?', @guild.id);
 		@admin = current_user.id == @guild.id_admin ? 1 : 0;
 	end
+	def update
+		@user_admin = User.find_by_id(params[:id_admin]);
+		@guild = Guild.find_by_id(@user_admin.id_guild);
+		if (@current_user.id_guild == @guild.id)
+			@guild.update({'id_admin': @user_admin.id});
+		else
+			render html: "error-badguild";
+		end
+		render html: @guild.id;
+	end
 	def destroy
 		@user = User.find_by_id(current_user.id);
 		if (@user.id_guild != -1) then
 			@guild = Guild.find_by_id(@user.id_guild);
-			if (@guild.nbmember == 1) then
-				@stat = Stat.find_by_id(@guild.id_stats);
-				@stat.destroy();
-				@guild.destroy();
+			if (@guild.id_admin == @user.id && @guild.nbmember != 1)
+				render html: "error-admin";
 			else
-				@guild.update(nbmember: @guild.nbmember - 1);
+				if (@guild.nbmember == 1) then
+					@stat = Stat.find_by_id(@guild.id_stats);
+					@stat.destroy();
+					@guild.destroy();
+				else
+					@guild.update(nbmember: @guild.nbmember - 1);
+				end
+				@user.update({"id_guild": '-1'});
+				render html: 1;
 			end
-			@user.update({"id_guild": '-1'});
+		else
+			render html: 1;
 		end
-		render html: 1;
 	end
 	def join
 		@user = User.find_by_id(current_user.id);
@@ -69,6 +86,8 @@ class GuildsController < ApplicationController
 				render html: "error_max";
 			end
 			@user.update({"id_guild": @guild.id});
+		else
+			render html: "error_alreadyinguild";
 		end
 		render html: @guild.id;
 	end

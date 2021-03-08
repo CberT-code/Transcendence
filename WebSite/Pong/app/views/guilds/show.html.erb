@@ -1,31 +1,40 @@
 <div id="content-guild">
 	<div id="line">
 		<div id="element">
-			<div id="element-line">
+			<div class="element-line">
 				<h1 id="guild_name"><%= @guild.name %></h1>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<p><%= @guild.description %></p>
 			</div>
 		</div>
 		<div id="element">
-			<div id="element-line">
+			<div class="element-line">
 				<h1><%= @guild.nbmember %> / <%= @guild.maxmember %></h1>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<% if @my_guild == 1%>
 					<button class="red_button" id="quit_guild">Leave guild</button>
 				<% elsif @user_guild == -1 %>
 					<button class="green_button" id="join_guild">join this guild</button>
 				<% end %>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
 				<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>" >
 			</div>
 			<% if @admin == 1 %>
-			<div id="element-line">
+			<div class="element-line">
+				<button class="red_button" id="change_admin">Change Admin</button>
+			</div>
+			<div class="element-line">
 				<button class="green_button" id="declare_war">Declare War</button>
+			</div>
+			<div class="element-line">
+				<%= form_for @guild do |f| %>
+					<%= f.select :id_admin, options_for_select(@list_users.map{ |u| [u.nickname, u.id] }, :selected => @user.id) %>
+				<% end %>
+					<button class="grey_button" id="exec_change_admin">OK</button>
 			</div>
 			<% end %>
 		</div>
@@ -33,10 +42,10 @@
 	<% if @admin == 1 %>
 	<div id="line-war">
 		<div id="big-element">
-			<div id="element-line">
-				<h1>List users</h1>
+			<div class="element-line">
+				<h1>Declare WAR</h1>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<%= form_with(url: "/search", method: "get", remote: true) do %>
 					<%= text_field :name, maxlength: 20, size: 24, placeholder: "Search a guild for the war..." %>
 					<%= submit_tag("Search") %>
@@ -47,10 +56,10 @@
 	<% end %>
 	<div id="line">
 		<div id="big-element">
-			<div id="element-line">
+			<div class="element-line">
 				<h1>List users</h1>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<table>
 					<thead>
 						<tr>
@@ -73,10 +82,10 @@
 	</div>
 	<div id="line">
 		<div id="big-element">
-			<div id="element-line">
+			<div class="element-line">
 				<h1>Last wars</h1>
 			</div>
-			<div id="element-line">
+			<div class="element-line">
 				<table>
 					<thead>
 						<tr>

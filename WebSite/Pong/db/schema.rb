@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_02_26_172946) do
+ActiveRecord::Schema.define(version: 2021_03_02_100519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -53,6 +53,16 @@ ActiveRecord::Schema.define(version: 2021_02_26_172946) do
     t.integer "victory", default: 0, null: false
     t.integer "defeat", default: 0, null: false
     t.integer "tournament", default: 0, null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "tournaments", force: :cascade do |t|
+    t.integer "id_type", default: -1, null: false
+    t.string "name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.datetime "start"
+    t.datetime "end"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
