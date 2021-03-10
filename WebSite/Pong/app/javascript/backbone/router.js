@@ -1,47 +1,78 @@
 window.app.ApplicationRouter = Backbone.Router.extend({
-  routes: {
-    "": "home",
-    "account": "account",
-    "tchat": "tchat",
-    "play": "play",
-    "guilds": "guilds",
-    "tournaments": "tournaments",
-  },
-  home: function() {
-    $.get("/").then(function(data){
-      $("#content").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
-    });
-  },
-  account: function() {
-    $.get("/account").then(function(data){
-	    $("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
-    });
-    // this.model = new AccountModel();
-    // this.model.set({content: $("#content").html()})
-    //   this.model.fetch({
-    //       headers: {'X-CSRF-Token': $('meta[name=csrf-token]').attr('content')},
-    //       type: "POST",
-    //   });
-    new ViewAccount();
-  },
-  tchat: function() {
-    $.get("/tchat").then(function(data){
-      $("#content").html("<div id='content-tchat'>" + ($(data).find("#content-tchat").html()) + "</div>");
-    });
-  },
-  play: function() {
-    $.get("/play").then(function(data){
-      $("#content").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");
-    });
-  },
-  guilds: function() {
-    $.get("/guilds").then(function(data){
-	  $("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
-    });
-  },
-  tournaments: function() {
-    $.get("/tournaments").then(function(data){
-      $("#content").html("<div id='content-tournaments'>" + ($(data).find("#content-tournaments").html()) + "</div>");
-    });
-  },
+	initialize: function() {
+		this.ViewAccount = new ViewAccount();
+		this.ViewGuilds = new ViewGuilds();
+		this.ViewTournaments = new ViewTournaments();
+	},
+	routes: {
+	"": "home",
+	"accounts": "accounts",
+	"show_user/:id": "show_user",
+	"tchat": "tchat",
+	"play": "play",
+	"guilds": "guilds",
+	"new_guild": "new_guild",
+	"show_guild/:id": "show_guild",
+	"tournaments": "tournaments",
+	"new_tournament": "new_tournament",
+},
+home: function() {
+	$.get("/").then(function(data){
+	$("#content").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
+	});
+},
+
+// ACCOUNTS
+show_user: function(id) {
+	$.get("/users/" +  id, { id: id}).then(function(data){
+		$("#content").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
+	});
+},
+accounts: function() {
+	$.get("/users").then(function(data){
+		$("#content").html("<div id='content-users'>" + ($(data).find("#content-users").html()) + "</div>");
+	});
+},
+
+// TCHAT
+tchat: function() {
+	$.get("/tchat").then(function(data){
+		$("#content").html("<div id='content-tchat'>" + ($(data).find("#content-tchat").html()) + "</div>");
+	});
+},
+
+// GAME
+play: function() {
+	$.get("/play").then(function(data){
+		$("#content").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");
+	});
+},
+
+// GUILDS
+guilds: function() {
+	$.get("/guilds").then(function(data){
+		$("#content").html("<div id='content-guilds'>" + ($(data).find("#content-guilds").html()) + "</div>");
+	});
+},
+new_guild: function() {
+	$.get("/guilds/new").then(function(data){
+		$("#content").html("<div id='content-new_guild'>" + ($(data).find("#content-new_guild").html()) + "</div>");
+	});
+},
+show_guild: function(id) {
+	$.get("/guilds/" +  id, { id: id}).then(function(data){
+		$("#content").html("<div id='content-guild'>" + ($(data).find("#content-guild").html()) + "</div>");
+		$("#line-war").hide();
+	});
+},
+tournaments: function() {
+	$.get("/tournaments").then(function(data){
+		$("#content").html("<div id='content-tournaments'>" + ($(data).find("#content-tournaments").html()) + "</div>");
+	});
+	},
+new_tournament: function() {
+		$.get("/tournaments/new").then(function(data){
+			$("#content").html("<div id='content-new_tournament'>" + ($(data).find("#content-new_tournament").html()) + "</div>");
+		});
+	},
 });

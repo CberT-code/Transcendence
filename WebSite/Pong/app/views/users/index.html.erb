@@ -1,0 +1,39 @@
+<div id="content-users">
+	<div id="element">
+		<div id="center">
+			<div id="left">
+				 <% if User.find(current_user.id).id_guild == -1 %>
+					<button class="green_button" id="create_guild" onClick="window.location='/#new_guild'">Create your guild</button>
+				<% end %>
+			</div>
+			<div id="right">
+				<input type="text" maxlenght="30" placeholder="Search a guild...">
+			</div>
+		</div>
+	</div>
+	<div id="element">
+		<div id="center">
+			<table>
+				<thead>
+					<tr>
+						<td>ID</td>
+						<td>Name</td>
+						<td>Members</td>
+						<td></td>
+					</tr>
+				</thead>
+				<tbody>
+				<% @i = 0%>
+					<% @Users.each do |user| %>
+						<tr>
+							<td><%= @i += 1 %></td>
+							<td><%= user.nickname %></td>
+							<td><%= user.role %> / <%= user.guild_role %></td>
+							<td><button onClick="window.location='/#show_user/<%= user.id %>'">Voir</button></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

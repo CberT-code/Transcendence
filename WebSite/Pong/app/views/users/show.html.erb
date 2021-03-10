@@ -1,0 +1,80 @@
+<div id="content-account">
+	<div id="title">
+		<div id="center">
+			<div id="left">
+				<img src='<%= @user.image %>' alt="profil_icon">
+				<input id="id" type="hidden" maxlenght="10" value="<%= @user.id %>" >
+			</div>
+			<div id="right">
+				<div id="name">
+					<% if (@current == 1 || @super_admin == 1)%>
+						<h1 class="username"><%= @user.nickname %> <i class="fas fa-pen"></i></h1>
+						<div id="container">
+							<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
+								<i class="fas fa-check"></i>
+								<i class="fas fa-times fa-times-switch"></i>
+						</div>
+					<% else %>
+						<h1 class="username"><%= @user.nickname %></h1>
+					<% end %>
+					<h3><%= @user.id_guild == -1 ? "NO GUILD" : @guild.name %></h3>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="corp">
+		<div id="element">
+			<div id="name">
+				<h2>statistic</h2>
+			</div>
+			<div id="container">
+				<div id="line">
+					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= (@user_stat.victory + @user_stat.defeat) %></p>
+				</div>
+				<div id="line">
+					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> <%= @user_stat.victory %></p>
+				</div>
+				<div id="line">
+					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defaites :</span> <%= @user_stat.defeat %></p>
+				</div>
+				<div id="line">
+					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournois gagnés :</span> <%= @user_stat.tournament %></p>
+				</div>
+			</div>
+		</div>
+		<% if (@current == 1 || @super_admin == 1) %>
+			<div id="element">
+				<div id="name">
+					<h2>delete</h2>
+				</div>
+				<div class="display-flex" id="container">
+					<button class="delete" ><i class="fas fa-trash-alt"></i> Delete account</button>
+				</div>
+			</div>
+		<% end %>
+		<div id="container-history">
+			<table>
+				<thead>
+					<tr>
+						<td>ID</td>
+						<td>Target 1</td>
+						<td>Target 2</td>
+						<td>Score</td>
+						<% if (@super_admin == 1) %>
+					</tr>
+				</thead>
+				<tbody>
+				<% @i = 0%>
+					<% @histories.each do |history| %>
+						<tr>
+							<td><%= @i += 1 %></td>
+							<td onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></td>
+							<td onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></td>
+							<td><%= history.score_target_1 %> / <%= history.score_target_2 %></td>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

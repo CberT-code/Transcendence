@@ -151,7 +151,6 @@ header a {
 }
 #content-account #title #center #right #name h1 {
 	margin-bottom: 2px;
-	text-transform: uppercase;
 	font-size: 140%;
 	font-family: "Roboto-MediumItalic";
 	letter-spacing: 2px;
@@ -228,7 +227,6 @@ header a {
 	display: flex;
 }
 #content-account #corp #element #name h2{
-	text-transform: uppercase;
 	font-size: 115%;
 	margin: auto;
 	color: #231f20;
@@ -292,7 +290,7 @@ header a {
 .display-flex {
 	display: flex;
 }
-#content-guilds #action {
+#content-guilds #element {
 	width: 100%;
 	padding-top: 25px;
 	height: max-content;
@@ -300,7 +298,7 @@ header a {
 	display: flex;
 	margin: auto;
 }
-#content-guilds #action #center{
+#content-guilds #element #center{
 	margin: auto;
 	height: 100%;
 	overflow: hidden;
@@ -308,7 +306,7 @@ header a {
 	width: max-content;
 
 }
-#content-guilds #action #left {
+#content-guilds #element #left {
 	width: max-content;
 	height: 100%;
 	overflow: hidden;
@@ -316,7 +314,165 @@ header a {
 	padding-left: 45px;
 	padding-right: 45px;
 }
-#content-guilds #action #left button{
+#content-guilds #element button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+	background-color: #6e6b6b;
+}
+#content-guilds #element .green_button{
+	display: block;
+	background-color: #7BE12E;
+}
+#content-guilds #element #right {
+	width: max-content;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+#content-guilds #element #right input{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	font-family: "Roboto-Thin";
+	font-size: 110%;
+}
+#content-new_guild .element {
+	width: 100%;
+	padding-top: 40px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-new_guild .element .center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-new_guild .element .center #guild_name{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 40px;
+	padding-left: 40px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-new_guild .element .center label{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-new_guild .element .center #guild_maxmember{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+	outline: none;
+}
+#content-new_guild .element .center button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	background-color: #7BE12E;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-new_guild .element .center #guild_description{
+	color: #231f20;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 80%;
+	resize: none;
+}
+#content-new_guild #response{
+	display: none;
+}
+#content-guild #line{
+    width: 100%;
+    height: calc(100% - 155px);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    padding-top: 50px;
+}
+#content-guild #line-war{
+    width: 100%;
+    height: calc(100% - 155px);
+    overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    padding-top: 50px;
+}
+#content-guild #element {
+	height: 400px;
+    width: 400px;
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    padding-top: 10px;
+}
+#content-guild #element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+
+}
+#content-guild #element button{
+	width: 250px;
 	margin: auto;
 	border: none;
 	outline: none;
@@ -332,32 +488,92 @@ header a {
 	border-radius: 6px;
 	transition-duration: 0.5s;
 }
-#content-guilds #action #left #create_guild{
+#content-guild #element .green_button{
 	display: block;
 	background-color: #7BE12E;
 }
-#content-guilds #action #left #quit_guild{
+#content-guild #element .red_button{
 	display: block;
 	background-color: #c51515;
 }
-#content-guilds #action #right {
-	width: max-content;
-	height: 100%;
-	overflow: hidden;
-	display: flex;
-	margin: auto;
-	padding-left: 15px;
-	padding-right: 15px;
+#content-guild #element .grey_button{
+	display: block;
+	background-color: #6e6b6b;
 }
-#content-guilds #action #right input{
-	border: none;
+#content-guild #element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-guild #element .element-line form{
+    margin: auto;
+    border: none;
 	outline: none;
-	border-bottom: solid 1px #231f20;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    font-family: "Roboto-Medium";
+    font-size: 110%;
+    border-radius: 6px;
+    transition-duration: 0.5s;
+}
+#content-guild #element .element-line #guild_id_admin{
+	border: none;
 	color: #231f20;
 	text-align: center;
 	background-color: transparent;
-	padding-right: 2px;
-	padding-left: 2px;
+	padding-right: 20px;
+	padding-left: 20px;
 	font-family: "Roboto-Thin";
-	font-size: 110%;
+	font-size: 150%;
+	outline: none;
+}
+#content-guild #element .element-line #exec_change_admin{
+    width: 60px;
+    padding-left: initial;
+    padding-right: initial;
+    display: none;
+    margin: unset;
+}
+#content-guild #element .element-line #edit_guild_160{
+    display: none;
+}
+#content-guild #big-element {
+	height: 400px;
+    width: 850px;
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    padding-top: 10px;
+}
+#content-guild #big-element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+}
+#content-guild #big-element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-guild #big-element .element-line #green{
+	color: #7BE12E;
+}
+#content-guild #big-element .element-line #red{
+	color: #c51515;
 }
