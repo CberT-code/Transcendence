@@ -7,7 +7,7 @@
 			</div>
 			<div id="right">
 				<div id="name">
-					<% if @current == 1 %>
+					<% if (@current == 1 || @super_admin == 1)%>
 						<h1 class="username"><%= @user.nickname %> <i class="fas fa-pen"></i></h1>
 						<div id="container">
 							<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
@@ -42,13 +42,13 @@
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 %>
+		<% if (@current == 1 || @super_admin == 1) %>
 			<div id="element">
 				<div id="name">
 					<h2>delete</h2>
 				</div>
 				<div class="display-flex" id="container">
-					<button class="delete" ><i class="fas fa-trash-alt"></i> Delete your account</button>
+					<button class="delete" ><i class="fas fa-trash-alt"></i> Delete account</button>
 				</div>
 			</div>
 		<% end %>
@@ -60,6 +60,7 @@
 						<td>Target 1</td>
 						<td>Target 2</td>
 						<td>Score</td>
+						<% if (@super_admin == 1) %>
 					</tr>
 				</thead>
 				<tbody>
@@ -67,8 +68,8 @@
 					<% @histories.each do |history| %>
 						<tr>
 							<td><%= @i += 1 %></td>
-							<td onClick="window.location='/#show_account/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></td>
-							<td onClick="window.location='/#show_account/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></td>
+							<td onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></td>
+							<td onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></td>
 							<td><%= history.score_target_1 %> / <%= history.score_target_2 %></td>
 						</tr>
 					<% end %>

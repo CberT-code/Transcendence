@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_02_100519) do
+ActiveRecord::Schema.define(version: 2021_03_08_141136) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -87,6 +87,8 @@ ActiveRecord::Schema.define(version: 2021_03_02_100519) do
     t.string "uid"
     t.citext "nickname"
     t.string "image"
+    t.integer "role"
+    t.integer "guild_role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id_guild"], name: "index_users_on_id_guild"
     t.index ["id_stats"], name: "index_users_on_id_stats", unique: true

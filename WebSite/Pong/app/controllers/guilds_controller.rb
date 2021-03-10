@@ -6,7 +6,7 @@ class GuildsController < ApplicationController
 	end
 
 	def index
-		@guilds = Guild.all.order('name')
+		@guilds = Guild.all.order('name');
 	end
 	def new
 		if (User.find_by_id(current_user.id).id_guild != -1) then
@@ -38,6 +38,7 @@ class GuildsController < ApplicationController
 	end
 	def show
 		@guild = Guild.find_by_id(params[:id]);
+		@super_admin = current_user.role;
 		@user = User.find_by_id(current_user.id);
 		@user_guild = User.find_by_id(current_user.id).id_guild;
 		@my_guild = @guild.id == @user_guild ? 1 : 0;
@@ -46,23 +47,27 @@ class GuildsController < ApplicationController
 		@admin = current_user.id == @guild.id_admin ? 1 : 0;
 	end
 	def update
+		@super_admin = current_user.role;
 		@user_admin = User.find_by_id(params[:id_admin]);
 		@guild = Guild.find_by_id(@user_admin.id_guild);
-		if (@current_user.id_guild == @guild.id)
+		if (@current_user.id_guild == @guild.id || @super_admin == 1)
 			@guild.update({'id_admin': @user_admin.id});
 		else
 			render html: "error-badguild";
 		end
 		render html: @guild.id;
 	end
+	# destroy need a solution to kill user if it's the user or the super admin
 	def destroy
-		@user = User.find_by_id(current_user.id);
-		if (@user.id_guild != -1) then
-			@guild = Guild.find_by_id(@user.id_guild);
+		@user = User.find_by_id(params[:id]);
+		@guild = Guild.find_by_id(@user.id_guild);
+		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
+
+		if (@user.id_guild != -1 && @admin == 1) then
 			if (@guild.id_admin == @user.id && @guild.nbmember != 1)
 				render html: "error-admin";
 			else
-				if (@guild.nbmember == 1) then
+				if (@guild.nbmember == 1 ) then
 					@stat = Stat.find_by_id(@guild.id_stats);
 					@stat.destroy();
 					@guild.destroy();
@@ -72,6 +77,10 @@ class GuildsController < ApplicationController
 				@user.update({"id_guild": '-1'});
 				render html: 1;
 			end
+		elsif (@user.id == current_user.id)
+			@guild.update(nbmember: @guild.nbmember - 1);
+			@user.update({"id_guild": '-1'});
+			render html: 1;
 		else
 			render html: 1;
 		end
@@ -91,5 +100,4 @@ class GuildsController < ApplicationController
 		end
 		render html: @guild.id;
 	end
-
 end

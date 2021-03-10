@@ -14,7 +14,7 @@
 			</div>
 			<div class="element-line">
 				<% if @my_guild == 1%>
-					<button class="red_button" id="quit_guild">Leave guild</button>
+					<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
 				<% elsif @user_guild == -1 %>
 					<button class="green_button" id="join_guild">join this guild</button>
 				<% end %>
@@ -23,7 +23,7 @@
 				<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
 				<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>" >
 			</div>
-			<% if @admin == 1 %>
+			<% if (@admin == 1 || @super_admin) %>
 			<div class="element-line">
 				<button class="red_button" id="change_admin">Change Admin</button>
 			</div>
@@ -39,17 +39,19 @@
 			<% end %>
 		</div>
 	</div>
-	<% if @admin == 1 %>
+	<% if (@admin == 1 || @super_admin) %>
 	<div id="line-war">
 		<div id="big-element">
 			<div class="element-line">
 				<h1>Declare WAR</h1>
 			</div>
 			<div class="element-line">
+				<span>search</span>
 				<%= form_with(url: "/search", method: "get", remote: true) do %>
 					<%= text_field :name, maxlength: 20, size: 24, placeholder: "Search a guild for the war..." %>
-					<%= submit_tag("Search") %>
 				<% end %>
+				<span>or</span>
+					<button class="grey_button" id="find_random">RANDOM GUILD</button>
 			</div>
 		</div>
 	</div>
@@ -65,6 +67,9 @@
 						<tr>
 							<td>ID</td>
 							<td>User</td>
+							<% if (@admin == 1 || @super_admin) %>
+								<td>kickout</td>
+							<% end %>
 						</tr>
 					</thead>
 					<tbody>
@@ -73,6 +78,9 @@
 							<tr>
 								<td><%= @i += 1 %></td>
 								<td><%= user.nickname %></td>
+								<% if (@admin == 1 || @super_admin) %>
+									<td><button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= user.id %>">Kick Out</button></td>
+								<% end %>
 							</tr>
 						<% end %>
 					</tbody>

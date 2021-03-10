@@ -1,68 +1,35 @@
-<div id="content-account">
-	<div id="title">
+<div id="content-users">
+	<div id="element">
 		<div id="center">
 			<div id="left">
-				<img src='<%= current_user.image %>' alt="profil_icon">
+				 <% if User.find(current_user.id).id_guild == -1 %>
+					<button class="green_button" id="create_guild" onClick="window.location='/#new_guild'">Create your guild</button>
+				<% end %>
 			</div>
 			<div id="right">
-				<div id="name">
-					<h1 class="username"><%= current_user.nickname %> <i class="fas fa-pen"></i></i></h1>
-					<div id="container">
-						<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
-						<i class="fas fa-check"></i>
-						<i class="fas fa-times fa-times-switch"></i>
-					</div>
-					<h3><%= current_user.id_guild == -1 ? "NO GUILD" : Guild.find(current_user.id_guild).name %></h3>
-				</div>
+				<input type="text" maxlenght="30" placeholder="Search a guild...">
 			</div>
 		</div>
 	</div>
-	<div id="corp">
-		<div id="element">
-			<div id="name">
-				<h2>statistic</h2>
-			</div>
-			<div id="container">
-				<div id="line">
-					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= (Stat.find(current_user.id_stats).victory + Stat.find(current_user.id_stats).defeat) %></p>
-				</div>
-				<div id="line">
-					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> <%= Stat.find(current_user.id_stats).victory %></p>
-				</div>
-				<div id="line">
-					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defaites :</span> <%= Stat.find(current_user.id_stats).defeat %></p>
-				</div>
-				<div id="line">
-					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournois gagnés :</span> <%= Stat.find(current_user.id_stats).tournament %></p>
-				</div>
-			</div>
-		</div>
-		<div id="element">
-			<div id="name">
-				<h2>delete</h2>
-			</div>
-			<div class="display-flex" id="container">
-				<button class="delete" ><i class="fas fa-trash-alt"></i> Delete your account</button>
-			</div>
-		</div>
-		<div id="container-history">
+	<div id="element">
+		<div id="center">
 			<table>
 				<thead>
 					<tr>
 						<td>ID</td>
-						<td>Target 1</td>
-						<td>Target 2</td>
-						<td>Score</td>
+						<td>Name</td>
+						<td>Members</td>
+						<td></td>
 					</tr>
 				</thead>
 				<tbody>
 				<% @i = 0%>
-					<% @histories.each do |history| %>
+					<% @Users.each do |user| %>
 						<tr>
 							<td><%= @i += 1 %></td>
-							<td><%= User.find_by_id(history.target_1).nickname %></td>
-							<td><%= User.find_by_id(history.target_2).nickname %></td>
-							<td><%= history.score_target_1 %> / <%= history.score_target_2 %></td>
+							<td><%= user.nickname %></td>
+							<td><%= user.role %> / <%= user.guild_role %></td>
+							<td><button onClick="window.location='/#show_user/<%= user.id %>'">Voir</button></td>
 						</tr>
 					<% end %>
 				</tbody>

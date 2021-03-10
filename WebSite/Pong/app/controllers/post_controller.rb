@@ -4,10 +4,4 @@ class PostController < ApplicationController
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
-	def deleteAccount
-		Stat.find_by_id(current_user.id_stats).destroy
-		User.find_by_id(current_user.id).destroy
-		destroy_user_session_path
-		render html: "1"
-	end
 end
