@@ -53,28 +53,31 @@
 			</div>
 		<% end %>
 		<div id="container-history">
-			<table>
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>Target 1</td>
-						<td>Target 2</td>
-						<td>Score</td>
-						<% if (@super_admin == 1) %>
-					</tr>
-				</thead>
-				<tbody>
-				<% @i = 0%>
-					<% @histories.each do |history| %>
-						<tr>
-							<td><%= @i += 1 %></td>
-							<td onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></td>
-							<td onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></td>
-							<td><%= history.score_target_1 %> / <%= history.score_target_2 %></td>
-						</tr>
-					<% end %>
-				</tbody>
-			</table>
+			<div id="head">
+				<h2>historique games</h2>
+			</div>
+			<div id="history">
+				<% @histories.each do |history| %>
+					<div id="game">
+						<div id="icon">
+							<% if (history.score_target_1 > history.score_target_2) %>
+							<i class="fas fa-check"></i>
+							<% else %>
+							<i class="fas fa-times"></i>
+							<% end %>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></p>
+						</div>
+						<div id="score">
+							<p><%= history.score_target_1 %> / <%= history.score_target_2 %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
 		</div>
 	</div>
 </div>
