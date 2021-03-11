@@ -563,6 +563,24 @@ header a {
     margin-right: 15px;
     margin-bottom: 15px;
 }
+#content-guild #element #title {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	display: flex;
+}
+#content-guild #element #title h1 {
+	margin: auto;
+	font-size: 125%;
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+}
+#content-guild #element #corp {
+	width: 100%;
+	height: calc(100% - 15%);
+	overflow: hidden;
+}
 #content-guild #element #center{
 	margin: auto;
 	height: 100%;
