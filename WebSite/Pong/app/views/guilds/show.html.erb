@@ -1,57 +1,42 @@
 <div id="content-guild">
 	<div id="element">
-		<div class="element-line">
-			<h1 id="guild_name">
+		<div id="title">
+			<h2 id="guild_name">
 				<%= @guild.name %>
-			</h1>
+			</h2>
 		</div>
-		<div class="element-line">
-			<p>
-				<%= @guild.description %>
-			</p>
+		<div id="corp">
+			<p><%= @guild.description %></p>
 		</div>
 	</div>
 	<div id="big-element">
-		<div class="element-line">
-			<h1>List users</h1>
+		<div id="title">
+			<h2>List users</h2>
 		</div>
-		<div class="element-line">
-			<table>
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>User</td>
-						<% if (@admin==1 || @super_admin) %>
-							<td>kickout</td>
-							<% end %>
-					</tr>
-				</thead>
-				<tbody>
-					<% @i=0%>
-						<% @list_users.each do |user| %>
-							<tr>
-								<td>
-									<%= @i +=1 %>
-								</td>
-								<td>
-									<%= user.nickname %>
-								</td>
-								<% if (@admin==1 || @super_admin) %>
-									<td><button class="red_button" id="quit_guild"
-											onClick="document.getElementById('id').value = <%= user.id %>">Kick
-											Out</button></td>
-									<% end %>
-							</tr>
-							<% end %>
-				</tbody>
-			</table>
+		<div id="corp">
+			<% @i =0 %>
+			<% @list_users.each do |user| %>
+			<div id="user">
+				<div id="position">
+					<p><%= @i +=1 %></p>
+				</div>
+				<div id="username">
+					<p><%= user.nickname %></p>
+				</div>
+				<% if (@admin==1 || @super_admin) %>
+				<div id="action">
+					<i class="fas fa-times"></i>
+				</div>
+				<% end %>
+			</div>
+			<% end %>
 		</div>
 	</div>
 	<div class="break"></div>
 	<% if (@admin==1 || @super_admin) %>
 		<div id="big-element">
-			<div class="element-line">
-				<h1>Declare WAR</h1>
+			<div id="title">
+				<h2>Declare WAR</h2>
 			</div>
 			<div class="element-line">
 				<span>search</span>
@@ -64,10 +49,10 @@
 		</div>
 		<% end %>
 			<div id="big-element">
-				<div class="element-line">
-					<h1>Last wars</h1>
+				<div id="title">
+					<h2>Last wars</h2>
 				</div>
-				<div class="element-line">
+				<div id="corp">
 					<table>
 						<thead>
 							<tr>
@@ -111,7 +96,7 @@
 
 			<div id="element">
 				<div id="title">
-					<h1><%= @guild.nbmember %> / <%= @guild.maxmember %></h1>
+					<h2><%= @guild.nbmember %> / <%= @guild.maxmember %></h2>
 				</div>
 				<div id="corp">
 					<% if @my_guild==1%>
