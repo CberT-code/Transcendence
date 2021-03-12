@@ -7,6 +7,16 @@
     --profile_pic:  220px;
 }
 
+@font-face {
+    font-family: "joystick_monospace";
+    src: url('../fonts/joystick_monospace.ttf');
+}
+
+
+.score {
+    font-family: "joystick_monospace";
+}
+
 #wrapper {
     position: relative;
     width: calc(2 * var(--game_width));
@@ -39,12 +49,12 @@
     z-index: 3;
 }
 
-#user{
+#left_player{
     background-color: red;
     left: 0px;
 }
 
-#opponent{
+#right_player{
     background-color: green;
     left: calc(var(--game_width) - var(--player_width));
 }

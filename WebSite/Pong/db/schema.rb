@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_03_135003) do
+ActiveRecord::Schema.define(version: 2021_03_12_160236) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -48,6 +48,12 @@ ActiveRecord::Schema.define(version: 2021_03_03_135003) do
     t.integer "statut"
     t.bigint "host_id"
     t.bigint "opponent_id"
+    t.integer "host_height"
+    t.integer "oppo_height"
+    t.integer "ball_x"
+    t.integer "ball_y"
+    t.integer "ball_x_dir"
+    t.integer "ball_y_dir"
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
   end

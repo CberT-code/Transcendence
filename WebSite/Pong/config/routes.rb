@@ -14,6 +14,8 @@ Rails.application.routes.draw do
 	get "/tournaments", to: "pages#tournaments"
 
 	resources :histories
+	post "/histories/run/:id", to: "histories#run"
+	post "/histories/wait/:id", to: "histories#wait"
 
 	post "/account/delete", to: "post#deleteAccount"
 	post "/account/changeusername", to: "post#ChangeUsername"
