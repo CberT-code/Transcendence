@@ -5,8 +5,13 @@ class HistoriesController < ApplicationController
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
+
+	def stop_games
+		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
+	end
 	
 	def index
+		stop_games
 		clean_list
 		@me = current_user
 
@@ -59,24 +64,24 @@ class HistoriesController < ApplicationController
 		@game = History.find(params[:id])
 		test = 0
 		fps = 1.0
+		avg = 0.0
 		
 		render :json => {'status': @game.statut, 'right_pp': @game.opponent.image, 'host': @game.host_height, 'oppo': @game.oppo_height }
 		
-		while @game.statut != 3
+		while @game.statut != 3 && test < 500
+			@game = History.find(params[:id])
 			time = Time.now
-			ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: 1.0/fps})
+			ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: 1.0/fps, status: @game.statut, user: current_user.uid})
 			test += 1
-			while Time.now.to_f <= time.to_f + 0.033
+			while Time.now.to_f <= time.to_f + 0.03
 				sleep 1.0/300.0
 			end
 			fps = Time.now.to_f - time.to_f
+			avg += fps
 		end
-		# if params[:ready] == "ok" && current_user == @game.host
-		# 	@game.statut = 2
-		# end
-
-		# @game.save!
-
+		avg = test / avg
+		ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: avg, status: @game.statut, user: current_user.uid})
+		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
 	end
 
 	def move_ball(game)

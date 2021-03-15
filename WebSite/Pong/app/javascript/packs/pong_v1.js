@@ -10,31 +10,55 @@ var ball = [250, 200]; // Ball (x, y)
 var score = [0, 0];
 var inter = 500;
 
+
 import consumer from "../channels/consumer"
 
 var tmp = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
     connected() {
-        console.log("connected to PongChannel room " + id);
-        $.post('/histories/wait/' + id, "",
-            function (data) {
-                $('#dev').html(JSON.stringify(data));
-                status = data['status'];
-                right_pp = "url(" + data['right_pp'] + ")";
-            }
-        );
-        $(document).keydown(function(event) {
-            // tmp.send("user pressed " + event.key);
-            console.log("user pressed " + event.key);
-            }
-        );
+		if (status != 42) {
+			console.log("connected to PongChannel room " + id + " status : " + status);
+			$.post('/histories/wait/' + id, "",
+				function (data) {
+					$('#dev').html(JSON.stringify(data));
+					status = data['status'];
+					right_pp = "url(" + data['right_pp'] + ")";
+				}
+			);
+			$(document).keydown(function(event) {
+				if (event.key == 'a' && !keys[0]) {
+					tmp.send({player: "up"});
+					keys[0] = 1;
+					console.log("user pressed " + event.key);
+				}
+				else if (event.key == 'q' && !keys[1]) {
+					tmp.send({player: "down"});
+					keys[1] = 1;
+					console.log("user pressed " + event.key);
+				}
+			} );
+			$(document).keyup(function(event) {
+				if (event.key == 'a' && keys[0]) {
+					tmp.send({player: "up"});
+					keys[0] = 0;
+					console.log("user released " + event.key);
+				}
+				else if (event.key == 'q' && keys[1]) {
+					tmp.send({player: "down"});
+					keys[1] = 0;
+					console.log("user released " + event.key);
+				}
+			}
+			);
+		}
     },
 
   disconnected() {
-        console.log("Disconnected from PongChannel, room " + id);
+		status = 42;
+		console.log("Disconnected from PongChannel, room " + id + " status " + status);
     },
 
   received(data) {
-    $("#foo").html(data['body'] + " " + data['test_var'] + " fps : " + data['fps']);
+    $("#foo").html(data['body'] + " " + data['test_var'] + " fps : " + data['fps'] + " status : " + data['status'] + " user : " + data['user']);
     if (status == "0" ) {
         // waiting(data);
     }
@@ -47,28 +71,6 @@ var tmp = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
   }
 });
 
-// document.addEventListener('keypress', logKey);
-// document.addEventListener('keyup', releaseKey);
-
-function logKey(e) {
-    if (e.key == 'a' || e.key == 'ArrowUp') {
-        keys[0] = 1;
-    }
-    else if (e.key == 'q' || e.key == 'ArrowDown') {
-        keys[1] = 1;
-    }
-}
-
-function releaseKey(e) {
-    if (e.key == 'a' || e.key == 'ArrowUp') {
-        keys[0] = 0;
-    }
-    else if (e.key == 'q' || e.key == 'ArrowDown') {
-        keys[1] = 0;
-    }
-    else
-        console.log("Invalid input : " + e.key);
-}
 
 function display() {
     $("#left_player").css("top", left_h);
