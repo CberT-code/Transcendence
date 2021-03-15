@@ -1,39 +1,37 @@
 <div id="content-guilds">
 	<div id="element">
 		<div id="center">
+			<% if User.find(current_user.id).id_guild == -1 %>
 			<div id="left">
-				 <% if User.find(current_user.id).id_guild == -1 %>
-					<button class="green_button" id="create_guild" onClick="window.location='/#new_guild'">Create your guild</button>
-				<% end %>
+				<button class="green_button" id="create_guild" onClick="window.location='/#new_guild'">Create your guild</button>
 			</div>
 			<div id="right">
 				<input type="text" maxlenght="30" placeholder="Search a guild...">
 			</div>
+			<% else %>
+			<div id="full">
+				<input type="text" maxlenght="30" placeholder="Search a guild...">
+			</div>
+			<% end %>
 		</div>
 	</div>
-	<div id="element">
-		<div id="center">
-			<table>
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>Name</td>
-						<td>Members</td>
-						<td></td>
-					</tr>
-				</thead>
-				<tbody>
-				<% @i = 0%>
-					<% @guilds.each do |guild| %>
-						<tr>
-							<td><%= @i += 1 %></td>
-							<td><%= guild.name %></td>
-							<td><%= guild.nbmember %> / <%= guild.maxmember %></td>
-							<td><button onClick="window.location='/#show_guild/<%= guild.id %>'">Voir</button></td>
-						</tr>
-					<% end %>
-				</tbody>
-			</table>
+	<div id="guild-list">
+		<% @i = 0%>
+		<% @guilds.each do |guild| %>
+		<div id="guild">
+			<div id="position">
+				<p><%= @i += 1 %></p>
+			</div>
+			<div id="information">
+				<p><%= guild.name %></p>
+			</div>
+			<div id="information">
+				<p><%= guild.nbmember %> / <%= guild.maxmember %></p>
+			</div>
+			<div id="action" onClick="window.location='/#show_guild/<%= guild.id %>'">
+				<p>voir</p>
+			</div>
 		</div>
+		<% end %>
 	</div>
 </div>

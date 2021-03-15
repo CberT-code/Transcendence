@@ -13,7 +13,8 @@ ViewAccount = Backbone.View.extend({
 		'click .fa-times-switch': 'SwitchInputOff',
 		'click .fa-check': 'EditUsername',
 	},
-	deleteAccount: function () {
+	deleteAccount: function (ev) {
+		console.log(ev.currentTarget.data("id"));
 		$.ajax(
 			{
 				url: '/users/' + $("#id").val(),

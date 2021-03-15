@@ -53,43 +53,34 @@
 					<h2>Last wars</h2>
 				</div>
 				<div id="corp">
-					<table>
-						<thead>
-							<tr>
-								<td>ID</td>
-								<td>target 1 / target 2</td>
-							</tr>
-						</thead>
-						<tbody>
-							<% @i=0%>
-								<% @wars_histories.each do |wars_history| %>
-									<% if (Guild.find_by_id(wars_history.target_1) && Guild.find_by_id(wars_history.target_2)) %>
-										<% @color1=wars_history.score_target_1> wars_history.score_target_2 ? "green" : "red"; %>
-											<% @color2=wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red" ; %>
-												<tr>
-													<td>
-														<%= @i +=1 %>
-													</td>
-													<td>
-														<span>
-															<%= Guild.find_by_id(wars_history.target_1).name %>
-														</span>
-														<span id="<%= @color1 %>">
-															<%= wars_history.score_target_1 %>
-														</span>
-														/
-														<span id="<%= @color2 %>">
-															<%= wars_history.score_target_2 %>
-														</span>
-														<span>
-															<%= Guild.find_by_id(wars_history.target_2).name %>
-														</span>
-													</td>
-												</tr>
-												<% end %>
-													<% end %>
-						</tbody>
-					</table>
+					<div id="war">
+						<div id="position">
+							<p>0</p>
+						</div>
+						<div id="target">
+							<p>TestA : 18</p>
+						</div>
+						<div id="target">
+							<p>TestB : 29</p>
+						</div>
+					</div>
+					<% @i=0%>
+					<% @wars_histories.each do |wars_history| %>
+					<div id="war">
+					<% if (Guild.find_by_id(wars_history.target_1) && Guild.find_by_id(wars_history.target_2)) %>
+					<% @color1=wars_history.score_target_1> wars_history.score_target_2 ? "green" : "red"; %>
+					<% @color2=wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red" ; %>
+					<div id="position">
+						<p><%= @i +=1 %></p>
+					</div>
+					<div id="target">
+						<p><%= Guild.find_by_id(wars_history.target_1).name %> : <%= wars_history.score_target_1 %></p>
+					</div>
+					<div id="target">
+						<p><%= Guild.find_by_id(wars_history.target_2).name %> : <%= wars_history.score_target_2 %></p>
+					</div>
+					<% end %>
+					<% end %>
 				</div>
 			</div>
 

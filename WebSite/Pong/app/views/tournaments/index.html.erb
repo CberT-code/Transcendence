@@ -1,33 +1,35 @@
 <div id="content-tournaments">
-	<div id="element">
-		<div id="center">
-					<button class="green_button" id="create_guild" onClick="window.location='/#new_tournament'">Create your tournament</button>
+	<div id="center">
+		<div id="element">
+			<div id="center">
+						<button class="green_button" id="create_guild" onClick="window.location='/#new_tournament'">Create your tournament</button>
+			</div>
 		</div>
-	</div>
-	<div id="element">
-		<div id="center">
-			<table>
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>Name</td>
-						<td>description</td>
-						<td>end</td>
-						<td></td>
-					</tr>
-				</thead>
-				<tbody>
-				<% @i = 0%>
-					<% @tournaments.each do |tournament| %>
+		<div id="element">
+			<div id="center">
+				<table>
+					<thead>
 						<tr>
-							<td><%= @i += 1 %></td>
-							<td><%= tournament.name %></td>
-							<td><%= tournament.description %></td>
-							<td><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</td>
+							<td>ID</td>
+							<td>Name</td>
+							<td>description</td>
+							<td>end</td>
+							<td></td>
 						</tr>
-					<% end %>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+					<% @i = 0%>
+						<% @tournaments.each do |tournament| %>
+							<tr>
+								<td><%= @i += 1 %></td>
+								<td><%= tournament.name %></td>
+								<td><%= tournament.description %></td>
+								<td><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</td>
+							</tr>
+						<% end %>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>

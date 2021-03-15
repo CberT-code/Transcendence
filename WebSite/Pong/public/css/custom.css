@@ -18,6 +18,11 @@
 	font-family: "Roboto-BoldItalic";
 	src: url("/css/fonts/Roboto-BoldItalic.ttf");
 }
+main {
+	width: 100%;
+	height: calc(100% - 55px);
+	overflow: hidden;
+}
 body {
 	height: 100%;
 	width: 100%;
@@ -114,6 +119,16 @@ header a {
 	overflow: hidden;
 	display: flex;
 	width: max-content;
+}
+#content-account #title #center #full {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+#content-account #title #center #full input {
+	border: none;
+	width: 100%;
+	height: 100%;
 }
 #content-account #title #center #left {
 	width: max-content;
@@ -387,9 +402,15 @@ header a {
 	height: 100%;
 	padding-top: 25px;
 }
+#content-guilds {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
 #content-guilds #element {
 	width: 100%;
 	padding-top: 25px;
+	padding-bottom: 50px;
 	height: max-content;
 	overflow: hidden;
 	display: flex;
@@ -402,6 +423,26 @@ header a {
 	display: flex;
 	width: max-content;
 
+}
+#content-guilds #element #center #full {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+#content-guilds #element #center #full input {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 2px;
+	padding-left: 2px;
+	font-family: "Roboto-Thin";
+	font-size: 110%;
 }
 #content-guilds #element #left {
 	width: max-content;
@@ -744,6 +785,41 @@ header a {
 	margin: auto;
 	font-size: 115%;
 }
+#content-guild #big-element #corp #war {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-guild #big-element #corp #war #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-guild #big-element #corp #war #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-guild #big-element #corp #war #target {
+	width: 255px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-guild #big-element #corp #war #target p {
+	margin: auto;
+	font-size: 115%;
+}
 #content-guild #big-element #corp #user #action {
 	height: 100%;
 	width: 80px;
@@ -780,4 +856,71 @@ header a {
 }
 #content-guild #big-element .element-line #red{
 	color: #c51515;
+}
+#content-guilds #guild-list {
+	width: 100%;
+	height: 50%;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+}
+#content-guilds #guild-list #guild {
+	width: max-content;
+	height: 55px;
+	border-radius: 3px;
+	overflow: hidden;
+	background-color: #ccc;
+	display: flex;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 15px;
+}
+#content-guilds #guild-list #guild #position {
+	height: 100%;
+	width: 50px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-guilds #guild-list #guild #position p {
+	margin: auto;
+	color: white;
+	font-size: 125%;
+	margin: auto;
+}
+#content-guilds #guild-list #guild #information {
+	width: 260px;
+	height: 100%;
+	display: flex;
+}
+#content-guilds #guild-list #guild #information p {
+	margin: auto;
+	font-size: 115%
+}
+#content-guilds #guild-list #guild #action {
+	height: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	display: flex;
+	overflow: hidden;
+	cursor: pointer;
+	background-color: #231f20;
+	transition-duration: 0.5s;
+}
+#content-guilds #guild-list #guild #action:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-guilds #guild-list #guild #action p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-tournaments {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
 }
