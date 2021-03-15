@@ -15,6 +15,7 @@ class HistoriesController < ApplicationController
 	end
 
 	def show
+		@me = current_user
 		@game = History.find(params[:id])
 	end
 
@@ -56,13 +57,26 @@ class HistoriesController < ApplicationController
 
 	def wait
 		@game = History.find(params[:id])
-		if params[:ready] == "ok" && current_user == @game.host
-			@game.statut = 2
+		test = 0
+		fps = 1.0
+		
+		render :json => {'status': @game.statut, 'right_pp': @game.opponent.image, 'host': @game.host_height, 'oppo': @game.oppo_height }
+		
+		while @game.statut != 3
+			time = Time.now
+			ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: 1.0/fps})
+			test += 1
+			while Time.now.to_f <= time.to_f + 0.033
+				sleep 1.0/300.0
+			end
+			fps = Time.now.to_f - time.to_f
 		end
+		# if params[:ready] == "ok" && current_user == @game.host
+		# 	@game.statut = 2
+		# end
 
-		@game.save!
+		# @game.save!
 
-		render :json => {'status': @game.statut, 'right_pp': @game.opponent.image, 'host': @game.host_height, 'oppo': @game.oppo_height,  }
 	end
 
 	def move_ball(game)
@@ -135,8 +149,13 @@ class HistoriesController < ApplicationController
 		check_score(@game)
 		@game.save!
 
+		ActionCable.server.broadcast("pong_21", { body: "This is Sparta (21) "})
+
 		render :json => {'id': @game.id, 'status': @game.statut, 'left': @game.host_height, 'right': @game.oppo_height,
 			'ball_x': @game.ball_x, 'ball_y': @game.ball_y, 'host': @game.host_score, 'oppo': @game.opponent_score }
 
+	end
+
+	def tmp
 	end
 end
