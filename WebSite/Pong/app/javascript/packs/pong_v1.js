@@ -123,11 +123,11 @@ function releaseKey(e) {
 //   }
 
 function display() {
-    document.getElementById("score").innerHTML = score[0] + " - " + score[1];
     $("#left_player").css("top", left_h);
     $("#right_player").css("top", right_h);
     $("#ball").css("left", ball[0]);
     $("#ball").css("top", ball[1]);
+    $("#score").html(score[0] + " - " + score[1]);
 }
 
 function game_loop() {
@@ -143,11 +143,16 @@ function game_loop() {
                 id = data['id'];
                 ball[0] = data['ball_x'];
                 ball[1] = data['ball_y'];
+                score[0] = data['host'];
+                score[1] = data['oppo'];
             },
             'json');
     display();
-    if (status != 1)
+    if (status != "2") {
+        console.log("Exiting game loop" + status)
+        $('#game').css('visibility', 'hidden');
         clearInterval(run);
+    }
 }
 
 function waiting() {
@@ -176,19 +181,27 @@ function check_wait_status() {
             } );
     if (status == 1) {
         $("#right_PP").css("background-image", right_pp);
+        console.log(rght_pp);
     }
 }
 
 function master() {
     // console.log("Status : " + status);
     id = $('#game_data').data('id');
-    if (status == "1") {
+    if (status == "2") {
         $('#game').css('visibility', 'visible');
 
-        inter = 33;
+        inter = 25;
         clearInterval(run);
         run = setInterval(game_loop, inter);
         return ;
+    }
+    else if (status == "1") {
+        $("#right_PP").css("background-image", right_pp);
+        $.post('/histories/wait/' + id, { ready: "ok" },
+            function(data) {
+                status = data['status'];
+            });
     }
     else if (status == "0") {
         if (waiting_id == 0) {
@@ -198,6 +211,7 @@ function master() {
         waiting();
     }
     else {
+        console.log(status + " ending run");
         clearInterval(run);
     }
     // if ($('#left_data').data('source').status == 'LFO') {
