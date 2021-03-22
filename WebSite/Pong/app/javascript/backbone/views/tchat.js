@@ -4,9 +4,15 @@ ViewGuilds = Backbone.View.extend(
         initialize: function () {
         },
         events: {
-            'click .createChannel': "CreateChannel",
+            'click .CreateaChannel': "CreateaChannel",
+            'click .cancelCreateChannel': "cancelCreateChannel",
         },
-        CreateChannel: function () {
-            console.log("CREATE CHANNEL");
+        CreateaChannel: function () {
+            $(".default").css("display", "none");
+            $(".createChannel").css("display", "flex");
+        },
+        cancelCreateChannel: function () {
+            $(".default").css("display", "flex");
+            $(".createChannel").css("display", "none");
         },
     });

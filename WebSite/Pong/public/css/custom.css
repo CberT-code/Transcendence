@@ -1067,7 +1067,7 @@ button:hover {
 	width: max-content;
 	padding-left: 15px;
 	padding-right: 15px;
-	background-color: #6e6b6b;
+	background-color: #231f20;
 	cursor: pointer;
 	color: white;
 	font-size: 110%;
@@ -1125,6 +1125,65 @@ button:hover {
 	color: #231f20;
 	font-family: "Roboto-Medium";
 	font-size: 115%;
+}
+#content-tchat #center #element form {
+	width: 100%;
+	height: calc(100% - 45px);
+	overflow: hidden;
+	display: grid;
+	grid-gap: 20px;
+	padding-top: 30px;
+}
+#content-tchat #center #element form #align {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	height: min-content;
+	width: 100%;
+}
+#content-tchat #center #element form #align button {
+	margin-left: 15px;
+	margin-right: 15px;
+	border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	cursor: pointer;
+	background-color: #231f20;
+}
+#content-tchat #center #element form input {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: solid 2px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+}
+#content-tchat #center #element form select {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: solid 2px #231f20;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+	text-align: center;
 }
 #content-tchat .createChannel {
 	display: none;
