@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     	delete "sign_out", :to => "devise/sessions#destroy", :as => :destroy_user_session_path
 	end
 	# get "/account", to: "pages#account"
-	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
 
 	# post "/account/delete", to: "post#deleteAccount"
@@ -18,4 +17,5 @@ Rails.application.routes.draw do
 	resources :guilds
 	resources :tournaments
 	resources :users
+	resources :tchat
 end
