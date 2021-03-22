@@ -1017,7 +1017,6 @@ button:hover {
 	width: max-content;
 	max-width: 100%;
 	overflow: hidden;
-	display: flex;
 	margin: auto;
 }
 #content-tchat #center #element {
@@ -1126,4 +1125,10 @@ button:hover {
 	color: #231f20;
 	font-family: "Roboto-Medium";
 	font-size: 115%;
+}
+#content-tchat .createChannel {
+	display: none;
+}
+#content-tchat .default {
+	display: flex;
 }
