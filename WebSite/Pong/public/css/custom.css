@@ -39,6 +39,10 @@ html {
 	margin: 0px;
 	background-color: #f4f2f2;
 }
+button:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
 header {
 	width: 100%;
 	height: 55px;
@@ -860,8 +864,8 @@ header a {
 #content-guilds #guild-list {
 	width: 100%;
 	height: 50%;
-	overflow-x: hidden;
-	overflow-y: auto;
+	overflow-x: auto;
+	overflow-y: hidden;
 	scrollbar-width: none;
 }
 #content-guilds #guild-list #guild {
@@ -923,4 +927,76 @@ header a {
 	height: 100%;
 	overflow: hidden;
 	display: flex;
+}
+#content-tournaments #center {
+	margin: auto;
+	width: max-content;
+	height: min-content;
+	overflow: hidden;
+}
+#content-tournaments #center #create {
+	width: 100%;
+	overflow: hidden;
+	height: min-content;
+	display: flex;
+} 
+#content-tournaments #center #create button {
+	height: 55px;
+	border: none;
+	border-radius: 9px;
+	text-transform: uppercase;
+	margin: auto;
+	width: max-content;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: #6e6b6b;
+	cursor: pointer;
+	color: white;
+	font-size: 110%;
+	font-family: "Roboto-Medium";
+	transition-duration: 0.5s;
+}
+#content-tournaments #list {
+	width: 700px;
+	height: min-content;
+	max-height: 80%;
+	overflow: hidden;
+}
+#content-tournaments #list #tournament {
+	height: 55px;
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	border-radius: 9px;
+	display: flex;
+	background-color: #ccc;
+	margin-top: 20px;
+	overflow: hidden;
+	font-family: "Roboto-Medium";
+}
+#content-tournaments #list #tournament #position {
+	height: 100%;
+	width: 15%;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-tournaments #list #tournament #position p {
+	margin: auto;
+	color: white;
+	font-size: 120%;
+}
+#content-tournaments #list #tournament #info {
+	height: 100%;
+	width: 33%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournaments #list #tournament #info p {
+	margin: auto;
+	font-size: 115%;
+}
+button:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
 }
