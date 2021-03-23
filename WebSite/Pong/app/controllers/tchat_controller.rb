@@ -7,7 +7,7 @@ class TchatController < ApplicationController
 		end
 	end
 	def index
-		@Channel = Channel.all;
+		@channel = Channel.all.order("id");
 	end
 	def channelCreate
 		if (!params[:title] || !params[:type])
