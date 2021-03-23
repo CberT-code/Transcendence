@@ -1,28 +1,172 @@
 class HistoriesController < ApplicationController
 	skip_before_action :verify_authenticity_token
+	
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
-
-	def stop_games
-		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
-	end
-	
+		
 	def index
-		stop_games
 		clean_list
 		@me = current_user
-
+		
 		@history = @me.hosted_games.all #TO DO : merge and sort both
 		@history_bis = @me.foreign_games.all
 	end
-
+	
 	def show
 		@me = current_user
 		@game = History.find(params[:id])
 	end
+
+	def new
+		redis = Redis.new(	url:  ENV['REDIS_URL'],
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
+		@me = current_user
+		game_found = "no"
+		History.all.each do |target|
+			if target.host != @me && target.statut == 0
+				@game = target
+				@game.opponent = @me
+				redis.set("game_#{@game.id}", "ready")
+				@game.save!
+				game_found = "ok"
+				redirect_to @game
+				break
+			end
+		end
+		if game_found != "ok"
+			@game = @me.hosted_games.new(statut: -1, opponent: @me, host_height: 150, oppo_height: 150,
+			ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
+			@game.save!
+			redis.set("game_#{@game.id}", "Looking For Opponent")
+			redirect_to @game
+		end
+	end
+	
+	def wait
+		redis = Redis.new(	url:  ENV['REDIS_URL'],
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
+		frame = 0
+		@game = History.find(params[:id])
+		@game.save!
+		status = redis.get("game_#{@game.id}")
+		while status == "Looking For Opponent"
+			sleep 0.25
+			ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose?", frame: frame, status: status})
+			frame += 1
+			status = redis.get("game_#{params[:id]}")
+		end
+		@game = History.find(params[:id])
+		ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", frame: frame, status: status, right_pp: @game.opponent.image})
+	end
+	
+	def run
+		@game = History.find(params[:id])
+		if current_user == @game.host
+			redis = Redis.new(	url:  ENV['REDIS_URL'],
+								port: ENV['REDIS_PORT'],
+								db:   ENV['REDIS_DB'])
+			status = "running"
+			redis.set("game_#{@game.id}", status)
+			frame = 0
+			move = Array["static", "static"]
+			player = Array[75, 75]
+			score = Array[0, 0, 30]
+			ball = Array[245.0, 195.0, 4.0, 7.0]
+			
+			while score[0] < 4 && score[1] < 4 && status == "running"
+				move[1] = redis.get("player_#{@game.opponent.id}")
+				move[0] = redis.get("player_#{@game.host.id}")
+				time = Time.now
+				if score[2] != 0
+					score[2] -= 1
+				else
+					calc(move, player, ball, score)
+				end
+				ActionCable.server.broadcast("pong_#{@game.id}", {	body: "Left : #{move[0]} -- Right : #{move[0]}",
+																	frame: frame, status: status,
+																	left_y: player[0], right_y: player[1],
+																	ball_x: ball[0], ball_y: ball[1],
+																	score: "#{score[0]} - #{score[1]}"})
+				while Time.now.to_f <= time.to_f +	0.0417
+					sleep 1.0/500.0
+				end
+				status = redis.get("game_#{@game.id}")
+				frame += 1
+			end
+			status = "ended"
+			redis.set("game_#{@game.id}", status)
+			ActionCable.server.broadcast("pong_#{@game.id}", {	body: "Left : #{move[0]} -- Right : #{move[1]}",
+																frame: frame, status: status,
+																left_y: player[0], right_y: player[1],
+																ball_x: ball[0].to_i, ball_y: ball[1].to_i,
+																score: "#{score[0]} - #{score[1]}"})
+			redis.del("game_#{@game.id}")
+		end
+	end
+	
+	def calc(move, player, ball, score)
+		for i in 0..1
+			if move[i] == "up"
+				player[i] += 10
+			elsif move[i] == "down"
+				player[i] -= 10
+			end
+			if player[i] <= 0
+				player[i] = 0
+			elsif player[i] >= 300
+				player[i] = 300
+			end
+		end
+		move_ball(ball, score, player)
+	end
+
+	def move_ball(ball, score, player)
+		ball[0] += Math.cos(ball[2]) * ball[3]
+		ball[1] += Math.sin(ball[2]) * ball[3]
+		pi = Math::PI
+		tpi = 2 * pi
+		if ball[0] <= 20.0
+			if ball[1].to_i - player[0] <= 100 && ball[1].to_i - player[0] >= 0
+				ball[2] = (pi - ball[2] + tpi) % tpi
+				ball[3] *= 1.01
+				#add effect according to speed
+			else
+				score[1] += 1
+				reset(player, ball)
+				return
+			end
+		elsif ball[0] >= 470.0
+			if ball[1].to_i - player[1] <= 100 && ball[1].to_i - player[1] >= 0
+				ball[2] = (pi - ball[2] + tpi) % tpi
+				ball[3] *= 1.01
+				#add effect according to speed
+			else
+				score[0] += 1
+				reset(player, ball)
+				return
+			end
+		end
+		if ball[1] <= 0.0
+			ball[2] = (ball[2] * -1 + tpi) % tpi
+		elsif ball[1] >= 390.0
+			ball[2] = (tpi - ball[2]) % tpi
+		end
+	end
+
+	def reset(player, ball)
+		ball[0] = 245.0
+		ball[1] = 195.0
+		ball[3] = 7.0
+		player[0] = 75
+		player[1] = 75
+		score[2] = 30
+	end
+		
 
 	def clean_list
 		History.all.each do |game|
@@ -31,136 +175,10 @@ class HistoriesController < ApplicationController
 			end
 		end
 	end
-
-	def new
-		@me = current_user
-		game_found = "no"
-		History.all.each do |target|
-			if target.host != @me && target.statut == 0
-				@game = target
-				@game.opponent = @me
-				@game.statut = 1
-				@game.save!
-				game_found = "ok"
-				redirect_to @game
-				break
-			end
-		end
-		if game_found != "ok"
-			@game = @me.hosted_games.new(statut: 0, opponent: @me, host_height: 150, oppo_height: 150,
-				ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
-		@game.save!
-		redirect_to @game
-		end
-	end
-
+	
 	def create
 	end
-
+	
 	def delete
-	end
-
-	def wait
-		@game = History.find(params[:id])
-		test = 0
-		fps = 1.0
-		avg = 0.0
-		
-		render :json => {'status': @game.statut, 'right_pp': @game.opponent.image, 'host': @game.host_height, 'oppo': @game.oppo_height }
-		
-		while @game.statut != 3 && test < 500
-			@game = History.find(params[:id])
-			time = Time.now
-			ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: 1.0/fps, status: @game.statut, user: current_user.uid})
-			test += 1
-			while Time.now.to_f <= time.to_f + 0.03
-				sleep 1.0/300.0
-			end
-			fps = Time.now.to_f - time.to_f
-			avg += fps
-		end
-		avg = test / avg
-		ActionCable.server.broadcast("pong_#{@game.id}", { body: "This is Sparta (#{@game.id})", test_var: test, fps: avg, status: @game.statut, user: current_user.uid})
-		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
-	end
-
-	def move_ball(game)
-		@game.ball_x += 5 * @game.ball_x_dir 
-		@game.ball_y += 5 * @game.ball_y_dir
-		if @game.ball_x <= 20 || @game.ball_x >= 470
-			@game.ball_x_dir *= -1
-		end
-		if @game.ball_y <= 0 || @game.ball_y >= 390
-			@game.ball_y_dir *= -1
-		end
-	end
-
-	def move_host(game, up, down)
-		test = rand(30)
-		if test  == 0
-			game.host_score += 1
-		elsif test == 1
-			game.opponent_score += 1
-		end
-		if (up != 0)
-			game.host_height -= 10
-			if game.host_height < 0
-				game.host_height = 0
-			end
-		end
-		if (down != 0)
-			game.host_height += 10
-			if game.host_height > 300
-				game.host_height = 300
-			end
-		end
-	end
-
-	def move_opponent(game, up, down)
-		if (up != 0)
-			game.opponent_height -= 10
-			if game.opponent_height < 0
-				game.opponent_height = 0
-			end
-		end
-		if (down != 0)
-			game.opponent_height += 10
-			if game.opponent_height > 300
-				game.opponent_height = 300
-			end
-		end
-	end
-
-	def check_bounce(game)
-	end
-
-	def check_score(game)
-		if game.opponent_score >= 5 || game.host_score >= 5
-			game.statut = 3
-		end
-	end
-
-	def run
-		@game = History.find(params[:id])
-		@me = current_user
-
-		if @me == @game.host
-			move_ball(@game)
-			move_host(@game, params['up'].to_i, params['down'].to_i)
-		elsif @me == @game.opponent
-			move_opponent(@game, params['up'].to_i, params['down'].to_i)
-		end
-		check_bounce(@game)
-		check_score(@game)
-		@game.save!
-
-		ActionCable.server.broadcast("pong_21", { body: "This is Sparta (21) "})
-
-		render :json => {'id': @game.id, 'status': @game.statut, 'left': @game.host_height, 'right': @game.oppo_height,
-			'ball_x': @game.ball_x, 'ball_y': @game.ball_y, 'host': @game.host_score, 'oppo': @game.opponent_score }
-
-	end
-
-	def tmp
 	end
 end

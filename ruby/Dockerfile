@@ -10,5 +10,8 @@ RUN mkdir /tmp/Pong
 CMD bash
 ENTRYPOINT cd /Pong ; bundle install ; bundle update ; \
 			yarn add jquery ; yarn add underscore; yarn install --check-files;\
-			#rake db:migrate;\
-			echo "READY TO BOOT SERVER"; sleep infinity #rails s -b 0.0.0.0 -p 1080;
+			rails db:migrate;\
+			#rails db:seed; \
+			echo "READY TO BOOT SERVER"; \
+			sleep infinity; \
+			#rails s -b 0.0.0.0 -p 1080

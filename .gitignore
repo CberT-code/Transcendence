@@ -1,5 +1,5 @@
 
-docker-compose.yml
+# docker-compose.yml
 
 # See https://help.github.com/articles/ignoring-files for more about ignoring files.
 #
@@ -44,3 +44,7 @@ Website/Pong/.yarn-integrity
 
 # Ignore application configuration
 Website/Pong/config/application.yml
+
+
+# Ignore db (use seeds!!)
+PostGresSql/srcs/data
