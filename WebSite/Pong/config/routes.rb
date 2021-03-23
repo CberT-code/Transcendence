@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
 	# post "/guilds/guildcreate", to: "post#GuildsCreate"
 	post "/guilds/join", to: "guilds#join"
+	post "/tchat/channel/create", to: "tchat#channelCreate"
 
 	resources :guilds
 	resources :tournaments
