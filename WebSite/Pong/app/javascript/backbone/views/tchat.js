@@ -16,6 +16,7 @@ ViewChannel = Backbone.View.extend(
             'click .cancelCreateChannel': "cancelCreateChannel",
             'click .submitCreatechannel': "submitCreatechannel",
             "click #channel": "viewChannel",
+            "click .cancelMessage": "cancelChannel",
         },
         viewChannel: function(e) {
             e.preventDefault();
@@ -32,6 +33,10 @@ ViewChannel = Backbone.View.extend(
         cancelCreateChannel: function () {
             $(".default").css("display", "flex");
             $(".createChannel").css("display", "none");
+        },
+        cancelChannel: function() {
+            $(".default").css("display", "flex");
+            $(".channel").css("display", "none");
         },
         submitCreatechannel: function () {
             if ($(".title").val() != "" && $(".type").val() != "")
