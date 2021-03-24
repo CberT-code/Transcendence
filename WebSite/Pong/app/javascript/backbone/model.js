@@ -7,3 +7,11 @@ AccountModel = Backbone.Model.extend({
         }
     }
 });
+
+ChannelModel = Backbone.Model.extend({
+    parse: function (response) {
+        $(".Channeltitle").html(response.title);
+    }
+});
+
+window.app.models.ChannelModel = new ChannelModel;

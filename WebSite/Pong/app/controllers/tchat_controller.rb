@@ -19,10 +19,24 @@ class TchatController < ApplicationController
 			@date = Date.today
 			if (!Channel.find_by_title(@title))
 				@key = SecureRandom.urlsafe_base64(8)
-				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, create_time=>@date)
+				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date)
 				render html: "1"
 			else
 				render html: "2"
+			end
+		end
+	end
+	def getChannel
+		if (!params[:id])
+			render html: "error-forbidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@user_id = current_user.id
+			@datas = Channel.find_by_id(@id)
+			if (@datas && (@datas.user_id == @user_id || $datas.type_channel == 2))
+				render json: @datas
+			else
+				render html: 2
 			end
 		end
 	end

@@ -3,6 +3,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 		this.ViewAccount = new ViewAccount();
 		this.ViewGuilds = new ViewGuilds();
 		this.ViewTournaments = new ViewTournaments();
+		this.ViewChannel = new ViewChannel();
 	},
 	routes: {
 	"": "home",

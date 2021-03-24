@@ -11,7 +11,8 @@
                 <div id="list">
 
                     <% @channel.each do |element| %>
-                    <div id="channel" value="<%= element.id %>">
+                    <div id="channel">
+                        <input type="hidden" value="<%= element.id %>">
                         <div id="icon">
                             <% if (element.type_channel == 1) %>
                             <i class="fas fa-lock"></i>
@@ -52,6 +53,19 @@
                     <button type="button" class="submitCreatechannel">Create</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div id="center" class="channel">
+        <div id="element">
+            <div id="title">
+                <h2 class="Channeltitle"></h2>
+            </div>
+            <div id="message">
+            </div>
+            <div id="action">
+                <button type="button" class="cancelMessage">Cancel</button>
+                <button type="button" class="submitMessage">send</button>
+            </div>
         </div>
     </div>
 </div>

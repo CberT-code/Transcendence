@@ -5,15 +5,25 @@ function notification(typef, textf) {
     console.log("notif");
 }
 
-ViewGuilds = Backbone.View.extend(
+ViewChannel = Backbone.View.extend(
     {
         el: $(document),
+        model: window.app.models.ChannelModel,
         initialize: function () {
         },
         events: {
             'click .CreateaChannel': "CreateaChannel",
             'click .cancelCreateChannel': "cancelCreateChannel",
             'click .submitCreatechannel': "submitCreatechannel",
+            "click #channel": "viewChannel",
+        },
+        viewChannel: function(e) {
+            e.preventDefault();
+            var id = $($(e.currentTarget).children()[0]).val();
+            console.log(id);
+            $(".default").css("display", "none");
+            $(".channel").css("display", "flex");
+            this.model.fetch({"url": "/tchat/channel/get/" + id});
         },
         CreateaChannel: function () {
             $(".default").css("display", "none");

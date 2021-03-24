@@ -1192,3 +1192,6 @@ button:hover {
 #content-tchat .default {
 	display: flex;
 }
+#content-tchat .channel {
+	display: none;
+}
