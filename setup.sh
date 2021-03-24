@@ -57,6 +57,7 @@ then
 		rm -rf PostGresSql/srcs/data/
 		git add -A
 		git add *
+		echo "enter your Commit message : "
 		read text
 		git commit -u -m $text
 		git push
