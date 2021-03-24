@@ -13,12 +13,10 @@ ViewGuilds = Backbone.View.extend(
 		'click #create': 'CreateGuild',
 		'click #quit_guild': 'GuildQuit',
 		'click #join_guild': 'JoinGuild',
-		'click #declare_war': 'declare_war',
 		'click #change_admin': 'list_change_admin',
 		'click #exec_change_admin': 'exec_change_admin',
     },
 	CreateGuild: function () {
-		console.log("testouillet");
 		if ($("#guildName").val() == "")
 			notification("error", "Please complete the guild name...");
 		else if ($("#guildStory").val() == "")
@@ -48,6 +46,7 @@ ViewGuilds = Backbone.View.extend(
 					else
 					{
 						$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
+						$("#header-wars").toggle();
 						window.location.href = "#show_guild/" + data ;
 					}
 				},
@@ -72,6 +71,7 @@ ViewGuilds = Backbone.View.extend(
 					else
 					{
 						$('#header-guild').attr('onClick',"window.location='/#guilds'")
+						$("#header-wars").toggle();
 						window.location.href = "#guilds";
 					}
 				},
@@ -92,13 +92,14 @@ ViewGuilds = Backbone.View.extend(
 				if (data == 'error_alreadyinguild')
 					notification("error", "You're already in a guild.");
 				$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
+				$("#header-wars").toggle();
 				window.location.href = "#guilds";
 			},
 			'text'
 		);
 	},
 	declare_war: function () {
-		$("#line-war").toggle();
+		
 	},
 	list_change_admin: function () {
 		$("#edit_guild_160").css("display", "inline");

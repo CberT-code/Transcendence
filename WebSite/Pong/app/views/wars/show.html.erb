@@ -1,0 +1,47 @@
+<div id="content-war">
+
+	<div id="content-guild">
+
+		<div id="big-element">
+			<div id="title">
+				<h2 id="guild_name">
+					<%= @guild1.name %>
+				</h2>
+			</div>
+			<div id="corp">
+				<% @i =0 %>
+				<% @list_users1.each do |user| %>
+				<div id="user">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+					</div>
+					<div id="username">
+						<p><%= user.nickname %></p>
+					</div>
+				</div>
+				<% end %>
+			</div>
+		</div>
+		<div class="break"></div>
+		<div id="big-element">
+			<div id="title">
+					<%= @guild2.name %>
+			</div>
+			<div id="corp">
+				<% @i =0 %>
+				<% @list_users2.each do |user| %>
+				<div id="war">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+					</div>
+					<div id="target">
+						<p><%= user.nickname %></p>
+					</div>
+				</div>
+				<% end %>
+			</div>
+		</div>
+
+	</div>
+
+</div>

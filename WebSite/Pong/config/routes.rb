@@ -18,4 +18,5 @@ Rails.application.routes.draw do
 	resources :guilds
 	resources :tournaments
 	resources :users
+	resources :wars
 end

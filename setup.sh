@@ -46,10 +46,22 @@ then
 		docker rmi -f transcendance_postgresql
 		docker rmi -f transcendance_web
 		tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
-
+		rm -rf PostGresSql/srcs/data/
 		tar -xvf ./PostGresSql/srcs/data.tgz
 		docker-compose up
 
 		print_msg $RESET "Transcendence has restart"
+elif [[ $1 == "git" ]]
+then
+		tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
+		rm -rf PostGresSql/srcs/data/
+		git add -A
+		git add *
+		git commit -u -m "$(LOGFILE) $(MSG)"
+		git push
+
+		print_msg $SUCCESS "Transcendence has been git"
 
 fi
+
+

@@ -23,7 +23,7 @@
 				<div id="username">
 					<p><%= user.nickname %></p>
 				</div>
-				<% if (@admin==1 || @super_admin) %>
+				<% if (@admin == 1 || @super_admin) %>
 				<div id="action">
 					<i class="fas fa-times"></i>
 				</div>
@@ -33,45 +33,19 @@
 		</div>
 	</div>
 	<div class="break"></div>
-	<% if (@admin==1 || @super_admin) %>
-		<div id="big-element">
-			<div id="title">
-				<h2>Declare WAR</h2>
-			</div>
-			<div class="element-line">
-				<span>search</span>
-				<%= form_with(url: "/search" , method: "get" , remote: true) do %>
-					<%= text_field :name, maxlength: 20, size: 24, placeholder: "Search a guild for the war..." %>
-						<% end %>
-							<span>or</span>
-							<button class="grey_button" id="find_random">RANDOM GUILD</button>
-			</div>
+	<div id="big-element">
+		<div id="title">
+			<h2>Last wars</h2>
 		</div>
-		<% end %>
-			<div id="big-element">
-				<div id="title">
-					<h2>Last wars</h2>
-				</div>
-				<div id="corp">
-					<div id="war">
-						<div id="position">
-							<p>0</p>
-						</div>
-						<div id="target">
-							<p>TestA : 18</p>
-						</div>
-						<div id="target">
-							<p>TestB : 29</p>
-						</div>
-					</div>
-					<% @i=0%>
-					<% @wars_histories.each do |wars_history| %>
-					<div id="war">
-					<% if (Guild.find_by_id(wars_history.target_1) && Guild.find_by_id(wars_history.target_2)) %>
-					<% @color1=wars_history.score_target_1> wars_history.score_target_2 ? "green" : "red"; %>
-					<% @color2=wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red" ; %>
+		<div id="corp">
+			<% @i=0%>
+			<% @wars_histories.each do |wars_history| %>
+				<div id="war">
+				<% if (Guild.find_by_id(wars_history.target_1) && Guild.find_by_id(wars_history.target_2)) %>
+					<% @color1 = wars_history.score_target_1 > wars_history.score_target_2 ? "green" : "red"; %>
+					<% @color2 = wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red" ; %>
 					<div id="position">
-						<p><%= @i +=1 %></p>
+						<p><%= @i += 1 %></p>
 					</div>
 					<div id="target">
 						<p><%= Guild.find_by_id(wars_history.target_1).name %> : <%= wars_history.score_target_1 %></p>
@@ -79,35 +53,33 @@
 					<div id="target">
 						<p><%= Guild.find_by_id(wars_history.target_2).name %> : <%= wars_history.score_target_2 %></p>
 					</div>
-					<% end %>
-					<% end %>
-				</div>
-			</div>
-
-
-			<div id="element">
-				<div id="title">
-					<h2><%= @guild.nbmember %> / <%= @guild.maxmember %></h2>
-				</div>
-				<div id="corp">
-					<% if @my_guild==1%>
-					<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
-					<% elsif @user_guild==-1 %>
-					<button class="green_button" id="join_guild">join this guild</button>
-					<% end %>
-					<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
-					<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>">
-				<% if (@admin==1 || @super_admin) %>
-					<button class="red_button" id="change_admin">Change Admin</button>
-					<button class="green_button" id="declare_war">Declare War</button>
-					<div class="element-line">
-						<%= form_for @guild do |f| %>
-							<%= f.select :id_admin, options_for_select(@list_users.map{ |u| [u.nickname, u.id] }, :selected=>
-								@user.id) %>
-								<% end %>
-									<button class="grey_button" id="exec_change_admin">OK</button>
-					</div>
 				<% end %>
+				</div>
+			<% end %>
+		</div>
+	</div>
+	<div id="element">
+		<div id="title">
+			<h2><%= @guild.nbmember %> / <%= @guild.maxmember %></h2>
+		</div>
+		<div id="corp">
+			<% if @my_guild == 1%>
+			<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
+			<% elsif @user_guild == -1 %>
+			<button class="green_button" id="join_guild">join this guild</button>
+			<% end %>
+			<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
+			<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>">
+		<% if (@admin == 1 || @super_admin) %>
+			<button class="red_button" id="change_admin">Change Admin</button>
+			<div class="element-line">
+				<%= form_for @guild do |f| %>
+					<%= f.select :id_admin, options_for_select(@list_users.map{ |u| [u.nickname, u.id] }, :selected=>
+						@user.id) %>
+						<% end %>
+							<button class="grey_button" id="exec_change_admin">OK</button>
 			</div>
+		<% end %>
+	</div>
 		
 </div>

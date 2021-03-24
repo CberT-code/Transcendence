@@ -20,17 +20,24 @@ class UsersController < ApplicationController
 
 	def update
 		@user = !params[:id] ? User.find_by_id(current_user.id) : @user = User.find_by_id(params[:id]);
-		@super_admin = current_user.role;
-		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @super_admin == 1)
-			if (!User.find_by_nickname(params[:username]))
-				User.find_by_id(@user.id).update({"nickname": params[:username]})
-				render html: "1";
+		if (params.has_key?(:checked))
+			puts params[:checked].inspect;
+			User.find_by_id(@user.id).update({"available": params[:checked]})
+			render html: "1";
+		end
+		if (params.has_key?(:username))
+			@super_admin = current_user.role;
+			@current = current_user.id == @user.id ? 1 : 0;
+			if (@current == 1 || @super_admin == 1)
+				if (!User.find_by_nickname(params[:username]))
+					User.find_by_id(@user.id).update({"nickname": params[:username]})
+					render html: "1";
+				else
+					render html: "2";
+				end
 			else
-				render html: "2";
+				render html: "error-forbidden";
 			end
-		else
-			render html: "error-forbidden";
 		end
 	end
 

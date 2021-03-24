@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_03_08_141136) do
+ActiveRecord::Schema.define(version: 2021_03_23_183240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "citext"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 2021_03_08_141136) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "statut"
+    t.integer "points"
   end
 
   create_table "stats", force: :cascade do |t|
@@ -89,10 +90,26 @@ ActiveRecord::Schema.define(version: 2021_03_08_141136) do
     t.string "image"
     t.integer "role"
     t.integer "guild_role"
+    t.integer "points", default: 0, null: false
+    t.boolean "available", default: false, null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["id_guild"], name: "index_users_on_id_guild"
     t.index ["id_stats"], name: "index_users_on_id_stats", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "wars", force: :cascade do |t|
+    t.integer "id_guild1", default: -1, null: false
+    t.integer "team1", default: [], array: true
+    t.integer "points_guild1", default: -1, null: false
+    t.integer "id_guild2", default: -1, null: false
+    t.integer "team2", default: [], array: true
+    t.integer "points_guild2", default: -1, null: false
+    t.datetime "start"
+    t.datetime "end"
+    t.integer "points", default: -1, null: false
+    t.integer "players", default: -1, null: false
+    t.integer "status", default: -1, null: false
   end
 
 end

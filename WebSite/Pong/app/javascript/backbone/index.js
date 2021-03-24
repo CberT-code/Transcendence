@@ -4,6 +4,7 @@ require("backbone/model.js")
 require("backbone/views/users.js")
 require("backbone/views/guilds.js")
 require("backbone/views/tournaments.js")
+require("backbone/views/wars.js")
 require("backbone/router.js")
 
 new window.app.ApplicationRouter();

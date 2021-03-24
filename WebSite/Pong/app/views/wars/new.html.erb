@@ -1,0 +1,19 @@
+<div id="content-new_war">
+	<%= form_for :histories, remote: true do |f| %>
+		<div class="element">
+			<div class="center">
+				<%= f.select :points, options_for_select([['Nombre de points en jeu',''],['1000','1000'],['5000','5000'],['10000','10000']], :selected => '') %>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
+				<%= f.select :target_type, options_for_select([['Max members',''],['5','5'],['10','10'],['15','15']], :selected => '') %>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
+				<button id="create">Create</button>
+			</div>
+		</div>
+	<% end %>
+</div>

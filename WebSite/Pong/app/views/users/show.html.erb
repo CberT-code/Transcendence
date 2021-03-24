@@ -42,10 +42,17 @@
 				</div>
 			</div>
 		</div>
-		<% if (@current == 1 || @super_admin == 1) %>
+		<% if ((@current == 1 || @super_admin == 1) && @user.id_guild != -1 ) %>
 			<div id="element">
 				<div id="name">
-					<h2>delete</h2>
+					<h2>actions</h2>
+				</div>
+				<div class="element-line">
+					<span>Available for war?</span>
+					<label class="switch">
+						<input id="available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
+						<span class="slider"></span>
+					</label>
 				</div>
 				<div class="display-flex" id="container">
 					<button class="delete" ><i class="fas fa-trash-alt"></i> Delete account</button>

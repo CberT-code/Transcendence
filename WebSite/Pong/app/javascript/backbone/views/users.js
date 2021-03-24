@@ -12,6 +12,8 @@ ViewAccount = Backbone.View.extend({
 		'click .fa-pen': 'SwitchInputOn',
 		'click .fa-times-switch': 'SwitchInputOff',
 		'click .fa-check': 'EditUsername',
+		'click #available': 'Available',
+		
 	},
 	deleteAccount: function (ev) {
 		console.log(ev.currentTarget.data("id"));
@@ -74,5 +76,27 @@ ViewAccount = Backbone.View.extend({
 			);
 		else
 			notification("error", "Please complete the form...");
-    }
+	},
+	Available: function () {
+			$.ajax(
+				{
+					url: '/users/' + $("#id").val(),
+					type: 'PATCH',
+					data: 
+					{
+						'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+						"checked": $("#available").is(':checked')
+					},
+					success: function (data) 
+					{
+						if (data == 1)
+							location.reload();
+						else if (data == "error-forbidden")
+							notification("error", "Forbidden");
+						else
+							notification("error", "This username already exist");
+					},
+				},
+			);
+    },
 });
