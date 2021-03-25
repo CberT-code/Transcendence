@@ -17,14 +17,14 @@ ViewChannel = Backbone.View.extend(
             'click .submitCreatechannel': "submitCreatechannel",
             "click #channel": "viewChannel",
             "click .cancelMessage": "cancelChannel",
+            "click .submitMessage": "submitMessage",
         },
-        viewChannel: function(e) {
+        viewChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();
-            console.log(id);
             $(".default").css("display", "none");
             $(".channel").css("display", "flex");
-            this.model.fetch({"url": "/tchat/channel/get/" + id});
+            this.model.fetch({ "url": "/tchat/channel/get/" + id });
         },
         CreateaChannel: function () {
             $(".default").css("display", "none");
@@ -34,9 +34,34 @@ ViewChannel = Backbone.View.extend(
             $(".default").css("display", "flex");
             $(".createChannel").css("display", "none");
         },
-        cancelChannel: function() {
+        cancelChannel: function () {
             $(".default").css("display", "flex");
             $(".channel").css("display", "none");
+        },
+        submitMessage: function (e) {
+            e.preventDefault();
+            var id = $(".submitMessage").val();
+            var key = $(".Channelkey").val();
+            var message = $(".message").val();
+            if (message != "" && id != "" && key != "")
+                $.post(
+                    "/tchat/channel/message/create",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                        "message": message,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Message send !");
+                            Backbone.history.loadUrl();
+                        }
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
         },
         submitCreatechannel: function () {
             if ($(".title").val() != "" && $(".type").val() != "")

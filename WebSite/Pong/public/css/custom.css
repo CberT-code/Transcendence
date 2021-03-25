@@ -1081,7 +1081,7 @@ button:hover {
 }
 #content-tchat #center #element #corp #list {
 	width: 100%;
-	height: calc(100% - 80px);
+	height: calc(100% - 95px);
 	overflow-x: hidden;
 	overflow-y: auto;
 	scrollbar-width: none;
@@ -1218,6 +1218,22 @@ button:hover {
 	cursor: pointer;
 	background-color: #231f20;
 	transition-duration: 0.5s;
+}
+#content-tchat #center #element #action input {
+	width: 80%;
+	height: min-content;
+	outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: solid 2px #231f20;
+	overflow: hidden;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+	margin-bottom: 15px;
 }
 #content-tchat .createChannel {
 	display: none;

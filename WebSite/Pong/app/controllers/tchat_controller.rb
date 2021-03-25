@@ -40,4 +40,37 @@ class TchatController < ApplicationController
 			end
 		end
 	end
+	def sendMessageChannel
+		if (!params[:id] || !params[:key] || !params[:message])
+			render html: "error-fobidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@key = params[:key]
+			@message = params[:message]
+			@user_id = current_user.id
+			@datas = Channel.find_by_id(@id)
+			@date = Date.today
+			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
+				Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
+				render html: 1
+			else
+				render html: "error-fobidden", :status => :unauthorized
+			end
+		end
+	end
+	def getChannelMessage
+		if (!params[:id] || !params[:key])
+			render html: "error-fobidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@key = params[:key]
+			@user_id = current_user.id
+			if (Channel.find_by_id_and_key(@id, @key))
+				@datas = Messages.find_by_target_id_and_message_type(@id, 1);
+				render json: @datas
+			else
+				render html: "error-fobidden", :status => :unauthorized
+			end
+		end
+	end
 end

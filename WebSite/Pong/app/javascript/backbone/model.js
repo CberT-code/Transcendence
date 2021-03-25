@@ -11,7 +11,19 @@ AccountModel = Backbone.Model.extend({
 ChannelModel = Backbone.Model.extend({
     parse: function (response) {
         $(".Channeltitle").html(response.title);
+        $(".Channelkey").attr("value", response.key);
+        $(".submitMessage").attr("value", response.id);
+        var id = response.id;
+        var key = response.key;
+        window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });;
     }
 });
 
+ChannelMessageModel = Backbone.Model.extend({
+    parse: function (response) {
+        console.log(response)
+    }
+});
+
+window.app.models.ChannelMessageModel = new ChannelMessageModel;
 window.app.models.ChannelModel = new ChannelModel;

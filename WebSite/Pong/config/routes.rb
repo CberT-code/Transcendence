@@ -14,7 +14,9 @@ Rails.application.routes.draw do
 	# post "/guilds/guildcreate", to: "post#GuildsCreate"
 	post "/guilds/join", to: "guilds#join"
 	post "/tchat/channel/create", to: "tchat#channelCreate"
+	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
 	get "/tchat/channel/get/:id", to: "tchat#getChannel"
+	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"
 
 	resources :guilds
 	resources :tournaments
