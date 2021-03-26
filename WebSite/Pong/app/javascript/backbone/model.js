@@ -21,7 +21,10 @@ ChannelModel = Backbone.Model.extend({
 
 ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
-        console.log(response)
+        console.log(response);
+        if (Array.isArray(response)) {
+            response.forEach(element =>  $("#messages").append("<div id='message'><div id='content'><p>"+ element[0].content  +"</p></div><div id='info'><p>"+ element[0].author +"</p></div></div>"));
+        }
     }
 });
 

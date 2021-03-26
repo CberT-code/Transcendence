@@ -66,8 +66,13 @@ class TchatController < ApplicationController
 			@key = params[:key]
 			@user_id = current_user.id
 			if (Channel.find_by_id_and_key(@id, @key))
-				@datas = Messages.find_by_target_id_and_message_type(@id, 1);
-				render json: @datas
+				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
+				@ret = Array.new
+				@datas.each do |element|
+					@tmp = User.find_by_id(element.user_id)
+					@ret.push(["content" => element.message, "date" => element.create_time, "author" => @tmp.nickname])
+				end
+				render json: @ret
 			else
 				render html: "error-fobidden", :status => :unauthorized
 			end
