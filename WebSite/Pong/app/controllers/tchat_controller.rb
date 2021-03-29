@@ -64,14 +64,31 @@ class TchatController < ApplicationController
 		end
 	end
 	def userBlockChannel
-		if (!params[:id] || !params[:key] || !params[:type] || ![1, 2].include ? params[:type])
+		if (!params[:id] || !params[:key] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
-		else
-			@user_id = current_user.id
+		elsif (params[:type] == "1")
+			@user_id = current_user.id.t_s
 			@block_user = params[:id]
+			if (@user_id == @block_user)
+				render html: "3"
+				return
+			end
 			@key = params[:key]
-
+			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			if (@datas)
+				@tmp = @datas.blocked_users ? @datas.blocked_users.split(",") : Array.new
+				if (!@tmp.include? @block_user)
+					@tmp.push(@block_user)
+					@datas.update({blocked_users: @tmp.join(",")})
+					@datas.save
+					render html: "1"
+					return 
+				end
+					render html: "2"
+					return 
+			end
 		end
+		render html: "error-fobidden", :status => :unauthorized
 	end
 	def removeMessageChannel
 		if (!params[:id] || !params[:key])
@@ -83,6 +100,7 @@ class TchatController < ApplicationController
 			if (Channel.find_by_user_id_and_key(@user_id, @key))
 				Messages.find_by_id(@id).destroy
 				render html: "1"
+				return 
 			else
 				render html: "error-fobidden", :status => :unauthorized
 			end

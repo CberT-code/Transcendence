@@ -64,8 +64,9 @@ ViewChannel = Backbone.View.extend(
                 );
         },
         blockUserChannel: function (e) {
-            var id = $(e.currentTarget()).val();
-            var key = $(".ChannelKey").val();
+            var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
+            console.log("KEY " + key);
             if (id != "" && key != "")
                 $.post(
                     "/tchat/channel/user",
@@ -79,7 +80,10 @@ ViewChannel = Backbone.View.extend(
                         if (data == 1) {
                             notification("success", "User blocked !");
                             Backbone.history.loadUrl();
-                        }
+                        } else if (data == 2) 
+                            notification("error", "This user is already block...");
+                        else
+                            notification("error", "You can block yourself...");
                     },
                     'text'
                 );
