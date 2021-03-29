@@ -15,6 +15,8 @@ Rails.application.routes.draw do
 	post "/guilds/join", to: "guilds#join"
 	post "/tchat/channel/create", to: "tchat#channelCreate"
 	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
+	post "/tchat/channel/message/remove", to: "tchat#removeMessageChannel"
+	post "/tchat/channel/user", to: "tchat#userBlockChannel"
 	get "/tchat/channel/get/:id", to: "tchat#getChannel"
 	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"
 

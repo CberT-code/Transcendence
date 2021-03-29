@@ -18,6 +18,8 @@ ViewChannel = Backbone.View.extend(
             "click #channel": "viewChannel",
             "click .cancelMessage": "cancelChannel",
             "click .submitMessage": "submitMessage",
+            "click .removeMessage": "removeMessage",
+            "click .blockUserChannel": "blockUserChannel",
         },
         viewChannel: function (e) {
             e.preventDefault();
@@ -37,6 +39,50 @@ ViewChannel = Backbone.View.extend(
         cancelChannel: function () {
             $(".default").css("display", "flex");
             $(".channel").css("display", "none");
+            $("#messages").empty();
+        },
+        removeMessage: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
+            console.log(id);
+            if (key != "")
+                $.post(
+                    "/tchat/channel/message/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Message remove !");
+                            Backbone.history.loadUrl();
+                        }
+                    },
+                    'text'
+                );
+        },
+        blockUserChannel: function (e) {
+            var id = $(e.currentTarget()).val();
+            var key = $(".ChannelKey").val();
+            if (id != "" && key != "")
+                $.post(
+                    "/tchat/channel/user",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                        "type": 1
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User blocked !");
+                            Backbone.history.loadUrl();
+                        }
+                    },
+                    'text'
+                );
         },
         submitMessage: function (e) {
             e.preventDefault();

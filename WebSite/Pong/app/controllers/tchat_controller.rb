@@ -16,10 +16,11 @@ class TchatController < ApplicationController
 			@user_id = current_user.id
 			@title = params[:title]
 			@type = params[:type]
+			@blocked_users = ""
 			@date = Date.today
 			if (!Channel.find_by_title(@title))
 				@key = SecureRandom.urlsafe_base64(8)
-				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date)
+				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date, :blocked_users=>@blocked_users)
 				render html: "1"
 			else
 				render html: "2"
@@ -51,8 +52,37 @@ class TchatController < ApplicationController
 			@datas = Channel.find_by_id(@id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
-				render html: 1
+				if (@datas.blocked_users @datas.blocked_users.split(",").include? @user_id)
+					render html: 2
+				else
+					Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
+					render html: 1
+				end
+			else
+				render html: "error-fobidden", :status => :unauthorized
+			end
+		end
+	end
+	def userBlockChannel
+		if (!params[:id] || !params[:key] || !params[:type] || ![1, 2].include ? params[:type])
+			render html: "error-fobidden", :status => :unauthorized
+		else
+			@user_id = current_user.id
+			@block_user = params[:id]
+			@key = params[:key]
+
+		end
+	end
+	def removeMessageChannel
+		if (!params[:id] || !params[:key])
+			render html: "error-fobidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@key = params[:key]
+			@user_id = current_user.id
+			if (Channel.find_by_user_id_and_key(@user_id, @key))
+				Messages.find_by_id(@id).destroy
+				render html: "1"
 			else
 				render html: "error-fobidden", :status => :unauthorized
 			end
@@ -68,9 +98,10 @@ class TchatController < ApplicationController
 			if (Channel.find_by_id_and_key(@id, @key))
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
+				@is_admin = Channel.find_by_user_id(@user_id) ? 1 : 0
 				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
-					@ret.push(["content" => element.message, "date" => element.create_time, "author" => @tmp.nickname])
+					@ret.push(["id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin])
 				end
 				render json: @ret
 			else
