@@ -6,7 +6,8 @@ function notification(typef, textf) {
 }
 ViewTournaments = Backbone.View.extend({
     el: $(document),
-
+    initialize: function () {
+	},
     events: {
 		'click #create_tournament': 'Create_tournament',
     },
@@ -38,7 +39,7 @@ ViewTournaments = Backbone.View.extend({
 						notification("error", "Oversize description...");
 					else{
 						// $('#header-tournament').attr('onClick',"window.location='/#show_tournament/" + data + "'");
-						// window.location.href = "#show_tournament/" + data ;
+						window.location.href = "#tournaments" ;
 					}
 			},
 			'text'

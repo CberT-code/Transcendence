@@ -3,24 +3,26 @@
 		<div id="create">
 			<button onClick="window.location='/#new_tournament'">Create your tournament</button>
 		</div>
-		<div id="list">
-			<% @i = 0%>
-			<% @tournaments.each do |tournament| %>
-			<div id="tournament">
-				<div id="position">
-					<p><%= @i += 1 %></p>
+		<% if @tournaments.count > 0%>
+			<div id="list">
+				<% @i = 0%>
+				<% @tournaments.each do |tournament| %>
+				<div id="tournament">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+					</div>
+					<div id="info">
+						<p><%= tournament.name %></p>
+					</div>
+					<div id="info">
+						<p><%= tournament.description %></p>
+					</div>
+					<div id="info">
+						<p><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</p>
+					</div>
 				</div>
-				<div id="info">
-					<p><%= tournament.name %></p>
-				</div>
-				<div id="info">
-					<p><%= tournament.description %></p>
-				</div>
-				<div id="info">
-					<p><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</p>
-				</div>
+				<% end %>
 			</div>
-			<% end %>
-		</div>
+		<% end %>
 	</div>
 </div>

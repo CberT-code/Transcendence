@@ -73,6 +73,7 @@ show_guild: function(id) {
 		$("#line-war").hide();
 	});
 },
+// Tournaments
 tournaments: function() {
 	$.get("/tournaments").then(function(data){
 		$("main").html("<div id='content-tournaments'>" + ($(data).find("#content-tournaments").html()) + "</div>");

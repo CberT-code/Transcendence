@@ -10,7 +10,7 @@ ViewGuilds = Backbone.View.extend(
     initialize: function () {
     },
     events: {
-		'click #create': 'CreateGuild',
+		'click #create_guild': 'CreateGuild',
 		'click #quit_guild': 'GuildQuit',
 		'click #join_guild': 'JoinGuild',
 		'click #change_admin': 'list_change_admin',
