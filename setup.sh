@@ -39,7 +39,7 @@ elif [[ $1 == "save" ]]
 then
 		tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
 		print_msg $ERROR "Database is saved"
-
+ 
 elif [[ $1 == "restart" ]]
 then
 		docker-compose down
