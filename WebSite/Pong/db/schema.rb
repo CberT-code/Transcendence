@@ -33,6 +33,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_183240) do
     t.integer "id_admin", default: 0, null: false
     t.boolean "available", default: false, null: false
     t.boolean "in_war", default: false, null: false
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -80,6 +81,7 @@ ActiveRecord::Schema.define(version: 2021_03_23_183240) do
     t.string "nickname", default: "", null: false
     t.string "image", default: "", null: false
     t.integer "role", default: -1, null: false
+    t.integer "status", default: 0, null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
