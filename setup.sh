@@ -53,7 +53,7 @@ then
 		print_msg $RESET "Transcendence has restart"
 elif [[ $1 == "git" ]]
 then
-		# tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
+		tar -czf ./PostGresSql/srcs/data.tgz ./PostGresSql/srcs/data
 		rm -rf PostGresSql/srcs/data/
 		git add -A
 		git add *

@@ -14,9 +14,12 @@ Rails.application.routes.draw do
 
 	# post "/guilds/guildcreate", to: "post#GuildsCreate"
 	post "/guilds/join", to: "guilds#join"
-
+	
 	resources :guilds
 	resources :tournaments
 	resources :users
 	resources :wars
+	post "/wars/add", to: "wars#add"
+	post "/wars/remove", to: "wars#remove"
+	get "/wars/search/:players/:search", to: "wars#getChannelMessage"
 end

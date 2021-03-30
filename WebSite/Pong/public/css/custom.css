@@ -159,6 +159,45 @@ header a {
 	text-decoration: none;
 	color: #231f20;
 }
+.text-bold {
+	font-family: "Roboto-Medium";
+}
+.text-green {
+	color: #7BE12B ;
+}
+.text-orange {
+	color: #e1922b ;
+}
+.text-red {
+	color: #c51515 ;
+}
+.back-green {
+	background-color: #7BE12B ;
+}
+.back-red {
+	background-color: #c51515 ;
+}
+.text-gold {
+	color: #fab50c ;
+}
+.display-flex {
+	display: flex;
+}
+button:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+.displayOff{
+	display: none;
+}
+.displayOn{
+	display: initial;
+}
+
+
+/* *************** */
+/* Content-account */
+/* *************** */
 #content-account {
 	width: 100%;
 	height: 100%;
@@ -435,31 +474,12 @@ header a {
 	font-family: "Roboto-Medium";
 	font-size: 115%;
 }
-.text-bold {
-	font-family: "Roboto-Medium";
-}
-.text-green {
-	color: #7BE12B ;
-}
-.text-red {
-	color: #c51515 ;
-}
-.text-gold {
-	color: #fab50c ;
-}
-.display-flex {
-	display: flex;
-}
-#content-guild {
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: center;
-	align-content: baseline;
-	overflow: hidden;
-	width: 100%;
-	height: 100%;
-	padding-top: 25px;
-}
+
+
+
+/* ************* */
+/* Content-Guilds */
+/* ************* */
 #content-guilds {
 	height: 100%;
 	width: 100%;
@@ -556,84 +576,84 @@ header a {
 	font-family: "Roboto-Thin";
 	font-size: 110%;
 }
-#content-new_guild .element {
-	width: 100%;
-	padding-top: 40px;
-	height: max-content;
-	overflow: hidden;
-	display: flex;
-	margin: auto;
-}
-#content-new_guild .element .center{
-	margin: auto;
-	height: 100%;
-	overflow: hidden;
-	display: flex;
-	width: max-content;
 
+#content-guilds #guild-list {
+	width: 100%;
+	height: 50%;
+	overflow-x: auto;
+	overflow-y: hidden;
+	scrollbar-width: none;
 }
-#content-new_guild .element .center #guild_name{
-	border: none;
-	outline: none;
-	border-bottom: solid 1px #231f20;
+#content-guilds #guild-list #guild {
+	width: max-content;
+	height: 55px;
+	border-radius: 3px;
+	overflow: hidden;
+	background-color: #ccc;
+	display: flex;
 	color: #231f20;
-	text-align: center;
-	background-color: transparent;
-	padding-right: 40px;
-	padding-left: 40px;
-	font-family: "Roboto-Thin";
-	font-size: 150%;
-}
-#content-new_guild .element .center label{
-	border: none;
-	color: #231f20;
-	text-align: center;
-	background-color: transparent;
-	padding-right: 20px;
-	padding-left: 20px;
-	font-family: "Roboto-Thin";
-	font-size: 150%;
-}
-#content-new_guild .element .center #guild_maxmember{
-	border: none;
-	color: #231f20;
-	text-align: center;
-	background-color: transparent;
-	padding-right: 20px;
-	padding-left: 20px;
-	font-family: "Roboto-Thin";
-	font-size: 150%;
-	outline: none;
-}
-#content-new_guild .element .center button{
-	margin: auto;
-	border: none;
-	outline: none;
-	padding-left: 45px;
-	padding-right: 45px;
-	padding-top: 10px;
-	padding-bottom: 10px;
-	text-transform: uppercase;
-	color: white;
-	background-color: #7BE12E;
-	cursor: pointer;
 	font-family: "Roboto-Medium";
-	font-size: 110%;
-	border-radius: 6px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 15px;
+}
+#content-guilds #guild-list #guild #position {
+	height: 100%;
+	width: 50px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-guilds #guild-list #guild #position p {
+	margin: auto;
+	color: white;
+	font-size: 125%;
+	margin: auto;
+}
+#content-guilds #guild-list #guild #information {
+	width: 260px;
+	height: 100%;
+	display: flex;
+}
+#content-guilds #guild-list #guild #information p {
+	margin: auto;
+	font-size: 115%
+}
+#content-guilds #guild-list #guild #action {
+	height: 100%;
+	padding-left: 15px;
+	padding-right: 15px;
+	display: flex;
+	overflow: hidden;
+	cursor: pointer;
+	background-color: #231f20;
 	transition-duration: 0.5s;
 }
-#content-new_guild .element .center #guild_description{
-	color: #231f20;
-	background-color: transparent;
-	font-family: "Roboto-Thin";
-	font-size: 80%;
-	resize: none;
+#content-guilds #guild-list #guild #action:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
 }
-#content-new_guild #response{
-	display: none;
+#content-guilds #guild-list #guild #action p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+
+/* ************* */
+/* Content-guild */
+/* ************* */
+#content-guild {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: baseline;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding-top: 25px;
 }
 #content-guild #line{
-    width: 100%;
+	width: 100%;
     height: calc(100% - 155px);
     overflow: hidden;
     display: flex;
@@ -643,7 +663,7 @@ header a {
     padding-top: 50px;
 }
 #content-guild #line-war{
-    width: 100%;
+	width: 100%;
     height: calc(100% - 155px);
     overflow: hidden;
     display: flex;
@@ -738,7 +758,7 @@ header a {
 	padding-right: 25px;
 }
 #content-guild #element .element-line form{
-    margin: auto;
+	margin: auto;
     border: none;
 	outline: none;
     padding-left: 45px;
@@ -764,6 +784,7 @@ header a {
 	font-size: 150%;
 	outline: none;
 }
+
 #content-guild #element .element-line #exec_change_admin{
     width: 60px;
     padding-left: initial;
@@ -915,67 +936,92 @@ header a {
 #content-guild #big-element .element-line #red{
 	color: #c51515;
 }
-#content-guilds #guild-list {
+
+
+/* ***************** */
+/* Content-new_guild */
+/* ***************** */
+#content-new_guild .element {
 	width: 100%;
-	height: 50%;
-	overflow-x: auto;
-	overflow-y: hidden;
-	scrollbar-width: none;
+	padding-top: 40px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
 }
-#content-guilds #guild-list #guild {
+#content-new_guild .element .center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
 	width: max-content;
-	height: 55px;
-	border-radius: 3px;
-	overflow: hidden;
-	background-color: #ccc;
-	display: flex;
+
+}
+#content-new_guild .element .center #guild_name{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
 	color: #231f20;
-	font-family: "Roboto-Medium";
-	margin-right: auto;
-	margin-left: auto;
-	margin-bottom: 15px;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 40px;
+	padding-left: 40px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
 }
-#content-guilds #guild-list #guild #position {
-	height: 100%;
-	width: 50px;
-	overflow: hidden;
-	display: flex;
-	background-color: #231f20;
+#content-new_guild .element .center label{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
 }
-#content-guilds #guild-list #guild #position p {
+#content-new_guild .element .center #guild_maxmember{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+	outline: none;
+}
+#content-new_guild .element .center button{
 	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
 	color: white;
-	font-size: 125%;
-	margin: auto;
-}
-#content-guilds #guild-list #guild #information {
-	width: 260px;
-	height: 100%;
-	display: flex;
-}
-#content-guilds #guild-list #guild #information p {
-	margin: auto;
-	font-size: 115%
-}
-#content-guilds #guild-list #guild #action {
-	height: 100%;
-	padding-left: 15px;
-	padding-right: 15px;
-	display: flex;
-	overflow: hidden;
+	background-color: #7BE12E;
 	cursor: pointer;
-	background-color: #231f20;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
 	transition-duration: 0.5s;
 }
-#content-guilds #guild-list #guild #action:hover {
-	opacity: 0.7;
-	transition-duration: 0.5s;
+#content-new_guild .element .center #guild_description{
+	color: #231f20;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 80%;
+	resize: none;
 }
-#content-guilds #guild-list #guild #action p {
-	margin: auto;
-	color: white;
-	font-size: 115%;
+#content-new_guild #response{
+	display: none;
 }
+
+
+/* ******************* */
+/* Content-tournaments */
+/* ******************* */
 #content-tournaments {
 	width: 100%;
 	height: 100%;
@@ -1050,13 +1096,622 @@ header a {
 	margin: auto;
 	font-size: 115%;
 }
-button:hover {
+
+/* *********** */
+/* Content-War */
+/* *********** */
+#content-war {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: baseline;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding-top: 25px;
+}
+#content-war .break {
+	flex-grow: 1;
+	flex-basis: 100%
+}
+#content-war .big-element {
+	height: 400px;
+    /* width: 35%; */
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+#content-war .big-element#guild {
+
+    width: 400px;
+}
+#content-war .big-element#noBackground{
+	background-color: transparent;
+	border: none;
+}
+#content-war .big-element #score{
+	padding-top: 50%;
+	text-align: center;
+}
+#content-war .big-element #title {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	display: flex;
+}
+#content-war .big-element #title h2 {
+	margin: auto;
+	font-size: 135%;
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#content-war .big-element #corp {
+	width: 100%;
+	height: calc(100% - 15%);
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: none;
+}
+#content-war .big-element #corp #user {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-war .big-element #corp #user #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-war .big-element #corp #user #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-war .big-element #corp #user #username {
+	width: 300px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-war .big-element #corp #user #username p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-war .big-element #corp .war {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-war .big-element #corp .war #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-war .big-element #corp .war #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-war .big-element #corp .war #target {
+	width: 255px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-war .big-element #corp .war #target p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-war .big-element #corp .war #targetbtn {
+	width: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-war .big-element #corp .war #targetbtn button {
+width: 100px;
+}
+#content-war .big-element #corp .war #targetbtn #add {
+background-color: #7BE12B;
+}
+#content-war .big-element #corp .war #targetbtn #remove {
+background-color: #c51515;
+}
+#content-war .big-element #corp .war #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-war .big-element #corp .war #action i:hover {
 	opacity: 0.7;
 	transition-duration: 0.5s;
 }
-.displayOff{
-	display: none;
+#content-war .big-element #corp #user #action {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
 }
-.displayOn{
-	display: initial;
+#content-war .big-element #corp #user #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-war .big-element #corp #user #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-war .big-element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+}
+#content-war .big-element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-war .big-element .element-line #green{
+	color: #7BE12E;
+}
+#content-war .big-element .element-line #red{
+	color: #c51515;
+}
+
+/* ************* */
+/* Content-war */
+/* ************* */
+#content-wars {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: baseline;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding-top: 25px;
+}
+#content-wars .break {
+	flex-grow: 1;
+	flex-basis: 100%
+}
+#content-wars #element {
+    width: 400px;
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+#content-wars #element button{
+	width: 250px;
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	transition-duration: 0.5s;
+}
+#content-wars #element .green_button{
+	display: block;
+	background-color: #7BE12E;
+}
+#content-wars #big-element {
+	height: 400px;
+    /* width: 35%; */
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+#content-wars #big-element #title {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	display: flex;
+}
+#content-wars #big-element #title h2 {
+	margin: auto;
+	font-size: 135%;
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#content-wars #big-element #corp {
+	width: 100%;
+	height: calc(100% - 15%);
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: none;
+}
+#content-wars #big-element #corp #war {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-wars #big-element #corp #war #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-wars #big-element #corp #war #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-wars #big-element #corp #war #target {
+	width: 255px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-wars #big-element #corp #war #target p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-wars #big-element #corp #user #action {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+}
+#content-wars #big-element #corp #user #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-wars #big-element #corp #user #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-wars #big-element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+}
+#content-wars #big-element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-wars #big-element .element-line #green{
+	color: #7BE12E;
+}
+#content-wars #big-element .element-line #red{
+	color: #c51515;
+}
+
+/* *********** */
+/* Content-new_War */
+/* *********** */
+#content-new_war {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: baseline;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding-top: 25px;
+}
+#content-new_war .break {
+	flex-grow: 1;
+	flex-basis: 100%;
+	margin-bottom: 50px;
+}
+#content-new_war .big-element {
+	height: 400px;
+    /* width: 35%; */
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+#content-new_war .big-element#guild {
+
+    width: 400px;
+}
+#content-new_war .big-element#noBackground{
+	background-color: transparent;
+	border: none;
+}
+#content-new_war .big-element #score{
+	padding-top: 50%;
+	text-align: center;
+}
+#content-new_war .big-element #title {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	display: flex;
+}
+#content-new_war .big-element #title h2 {
+	margin: auto;
+	font-size: 135%;
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#content-new_war .big-element #corp {
+	width: 100%;
+	height: calc(100% - 15%);
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: none;
+}
+#content-new_war .big-element #corp #user {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-new_war .big-element #corp #user #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-new_war .big-element #corp #user #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-new_war .big-element #corp #user #username {
+	width: 300px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-new_war .big-element #corp #user #username p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-new_war .big-element #corp .war {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-new_war .big-element #corp .war #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-new_war .big-element #corp .war #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-new_war .big-element #corp .war #target {
+	width: 255px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-new_war .big-element #corp .war #target p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-new_war .big-element #corp .war #targetbtn {
+	width: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-new_war .big-element #corp .war #targetbtn button {
+width: 100px;
+}
+#content-new_war .big-element #corp .war #targetbtn #attack {
+background-color: #7BE12B;
+}
+#content-new_war .big-element #corp .war #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-new_war .big-element #corp .war #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-new_war .big-element #corp #user #action {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+}
+#content-new_war .big-element #corp #user #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-new_war .big-element #corp #user #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-new_war .big-element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+}
+#content-new_war .big-element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-new_war .big-element .element-line #green{
+	color: #7BE12E;
+}
+#content-new_war .big-element .element-line #red{
+	color: #c51515;
+}
+#content-new_war .element {
+	width: 100%;
+	padding-top: 40px;
+	height: max-content;
+	overflow: hidden;
+	display: flex;
+	margin: auto;
+}
+#content-new_war .element .center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: max-content;
+
+}
+#content-new_war .element .center input{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 40px;
+	padding-left: 40px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-new_war .element .center label{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-new_war .element .center select{
+	border: none;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 20px;
+	padding-left: 20px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+	outline: none;
+}
+#content-new_war .element .center button{
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	background-color: #7BE12E;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	transition-duration: 0.5s;
+}
+#content-new_war .element .center #guild_description{
+	color: #231f20;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 80%;
+	resize: none;
 }

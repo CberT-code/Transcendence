@@ -7,13 +7,53 @@
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.select :target_type, options_for_select([['Max members',''],['5','5'],['10','10'],['15','15']], :selected => '') %>
+				<%= f.select :nb_players, options_for_select([['Max members',''],['5','5'],['10','10'],['15','15']], :selected => '') %>
 			</div>
 		</div>
 		<div class="element">
 			<div class="center">
-				<button id="create">Create</button>
+				<%= f.date_field :date_start, min: Date.today + 2.days, max: Date.today + 17.days, value: Date.today + 2.days %>
+				<%= f.date_field :date_start, min: Date.today + 4.days, max: Date.today + 19.days, value: Date.today + 4.days  %>
+
 			</div>
 		</div>
+		<div class="element">
+			<div class="center">
+				<button id="random">Random</button>
+			</div>
+		</div>
+	<% end %>
+	<% if @list_guild.count > 0%>
+	<div class="break"></div>
+	<div class="element">
+		<div class="center">
+			<input id="search" placeholder="Search...">
+		</div>
+	</div>
+	<div class="break"></div>
+	<div class="big-element">
+		<div id="title">
+			<h2>Guilds</h2>
+		</div>
+		<% @i = 0%>
+		<div id="corp">
+			<% @list_guild.each do |guild| %>
+			<div class="war">
+				<div id="position">
+					<p><%= @i += 1 %></p>
+				</div>
+				<div id="target">
+					<p><%= guild.name %></p>
+				</div>
+				<div id="target">
+					<p><%= guild.nbmember %></p>
+				</div>
+				<div id="targetbtn">
+					<button id="attack" value="<% guild.id %>">Attack</button>
+				</div>
+			</div>
+		<% end %>
+		</div>
+	</div>
 	<% end %>
 </div>

@@ -1,47 +1,88 @@
 <div id="content-war">
-
-	<div id="content-guild">
-
-		<div id="big-element">
-			<div id="title">
-				<h2 id="guild_name">
-					<%= @guild1.name %>
-				</h2>
-			</div>
-			<div id="corp">
-				<% @i =0 %>
-				<% @list_users1.each do |user| %>
-				<div id="user">
-					<div id="position">
-						<p><%= @i += 1 %></p>
-					</div>
-					<div id="username">
-						<p><%= user.nickname %></p>
-					</div>
-				</div>
-				<% end %>
-			</div>
+	<div class="big-element" id="guild">
+		<div id="title">
+			<h2 id="guild_name">
+				<%= @guild1.name %>
+			</h2>
 		</div>
-		<div class="break"></div>
-		<div id="big-element">
-			<div id="title">
-					<%= @guild2.name %>
+		<div id="corp">
+			<% @i =0 %>
+			<% @list_users1.each do |user| %>
+			<div id="user">
+				<div id="position">
+					<p><%= @i += 1 %></p>
+				</div>
+				<div id="username">
+					<p><%= user.nickname %></p>
+				</div>
 			</div>
+			<% end %>
+		</div>
+	</div>
+	<div class="big-element" id="noBackground">
+		<div id="score">
+			<% if @war.points_guild1 > @war.points_guild2 %>
+				<h1><span class="text-green"><%= @war.points_guild1 %> </span> / <span class="text-red"><%= @war.points_guild2 %></span></h1>
+			<% else %>
+				<h1><span class="text-red"><%= @war.points_guild1 %> </span> / <span class="text-green"><%= @war.points_guild2 %></span></h1>
+			<% end%>
+			<% if @war.status == 1 && @datedays >= 2%>
+				<h1 class="text-orange">Start in : <%= @datedays %> days</h1>
+			<% elsif @war.status == 1 && @datedays < 2%>
+				<h1 class="text-orange">Start in : <%= @datehours / (60 * 60) %> heures</h1>
+			<% elsif @war.status == 2 %>
+				<h1 class="text-green">In war</h1>
+			<% elsif @war.status == 3 %>
+				<h1 class="text-red">Finished</h1>
+			<% end %>
+		</div>
+	</div>
+	<div class="big-element" id="guild">
+		<div id="title">
+			<h2 id="guild_name">
+				<%= @guild2.name %>
+			</h2>
+		</div>
+		<div id="corp">
+			<% @i =0 %>
+			<% @list_users2.each do |user| %>
+			<div id="user">
+				<div id="position">
+					<p><%= @i += 1 %></p>
+				</div>
+				<div id="username">
+					<p><%= user.nickname %></p>
+				</div>
+			</div>
+			<% end %>
+		</div>
+	</div>
+	<div class="break"></div>
+	<% if @wars_history.count > 0%>
+		<div class="big-element">
+			<div id="title">
+				<h2>Last fights</h2>
+			</div>
+			<% @i = 0%>
 			<div id="corp">
-				<% @i =0 %>
-				<% @list_users2.each do |user| %>
-				<div id="war">
+				<% @wars_history.each do |fight| %>
+				<div class="war">
 					<div id="position">
 						<p><%= @i += 1 %></p>
 					</div>
 					<div id="target">
-						<p><%= user.nickname %></p>
+						<p><%= User.find_by_id(fight.target_1).nickname %></p>
+					</div>
+					<div id="target">
+						<p><%= User.find_by_id(fight.target_2).nickname %></p>
+					</div>
+					<div id="target">
+						<p><%= fight.score_target_1 %> / <%= fight.score_target_2 %></p>
 					</div>
 				</div>
-				<% end %>
+			<% end %>
 			</div>
 		</div>
-
-	</div>
+	<% end %>
 
 </div>

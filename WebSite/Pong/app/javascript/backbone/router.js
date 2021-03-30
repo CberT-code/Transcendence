@@ -22,6 +22,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"wars": "wars",
 	"new_war": "new_war",
 	"show_war/:id": "show_war",
+	"edit_war/:id": "edit_war",
 },
 home: function() {
 	$.get("/").then(function(data){
@@ -95,6 +96,11 @@ new_war: function() {
 },
 show_war: function(id) {
 	$.get("/wars/" +  id, { id: id}).then(function(data){
+		$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
+	});
+},
+edit_war: function(id) {
+	$.get("/wars/" +  id + "/edit", { id: id}).then(function(data){
 		$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
 	});
 },

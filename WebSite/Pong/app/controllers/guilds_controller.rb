@@ -29,7 +29,7 @@ class GuildsController < ApplicationController
 			@guild = Guild.new;
 			@stat = Stat.new;
 			@stat.save;
-			@guild.update({name: params[:guildname], description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember]});
+			@guild.update({name: params[:guildname], description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember], id_admin: current_user.id});
 			@guild.nbmember = 1;
 			@guild.save;
 			User.find_by_id(current_user.id).update({"id_guild": @guild.id});

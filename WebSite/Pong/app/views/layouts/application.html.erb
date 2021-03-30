@@ -20,7 +20,7 @@
 			<h1 onClick="window.location='/#accounts'">PongGame</h1>
 		</div>
 		<div id="right">
-			<% if User.find_by_id(current_user.id).role == 1 %>
+			<% if current_user.role == 1 %>
 				<button onClick="window.location='/#accounts'" >Accounts</button>
 			<% else %>
 				<button onClick="window.location='/#show_user/<%= current_user.id %>'" >Account</button>
@@ -28,12 +28,17 @@
 			<button onClick="window.location='/#tchat'">Chat</button>
 			<button onClick="window.location='/#play'" >Play</button>
 
-			<% if User.find_by_id(current_user.id).id_guild == -1 %>
+			<% if current_user.id_guild == -1 %>
 				<button id="header-guild" onClick="window.location='/#guilds'">Guilds</button>
 				<button id="header-wars" class="displayOff" onClick="window.location='/#wars'">Wars</button>
 			<% else %>
 				<button id="header-guild" onClick="window.location='/#show_guild/<%= current_user.id_guild %>'">Guilds</button>
-				<button id="header-wars" class="displayOn" onClick="window.location='/#wars'">Wars</button>
+				<% @inwars = War.where('(id_guild1 = ? or id_guild2 = ?) and status = ?', current_user.id_guild, current_user.id_guild, 1) %>
+				<% if ( @inwars.count != 0) %>
+					<button id="header-wars" class="displayOn" onClick="window.location='/#show_war/<%= @inwars.ids[0] %>'">Wars</button>
+				<% else %>
+					<button id="header-wars" class="displayOn" onClick="window.location='/#wars'">Wars</button>
+				<% end %>
 			<% end %>
 			<button onClick="window.location='/#tournaments'">Tournaments</button>
 			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
