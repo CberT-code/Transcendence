@@ -48,11 +48,11 @@ class TchatController < ApplicationController
 			@id = params[:id]
 			@key = params[:key]
 			@message = params[:message]
-			@user_id = current_user.id
+			@user_id = current_user.id.to_s
 			@datas = Channel.find_by_id(@id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				if (@datas.blocked_users @datas.blocked_users.split(",").include? @user_id)
+				if (@datas.blocked_users && @datas.blocked_users.split(",").include?(@user_id))
 					render html: 2
 				else
 					Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
@@ -67,7 +67,7 @@ class TchatController < ApplicationController
 		if (!params[:id] || !params[:key] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
 		elsif (params[:type] == "1")
-			@user_id = current_user.id.t_s
+			@user_id = current_user.id.to_s
 			@block_user = params[:id]
 			if (@user_id == @block_user)
 				render html: "3"
@@ -77,7 +77,7 @@ class TchatController < ApplicationController
 			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
 			if (@datas)
 				@tmp = @datas.blocked_users ? @datas.blocked_users.split(",") : Array.new
-				if (!@tmp.include? @block_user)
+				if (!@tmp.include?(@block_user))
 					@tmp.push(@block_user)
 					@datas.update({blocked_users: @tmp.join(",")})
 					@datas.save
