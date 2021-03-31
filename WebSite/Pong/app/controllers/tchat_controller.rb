@@ -15,7 +15,7 @@ class TchatController < ApplicationController
 		else
 			@user_id = current_user.id
 			@title = params[:title]
-			@type = params[:type]
+			@type = params[:type].to_i
 			@blocked_users = ""
 			@date = Date.today
 			if (!Channel.find_by_title(@title))
@@ -36,9 +36,26 @@ class TchatController < ApplicationController
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.user_id == @user_id || $datas.type_channel == 2))
 				render json: @datas
-			else
-				render html: 2
+				return
 			end
+			render html: 2
+			return 
+		end
+	end
+	def getPrivateChannel
+		if (!params[:id] || !params[:key])
+			render html: "error-forbidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@key = params[:key]
+			@user_id = current_user.id
+			@datas = Channel.find_by_id(@id)
+			if (@datas && (@datas.key == @key || @datas.user_id == @user_id))
+				render json: @datas
+				return
+			end
+			render html: 2
+			return 
 		end
 	end
 	def sendMessageChannel
@@ -54,13 +71,14 @@ class TchatController < ApplicationController
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
 				if (@datas.blocked_users && @datas.blocked_users.split(",").include?(@user_id))
 					render html: 2
-				else
-					Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
-					render html: 1
+					return
 				end
-			else
-				render html: "error-fobidden", :status => :unauthorized
+				Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
+				render html: 1
+				return
 			end
+			render html: "error-fobidden", :status => :unauthorized
+			return
 		end
 	end
 	def userBlockChannel
@@ -113,7 +131,8 @@ class TchatController < ApplicationController
 			@id = params[:id]
 			@key = params[:key]
 			@user_id = current_user.id
-			if (Channel.find_by_id_and_key(@id, @key))
+			@datas = Channel.find_by_id_and_key(@id, @key)
+			if (@datas)
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
 				@is_admin = Channel.find_by_user_id(@user_id) ? 1 : 0

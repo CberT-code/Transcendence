@@ -15,18 +15,29 @@ ViewChannel = Backbone.View.extend(
             'click .CreateaChannel': "CreateaChannel",
             'click .cancelCreateChannel': "cancelCreateChannel",
             'click .submitCreatechannel': "submitCreatechannel",
-            "click #channel": "viewChannel",
+            "click .publicChannel": "viewPublicChannel",
+            "click .privateChannel": "viewPrivateChannel",
             "click .cancelMessage": "cancelChannel",
             "click .submitMessage": "submitMessage",
             "click .removeMessage": "removeMessage",
             "click .blockUserChannel": "blockUserChannel",
+            "click .cancelPrivateChannel": "cancelPrivChannel",
+            "click .submitPrivateChannel": "submitPrivateChannel",
         },
-        viewChannel: function (e) {
+        viewPublicChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();
             $(".default").css("display", "none");
             $(".channel").css("display", "flex");
             this.model.fetch({ "url": "/tchat/channel/get/" + id });
+        },
+        viewPrivateChannel: function (e) {
+            e.preventDefault();
+            var id = $($(e.currentTarget).children()[0]).val();
+            console.log("CHECK ID" + id);
+            $(".default").css("display", "none");
+            $(".pvChannel").css("display", "flex");
+            $(".privateChannelId").val(id);
         },
         CreateaChannel: function () {
             $(".default").css("display", "none");
@@ -41,11 +52,24 @@ ViewChannel = Backbone.View.extend(
             $(".channel").css("display", "none");
             $("#messages").empty();
         },
+        cancelPrivChannel: function () {
+            $(".default").css("display", "flex");
+            $(".pvChannel").css("display", "none");
+            console.log("CANCEL PRIVATE");
+        },
+        submitPrivateChannel: function() {
+            var key = $(".key").val();
+            var id = $(".privateChannelId").val();
+            if (key != "" && id != "")
+                window.app.models.ChannelPrivateMessageModel.fetch({ "url": "/tchat/channel/get/" + id + "/" + key});
+            else
+                notification("error", "Please complete the form...");
+
+        },
         removeMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
             var key = $(".Channelkey").val();
-            console.log(id);
             if (key != "")
                 $.post(
                     "/tchat/channel/message/remove",
@@ -106,7 +130,8 @@ ViewChannel = Backbone.View.extend(
                         if (data == 1) {
                             notification("success", "Message send !");
                             Backbone.history.loadUrl();
-                        }
+                        } else
+                            notification("error", "You can't send a message, you are blocked from this channel...");
                     },
                     'text'
                 );

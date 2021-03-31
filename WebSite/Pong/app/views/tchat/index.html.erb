@@ -11,28 +11,29 @@
                 <div id="list">
 
                     <% @channel.each do |element| %>
-                    <div id="channel">
+                    <% if (element.type_channel==1) %>
+                    <div id="channel" class="privateChannel">
                         <input type="hidden" value="<%= element.id %>">
                         <div id="icon">
-                            <% if (element.type_channel == 1) %>
                             <i class="fas fa-lock"></i>
-                            <% else %>
-                            <i class="fas fa-unlock"></i>
-                            <% end %>
                         </div>
                         <div id="info">
                             <p><%= element.title %></p>
                         </div>
                     </div>
+                    <% else %>
+                    <div id="channel" class="publicChannel">
+                        <input type="hidden" value="<%= element.id %>">
+                        <div id="icon">
+                            <i class="fas fa-unlock"></i>
+                        </div>
+                        <div id="info">
+                            <p><%= element.title %></p>
+                        </div>
+                    </div>
+                    <% end %>
 	            	<% end %>
                 </div>
-            </div>
-        </div>
-        <div id="element">
-            <div id="title">
-                <h2>private messages</h2>
-            </div>
-            <div id="corp">
             </div>
         </div>
     </div>
@@ -51,6 +52,21 @@
                 <div id="align">
                     <button type="button" class="cancelCreateChannel">Cancel</button>
                     <button type="button" class="submitCreatechannel">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="center" class="pvChannel">
+        <div id="element">
+            <div id="title">
+                <h2>Private channel</h2>
+            </div>
+            <form>
+                <input type="text" class="key" placeholder="Channel key..." maxlength="12">
+                <input type="hidden" class="privateChannelId" value="">
+                <div id="align">
+                    <button type="button" class="cancelPrivateChannel">Cancel</button>
+                    <button type="button" class="submitPrivateChannel">Create</button>
                 </div>
             </form>
         </div>
