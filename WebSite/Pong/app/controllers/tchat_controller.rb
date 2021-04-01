@@ -34,7 +34,7 @@ class TchatController < ApplicationController
 			@id = params[:id]
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
-			if (@datas && (@datas.user_id == @user_id || $datas.type_channel == 2))
+			if (@datas && (@datas.user_id == @user_id || @datas.type_channel == 2))
 				render json: @datas
 				return
 			end
@@ -57,6 +57,29 @@ class TchatController < ApplicationController
 			render html: 2
 			return 
 		end
+	end
+	def getAdminBlockedUsers
+		if (!params[:key])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@key = params[:key]
+		@user_id = current_user.id
+		@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+		if (!@datas)
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@tmp = @datas.blocked_users.split(",")
+		@ret = Array.new
+		@tmp.each do |element|
+			@id = element.to_i
+			@data = User.find_by_id(@id)
+			if (@data)
+				@ret.push({"user_id" => @id, "username" => @data.nickname});
+			end
+		end
+		render json: @ret
 	end
 	def sendMessageChannel
 		if (!params[:id] || !params[:key] || !params[:message])
@@ -124,6 +147,26 @@ class TchatController < ApplicationController
 			end
 		end
 	end
+	def removeBlockedUser
+		if (!params[:key] || !params[:id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@key = params[:key]
+		@id = params[:id]
+		@user_id = current_user.id
+		@datas = Channel.find_by_key(@key)
+		if (@datas && @datas.user_id == @user_id)
+			@tmp = @datas.blocked_users.split(",")
+			@tmp.delete(@id)
+			@datas.update({blocked_users: @tmp.join(",")})
+			@datas.save
+			render html: "1"
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
+		return
+	end
 	def getChannelMessage
 		if (!params[:id] || !params[:key])
 			render html: "error-fobidden", :status => :unauthorized
@@ -135,7 +178,7 @@ class TchatController < ApplicationController
 			if (@datas)
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
-				@is_admin = Channel.find_by_user_id(@user_id) ? 1 : 0
+				@is_admin = Channel.find_by_user_id_and_id(@user_id, @id) ? 1 : 0
 				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
 					@ret.push(["id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin])

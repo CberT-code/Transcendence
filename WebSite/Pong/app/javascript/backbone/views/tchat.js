@@ -23,11 +23,14 @@ ViewChannel = Backbone.View.extend(
             "click .blockUserChannel": "blockUserChannel",
             "click .cancelPrivateChannel": "cancelPrivChannel",
             "click .submitPrivateChannel": "submitPrivateChannel",
+            "click .submitAdminChannel": "submitAdminChannel",
+            "click .removeBlocked": "removeBlocked",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();
             $(".default").css("display", "none");
+            $("#messages").empty();
             $(".channel").css("display", "flex");
             this.model.fetch({ "url": "/tchat/channel/get/" + id });
         },
@@ -37,6 +40,7 @@ ViewChannel = Backbone.View.extend(
             console.log("CHECK ID" + id);
             $(".default").css("display", "none");
             $(".pvChannel").css("display", "flex");
+            $("#messages").empty();
             $(".privateChannelId").val(id);
         },
         CreateaChannel: function () {
@@ -50,12 +54,12 @@ ViewChannel = Backbone.View.extend(
         cancelChannel: function () {
             $(".default").css("display", "flex");
             $(".channel").css("display", "none");
+            $(".submitAdminChannel").css("display", "none");
             $("#messages").empty();
         },
         cancelPrivChannel: function () {
             $(".default").css("display", "flex");
             $(".pvChannel").css("display", "none");
-            console.log("CANCEL PRIVATE");
         },
         submitPrivateChannel: function() {
             var key = $(".key").val();
@@ -65,6 +69,14 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
 
+        },
+        submitAdminChannel: function() {
+            $(".channel").css("display", "none");
+            $(".adminChannel").css("display", "block");
+            $("#messages").empty();
+            $("#listBlocked").empty();
+            var key = $(".Channelkey").val();
+            window.app.models.ChannelAdminBlock.fetch({ "url": "/tchat/channel/blocked/" + key });
         },
         removeMessage: function (e) {
             e.preventDefault();
@@ -81,6 +93,26 @@ ViewChannel = Backbone.View.extend(
                     function (data) {
                         if (data == 1) {
                             notification("success", "Message remove !");
+                            Backbone.history.loadUrl();
+                        }
+                    },
+                    'text'
+                );
+        },
+        removeBlocked: function(e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
+            if (id != "" && key != "")
+                $.post(
+                    "/tchat/channel/blocked/" + key,
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "id": id,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User removed !");
                             Backbone.history.loadUrl();
                         }
                     },
@@ -107,7 +139,7 @@ ViewChannel = Backbone.View.extend(
                         } else if (data == 2) 
                             notification("error", "This user is already block...");
                         else
-                            notification("error", "You can block yourself...");
+                            notification("error", "You cannot block yourself...");
                     },
                     'text'
                 );

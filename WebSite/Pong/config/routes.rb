@@ -17,6 +17,8 @@ Rails.application.routes.draw do
 	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
 	post "/tchat/channel/message/remove", to: "tchat#removeMessageChannel"
 	post "/tchat/channel/user", to: "tchat#userBlockChannel"
+	post "/tchat/channel/blocked/:key", to: "tchat#removeBlockedUser"
+	get "/tchat/channel/blocked/:key", to: "tchat#getAdminBlockedUsers"
 	get "/tchat/channel/get/:id", to: "tchat#getChannel"
 	get "/tchat/channel/get/:id/:key", to: "tchat#getPrivateChannel"
 	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"

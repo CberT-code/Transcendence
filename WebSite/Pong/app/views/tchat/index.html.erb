@@ -25,7 +25,7 @@
                     <div id="channel" class="publicChannel">
                         <input type="hidden" value="<%= element.id %>">
                         <div id="icon">
-                            <% if (element.type_channel==2) %>
+                            <% if (element.type_channel==1) %>
                             <i class="fas fa-unlock"></i>
                             <% else %>
                             <i class="fas fa-lock"></i>
@@ -75,18 +75,35 @@
             </form>
         </div>
     </div>
+    <div id="center" class="adminChannel">
+        <div id="element">
+            <div id="title">
+                <h2 class="ChannelAdmintitle"></h2>
+            </div>
+            <div id="info">
+                <p class="ChannelAdminkey"><i class="fas fa-key"></i> </p>
+            </div>
+            <div id="listBlocked">
+            </div>
+            <div id="action">
+                <input type="hidden" class="adminId" value="">
+                <button type="button" class="cancelPrivateChannel">Cancel</button>
+            </div>
+        </div>
+    </div>
     <div id="center" class="channel">
         <div id="element">
             <div id="title">
-                <h2 class="Channeltitle"></h2>
+                <h2></h2>
             </div>
             <div id="messages">
             </div>
-            <div id="action">
+            <div id="action" class="actionChannel">
                 <input type="text" class="message" placeholder="Your message..." maxlength="90">
                 <input type="hidden" class="Channelkey" value="">
                 <button type="button" class="cancelMessage">Cancel</button>
                 <button type="button" class="submitMessage">send</button>
+                <button type="button" class="submitAdminChannel">Admin</button>
             </div>
         </div>
     </div>

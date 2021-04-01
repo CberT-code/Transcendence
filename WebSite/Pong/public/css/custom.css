@@ -1293,6 +1293,64 @@ button:hover {
 	font-size: 105%;
 	margin-bottom: 15px;
 }
+#content-tchat #center #element #info {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: flex;
+	padding-bottom: 25px;
+}
+#content-tchat #center #element #info p {
+	margin: auto;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+}
+#content-tchat #center #element #listBlocked {
+	width: 100%;
+	height: 475px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+	background-color: #cccccc69;
+	display: grid;
+	justify-content: center;
+	align-content: baseline;
+	padding-top: 15px;
+	grid-gap: 25px;
+}
+#content-tchat #center #element #listBlocked #blocked {
+	width: 485px;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	background-color: #ccc;
+}
+#content-tchat #center #element #listBlocked #blocked #username {
+	height: 100%;
+	width: 60%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #listBlocked #blocked #username p {
+	margin: auto;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	color: #231f20;
+}
+#content-tchat #center #element #listBlocked #blocked button {
+	height: 100%;
+	width: 40%;
+	border: none;
+	color: white;
+	cursor: pointer;
+	outline: none;
+	background-color: #231f20;
+	text-transform: uppercase;
+	overflow: hidden;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+}
 #content-tchat .createChannel {
 	display: none;
 }
@@ -1303,5 +1361,11 @@ button:hover {
 	display: none;
 }
 #content-tchat .pvChannel {
+	display: none;
+}
+#content-tchat .adminChannel {
+	display: none;
+}
+#content-tchat #action .submitAdminChannel {
 	display: none;
 }
