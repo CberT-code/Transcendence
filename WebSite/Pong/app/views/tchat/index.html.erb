@@ -11,7 +11,10 @@
                 <div id="list">
 
                     <% @channel.each do |element| %>
-                    <% if (element.type_channel==1 && element.user_id != current_user.id) %>
+                    <%
+                    if (!element.blocked_users || element.blocked_users == "" || (element.blocked_users.kind_of?(Array) && !element.blocked_users.split(",").include?(current_user.id.to_s)))
+                    if (element.type_channel==1 && element.user_id != current_user.id) 
+                    %>
                     <div id="channel" class="privateChannel">
                         <input type="hidden" value="<%= element.id %>">
                         <div id="icon">
@@ -37,6 +40,7 @@
                     </div>
                     <% end %>
 	            	<% end %>
+                    <% end %>
                 </div>
             </div>
         </div>
@@ -87,7 +91,7 @@
             </div>
             <div id="action">
                 <input type="hidden" class="adminId" value="">
-                <button type="button" class="cancelPrivateChannel">Cancel</button>
+                <button type="button" class="cancelAdminChannel">Cancel</button>
             </div>
         </div>
     </div>

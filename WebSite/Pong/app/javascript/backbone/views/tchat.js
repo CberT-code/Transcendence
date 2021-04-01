@@ -25,6 +25,7 @@ ViewChannel = Backbone.View.extend(
             "click .submitPrivateChannel": "submitPrivateChannel",
             "click .submitAdminChannel": "submitAdminChannel",
             "click .removeBlocked": "removeBlocked",
+            "click .cancelAdminChannel": "cancelAdminChannel",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -56,6 +57,10 @@ ViewChannel = Backbone.View.extend(
             $(".channel").css("display", "none");
             $(".submitAdminChannel").css("display", "none");
             $("#messages").empty();
+        },
+        cancelAdminChannel: function() {
+            $(".default").css("display", "flex");
+            $(".adminChannel").css("display", "none");
         },
         cancelPrivChannel: function () {
             $(".default").css("display", "flex");
