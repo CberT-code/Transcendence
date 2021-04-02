@@ -26,6 +26,7 @@ ViewChannel = Backbone.View.extend(
             "click .submitAdminChannel": "submitAdminChannel",
             "click .removeBlocked": "removeBlocked",
             "click .cancelAdminChannel": "cancelAdminChannel",
+            "click .muteUserChannel": "muteUserChannel",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -38,10 +39,10 @@ ViewChannel = Backbone.View.extend(
         viewPrivateChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();
-            console.log("CHECK ID" + id);
             $(".default").css("display", "none");
             $(".pvChannel").css("display", "flex");
             $("#messages").empty();
+            $(".ChannelAdminkey").empty();
             $(".privateChannelId").val(id);
         },
         CreateaChannel: function () {
@@ -58,24 +59,25 @@ ViewChannel = Backbone.View.extend(
             $(".submitAdminChannel").css("display", "none");
             $("#messages").empty();
         },
-        cancelAdminChannel: function() {
+        cancelAdminChannel: function () {
             $(".default").css("display", "flex");
             $(".adminChannel").css("display", "none");
+            $(".submitAdminChannel").css("display", "none");
         },
         cancelPrivChannel: function () {
             $(".default").css("display", "flex");
             $(".pvChannel").css("display", "none");
         },
-        submitPrivateChannel: function() {
+        submitPrivateChannel: function () {
             var key = $(".key").val();
             var id = $(".privateChannelId").val();
             if (key != "" && id != "")
-                window.app.models.ChannelPrivateMessageModel.fetch({ "url": "/tchat/channel/get/" + id + "/" + key});
+                window.app.models.ChannelPrivateMessageModel.fetch({ "url": "/tchat/channel/get/" + id + "/" + key });
             else
                 notification("error", "Please complete the form...");
 
         },
-        submitAdminChannel: function() {
+        submitAdminChannel: function () {
             $(".channel").css("display", "none");
             $(".adminChannel").css("display", "block");
             $("#messages").empty();
@@ -104,7 +106,7 @@ ViewChannel = Backbone.View.extend(
                     'text'
                 );
         },
-        removeBlocked: function(e) {
+        removeBlocked: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
             var key = $(".Channelkey").val();
@@ -127,7 +129,6 @@ ViewChannel = Backbone.View.extend(
         blockUserChannel: function (e) {
             var id = $(e.currentTarget).val();
             var key = $(".Channelkey").val();
-            console.log("KEY " + key);
             if (id != "" && key != "")
                 $.post(
                     "/tchat/channel/user",
@@ -141,10 +142,34 @@ ViewChannel = Backbone.View.extend(
                         if (data == 1) {
                             notification("success", "User blocked !");
                             Backbone.history.loadUrl();
-                        } else if (data == 2) 
+                        } else if (data == 2)
                             notification("error", "This user is already block...");
                         else
                             notification("error", "You cannot block yourself...");
+                    },
+                    'text'
+                );
+        },
+        muteUserChannel: function (e) {
+            var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
+            if (id != "" && key != "")
+                $.post(
+                    "/tchat/channel/user",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                        "type": 2
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User muted !");
+                            Backbone.history.loadUrl();
+                        } else if (data == 2)
+                            notification("error", "This user is already mute...");
+                        else
+                            notification("error", "You cannot mute yourself...");
                     },
                     'text'
                 );

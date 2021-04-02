@@ -38,7 +38,7 @@ ChannelMessageModel = Backbone.Model.extend({
             }
             response.forEach(function (element) {
                 if (element[0].admin == 1)
-                    $("#messages").append("<div id='message'><div id='content'><div id='username'><p>" + element[0].author + " - " + element[0].date + "</p></div><div id='text'><p>" + element[0].content + "</p></div></div><div id='action'><button value='" + element[0].id + "' class='removeMessage'>remove</button><button value='" + element[0].author_id + "' class='blockUserChannel'>block</button></div></div>");
+                    $("#messages").append("<div id='message'><div id='content'><div id='username'><p>" + element[0].author + " - " + element[0].date + "</p></div><div id='text'><p>" + element[0].content + "</p></div></div><div id='action'><button value='" + element[0].id + "' class='removeMessage'>remove</button><button value='" + element[0].author_id + "' class='blockUserChannel'>block</button><button value='" + element[0].author_id + "' class='muteUserChannel'>mute</button></div></div>");
                 else
                     $("#messages").append("<div id='message'><div id='content'><div id='username'><p>" + element[0].author + " - " + element[0].date + "</p></div><div id='text'><p>" + element[0].content + "</p></div></div></div>");
             });

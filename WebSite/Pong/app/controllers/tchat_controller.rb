@@ -70,13 +70,15 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@tmp = @datas.blocked_users.split(",")
 		@ret = Array.new
-		@tmp.each do |element|
-			@id = element.to_i
-			@data = User.find_by_id(@id)
-			if (@data)
-				@ret.push({"user_id" => @id, "username" => @data.nickname});
+		if (@datas.blocked_users.kind_of?(Array))
+			@tmp = @datas.blocked_users.split(",")
+			@tmp.each do |element|
+				@id = element.to_i
+				@data = User.find_by_id(@id)
+				if (@data)
+					@ret.push({"user_id" => @id, "username" => @data.nickname});
+				end
 			end
 		end
 		render json: @ret
@@ -105,10 +107,10 @@ class TchatController < ApplicationController
 		end
 	end
 	def userBlockChannel
+		@user_id = current_user.id.to_s
 		if (!params[:id] || !params[:key] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
 		elsif (params[:type] == "1")
-			@user_id = current_user.id.to_s
 			@block_user = params[:id]
 			if (@user_id == @block_user)
 				render html: "3"
@@ -125,8 +127,28 @@ class TchatController < ApplicationController
 					render html: "1"
 					return 
 				end
-					render html: "2"
+				render html: "2"
+				return 
+			end
+		elsif (params[:type] == "2")
+			@mute_user = params[:id]
+			@key = params[:key]
+			if (@user_id == @mute_user)
+				render html: "3"
+				return
+			end
+			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			if (@datas)
+				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
+				if (!@tmp.include?(@block_user))
+					@tmp.push(@block_user)
+					@datas.update({muted_users: @tmp.join(",")})
+					@datas.save
+					render html: "1"
 					return 
+				end
+				render html: "2"
+				return 
 			end
 		end
 		render html: "error-fobidden", :status => :unauthorized
