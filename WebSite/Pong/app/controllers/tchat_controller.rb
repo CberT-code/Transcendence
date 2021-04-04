@@ -150,6 +150,21 @@ class TchatController < ApplicationController
 				render html: "2"
 				return 
 			end
+		elsif (params[:type] == "3")
+			@mute_user = params[:id]
+			@key = params[:key]
+			if (@user_id == @mute_user)
+				render html: "3"
+				return
+			end
+			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			if (@datas)
+				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
+				@tmp.delete(@mute_user)
+				@datas.update({muted_users: @tmp.join(",")})
+				render html: "1"
+				return
+			end
 		end
 		render html: "error-fobidden", :status => :unauthorized
 	end

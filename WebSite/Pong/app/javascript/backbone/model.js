@@ -41,7 +41,7 @@ ChannelMessageModel = Backbone.Model.extend({
                 if (element.admin == 1) {
                     ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button><button value='" + element.author_id + "' class='blockUserChannel'>block</button>";
                     if (element.muted == 1)
-                        ret += "<button class='unmuteUser' value='" + element.author_id + "'>unmute</button>";
+                        ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
                     else
                         ret += "<button class='muteUserChannel' value='" + element.author_id + "'>mute</button>";
                     ret += "</div>";

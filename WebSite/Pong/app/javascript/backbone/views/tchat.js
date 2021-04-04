@@ -27,6 +27,7 @@ ViewChannel = Backbone.View.extend(
             "click .removeBlocked": "removeBlocked",
             "click .cancelAdminChannel": "cancelAdminChannel",
             "click .muteUserChannel": "muteUserChannel",
+            "click .unmuteUserChannel": "unmuteUserChannel",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -160,6 +161,30 @@ ViewChannel = Backbone.View.extend(
                         "key": key,
                         "id": id,
                         "type": 2
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User muted !");
+                            Backbone.history.loadUrl();
+                        } else if (data == 2)
+                            notification("error", "This user is already mute...");
+                        else
+                            notification("error", "You cannot mute yourself...");
+                    },
+                    'text'
+                );
+        },
+        unmuteUserChannel: function (e) {
+            var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
+            if (id != "" && key != "")
+                $.post(
+                    "/tchat/channel/user",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                        "type": 3
                     },
                     function (data) {
                         if (data == 1) {
