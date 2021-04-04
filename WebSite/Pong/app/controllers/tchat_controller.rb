@@ -196,14 +196,15 @@ class TchatController < ApplicationController
 			@id = params[:id]
 			@key = params[:key]
 			@user_id = current_user.id
-			@datas = Channel.find_by_id_and_key(@id, @key)
-			if (@datas)
+			@channel = Channel.find_by_id_and_key(@id, @key)
+			if (@channel)
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
-				@is_admin = Channel.find_by_user_id_and_id(@user_id, @id) ? 1 : 0
-				@datas.each do |element|
+				@is_admin = @channel.user_id == @user_id ? 1 : 0
+				@is_muted = (@channel.muted_users && @channel.muted_users.split(",").include?(@user_id.to_s)) ? 1 : 0
+ 				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
-					@ret.push(["id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin])
+					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_muted})
 				end
 				render json: @ret
 			else

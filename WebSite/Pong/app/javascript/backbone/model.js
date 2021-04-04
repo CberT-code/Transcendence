@@ -19,7 +19,7 @@ ChannelModel = Backbone.Model.extend({
     parse: function (response) {
         $(".Channeltitle").html(response.title);
         $(".ChannelAdmintitle").html("admin " + response.title);
-        $(".ChannelAdminkey").append(response.key);
+        $(".ChannelAdminkey").html("KEY" + response.key);
         $(".Channelkey").attr("value", response.key);
         $(".submitMessage").attr("value", response.id);
         var id = response.id;
@@ -32,15 +32,22 @@ ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
         console.log(response);
         if (Array.isArray(response)) {
-            console.log(response[0][0]);
-            if (response[0][0].admin == 1) {
+            console.log(response[0]);
+            if (response[0].admin == 1) {
                 $(".submitAdminChannel").css("display", "block");
             }
             response.forEach(function (element) {
-                if (element[0].admin == 1)
-                    $("#messages").append("<div id='message'><div id='content'><div id='username'><p>" + element[0].author + " - " + element[0].date + "</p></div><div id='text'><p>" + element[0].content + "</p></div></div><div id='action'><button value='" + element[0].id + "' class='removeMessage'>remove</button><button value='" + element[0].author_id + "' class='blockUserChannel'>block</button><button value='" + element[0].author_id + "' class='muteUserChannel'>mute</button></div></div>");
-                else
-                    $("#messages").append("<div id='message'><div id='content'><div id='username'><p>" + element[0].author + " - " + element[0].date + "</p></div><div id='text'><p>" + element[0].content + "</p></div></div></div>");
+                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
+                if (element.admin == 1) {
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button><button value='" + element.author_id + "' class='blockUserChannel'>block</button>";
+                    if (element.muted == 1)
+                        ret += "<button class='unmuteUser' value='" + element.author_id + "'>unmute</button>";
+                    else
+                        ret += "<button class='muteUserChannel' value='" + element.author_id + "'>mute</button>";
+                    ret += "</div>";
+                }
+                ret += "</div>";
+                $("#messages").append(ret);
             });
         }
     }
@@ -49,9 +56,9 @@ ChannelMessageModel = Backbone.Model.extend({
 ChannelAdminBlock = Backbone.Model.extend({
     parse: function (response) {
         if (Array.isArray(response)) {
-           response.forEach(function (element) {
-            $("#listBlocked").append("<div id='blocked'><div id='username'><p>"+ element.username +"</p></div><button class='removeBlocked' value='"+ element.user_id +"'>remove</button></div>");
-           });
+            response.forEach(function (element) {
+                $("#listBlocked").append("<div id='blocked'><div id='username'><p>" + element.username + "</p></div><button class='removeBlocked' value='" + element.user_id + "'>remove</button></div>");
+            });
         }
     }
 });

@@ -42,7 +42,6 @@ ViewChannel = Backbone.View.extend(
             $(".default").css("display", "none");
             $(".pvChannel").css("display", "flex");
             $("#messages").empty();
-            $(".ChannelAdminkey").empty();
             $(".privateChannelId").val(id);
         },
         CreateaChannel: function () {
