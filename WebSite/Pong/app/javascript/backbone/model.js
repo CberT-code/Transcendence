@@ -23,6 +23,10 @@ ChannelModel = Backbone.Model.extend({
         $(".Channelkey").attr("value", response.key);
         $(".Channelid").attr("value", response.id);
         $(".submitMessage").attr("value", response.id);
+        if (response.type_channel == 1)
+            $(".ChannelAdminMode").html("change to private");
+        else
+            $(".ChannelAdminMode").html("change to public");
         var id = response.id;
         var key = response.key;
         window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
@@ -78,6 +82,10 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
             $(".Channeltitle").html(response.title);
             $(".Channelkey").attr("value", response.key);
             $(".submitMessage").attr("value", response.id);
+            if (response.type_channel == 1)
+                $(".ChannelAdminMode").html("change to private");
+            else
+                $(".ChannelAdminMode").html("change to public");
             window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + response.id + "/" + response.key });
         }
     }

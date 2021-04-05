@@ -28,6 +28,7 @@ ViewChannel = Backbone.View.extend(
             "click .cancelAdminChannel": "cancelAdminChannel",
             "click .muteUserChannel": "muteUserChannel",
             "click .unmuteUserChannel": "unmuteUserChannel",
+            "click .ChannelAdminMode": "UpateChannelType",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
         },
         viewPublicChannel: function (e) {
@@ -90,12 +91,12 @@ ViewChannel = Backbone.View.extend(
             e.preventDefault();
             var id = $(e.currentTarget).val();
             var channel_id = $(".Channelid").val();
-            if (key != "")
+            if (channel_id != "")
                 $.post(
                     "/tchat/channel/message/remove",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channelId": channel_id,
+                        "channel_id": channel_id,
                         "id": id,
                     },
                     function (data) {
@@ -212,6 +213,24 @@ ViewChannel = Backbone.View.extend(
                             notification("error", "This user is already unmute...");
                         else
                             notification("error", "You cannot unmute yourself...");
+                    },
+                    'text'
+                );
+        },
+        UpateChannelType: function (e) {
+            var channelId = $(".Channelid").val();
+            if (channelId != "")
+                $.post(
+                    "/tchat/channel/type",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "channelId": channelId,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Channel type updated !");
+                            Backbone.history.loadUrl();
+                        }
                     },
                     'text'
                 );

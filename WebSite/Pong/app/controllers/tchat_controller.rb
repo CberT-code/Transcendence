@@ -224,6 +224,23 @@ class TchatController < ApplicationController
 		end
 		render html: "error-forbidden", :status => :unauthorized
 	end
+	def UpdateChannelType
+		if (!params[:channelId])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@channelId = params[:channelId]
+		@user_id = current_user.id
+		@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
+		if (@datas)
+			@datas.update({type_channel: (@datas.type_channel == 1 ? 2 : 1)})
+			@datas.save
+			render html: "1"
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
+		return
+	end
 	def getChannelMessage
 		if (!params[:id] || !params[:key])
 			render html: "error-fobidden", :status => :unauthorized
