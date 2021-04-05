@@ -19,8 +19,9 @@ ChannelModel = Backbone.Model.extend({
     parse: function (response) {
         $(".Channeltitle").html(response.title);
         $(".ChannelAdmintitle").html("admin " + response.title);
-        $(".ChannelAdminkey").html("KEY" + response.key);
+        $(".ChannelAdminkey").val(response.key);
         $(".Channelkey").attr("value", response.key);
+        $(".Channelid").attr("value", response.id);
         $(".submitMessage").attr("value", response.id);
         var id = response.id;
         var key = response.key;
@@ -39,7 +40,11 @@ ChannelMessageModel = Backbone.Model.extend({
             response.forEach(function (element) {
                 var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
-                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button><button value='" + element.author_id + "' class='blockUserChannel'>block</button>";
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
+                    if (element.blocked == 1)
+                        ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unblock</button>";
+                    else
+                        ret += "<button class='blockUserChannel' value='" + element.author_id + "'>block</button>";
                     if (element.muted == 1)
                         ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
                     else
@@ -57,7 +62,7 @@ ChannelAdminBlock = Backbone.Model.extend({
     parse: function (response) {
         if (Array.isArray(response)) {
             response.forEach(function (element) {
-                $("#listBlocked").append("<div id='blocked'><div id='username'><p>" + element.username + "</p></div><button class='removeBlocked' value='" + element.user_id + "'>remove</button></div>");
+                $("#listBlocked").append("<div id='blocked'><div id='username'><p>" + element.username + "</p></div><button class='removeBlocked' value='" + element.user_id + "'>UnBlock</button></div>");
             });
         }
     }

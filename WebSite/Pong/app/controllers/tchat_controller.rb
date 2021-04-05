@@ -59,13 +59,13 @@ class TchatController < ApplicationController
 		end
 	end
 	def getAdminBlockedUsers
-		if (!params[:key])
+		if (!params[:id])
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@key = params[:key]
+		@id = params[:id]
 		@user_id = current_user.id
-		@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+		@datas = Channel.find_by_id_and_user_id(@id, @user_id)
 		if (!@datas)
 			render html: "error-forbidden", :status => :unauthorized
 			return
@@ -108,7 +108,7 @@ class TchatController < ApplicationController
 	end
 	def userBlockChannel
 		@user_id = current_user.id.to_s
-		if (!params[:id] || !params[:key] || !params[:type])
+		if (!params[:id] || !params[:channelId] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
 		elsif (params[:type] == "1")
 			@block_user = params[:id]
@@ -116,8 +116,8 @@ class TchatController < ApplicationController
 				render html: "3"
 				return
 			end
-			@key = params[:key]
-			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			@channelId = params[:channelId]
+			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 			if (@datas)
 				@tmp = @datas.blocked_users ? @datas.blocked_users.split(",") : Array.new
 				if (!@tmp.include?(@block_user))
@@ -132,12 +132,12 @@ class TchatController < ApplicationController
 			end
 		elsif (params[:type] == "2")
 			@mute_user = params[:id]
-			@key = params[:key]
+			@channelId = params[:channelId]
 			if (@user_id == @mute_user)
 				render html: "3"
 				return
 			end
-			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 			if (@datas)
 				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
 				if (!@tmp.include?(@block_user))
@@ -152,12 +152,12 @@ class TchatController < ApplicationController
 			end
 		elsif (params[:type] == "3")
 			@mute_user = params[:id]
-			@key = params[:key]
+			@channelId = params[:channelId]
 			if (@user_id == @mute_user)
 				render html: "3"
 				return
 			end
-			@datas = Channel.find_by_key_and_user_id(@key, @user_id)
+			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 			if (@datas)
 				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
 				@tmp.delete(@mute_user)
@@ -169,13 +169,13 @@ class TchatController < ApplicationController
 		render html: "error-fobidden", :status => :unauthorized
 	end
 	def removeMessageChannel
-		if (!params[:id] || !params[:key])
+		if (!params[:id] || !params[:channel_id])
 			render html: "error-fobidden", :status => :unauthorized
 		else
 			@id = params[:id]
-			@key = params[:key]
+			@channel_id = params[:channel_id]
 			@user_id = current_user.id
-			if (Channel.find_by_user_id_and_key(@user_id, @key))
+			if (Channel.find_by_user_id_and_id(@user_id, @channel_id))
 				Messages.find_by_id(@id).destroy
 				render html: "1"
 				return 
@@ -204,6 +204,26 @@ class TchatController < ApplicationController
 		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
+	def UpdateChannelKey
+		if (!params[:id] || !params[:key])
+			render html: "error-forbidden", :status => :unauthorized
+		else
+			@id = params[:id]
+			@key = params[:key]
+			@user_id = current_user.id
+			@datas = Channel.find_by_id_and_user_id(@id, @user_id)
+			if (@datas)
+				if (@key !~ /[!@#$%^&*()_+{}\[\]:;'"\/\\?><.,]/)
+					@datas.update({:key => @key})
+					@datas.save
+					render html: "1"
+					return
+				end
+				render html: "2"
+			end
+		end
+		render html: "error-forbidden", :status => :unauthorized
+	end
 	def getChannelMessage
 		if (!params[:id] || !params[:key])
 			render html: "error-fobidden", :status => :unauthorized
@@ -217,9 +237,10 @@ class TchatController < ApplicationController
 				@ret = Array.new
 				@is_admin = @channel.user_id == @user_id ? 1 : 0
 				@is_muted = (@channel.muted_users && @channel.muted_users.split(",").include?(@user_id.to_s)) ? 1 : 0
+				@is_blocked = (@channel.blocked_users && @channel.blocked_users.split(",").include?(@user_id.to_s)) ? 1 : 0
  				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
-					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_muted})
+					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_muted, "blocked" => @is_blocked})
 				end
 				render json: @ret
 			else

@@ -28,6 +28,7 @@ ViewChannel = Backbone.View.extend(
             "click .cancelAdminChannel": "cancelAdminChannel",
             "click .muteUserChannel": "muteUserChannel",
             "click .unmuteUserChannel": "unmuteUserChannel",
+            "keyup .ChannelAdminkey": "UpdateChannelKey",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -43,7 +44,7 @@ ViewChannel = Backbone.View.extend(
             $(".default").css("display", "none");
             $(".pvChannel").css("display", "flex");
             $("#messages").empty();
-            $(".privateChannelId").val(id);
+            $(".Channelid").val(id);
         },
         CreateaChannel: function () {
             $(".default").css("display", "none");
@@ -70,7 +71,7 @@ ViewChannel = Backbone.View.extend(
         },
         submitPrivateChannel: function () {
             var key = $(".key").val();
-            var id = $(".privateChannelId").val();
+            var id = $(".Channelid").val();
             if (key != "" && id != "")
                 window.app.models.ChannelPrivateMessageModel.fetch({ "url": "/tchat/channel/get/" + id + "/" + key });
             else
@@ -82,19 +83,19 @@ ViewChannel = Backbone.View.extend(
             $(".adminChannel").css("display", "block");
             $("#messages").empty();
             $("#listBlocked").empty();
-            var key = $(".Channelkey").val();
-            window.app.models.ChannelAdminBlock.fetch({ "url": "/tchat/channel/blocked/" + key });
+            var id = $(".Channelid").val();
+            window.app.models.ChannelAdminBlock.fetch({ "url": "/tchat/channel/blocked/" + id });
         },
         removeMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
-            var key = $(".Channelkey").val();
+            var channel_id = $(".Channelid").val();
             if (key != "")
                 $.post(
                     "/tchat/channel/message/remove",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "key": key,
+                        "channelId": channel_id,
                         "id": id,
                     },
                     function (data) {
@@ -128,13 +129,13 @@ ViewChannel = Backbone.View.extend(
         },
         blockUserChannel: function (e) {
             var id = $(e.currentTarget).val();
-            var key = $(".Channelkey").val();
-            if (id != "" && key != "")
+            var channelId = $(".Channelid").val();
+            if (id != "" && channelId != "")
                 $.post(
                     "/tchat/channel/user",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "key": key,
+                        "channelId": channelId,
                         "id": id,
                         "type": 1
                     },
@@ -152,13 +153,13 @@ ViewChannel = Backbone.View.extend(
         },
         muteUserChannel: function (e) {
             var id = $(e.currentTarget).val();
-            var key = $(".Channelkey").val();
-            if (id != "" && key != "")
+            var channelId = $(".Channelid").val();
+            if (id != "" && id != "")
                 $.post(
                     "/tchat/channel/user",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "key": key,
+                        "channelId": channelId,
                         "id": id,
                         "type": 2
                     },
@@ -174,26 +175,43 @@ ViewChannel = Backbone.View.extend(
                     'text'
                 );
         },
+        UpdateChannelKey: function (e) {
+            e.preventDefault();
+            var key = $(e.currentTarget).val();
+            var id = $(".Channelid").val();
+            if (key != "" && id != "")
+                $.post(
+                    "/tchat/channel/key",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "key": key,
+                        "id": id,
+                    },
+                    function (data) {
+                    },
+                    'text'
+                );
+        },
         unmuteUserChannel: function (e) {
             var id = $(e.currentTarget).val();
-            var key = $(".Channelkey").val();
-            if (id != "" && key != "")
+            var channelId = $(".Channelid").val();
+            if (id != "" && channelId != "")
                 $.post(
                     "/tchat/channel/user",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "key": key,
+                        "channelId": channelId,
                         "id": id,
                         "type": 3
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "User muted !");
+                            notification("success", "User unmuted !");
                             Backbone.history.loadUrl();
                         } else if (data == 2)
-                            notification("error", "This user is already mute...");
+                            notification("error", "This user is already unmute...");
                         else
-                            notification("error", "You cannot mute yourself...");
+                            notification("error", "You cannot unmute yourself...");
                     },
                     'text'
                 );

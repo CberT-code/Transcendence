@@ -71,7 +71,6 @@
             </div>
             <form>
                 <input type="text" class="key" placeholder="Channel key..." maxlength="12">
-                <input type="hidden" class="privateChannelId" value="">
                 <div id="align">
                     <button type="button" class="cancelPrivateChannel">Cancel</button>
                     <button type="button" class="submitPrivateChannel">Create</button>
@@ -85,7 +84,14 @@
                 <h2 class="ChannelAdmintitle"></h2>
             </div>
             <div id="info">
-                <p class="ChannelAdminkey"><i class="fas fa-key"></i> </p>
+                <div id="input-text">
+                    <div id="left">
+                        <p>Key :</p>
+                    </div>
+                    <div id="right">
+                        <input type="text" maxlength="12" class="ChannelAdminkey" placeholder="Indicate the channel key...">
+                    </div>
+                </div>
             </div>
             <div id="listBlocked">
             </div>
@@ -105,6 +111,7 @@
             <div id="action" class="actionChannel">
                 <input type="text" class="message" placeholder="Your message..." maxlength="90">
                 <input type="hidden" class="Channelkey" value="">
+                <input type="hidden" class="Channelid" value="">
                 <button type="button" class="cancelMessage">Cancel</button>
                 <button type="button" class="submitMessage">send</button>
                 <button type="button" class="submitAdminChannel">Admin</button>

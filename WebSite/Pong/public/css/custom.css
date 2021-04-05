@@ -1122,12 +1122,9 @@ button:hover {
 	width: 85%;
 	overflow: hidden;
 	display: flex;
-}
-#content-tchat #center #element #corp #list #channel #info p {
-	margin: auto;
-	color: #231f20;
-	font-family: "Roboto-Medium";
-	font-size: 115%;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
 }
 #content-tchat #center #element form {
 	width: 100%;
@@ -1299,6 +1296,42 @@ button:hover {
 	overflow: hidden;
 	display: flex;
 	padding-bottom: 25px;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element #info #input-text {
+	height: 55px;
+	width: 65%;
+	overflow: hidden;
+	display: flex;
+	border-bottom: solid 2px #231f20;
+}
+#content-tchat #center #element #info #input-text #left {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #info #input-text #right {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+}
+#content-tchat #center #element #info #input-text #right input {
+	height: 100%;
+	width: 100%;
+	border: none;
+	overflow: hidden;
+	background-color: transparent;
+	font-family: "Roboto-Medium";
+	font-size: 105%;
+}
+#content-tchat #center #element #info #input-text p {
+	margin: auto;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	font-size: 105%;
 }
 #content-tchat #center #element #info p {
 	margin: auto;
