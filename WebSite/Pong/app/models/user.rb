@@ -2,6 +2,8 @@ class User < ApplicationRecord
 	has_many :games
 	has_many :hosted_games, class_name: 'History', foreign_key: 'host_id'
 	has_many :foreign_games, class_name: 'History', foreign_key: 'opponent_id'
+	belongs_to :guild, optional: true
+	belongs_to :stat
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 	devise :database_authenticatable, :registerable,
@@ -18,10 +20,7 @@ class User < ApplicationRecord
 
 		@stat = Stat.new
 		@stat.save
-		user.id_stats = @stat.id
-
-		user.name = user.email.split('@')[0]
-		user.picture_url = 'https://cdn.intra.42.fr/users/large_' + user.name + '.jpg'
+		user.stat_id = @stat.id
 		user.save!
 	  end
 	end

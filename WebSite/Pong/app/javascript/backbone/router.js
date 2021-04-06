@@ -25,6 +25,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"show_war/:id": "show_war",
 	"edit_war/:id": "edit_war",
 	"error/403": "error403",
+	//play
+	// "new_play": "new_play",
 },
 home: function() {
 	$.get("/").then(function(data){
@@ -112,4 +114,14 @@ error403: function(id) {
 		$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
 	});
 },
+play: function(id) {
+	$.get("/histories").then(function(data){
+		$("main").html("<div id='content-history'>" + ($(data).find("#content-history").html()) + "</div>");
+	});
+},
+// new_play: function(id) {
+// 	$.get("/histories/new").then(function(data){
+// 		$("main").html("<div id='content-history'>" + ($(data).find("#content-history").html()) + "</div>");
+// 	});
+// },
 });

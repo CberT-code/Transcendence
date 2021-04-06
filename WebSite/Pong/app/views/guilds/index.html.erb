@@ -1,7 +1,7 @@
 <div id="content-guilds">
 	<div id="element">
 		<div id="center">
-			<% if current_user.id_guild == -1 %>
+			<% if !current_user.guild_id %>
 			<div id="left">
 				<button class="green_button" onClick="window.location='/#new_guild'">Create your guild</button>
 			</div>

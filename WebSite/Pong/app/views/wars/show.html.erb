@@ -21,7 +21,7 @@
 	</div>
 	<div class="big-element" id="noBackground">
 		<div id="score">
-			<h1><%= Tournament.find_by_id(@war.id_tournament).name %></h1>
+			<h1><%= Tournament.find_by_id(@war.tournament_id).name %></h1>
 			<% if @war.points_guild1 > @war.points_guild2 %>
 				<h1><span class="text-green"><%= @war.points_guild1 %> </span> / <span class="text-red"><%= @war.points_guild2 %></span></h1>
 			<% else %>
@@ -73,13 +73,13 @@
 						<p><%= @i += 1 %></p>
 					</div>
 					<div id="target">
-						<p><%= User.find_by_id(fight.target_1).nickname %></p>
+						<p><%= User.find_by_id(fight.host_id).nickname %></p>
 					</div>
 					<div id="target">
-						<p><%= User.find_by_id(fight.target_2).nickname %></p>
+						<p><%= User.find_by_id(fight.opponent_id).nickname %></p>
 					</div>
 					<div id="target">
-						<p><%= fight.score_target_1 %> / <%= fight.score_target_2 %></p>
+						<p><%= fight.score_host_id %> / <%= fight.score_opponent_id %></p>
 					</div>
 				</div>
 			<% end %>

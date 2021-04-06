@@ -12,7 +12,7 @@
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.select :id_tournament, options_for_select(@list_tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
+				<%= f.select :tournament_id, options_for_select(@list_tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
 			</div>
 		</div>
 		<div class="element">

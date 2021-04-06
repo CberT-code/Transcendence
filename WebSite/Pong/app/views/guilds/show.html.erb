@@ -1,5 +1,5 @@
 <div id="content-guild">
-	<input id="id_guild" type="hidden" maxlenght="10" value="<%= @guild.id %>">
+	<input id="guild_id" type="hidden" maxlenght="10" value="<%= @guild.id %>">
 	<div id="element">
 		<div id="title">
 			<h2 id="guild_name">
@@ -82,17 +82,17 @@
 				<% @i=0%>
 				<% @wars_histories.each do |wars_history| %>
 					<div id="war">
-					<% if (Guild.find_by_id(wars_history.target_1) && Guild.find_by_id(wars_history.target_2)) %>
-						<% @color1 = wars_history.score_target_1 > wars_history.score_target_2 ? "green" : "red"; %>
-						<% @color2 = wars_history.score_target_1 < wars_history.score_target_2 ? "green" : "red" ; %>
+					<% if (Guild.find_by_id(wars_history.host_id) && Guild.find_by_id(wars_history.opponent_id)) %>
+						<% @color1 = wars_history.score_host_id > wars_history.score_opponent_id ? "green" : "red"; %>
+						<% @color2 = wars_history.score_host_id < wars_history.score_opponent_id ? "green" : "red" ; %>
 						<div id="position">
 							<p><%= @i += 1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.target_1).name %> : <%= wars_history.score_target_1 %></p>
+							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.score_host_id %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.target_2).name %> : <%= wars_history.score_target_2 %></p>
+							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.score_opponent_id %></p>
 						</div>
 					<% end %>
 					</div>
@@ -107,7 +107,7 @@
 		<div id="corp">
 			<% if @my_guild == 1%>
 			<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
-			<% elsif current_user.id_guild == -1 %>
+			<% elsif !current_user.guild_id %>
 			<button class="green_button" id="join_guild">join this guild</button>
 			<% end %>
 			<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>

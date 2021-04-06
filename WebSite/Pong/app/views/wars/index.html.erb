@@ -1,5 +1,5 @@
 <div id="content-wars">
-	<% if (User.find(current_user.id).id_guild != -1 || @admin == 1) %>
+	<% if (User.find(current_user.id).guild_id || @admin == 1) %>
 		<div id="element">
 
 				<% if @admin == 1 && @request_sent.count == 0 %>
@@ -18,7 +18,7 @@
 				<div id="war">
 					<div id="position">
 						<p><%= @i += 1 %></p>
-						<%= @enemy = war.id_guild1 == @guild.id ? war.id_guild1 : war.id_guild2; %>
+						<%= @enemy = war.guild_id1 == @guild.id ? war.guild_id1 : war.guild_id2; %>
 					</div>
 					<div id="target">
 						<p><%= Guild.find_by_id(@enemy).name %></p>
@@ -30,7 +30,7 @@
 						<p><%= war.players %> players</p>
 					</div>
 					<div id="target">
-					<% if (@guild.id == war.id_guild1 && war.status == 0) then %>
+					<% if (@guild.id == war.guild_id1 && war.status == 0) then %>
 							<p>Sended</p>
 					<% elsif (war.status == 0) then %>
 						<button id="Accept" value="<%= war.id %>" >Accept</button>
@@ -58,10 +58,10 @@
 						<p><%= @i += 1 %></p>
 					</div>
 					<div id="target">
-						<p><%= Guild.find_by_id(war.id_guild1).name %></p>
+						<p><%= Guild.find_by_id(war.guild_id1).name %></p>
 					</div>
 					<div id="target">
-						<p><%= Guild.find_by_id(war.id_guild2).name %></p>
+						<p><%= Guild.find_by_id(war.guild_id2).name %></p>
 					</div>
 					<div id="target">
 						<p><%= war.points_guild1 %> / <%= war.points_guild2 %></p>

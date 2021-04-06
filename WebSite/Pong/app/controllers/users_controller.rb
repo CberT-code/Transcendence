@@ -13,10 +13,10 @@ class UsersController < ApplicationController
 
 	def show
 		if (!@user.deleted)
-			@user_stat = Stat.find_by_id(@user.id_stats);
-			@guild = Guild.find_by_id(@user.id_guild);
+			@user_stat = @user.stat;
+			@guild = @user.guild;
 			@current = current_user.id == @user.id ? 1 : 0;
-			@histories = History.where('target_1 = ? or target_2 = ?', @user.id, @user.id);
+			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
 		else
 			render 'error/403', :status => :unauthorized
 		end
@@ -46,10 +46,10 @@ class UsersController < ApplicationController
 	def destroy
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1)
-			if (@user.id_guild != -1)
+			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				Stat.find_by_id(@user.id_stats).destroy;
+				Stat.find_by_id(@user.stat_id).destroy;
 				@user.update({"deleted": TRUE});
 				destroy_user_session_path;
 				render html: "success";

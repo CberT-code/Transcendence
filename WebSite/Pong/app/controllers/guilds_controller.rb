@@ -11,13 +11,13 @@ class GuildsController < ApplicationController
 	end
 
 	def new
-		if (current_user.id_guild != -1) then
+		if (current_user.guild_id) then
 			render 'error/403', :status => :unauthorized
 		end
 	end
 	
 	def create
-		if (current_user.id_guild != -1) then
+		if (current_user.guild_id) then
 			render 'error/403', :status => :unauthorized
 		end
 		if (params[:guildname] == "")
@@ -39,7 +39,7 @@ class GuildsController < ApplicationController
 			@guild.update({name: params[:guildname], anagramme: params[:guildname].first(5), description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember], id_admin: current_user.id, deleted: false});
 			@guild.nbmember = 1;
 			@guild.save;
-			User.find_by_id(current_user.id).update({"id_guild": @guild.id});
+			User.find_by_id(current_user.id).update({"guild_id": @guild.id});
 			render html: @guild.id;
 		end
 	end
@@ -51,9 +51,9 @@ class GuildsController < ApplicationController
 			render 'error/403', :status => :unauthorized;
 		end
 		@user = User.find_by_id(current_user.id);
-		@my_guild = @guild.id == current_user.id_guild ? 1 : 0;
-		@wars_histories = History.where('target_1 = ? or target_2 = ?', @guild.id, @guild.id);
-		@list_users = User.where('id_guild = ?', @guild.id);
+		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
+		@wars_histories = History.where('host_id = ? or opponent_id = ?', @guild.id, @guild.id);
+		@list_users = User.where('guild_id = ?', @guild.id);
 		@ban_users = @guild.banned;
 		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
 	end
@@ -61,8 +61,8 @@ class GuildsController < ApplicationController
 	def update
 		
 		@new_admin = User.find_by_id(params[:id_admin]);
-		@guild = Guild.find_by_id(@new_admin.id_guild);
-		if ((@current_user.id_guild == @guild.id && @guild.id_admin == current_user.id  ) || @admin == 1)
+		@guild = Guild.find_by_id(@new_admin.guild_id);
+		if ((@current_user.guild_id == @guild.id && @guild.id_admin == current_user.id  ) || @admin == 1)
 			@guild.update({'id_admin': @new_admin.id});
 			render html: @guild.id;
 		else
@@ -73,10 +73,10 @@ class GuildsController < ApplicationController
 	# destroy need a solution to kill user if it's the user or the super admin
 	def destroy
 		@usertodelete = User.find_by_id(params[:id]);
-		@guild = Guild.find_by_id(@usertodelete.id_guild);
+		@guild = Guild.find_by_id(@usertodelete.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
 		@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
-		if (@usertodelete.id_guild != -1 && (@admin == 1 || (@officer == 1 && @usertodelete != @guild.id_admin))) then
+		if (@usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete != @guild.id_admin))) then
 			if (@guild.id_admin == @usertodelete.id && @guild.nbmember != 1)
 				render html: "error-admin";
 			else
@@ -87,13 +87,13 @@ class GuildsController < ApplicationController
 					@guild.update(nbmember: @guild.nbmember - 1);
 					@guild.officers.delete(@usertodelete.id);
 				end
-				@usertodelete.update({"id_guild": '-1'});
+				@usertodelete.update({"guild_id": '-1'});
 				render html: 2;
 			end
 		elsif (@usertodelete.id == current_user.id)
 			@guild.update(nbmember: @guild.nbmember - 1);
 			@guild.officers.delete(@usertodelete.id);
-			@usertodelete.update({"id_guild": '-1'});
+			@usertodelete.update({"guild_id": '-1'});
 			render html: 1;
 		else
 			render html: 1;
@@ -103,9 +103,9 @@ class GuildsController < ApplicationController
 
 	def ban
 		@usertoban = User.find_by_id(params[:id]);
-		@guild = Guild.find_by_id(@usertoban.id_guild);
+		@guild = Guild.find_by_id(@usertoban.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
-		if (@usertoban.id_guild != -1 && @admin == 1) then
+		if (@usertoban.guild_id && @admin == 1) then
 			if (@guild.id_admin == @usertoban.id && @guild.nbmember != 1)
 				render html: "error-admin";
 			else
@@ -115,7 +115,7 @@ class GuildsController < ApplicationController
 					render html: "error-yourself";
 				else
 					@guild.update(nbmember: @guild.nbmember - 1);
-					@usertoban.update({"id_guild": '-1'});
+					@usertoban.update({"guild_id": '-1'});
 					if (@guild.banned.count == 0)
 						@guild.update({banned: [@usertoban.id]});
 					else
@@ -142,13 +142,13 @@ class GuildsController < ApplicationController
 
 	def join
 		@user = User.find_by_id(current_user.id);
-		if (@user.id_guild == -1) then
+		if (!@user.guild_id) then
 			@guild = Guild.find_by_id(params[:id]);
 			if (@guild.banned.include? @user.id)
 				render html: "error_banned";
 			elsif (@guild.nbmember < @guild.maxmember)
 				@guild.update(nbmember: @guild.nbmember + 1);
-				@user.update({"id_guild": @guild.id});
+				@user.update({"guild_id": @guild.id});
 				render html: @guild.id;
 			else
 				render html: "error_max";
@@ -162,7 +162,7 @@ class GuildsController < ApplicationController
 		@list_guild = Guild.where("LOWER(name) LIKE LOWER(?)", params[:search] + "%");
 		@ret = Array.new
 		@list_guild.each do |guild|
-			if (guild.id != current_user.id_guild)
+			if (guild.id != current_user.guild_id)
 				@ret.push(["id" => guild.id, "name" => guild.name, "nbmember" => guild.nbmember])
 			end
 		end

@@ -144,7 +144,7 @@ ViewWars = Backbone.View.extend(
 				'points' : $("#histories_points").val(),
 				'date_start' : $("#histories_date_start").val(),
 				'date_end' : $("#histories_date_end").val(),
-				'id_tournament' : $("#histories_id_tournament").val(),
+				'tournament_id' : $("#histories_tournament_id").val(),
 			},
 			function (data) 
 			{

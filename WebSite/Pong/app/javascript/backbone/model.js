@@ -10,7 +10,7 @@ AccountModel = Backbone.Model.extend({
     parse: function (response) {
         console.log("parse !");
         for (var tmp in response) {
-            $("#container-history").append("<div id='game'><div id='name'><p>" + response[tmp].target_1 + " " + response[tmp].target_2 + "</p></div><div id='score'><p>socre " + response[tmp].score_target_1 + " " + response[tmp].score_target_2 + " </p></div></div>");
+            $("#container-history").append("<div id='game'><div id='name'><p>" + response[tmp].host_id + " " + response[tmp].opponent_id + "</p></div><div id='score'><p>socre " + response[tmp].score_host_id + " " + response[tmp].score_opponent_id + " </p></div></div>");
         }
     }
 });

@@ -17,7 +17,7 @@
 					<% else %>
 						<h1 class="username"><%= @user.nickname %></h1>
 					<% end %>
-					<h3><%= @user.id_guild == -1 ? "NO GUILD" : @guild.name %></h3>
+					<h3><%= !@user.guild_id ? "NO GUILD" : @guild.name %></h3>
 				</div>
 			</div>
 		</div>
@@ -68,20 +68,20 @@
 					<% @histories.each do |history| %>
 						<div id="game">
 							<div id="icon">
-								<% if (history.score_target_1 > history.score_target_2) %>
+								<% if (history.host_score > history.opponent_score) %>
 								<i id="" class="fas fa-check"></i>
 								<% else %>
 								<i class="fas fa-times"></i>
 								<% end %>
 							</div>
 							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></p>
+								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
 							</div>
 							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></p>
+								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
 							</div>
 							<div id="score">
-								<p><%= history.score_target_1 %> / <%= history.score_target_2 %></p>
+								<p><%= history.host_score %> / <%= history.opponent_score %></p>
 							</div>
 						</div>
 					<% end %>

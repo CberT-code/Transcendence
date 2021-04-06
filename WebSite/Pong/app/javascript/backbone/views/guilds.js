@@ -134,7 +134,7 @@ ViewGuilds = Backbone.View.extend(
 			'/guilds/unban',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"idguild": $("#id_guild").val(),
+				"idguild": $("#guild_id").val(),
 				"id": $("#id").val(),
 			},
 			function (data) 
@@ -223,7 +223,7 @@ ViewGuilds = Backbone.View.extend(
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				'select': $(e.currentTarget).val(),
-				"idguild": $("#id_guild").val(),
+				"idguild": $("#guild_id").val(),
 				"id": $("#id").val(),
 			},
 			function (data) 

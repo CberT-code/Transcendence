@@ -1,12 +1,15 @@
-<%= link_to 'NEW_GAME', '/histories/new' %>
-<% @history.each do |game| %>
-    <li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
-<% end %>
-<% @history_bis.each do |game| %>
-    <li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
-<% end %>
-<div>
-    <p>TESTING : <%= @me.id %></p>
-    <div id='dev'></div>
-    <div id='foo'></div>
+<div id="content-history">
+<button onClick="window.location='/#new_play'">New Game</button>
+	<%= link_to 'NEW_GAME', '/histories/new' %>
+	<% @history.each do |game| %>
+		<li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
+	<% end %>
+	<% @history_bis.each do |game| %>
+		<li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
+	<% end %>
+	<div>
+		<p>TESTING : <%= @me.id %></p>
+		<div id='dev'></div>
+		<div id='foo'></div>
+	</div>
 </div>

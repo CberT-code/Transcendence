@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_06_094903) do
+ActiveRecord::Schema.define(version: 2021_04_06_173918) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 2021_04_06_094903) do
   end
 
   create_table "histories", force: :cascade do |t|
-    t.integer "id_tournament", default: 1, null: false
+    t.integer "tournament_id", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "statut"
@@ -101,8 +101,6 @@ ActiveRecord::Schema.define(version: 2021_04_06_094903) do
   create_table "users", force: :cascade do |t|
     t.string "nickname", null: false
     t.string "email", null: false
-    t.integer "id_guild", default: -1, null: false
-    t.integer "id_stats", null: false
     t.string "image", default: "", null: false
     t.boolean "available", default: false, null: false
     t.integer "role", default: 0, null: false
@@ -123,18 +121,19 @@ ActiveRecord::Schema.define(version: 2021_04_06_094903) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.string "picture_url"
+    t.bigint "guild_id"
+    t.bigint "stat_id", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["id_guild"], name: "index_users_on_id_guild"
-    t.index ["id_stats"], name: "index_users_on_id_stats", unique: true
+    t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["stat_id"], name: "index_users_on_stat_id"
   end
 
   create_table "wars", force: :cascade do |t|
-    t.integer "id_tounament", default: 1, null: false
-    t.integer "id_guild1", null: false
+    t.integer "guild_id1", null: false
     t.integer "team1", default: [], array: true
     t.integer "points_guild1", default: 0, null: false
-    t.integer "id_guild2", null: false
+    t.integer "guild_id2", null: false
     t.integer "team2", default: [], array: true
     t.integer "points_guild2", default: 0, null: false
     t.datetime "start"
@@ -142,6 +141,11 @@ ActiveRecord::Schema.define(version: 2021_04_06_094903) do
     t.integer "points", null: false
     t.integer "players", null: false
     t.integer "status", default: 0, null: false
+    t.bigint "tournament_id", null: false
+    t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 
+  add_foreign_key "users", "guilds"
+  add_foreign_key "users", "stats"
+  add_foreign_key "wars", "tournaments"
 end
