@@ -20,7 +20,7 @@ class TchatController < ApplicationController
 			@date = Date.today
 			if (!Channel.find_by_title(@title))
 				@key = SecureRandom.urlsafe_base64(8)
-				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date, :blocked_users=>@blocked_users)
+				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date)
 				render html: "1"
 			else
 				render html: "2"
@@ -92,9 +92,10 @@ class TchatController < ApplicationController
 			@message = params[:message]
 			@user_id = current_user.id.to_s
 			@datas = Channel.find_by_id(@id)
+			@sanction = Sanctions.find_by_id_user_id_target_id(@datas.id, @user_id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				if (@datas.blocked_users && @datas.blocked_users.split(",").include?(@user_id))
+				if (@sanctions && @sanction.end_time <= Time.new.to_i && @sanction.sanction_type == 1)
 					render html: 2
 					return
 				end
@@ -110,7 +111,7 @@ class TchatController < ApplicationController
 		@user_id = current_user.id.to_s
 		if (!params[:id] || !params[:channelId] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
-		elsif (params[:type] == "1")
+		elsif (params[:type] == "1" || params[:type] == "2")
 			@block_user = params[:id]
 			if (@user_id == @block_user)
 				render html: "3"
@@ -119,35 +120,8 @@ class TchatController < ApplicationController
 			@channelId = params[:channelId]
 			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 			if (@datas)
-				@tmp = @datas.blocked_users ? @datas.blocked_users.split(",") : Array.new
-				if (!@tmp.include?(@block_user))
-					@tmp.push(@block_user)
-					@datas.update({blocked_users: @tmp.join(",")})
-					@datas.save
-					render html: "1"
-					return 
-				end
-				render html: "2"
-				return 
-			end
-		elsif (params[:type] == "2")
-			@mute_user = params[:id]
-			@channelId = params[:channelId]
-			if (@user_id == @mute_user)
-				render html: "3"
-				return
-			end
-			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-			if (@datas)
-				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
-				if (!@tmp.include?(@block_user))
-					@tmp.push(@block_user)
-					@datas.update({muted_users: @tmp.join(",")})
-					@datas.save
-					render html: "1"
-					return 
-				end
-				render html: "2"
+				Sanctions.create(:sanction_type=> @type.to_i, :user_id=> @datas.id, target_id: @block_user.to_i, :create_time=>@date)
+				render html: "1"
 				return 
 			end
 		elsif (params[:type] == "3")
