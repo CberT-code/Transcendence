@@ -10,10 +10,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_05_191419) do
+ActiveRecord::Schema.define(version: 2021_04_06_094903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "channels", force: :cascade do |t|
+    t.datetime "create_time", null: false
+    t.integer "user_id", null: false
+    t.string "title", null: false
+    t.string "key", null: false
+    t.integer "type_channel", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.string "type_name", default: "", null: false
+    t.string "description", default: "", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "guilds", force: :cascade do |t|
     t.string "name", default: "", null: false
@@ -42,6 +59,26 @@ ActiveRecord::Schema.define(version: 2021_04_05_191419) do
     t.integer "points", null: false
     t.datetime "start"
     t.datetime "end"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "messages", force: :cascade do |t|
+    t.datetime "create_time", null: false
+    t.integer "user_id", null: false
+    t.integer "message_type", null: false
+    t.string "message", null: false
+    t.integer "target_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "sanctions", force: :cascade do |t|
+    t.datetime "create_time", null: false
+    t.integer "end_time", null: false
+    t.integer "user_id", null: false
+    t.integer "sanction_type", null: false
+    t.integer "target_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

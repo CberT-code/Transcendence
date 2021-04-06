@@ -1,9 +1,16 @@
+function notification(typef, textf) {
+    var notification = new Noty({ theme: 'mint', type: typef, text: textf });
+    notification.setTimeout(4500);
+    notification.show();
+    console.log("notif");
+}
+
 AccountModel = Backbone.Model.extend({
     urlRoot: "/account/history",
     parse: function (response) {
         console.log("parse !");
         for (var tmp in response) {
-            $("#container-history").append("<div id='game'><div id='name'><p>" + response[tmp].target_1 +" " + response[tmp].target_2 + "</p></div><div id='score'><p>socre " + response[tmp].score_target_1 + " " + response[tmp].score_target_2 + " </p></div></div>");
+            $("#container-history").append("<div id='game'><div id='name'><p>" + response[tmp].target_1 + " " + response[tmp].target_2 + "</p></div><div id='score'><p>socre " + response[tmp].score_target_1 + " " + response[tmp].score_target_2 + " </p></div></div>");
         }
     }
 });
@@ -11,11 +18,18 @@ AccountModel = Backbone.Model.extend({
 ChannelModel = Backbone.Model.extend({
     parse: function (response) {
         $(".Channeltitle").html(response.title);
+        $(".ChannelAdmintitle").html("admin " + response.title);
+        $(".ChannelAdminkey").val(response.key);
         $(".Channelkey").attr("value", response.key);
+        $(".Channelid").attr("value", response.id);
         $(".submitMessage").attr("value", response.id);
+        if (response.type_channel == 1)
+            $(".ChannelAdminMode").html("change to private");
+        else
+            $(".ChannelAdminMode").html("change to public");
         var id = response.id;
         var key = response.key;
-        window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });;
+        window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
     }
 });
 
@@ -23,32 +37,61 @@ ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
         console.log(response);
         if (Array.isArray(response)) {
-            response.forEach(function(element) {
-                if (element[0].admin == 1)
-                    $("#messages").append("<div id='message'><div id='content'><div id='username'><p>"+ element[0].author +" - "+ element[0].date +"</p></div><div id='text'><p>"+ element[0].content  +"</p></div></div><div id='action'><button value='"+ element[0].id +"' class='removeMessage'>remove</button><button value='"+ element[0].author_id +"' class='block'>block</button></div></div>");
-                else
-                    $("#messages").append("<div id='message'><div id='content'><p>"+ element[0].content  +"</p></div><div id='info'><p>"+ element[0].author +"</p></div></div>");
+            console.log(response[0]);
+            if (response[0].admin == 1) {
+                $(".submitAdminChannel").css("display", "block");
+            }
+            response.forEach(function (element) {
+                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
+                if (element.admin == 1) {
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
+                    if (element.blocked == 1)
+                        ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unblock</button>";
+                    else
+                        ret += "<button class='blockUserChannel' value='" + element.author_id + "'>block</button>";
+                    if (element.muted == 1)
+                        ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
+                    else
+                        ret += "<button class='muteUserChannel' value='" + element.author_id + "'>mute</button>";
+                    ret += "</div>";
+                }
+                ret += "</div>";
+                $("#messages").append(ret);
             });
         }
     }
 });
 
-// SearchGuildForWarModel = Backbone.Model.extend({
-//     parse: function (response) {
-//         console.log(response);
-//         if (Array.isArray(response)) {
-// 			i = 0;
-//             response.forEach(
-// 				function(guild) {
-// 					console.log("ici i = " + i);
-// 					i += 1;
-// 					$("#corp").append("<div class='war'><div id='position'><p>" + i + "</p></div><div id='target'><p>" + guild[0].name + "</p></div><div id='target'><p>" + guild[0].nbmember + "</p></div><div id='target'><p>" + guild[0].points + "</p></div><div id='targetbtn'><button id='attack' value='" + guild[0].id + "'>Attack</button></div></div>");
-// 				}
-// 			);
-//         }
-//     }
-// });
+ChannelAdminBlock = Backbone.Model.extend({
+    parse: function (response) {
+        if (Array.isArray(response)) {
+            response.forEach(function (element) {
+                $("#listBlocked").append("<div id='blocked'><div id='username'><p>" + element.username + "</p></div><button class='removeBlocked' value='" + element.user_id + "'>UnBlock</button></div>");
+            });
+        }
+    }
+});
 
+ChannelPrivateMessageModel = Backbone.Model.extend({
+    parse: function (response) {
+        if (response == 2) {
+            notification("error", "This key is not correct...");
+        } else {
+            $(".pvChannel").css("display", "none");
+            $(".channel").css("display", "flex");
+            $(".Channeltitle").html(response.title);
+            $(".Channelkey").attr("value", response.key);
+            $(".submitMessage").attr("value", response.id);
+            if (response.type_channel == 1)
+                $(".ChannelAdminMode").html("change to private");
+            else
+                $(".ChannelAdminMode").html("change to public");
+            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + response.id + "/" + response.key });
+        }
+    }
+});
+
+window.app.models.ChannelPrivateMessageModel = new ChannelPrivateMessageModel;
 window.app.models.ChannelMessageModel = new ChannelMessageModel;
 window.app.models.ChannelModel = new ChannelModel;
-// window.app.models.SearchGuildForWarModel = new SearchGuildForWarModel;
+window.app.models.ChannelAdminBlock = new ChannelAdminBlock;

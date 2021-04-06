@@ -5,7 +5,6 @@ Rails.application.routes.draw do
     	delete "sign_out", :to => "devise/sessions#destroy", :as => :destroy_user_session_path
 	end
 	# get "/account", to: "pages#account"
-	get "/tchat", to: "pages#tchat"
 	get "/play", to: "pages#play"
 	get "/501", to: "error#403"
 
@@ -15,7 +14,18 @@ Rails.application.routes.draw do
 
 	# post "/guilds/guildcreate", to: "post#GuildsCreate"
 	post "/guilds/join", to: "guilds#join"
-	
+	post "/tchat/channel/create", to: "tchat#channelCreate"
+	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
+	post "/tchat/channel/message/remove", to: "tchat#removeMessageChannel"
+	post "/tchat/channel/user", to: "tchat#userBlockChannel"
+	post "/tchat/channel/blocked/:key", to: "tchat#removeBlockedUser"
+	post "/tchat/channel/key", to: "tchat#UpdateChannelKey"
+	post "/tchat/channel/type", to: "tchat#UpdateChannelType"
+	get "/tchat/channel/blocked/:id", to: "tchat#getAdminBlockedUsers"
+	get "/tchat/channel/get/:id", to: "tchat#getChannel"
+	get "/tchat/channel/get/:id/:key", to: "tchat#getPrivateChannel"
+	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"
+
 	resources :guilds
 	resources :tournaments
 	resources :users
@@ -28,4 +38,5 @@ Rails.application.routes.draw do
 	post "/guilds/unban", to: "guilds#unban"
 	post "/guilds/officer", to: "guilds#officer"
 	post "/guilds/anagramme", to: "guilds#anagramme"
+	resources :tchat
 end

@@ -117,6 +117,12 @@ header #left h1 {
 	text-transform: uppercase;
 	font-family: "Roboto-BoldItalic";
 	font-size: 125%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+header #left h1:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
 }
 header #right {
 	height: 100%;
@@ -1764,4 +1770,488 @@ background-color: #7BE12B;
 	font-family: "Roboto-Thin";
 	font-size: 80%;
 	resize: none;
+}
+#content-tchat {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center {
+	height: min-content;
+	width: max-content;
+	max-width: 100%;
+	overflow: hidden;
+	margin: auto;
+}
+#content-tchat #center #element {
+	height: min-content;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border-radius: 9px;
+	width: 600px;
+	margin-left: 15px;
+	margin-right: 15px;
+	background-color: white;
+	border: solid 1px #e1e1e1;
+}
+#content-tchat #center #element #title {
+	width: 100%;
+	height: 45px;
+	display: flex;
+	overflow: hidden;
+	margin-bottom: 25px;
+}
+#content-tchat #center #element #title h2 {
+	font-size: 135%;
+	margin: auto;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+	text-transform: uppercase;
+}
+#content-tchat #center #element #corp {
+	width: 100%;
+	height: 450px;
+	overflow: hidden;
+	padding-top: 15px;
+}
+#content-tchat #center #element #corp #action {
+	width: 100%;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	margin-bottom: 15px;
+}
+#content-tchat #center #element #corp #action button {
+	height: 55px;
+	border: none;
+	border-radius: 9px;
+	text-transform: uppercase;
+	margin: auto;
+	width: max-content;
+	padding-left: 15px;
+	padding-right: 15px;
+	background-color: #231f20;
+	cursor: pointer;
+	color: white;
+	font-size: 110%;
+	font-family: "Roboto-Medium";
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #corp #action button:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #corp #list {
+	width: 100%;
+	height: calc(100% - 95px);
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+}
+#content-tchat #center #element #corp #list #channel {
+	width: 90%;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 9px;
+	background-color: #ccc;
+	margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #corp #list #channel:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #corp #list #channel #icon {
+	height: 100%;
+	width: 15%;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-tchat #center #element #corp #list #channel #icon i {
+	margin: auto;
+	color: white;
+	font-size: 120%;
+}
+#content-tchat #center #element #corp #list #channel #info {
+	height: 100%;
+	width: 85%;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element form {
+	width: 100%;
+	height: calc(100% - 45px);
+	overflow: hidden;
+	display: grid;
+	grid-gap: 20px;
+	padding-top: 30px;
+}
+#content-tchat #center #element form #align {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+	height: min-content;
+	width: 100%;
+}
+#content-tchat #center #element form #align button {
+	margin-left: 15px;
+	margin-right: 15px;
+	border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	cursor: pointer;
+	background-color: #231f20;
+}
+#content-tchat #center #element form input {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: solid 2px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+}
+#content-tchat #center #element form select {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	border-bottom: solid 2px #231f20;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+	text-align: center;
+}
+#content-tchat #center #element #messages {
+	width: 100%;
+	height: 475px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+	background-color: #cccccc69;
+}
+#content-tchat #center #element #messages #message {
+	height: min-content;
+	padding: 15px;
+	width: 95%;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	overflow: hidden;
+	color: #231f20;
+}
+#content-tchat #center #element #messages #message #content {
+	height: 150px;
+	width: 80%;
+	overflow: hidden;
+}
+#content-tchat #center #element #messages #message #content #username {
+	width: 100%;
+	height: 20%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #messages #message #content #username p {
+	margin-top: auto;
+	margin-bottom: auto;
+	font-size: 95%;
+	font-family: "Roboto-Thin";
+}
+#content-tchat #center #element #messages #message #content #text {
+	width: 100%;
+	height: 80%;
+	overflow: hidden;
+	display: block;
+}
+#content-tchat #center #element #messages #message #content #text p {
+	font-size: 105%;
+	font-family: "Roboto-Medium";
+	word-wrap: break-word;
+}
+#content-tchat #center #element #messages #message #action {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+	padding: 0px;
+}
+#content-tchat #center #element #messages #message button {
+	font-size: 95%;
+	font-family: "Roboto-Thin";
+	background-color: transparent;
+	padding: 0px;
+	color: #231f20;
+}
+#content-tchat #center #element #action {
+	display: flex;
+	width: 100%;
+	height: min-content;
+	padding-top: 25px;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element #action button {
+	margin-left: 15px;
+	margin-right: 15px;
+	border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	cursor: pointer;
+	background-color: #231f20;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #action input {
+	width: 80%;
+	height: min-content;
+	outline: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: solid 2px #231f20;
+	overflow: hidden;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+	margin-bottom: 15px;
+}
+#content-tchat #center #element #mode {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+#content-tchat #center #element #mode button {
+	margin-left: 15px;
+	margin-right: 15px;
+	border: none;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	cursor: pointer;
+	background-color: #231f20;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #swapAdmin {
+	overflow: hidden;
+	width: 100%;
+	height: min-content;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element #swapAdmin #input-text{
+	height: 55px;
+	width: 65%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #left {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #left input {
+	height: 90%;
+	width: 100%;
+	border: none;
+	overflow: hidden;
+	background-color: transparent;
+	font-family: "Roboto-Medium";
+	font-size: 95%;
+	border-bottom: solid 2px #231f20;
+	margin: auto;
+	outline: none;
+}
+#content-tchat #center #element #swapAdmin #input-text #right {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #right button {
+	margin: auto;
+	height: min-content;
+	width: max-content;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	padding-right: 15px;
+	padding-left: 15px;
+	border: none;
+	color: white;
+	cursor: pointer;
+	outline: none;
+	background-color: #231f20;
+	text-transform: uppercase;
+	overflow: hidden;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+}
+#content-tchat #center #element #info {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: flex;
+	padding-bottom: 25px;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element #info #input-text {
+	height: 55px;
+	width: 65%;
+	overflow: hidden;
+	display: flex;
+	border-bottom: solid 2px #231f20;
+}
+#content-tchat #center #element #info #input-text #left {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #info #input-text #right {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+}
+#content-tchat #center #element #info #input-text #right input {
+	height: 100%;
+	width: 100%;
+	border: none;
+	overflow: hidden;
+	background-color: transparent;
+	font-family: "Roboto-Medium";
+	font-size: 95%;
+}
+#content-tchat #center #element #info #input-text p {
+	margin: auto;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	font-size: 105%;
+}
+#content-tchat #center #element #info p {
+	margin: auto;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+}
+#content-tchat #center #element #listBlocked {
+	width: 100%;
+	height: 475px;
+	overflow-x: hidden;
+	overflow-y: auto;
+	scrollbar-width: none;
+	background-color: #cccccc69;
+	display: grid;
+	justify-content: center;
+	align-content: baseline;
+	padding-top: 15px;
+	grid-gap: 25px;
+}
+#content-tchat #center #element #listBlocked #blocked {
+	width: 485px;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	background-color: #ccc;
+}
+#content-tchat #center #element #listBlocked #blocked #username {
+	height: 100%;
+	width: 60%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #listBlocked #blocked #username p {
+	margin: auto;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	color: #231f20;
+}
+#content-tchat #center #element #listBlocked #blocked button {
+	height: 100%;
+	width: 40%;
+	border: none;
+	color: white;
+	cursor: pointer;
+	outline: none;
+	background-color: #231f20;
+	text-transform: uppercase;
+	overflow: hidden;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+}
+#content-tchat .createChannel {
+	display: none;
+}
+#content-tchat .default {
+	display: flex;
+}
+#content-tchat .channel {
+	display: none;
+}
+#content-tchat .pvChannel {
+	display: none;
+}
+#content-tchat .adminChannel {
+	display: none;
+}
+#content-tchat #action .submitAdminChannel {
+	display: none;
 }
