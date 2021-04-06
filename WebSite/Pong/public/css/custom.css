@@ -1318,6 +1318,66 @@ button:hover {
 	background-color: #231f20;
 	transition-duration: 0.5s;
 }
+#content-tchat #center #element #swapAdmin {
+	overflow: hidden;
+	width: 100%;
+	height: min-content;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-tchat #center #element #swapAdmin #input-text{
+	height: 55px;
+	width: 65%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #left {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #left input {
+	height: 90%;
+	width: 100%;
+	border: none;
+	overflow: hidden;
+	background-color: transparent;
+	font-family: "Roboto-Medium";
+	font-size: 95%;
+	border-bottom: solid 2px #231f20;
+	margin: auto;
+	outline: none;
+}
+#content-tchat #center #element #swapAdmin #input-text #right {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #element #swapAdmin #input-text #right button {
+	margin: auto;
+	height: min-content;
+	width: max-content;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	padding-right: 15px;
+	padding-left: 15px;
+	border: none;
+	color: white;
+	cursor: pointer;
+	outline: none;
+	background-color: #231f20;
+	text-transform: uppercase;
+	overflow: hidden;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+}
 #content-tchat #center #element #info {
 	width: 100%;
 	height: min-content;
@@ -1353,7 +1413,7 @@ button:hover {
 	overflow: hidden;
 	background-color: transparent;
 	font-family: "Roboto-Medium";
-	font-size: 105%;
+	font-size: 95%;
 }
 #content-tchat #center #element #info #input-text p {
 	margin: auto;
