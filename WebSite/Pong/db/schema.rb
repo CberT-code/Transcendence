@@ -53,7 +53,21 @@ ActiveRecord::Schema.define(version: 2021_04_06_094903) do
     t.datetime "start"
     t.datetime "end"
     t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+	t.datetime "updated_at", precision: 6, null: false
+	
+	t.integer "statut"
+    t.bigint "host_id"
+    t.bigint "opponent_id"
+    t.integer "host_height"
+    t.integer "oppo_height"
+    t.integer "ball_x"
+    t.integer "ball_y"
+    t.integer "ball_x_dir"
+    t.integer "ball_y_dir"
+    t.integer "host_score"
+    t.integer "opponent_score"
+    t.index ["host_id"], name: "index_histories_on_host_id"
+    t.index ["opponent_id"], name: "index_histories_on_opponent_id"
   end
 
   create_table "messages", force: :cascade do |t|

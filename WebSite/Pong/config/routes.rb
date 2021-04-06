@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 	devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
+
 	root to: "pages#home"
+
 	devise_scope :user do
     	delete "sign_out", :to => "devise/sessions#destroy", :as => :destroy_user_session_path
 	end
@@ -39,4 +41,8 @@ Rails.application.routes.draw do
 	post "/guilds/officer", to: "guilds#officer"
 	post "/guilds/anagramme", to: "guilds#anagramme"
 	resources :tchat
+
+	resources :histories
+	post "/histories/run/:id", to: "histories#run"
+	post "/histories/wait/:id", to: "histories#wait"
 end

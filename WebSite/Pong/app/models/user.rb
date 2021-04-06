@@ -1,13 +1,17 @@
 class User < ApplicationRecord
+	has_many :games
+	has_many :hosted_games, class_name: 'History', foreign_key: 'host_id'
+	has_many :foreign_games, class_name: 'History', foreign_key: 'opponent_id'
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
 	devise :database_authenticatable, :registerable,
 		   :recoverable, :rememberable, :validatable, :trackable,
 		   :omniauthable, omniauth_providers: [:marvin]
-  
-	def self.from_omniauth(auth)
+
+   def self.from_omniauth(auth)
 	  where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
 		user.email = auth.info.email
+		user.uid = auth.uid
 		user.password = Devise.friendly_token[0,20]
 		user.nickname = auth.info.nickname
 		user.image = auth.info.image
@@ -16,6 +20,9 @@ class User < ApplicationRecord
 		@stat.save
 		user.id_stats = @stat.id
 
+		user.name = user.email.split('@')[0]
+		user.picture_url = 'https://cdn.intra.42.fr/users/large_' + user.name + '.jpg'
+		user.save!
 	  end
 	end
   end

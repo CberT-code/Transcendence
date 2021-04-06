@@ -4,7 +4,16 @@ class PagesController < ApplicationController
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
+	
+	def salut
+		@name = params[:name]
+	end
+
+	def connexion
+	end
+
 	def home
 		# @session = session["devise.marvin_data"]	
 	end
+
 end
