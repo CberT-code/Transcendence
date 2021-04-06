@@ -21,6 +21,7 @@
 	</div>
 	<div class="big-element" id="noBackground">
 		<div id="score">
+			<h1><%= Tournament.find_by_id(@war.id_tournament).name %></h1>
 			<% if @war.points_guild1 > @war.points_guild2 %>
 				<h1><span class="text-green"><%= @war.points_guild1 %> </span> / <span class="text-red"><%= @war.points_guild2 %></span></h1>
 			<% else %>
@@ -28,6 +29,7 @@
 			<% end%>
 			<% if @war.status == 1 && @datedays >= 2%>
 				<h1 class="text-orange">Start in : <%= @datedays %> days</h1>
+				<button id="change_team" class="green_button" onClick="window.location='/#edit_war/<%= @war.id %>'" >Change My Team</button>
 			<% elsif @war.status == 1 && @datedays < 2%>
 				<h1 class="text-orange">Start in : <%= @datehours / (60 * 60) %> heures</h1>
 			<% elsif @war.status == 2 %>

@@ -1,74 +1,78 @@
 <div id="content-wars">
 	<% if (User.find(current_user.id).id_guild != -1 || @admin == 1) %>
-	<div id="element">
+		<div id="element">
 
-			<% if @admin == 1 %>
-				<button class="green_button" id="create_war" onClick="window.location='/#new_war'">Declare War</button>
-			<% end %>
-	</div>
-	<div class="break"></div>
-	<div id="big-element">
-		<div id="title">
-			<h2>War Request</h2>
-		</div>
-		<% @i = 0%>
-		<div id="corp">
-			<% @wars_request.each do |war| %>
-			<div id="war">
-				<div id="position">
-					<p><%= @i += 1 %></p>
-					<%= @enemy = war.id_guild1 == @guild.id ? war.id_guild1 : war.id_guild2; %>
-				</div>
-				<div id="target">
-					<p><%= Guild.find_by_id(@enemy).name %></p>
-				</div>
-				<div id="target">
-					<p>for <%= war.points %> points</p>
-				</div>
-				<div id="target">
-					<p><%= war.players %> players</p>
-				</div>
-				<div id="target">
-				<% if (@guild.id == war.id_guild1 && war.status == 0) then %>
-						<p>Sended</p>
-				<% elsif (war.status == 0) then %>
-					<button id="Accept" value="<%= war.id %>" >Accept</button>
-					<button id="Decline" value="<%= war.id %>" >Decline</button>
-				<% else %>
-						<p>Start in : days</p>
+				<% if @admin == 1 && @request_sent.count == 0 %>
+					<button class="green_button" id="create_war" onClick="window.location='/#new_war'">Declare War</button>
 				<% end %>
-				</div>
+		</div>
+		<div class="break"></div>
+		<% if @wars_request.count > 0 %>
+		<div id="big-element">
+			<div id="title">
+				<h2>War Request</h2>
 			</div>
-		<% end %>
-		</div>
-	</div>
-	<div class="break"></div>
-	<div id="big-element">
-		<div id="title">
-			<h2>Last war</h2>
-		</div>
-		<% @i = 0%>
-		<div id="corp">
-			<% @wars_history.each do |war| %>
-			<div id="war">
-				<div id="position">
-					<p><%= @i += 1 %></p>
+			<% @i = 0%>
+			<div id="corp">
+				<% @wars_request.each do |war| %>
+				<div id="war">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+						<%= @enemy = war.id_guild1 == @guild.id ? war.id_guild1 : war.id_guild2; %>
+					</div>
+					<div id="target">
+						<p><%= Guild.find_by_id(@enemy).name %></p>
+					</div>
+					<div id="target">
+						<p>for <%= war.points %> points</p>
+					</div>
+					<div id="target">
+						<p><%= war.players %> players</p>
+					</div>
+					<div id="target">
+					<% if (@guild.id == war.id_guild1 && war.status == 0) then %>
+							<p>Sended</p>
+					<% elsif (war.status == 0) then %>
+						<button id="Accept" value="<%= war.id %>" >Accept</button>
+						<button id="Decline" value="<%= war.id %>" >Decline</button>
+					<% else %>
+							<p>Start in : days</p>
+					<% end %>
+					</div>
 				</div>
-				<div id="target">
-					<p><%= Guild.find_by_id(war.id_guild1).name %></p>
-				</div>
-				<div id="target">
-					<p><%= Guild.find_by_id(war.id_guild2).name %></p>
-				</div>
-				<div id="target">
-					<p><%= war.points_guild1 %> / <%= war.points_guild2 %></p>
-				</div>
-				<div id="target" >
-					<button  onClick="window.location='/#show_war/<%= war.id %>'" >Voir</button>
-				</div>
+			<% end %>
 			</div>
-		<% end %>
 		</div>
-	</div>
+		<% end %>
+		<div class="break"></div>
+		<% if @wars_history.count > 0%>
+		<div id="big-element">
+			<div id="title">
+				<h2>Last war</h2>
+			</div>
+			<% @i = 0%>
+			<div id="corp">
+				<% @wars_history.each do |war| %>
+				<div id="war">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+					</div>
+					<div id="target">
+						<p><%= Guild.find_by_id(war.id_guild1).name %></p>
+					</div>
+					<div id="target">
+						<p><%= Guild.find_by_id(war.id_guild2).name %></p>
+					</div>
+					<div id="target">
+						<p><%= war.points_guild1 %> / <%= war.points_guild2 %></p>
+					</div>
+					<div id="target" >
+						<button  onClick="window.location='/#show_war/<%= war.id %>'" >Voir</button>
+					</div>
+				</div>
+			<% end %>
+			</div>
+		</div>
+		<% end %>
 	<% end %>
 </div>

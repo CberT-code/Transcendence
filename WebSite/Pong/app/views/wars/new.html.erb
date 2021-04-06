@@ -2,32 +2,36 @@
 	<%= form_for :histories, remote: true do |f| %>
 		<div class="element">
 			<div class="center">
-				<%= f.select :points, options_for_select([['Nombre de points en jeu',''],['1000','1000'],['5000','5000'],['10000','10000']], :selected => '') %>
+				<%= f.select :points, options_for_select([['Points to win/loose','null'],['1000','1000'],['5000','5000'],['10000','10000']], :selected => '') %>
 			</div>
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.select :nb_players, options_for_select([['Max members',''],['5','5'],['10','10'],['15','15']], :selected => '') %>
+				<%= f.select :nb_players, options_for_select([['Max members','null'],['5','5'],['10','10'],['15','15']], :selected => '') %>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
+				<%= f.select :id_tournament, options_for_select(@list_tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
 			</div>
 		</div>
 		<div class="element">
 			<div class="center">
 				<%= f.date_field :date_start, min: Date.today + 2.days, max: Date.today + 17.days, value: Date.today + 2.days %>
-				<%= f.date_field :date_start, min: Date.today + 4.days, max: Date.today + 19.days, value: Date.today + 4.days  %>
-
-			</div>
-		</div>
-		<div class="element">
-			<div class="center">
-				<button id="random">Random</button>
+				<%= f.date_field :date_end, min: Date.today + 4.days, max: Date.today + 19.days, value: Date.today + 4.days  %>
 			</div>
 		</div>
 	<% end %>
+		<div class="element">
+			<div class="center">
+				<button id="attack" value="0">Random</button>
+			</div>
+		</div>
 	<% if @list_guild.count > 0%>
 	<div class="break"></div>
 	<div class="element">
 		<div class="center">
-			<input id="search" placeholder="Search...">
+			<input id="wars_search" placeholder="Search...">
 		</div>
 	</div>
 	<div class="break"></div>
@@ -48,8 +52,11 @@
 				<div id="target">
 					<p><%= guild.nbmember %></p>
 				</div>
+				<div id="target">
+					<p><%= guild.points %></p>
+				</div>
 				<div id="targetbtn">
-					<button id="attack" value="<% guild.id %>">Attack</button>
+					<button id="attack" value="<%= guild.id %>">Attack</button>
 				</div>
 			</div>
 		<% end %>

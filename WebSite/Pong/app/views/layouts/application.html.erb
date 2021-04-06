@@ -33,7 +33,7 @@
 				<button id="header-wars" class="displayOff" onClick="window.location='/#wars'">Wars</button>
 			<% else %>
 				<button id="header-guild" onClick="window.location='/#show_guild/<%= current_user.id_guild %>'">Guilds</button>
-				<% @inwars = War.where('(id_guild1 = ? or id_guild2 = ?) and status = ?', current_user.id_guild, current_user.id_guild, 1) %>
+				<% @inwars = War.where('(id_guild1 = ? or id_guild2 = ?) and (status = ? or status = ?)', current_user.id_guild, current_user.id_guild, 1, 2) %>
 				<% if ( @inwars.count != 0) %>
 					<button id="header-wars" class="displayOn" onClick="window.location='/#show_war/<%= @inwars.ids[0] %>'">Wars</button>
 				<% else %>

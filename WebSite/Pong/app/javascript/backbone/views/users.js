@@ -2,21 +2,18 @@ function notification(typef, textf) {
 	var notification = new Noty({ theme: 'mint', type: typef, text: textf });
 	notification.setTimeout(4500);
 	notification.show();
-	console.log("notif");
 }
 
 ViewAccount = Backbone.View.extend({
 	el: $(document),
 	events: {
-		'click .delete': 'deleteAccount',
-		'click .fa-pen': 'SwitchInputOn',
-		'click .fa-times-switch': 'SwitchInputOff',
-		'click .fa-check': 'EditUsername',
-		'click #available': 'Available',
-		
+		'click #delete_user': 'DeleteAccount',
+		'click #modif_username': 'ModifUsername',
+		'click #cancel_modif_username': 'CancelModifUsername',
+		'click #confirm_modif_username': 'ConfirmModifUsername',
+		'click #user_available': 'UserAvailable',
 	},
-	deleteAccount: function (ev) {
-		console.log(ev.currentTarget.data("id"));
+	DeleteAccount: function () {
 		$.ajax(
 			{
 				url: '/users/' + $("#id").val(),
@@ -32,52 +29,49 @@ ViewAccount = Backbone.View.extend({
 					else if (data == "error-forbidden")
 						notification("error", "Forbidden");
 					else
-						console.log("Account Deleted")
+						notification("success", "Account Deleted");
 				},
 			},
 		);
 		window.location.href = "#home";
 	},
-	SwitchInputOn: function () {
+	ModifUsername: function () {
 		$(".fa-pen").css("display", "none");
 		$(".username_input").css("display", "block");
 		$(".username").css("display", "none");
 		$(".fa-check").css("display", "block");
 		$(".fa-times-switch").css("display", "block");
 	},
-	SwitchInputOff: function () {
+	CancelModifUsername: function () {
 		$(".fa-pen").css("display", "block");
 		$(".username_input").css("display", "none");
 		$(".username").css("display", "flex");
 		$(".fa-check").css("display", "none");
 		$(".fa-times-switch").css("display", "none");
 	},
-	EditUsername: function () {
-		if ($(".username_input").val() != "")
-			$.ajax(
+	ConfirmModifUsername: function () {
+		$.ajax(
+			{
+				url: '/users/' + $("#id").val(),
+				type: 'PATCH',
+				data: 
 				{
-					url: '/users/' + $("#id").val(),
-					type: 'PATCH',
-					data: 
-					{
-						'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-						"username": $(".username_input").val()
-					},
-					success: function (data) 
-					{
-						if (data == 1)
-							location.reload();
-						else if (data == "error-forbidden")
-							notification("error", "Forbidden");
-						else
-							notification("error", "This username already exist");
-					},
+					'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+					"username": $(".username_input").val()
 				},
-			);
-		else
-			notification("error", "Please complete the form...");
+				success: function (data) 
+				{
+					if (data == "success")
+						Backbone.history.loadUrl();
+					else if (data == "error-incomplete")
+						notification("error", "Please complete the form...");
+					else if (data == "error-username_exist")
+						notification("error", "This username already exist");
+				},
+			},
+		);	
 	},
-	Available: function () {
+	UserAvailable: function () {
 			$.ajax(
 				{
 					url: '/users/' + $("#id").val(),
@@ -85,16 +79,12 @@ ViewAccount = Backbone.View.extend({
 					data: 
 					{
 						'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-						"checked": $("#available").is(':checked')
+						"checked": $("#user_available").is(':checked')
 					},
 					success: function (data) 
 					{
-						if (data == 1)
-							location.reload();
-						else if (data == "error-forbidden")
-							notification("error", "Forbidden");
-						else
-							notification("error", "This username already exist");
+						if (data == "success")
+							Backbone.history.loadUrl();
 					},
 				},
 			);

@@ -41,7 +41,7 @@ ViewTournaments = Backbone.View.extend({
 						// $('#header-tournament').attr('onClick',"window.location='/#show_tournament/" + data + "'");
 						window.location.href = "#tournaments" ;
 					}
-			},
+				},
 			'text'
 			);
 		}

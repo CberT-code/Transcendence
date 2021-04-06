@@ -3,56 +3,56 @@ class UsersController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
+		@admin = current_user.role;
+		@user = User.find_by_id(params[:id]);
 	end
 
 	def index
-		@Users = User.all.order('nickname')
+		@Users = User.where("deleted = ?", FALSE);
 	end
 
 	def show
-		@user = !params[:id] ? User.find_by_id(current_user.id) : @user = User.find_by_id(params[:id]);
-		@super_admin = current_user.role;
-		@user_stat = Stat.find_by_id(@user.id_stats);
-		@guild = Guild.find_by_id(@user.id_guild);
-		@current = current_user.id == @user.id ? 1 : 0;
-		@histories = History.where('(target_1 = ? or target_2 = ?) and target_type = ?', @user.id, @user.id, 1);
+		if (!@user.deleted)
+			@user_stat = Stat.find_by_id(@user.id_stats);
+			@guild = Guild.find_by_id(@user.id_guild);
+			@current = current_user.id == @user.id ? 1 : 0;
+			@histories = History.where('target_1 = ? or target_2 = ?', @user.id, @user.id);
+		else
+			render 'error/403', :status => :unauthorized
+		end
 	end
 
 	def update
-		@user = !params[:id] ? User.find_by_id(current_user.id) : @user = User.find_by_id(params[:id]);
-		if (params.has_key?(:checked))
-			puts params[:checked].inspect;
-			User.find_by_id(@user.id).update({"available": params[:checked]})
-			render html: "1";
-		end
-		if (params.has_key?(:username))
-			@super_admin = current_user.role;
-			@current = current_user.id == @user.id ? 1 : 0;
-			if (@current == 1 || @super_admin == 1)
-				if (!User.find_by_nickname(params[:username]))
-					User.find_by_id(@user.id).update({"nickname": params[:username]})
-					render html: "1";
+		@current = current_user.id == @user.id ? 1 : 0;
+		if (@current == 1 || @admin == 1)
+			if (params.has_key?(:checked))
+				User.find_by_id(@user.id).update({"available": params[:checked]});
+				render html: "success";
+			elsif (params.has_key?(:username))
+				if (params[:username] == "")
+					render html: "error-incomplete";
+				elsif (!User.find_by_nickname(params[:username]))
+					@user.update({"nickname": params[:username]});
+					render html: "success";
 				else
-					render html: "2";
+					render html: "errorusername_exist";
 				end
-			else
-				render html: "error-forbidden";
 			end
+		else
+			render 'error/403', :status => :unauthorized;
 		end
 	end
 
 	def destroy
-		@user = !params[:id] ? User.find_by_id(current_user.id) : @user = User.find_by_id(params[:id]);
-		@super_admin = current_user.role;
 		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @super_admin == 1)
+		if (@current == 1 || @admin == 1)
 			if (@user.id_guild != -1)
-				render html: "error-inguild"
+				render html: "error-inguild";
 			else
 				Stat.find_by_id(@user.id_stats).destroy;
-				User.find_by_id(@user.id).destroy;
-				destroy_user_session_path
-				render html: "1"
+				@user.update({"deleted": TRUE});
+				destroy_user_session_path;
+				render html: "success";
 			end
 		else
 			render html: "error-forbidden";

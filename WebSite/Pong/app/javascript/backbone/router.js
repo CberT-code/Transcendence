@@ -23,6 +23,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"new_war": "new_war",
 	"show_war/:id": "show_war",
 	"edit_war/:id": "edit_war",
+	"error/403": "error403",
 },
 home: function() {
 	$.get("/").then(function(data){
@@ -33,7 +34,7 @@ home: function() {
 // ACCOUNTS
 show_user: function(id) {
 	$.get("/users/" +  id, { id: id}).then(function(data){
-		$("main").html("<div id='content-account'>" + ($(data).find("#content-account").html()) + "</div>");
+		$("main").html("<div id='content-user'>" + ($(data).find("#content-user").html()) + "</div>");
 	});
 },
 accounts: function() {
@@ -103,6 +104,11 @@ show_war: function(id) {
 edit_war: function(id) {
 	$.get("/wars/" +  id + "/edit", { id: id}).then(function(data){
 		$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
+	});
+},
+error403: function(id) {
+	$.get("/error/403").then(function(data){
+		$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
 	});
 },
 });

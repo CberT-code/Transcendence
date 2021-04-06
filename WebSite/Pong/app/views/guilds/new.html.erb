@@ -1,8 +1,13 @@
 <div id="content-new_guild">
-	<%= form_for @guild, remote: true do |f| %>
+	<%= form_for :guilds, remote: true do |f| %>
 		<div class="element">
 			<div class="center">
 				<%= f.text_field :name, maxlength: 20, size: 24, placeholder: "Enter guild name"%>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
+				<%= f.text_field :anagramme, maxlength: 5, size: 24, placeholder: "Enter your Anagramme"%>
 			</div>
 		</div>
 		<div class="element">
@@ -15,10 +20,10 @@
 				<%= f.select :maxmember, options_for_select([['Max members',''],['5','5'],['10','10'],['15','15']], :selected => '') %>
 			</div>
 		</div>
+	<% end %>
 		<div class="element">
 			<div class="center">
 				<button id="create_guild">Create</button>
 			</div>
 		</div>
-	<% end %>
 </div>

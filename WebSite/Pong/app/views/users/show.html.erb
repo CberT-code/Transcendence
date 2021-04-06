@@ -1,4 +1,4 @@
-<div id="content-account">
+<div id="content-user">
 	<div id="title">
 		<div id="center">
 			<div id="left">
@@ -7,12 +7,12 @@
 			</div>
 			<div id="right">
 				<div id="name">
-					<% if (@current == 1 || @super_admin == 1)%>
-						<h1 class="username"><%= @user.nickname %> <i class="fas fa-pen"></i></h1>
+					<% if (@current == 1 || @admin == 1)%>
+						<h1 class="username"><%= @user.nickname %> <i id="modif_username" class="fas fa-pen"></i></h1>
 						<div id="container">
 							<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
-								<i class="fas fa-check"></i>
-								<i class="fas fa-times fa-times-switch"></i>
+								<i id="confirm_modif_username" class="fas fa-check"></i>
+								<i id="cancel_modif_username" class="fas fa-times fa-times-switch"></i>
 						</div>
 					<% else %>
 						<h1 class="username"><%= @user.nickname %></h1>
@@ -42,7 +42,7 @@
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 || @super_admin == 1 %>
+		<% if @current == 1 || @admin == 1 %>
 			<div id="element">
 				<div id="name">
 					<h2>actions</h2>
@@ -50,41 +50,43 @@
 				<div class="element-line">
 					<span>Available for war?</span>
 					<label class="switch">
-						<input id="available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
+						<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
 						<span class="slider"></span>
 					</label>
 				</div>
 				<div class="display-flex" id="container">
-					<button class="delete" ><i class="fas fa-trash-alt"></i> Delete account</button>
+					<button id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button>
 				</div>
 			</div>
 		<% end %>
-		<div id="container-history">
-			<div id="head">
-				<h2>historique games</h2>
+		<% if @histories.count > 0 %>
+			<div id="container-history">
+				<div id="head">
+					<h2>historique games</h2>
+				</div>
+				<div id="history">
+					<% @histories.each do |history| %>
+						<div id="game">
+							<div id="icon">
+								<% if (history.score_target_1 > history.score_target_2) %>
+								<i id="" class="fas fa-check"></i>
+								<% else %>
+								<i class="fas fa-times"></i>
+								<% end %>
+							</div>
+							<div id="target">
+								<p onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></p>
+							</div>
+							<div id="target">
+								<p onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></p>
+							</div>
+							<div id="score">
+								<p><%= history.score_target_1 %> / <%= history.score_target_2 %></p>
+							</div>
+						</div>
+					<% end %>
+				</div>
 			</div>
-			<div id="history">
-				<% @histories.each do |history| %>
-					<div id="game">
-						<div id="icon">
-							<% if (history.score_target_1 > history.score_target_2) %>
-							<i class="fas fa-check"></i>
-							<% else %>
-							<i class="fas fa-times"></i>
-							<% end %>
-						</div>
-						<div id="target">
-							<p onClick="window.location='/#show_user/<%= history.target_1 %>'"><%= User.find_by_id(history.target_1).nickname %></p>
-						</div>
-						<div id="target">
-							<p onClick="window.location='/#show_user/<%= history.target_2 %>'"><%= User.find_by_id(history.target_2).nickname %></p>
-						</div>
-						<div id="score">
-							<p><%= history.score_target_1 %> / <%= history.score_target_2 %></p>
-						</div>
-					</div>
-				<% end %>
-			</div>
-		</div>
+		<% end %>
 	</div>
 </div>

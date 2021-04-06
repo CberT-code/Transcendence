@@ -193,41 +193,45 @@ button:hover {
 .displayOn{
 	display: initial;
 }
+.green_button{
+	display: block;
+	background-color: #7BE12E;
+}
 
 
-/* *************** */
-/* Content-account */
-/* *************** */
-#content-account {
+/* ************ */
+/* Content-user */
+/* ************ */
+#content-user {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 }
-#content-account #title {
+#content-user #title {
 	width: 100%;
 	height: 110px;
 	overflow: hidden;
 	display: flex;
 	background-color: #ccc;
 }
-#content-account #title #center {
+#content-user #title #center {
 	margin: auto;
 	height: 100%;
 	overflow: hidden;
 	display: flex;
 	width: max-content;
 }
-#content-account #title #center #full {
+#content-user #title #center #full {
 	width: 100%;
 	height: 100%;
 	overflow: hidden;
 }
-#content-account #title #center #full input {
+#content-user #title #center #full input {
 	border: none;
 	width: 100%;
 	height: 100%;
 }
-#content-account #title #center #left {
+#content-user #title #center #left {
 	width: max-content;
 	height: 100%;
 	overflow: hidden;
@@ -235,18 +239,18 @@ button:hover {
 	padding-left: 15px;
 	padding-right: 15px;
 }
-#content-account #title #center #left img{
+#content-user #title #center #left img{
 	margin: auto;
 	height: 95px;
 	border-radius: 100%;
 	cursor: pointer;
 	transition-duration: 0.5s;
 }
-#content-account #title #center #left img:hover{
+#content-user #title #center #left img:hover{
 	transition-duration: 0.5s;
 	opacity: 0.7;
 }
-#content-account #title #center #right {
+#content-user #title #center #right {
 	width: max-content;
 	height: 100%;
 	overflow: hidden;
@@ -254,14 +258,14 @@ button:hover {
 	padding-left: 15px;
 	padding-right: 15px;
 }
-#content-account #title #center #right #name {
+#content-user #title #center #right #name {
 	height: min-content;
 	width: max-content;
 	overflow: hidden;
 	margin: auto;
 	text-align: center;
 }
-#content-account #title #center #right #name h1 {
+#content-user #title #center #right #name h1 {
 	margin-bottom: 2px;
 	font-size: 140%;
 	font-family: "Roboto-MediumItalic";
@@ -270,20 +274,20 @@ button:hover {
 	padding-right: 15px;
 	padding-left: 15px;
 }
-#content-account #title #center #right #name i {
+#content-user #title #center #right #name i {
 	cursor: pointer;
 	transition-duration: 0.5s;
 }
-#content-account #title #center #right #name i:hover {
+#content-user #title #center #right #name i:hover {
 	transition-duration: 0.5s;
 	opacity: 0.7;
 }
-#content-account #title #center #right #name #container {
+#content-user #title #center #right #name #container {
 	display: flex;
 	height: min-content;
 	width: max-content;
 }
-#content-account #title #center #right #name input {
+#content-user #title #center #right #name input {
 	display: none;
 	border: none;
 	outline: none;
@@ -296,22 +300,22 @@ button:hover {
 	font-family: "Roboto-Thin";
 	font-size: 105%;
 }
-#content-account #title #center #right #name input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+#content-user #title #center #right #name input::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
 	color: #231f20;
 	opacity: 1;
 }
-#content-account #title #center #right #name #container i {
+#content-user #title #center #right #name #container i {
 	display: none;
 	margin-left: 5px;
 }
-#content-account #title #center #right h3 {
+#content-user #title #center #right h3 {
 	margin: 0px;
 	text-transform: uppercase;
 	font-size: 115%;
 	font-family: "Roboto-Thin";
 	letter-spacing: 2px;
 }
-#content-account #corp {
+#content-user #corp {
 	width: 100%;
 	height: calc(100% - 155px);
 	overflow: hidden;
@@ -321,7 +325,7 @@ button:hover {
 	align-content: center;
 	padding-top: 25px;
 }
-#content-account #corp #element {
+#content-user #corp #element {
 	height: 400px;
 	width: 400px;
 	border-radius: 9px;
@@ -332,13 +336,13 @@ button:hover {
 	margin-bottom: 25px;
 	padding-top: 10px;
 }
-#content-account #corp #element #name {
+#content-user #corp #element #name {
 	height: 15%;
 	width: 100%;
 	overflow: hidden;
 	display: flex;
 }
-#content-account #corp #element #name h2{
+#content-user #corp #element #name h2{
 	font-size: 135%;
 	margin: auto;
 	color: #231f20;
@@ -349,12 +353,12 @@ button:hover {
 	padding-left: 15px;
 	text-transform: uppercase;
 }
-#content-account #corp #element #container {
+#content-user #corp #element #container {
 	height: 85%;
 	width: 100%;
 	overflow: hidden;
 }
-#content-account #corp #element #container #line {
+#content-user #corp #element #container #line {
 	width: 100%;
 	height: min-content;
 	padding-top: 8px;
@@ -362,12 +366,12 @@ button:hover {
 	padding-left: 25px;
 	padding-right: 25px;
 }
-#content-account #corp #element #container #line p {
+#content-user #corp #element #container #line p {
 	font-family: "Roboto-Thin";
 	font-size: 115%;
 	color: #231f20;
 }
-#content-account #corp #element #container button {
+#content-user #corp #element #container button {
 	margin: auto;
 	border: none;
 	outline: none;
@@ -384,11 +388,11 @@ button:hover {
 	border-radius: 6px;
 	transition-duration: 0.5s;
 }
-#content-account #corp #element #container button:hover{
+#content-user #corp #element #container button:hover{
 	transition-duration: 0.5s;
 	opacity: 0.7;
 }
-#content-account #corp #container-history {
+#content-user #corp #container-history {
 	height: 250px;
 	width: 80%;
 	overflow: hidden;
@@ -398,13 +402,13 @@ button:hover {
 	border: solid 1px #e1e1e1;
 	padding-top: 10px;
 }
-#content-account #corp #container-history #head {
+#content-user #corp #container-history #head {
 	width: 100%;
 	height: 60px;
 	display: flex;
 	overflow: hidden;
 }
-#content-account #corp #container-history #head h2 {
+#content-user #corp #container-history #head h2 {
 	margin: auto;
 	text-transform: uppercase;
 	font-family: "Roboto-Medium";
@@ -414,14 +418,14 @@ button:hover {
 	padding-right: 15px;
 	padding-left: 15px;
 }
-#content-account #corp #container-history #history {
+#content-user #corp #container-history #history {
 	width: 100%;
 	height: calc(100% - 80px);
 	overflow-y: auto;
 	overflow-x: hidden;
 	scrollbar-width: none;
 }
-#content-account #corp #container-history #history #game {
+#content-user #corp #container-history #history #game {
 	width: 75%;
 	overflow: hidden;
 	height: 55px;
@@ -434,42 +438,42 @@ button:hover {
 	margin-top: 15px;
 	color: #231f20;
 }
-#content-account #corp #container-history #history #game #icon {
+#content-user #corp #container-history #history #game #icon {
 	height: 100%;
 	width: 8%;
 	overflow: hidden;
 	display: flex;
 	background-color: #231f20;
 }
-#content-account #corp #container-history #history #game #icon i {
+#content-user #corp #container-history #history #game #icon i {
 	margin: auto;
 	color: white;
 	font-size: 120%;
 }
-#content-account #corp #container-history #history #game #target {
+#content-user #corp #container-history #history #game #target {
 	width: 30%;
 	height: 100%;
 	overflow: hidden;
 	display: flex;
 }
-#content-account #corp #container-history #history #game #target p {
+#content-user #corp #container-history #history #game #target p {
 	margin: auto;
 	font-family: "Roboto-Medium";
 	font-size: 115%;
 	cursor: pointer;
 	transition-duration: 0.5s;
 }
-#content-account #corp #container-history #history #game #target p:hover {
+#content-user #corp #container-history #history #game #target p:hover {
 	opacity: 0.7;
 	transition-duration: 0.5s;
 }
-#content-account #corp #container-history #history #game #score {
+#content-user #corp #container-history #history #game #score {
 	height: 100%;
 	width: 32%;
 	display: flex;
 	overflow: hidden;
 }
-#content-account #corp #container-history #history #game #score p {
+#content-user #corp #container-history #history #game #score p {
 	margin: auto;
 	font-family: "Roboto-Medium";
 	font-size: 115%;
@@ -677,7 +681,7 @@ button:hover {
 	flex-basis: 100%
 }
 #content-guild #element {
-	height: 400px;
+	height: 420px;
     width: 400px;
     border-radius: 9px;
     background-color: white;
@@ -783,6 +787,7 @@ button:hover {
 	font-family: "Roboto-Thin";
 	font-size: 150%;
 	outline: none;
+	display: none;
 }
 
 #content-guild #element .element-line #exec_change_admin{
@@ -796,8 +801,8 @@ button:hover {
     display: none;
 }
 #content-guild #big-element {
-	height: 400px;
-    width: 35%;
+	height: 420px;
+    width: min-content;
     border-radius: 9px;
     background-color: white;
     border: solid 1px #e1e1e1;
@@ -835,7 +840,6 @@ button:hover {
 	overflow: hidden;
 	display: flex;
 	border-radius: 3px;
-	margin-left: auto;
 	margin-right: auto;
 	margin-top: 15px;
 	background-color: #ccc;
@@ -855,7 +859,7 @@ button:hover {
 	font-size: 115%;
 }
 #content-guild #big-element #corp #user #username {
-	width: 300px;
+	width: 150px;
 	height: 100%;
 	overflow: hidden;
 	display: flex;
@@ -957,7 +961,19 @@ button:hover {
 	width: max-content;
 
 }
-#content-new_guild .element .center #guild_name{
+#content-new_guild .element .center #guilds_name{
+	border: none;
+	outline: none;
+	border-bottom: solid 1px #231f20;
+	color: #231f20;
+	text-align: center;
+	background-color: transparent;
+	padding-right: 40px;
+	padding-left: 40px;
+	font-family: "Roboto-Thin";
+	font-size: 150%;
+}
+#content-new_guild .element .center #guilds_anagramme{
 	border: none;
 	outline: none;
 	border-bottom: solid 1px #231f20;
@@ -979,7 +995,7 @@ button:hover {
 	font-family: "Roboto-Thin";
 	font-size: 150%;
 }
-#content-new_guild .element .center #guild_maxmember{
+#content-new_guild .element .center #guilds_maxmember{
 	border: none;
 	color: #231f20;
 	text-align: center;
@@ -1007,7 +1023,7 @@ button:hover {
 	border-radius: 6px;
 	transition-duration: 0.5s;
 }
-#content-new_guild .element .center #guild_description{
+#content-new_guild .element .center #guilds_description{
 	color: #231f20;
 	background-color: transparent;
 	font-family: "Roboto-Thin";
@@ -1115,8 +1131,8 @@ button:hover {
 	flex-basis: 100%
 }
 #content-war .big-element {
-	height: 400px;
-    /* width: 35%; */
+	height: 420px;
+	width: 450px;
     border-radius: 9px;
     background-color: white;
     border: solid 1px #e1e1e1;
@@ -1124,17 +1140,51 @@ button:hover {
     margin-right: 15px;
     margin-bottom: 15px;
 }
-#content-war .big-element#guild {
-
-    width: 400px;
-}
 #content-war .big-element#noBackground{
 	background-color: transparent;
 	border: none;
 }
+#content-war .big-element #btn button{
+	width: 250px;
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	transition-duration: 0.5s;
+}
 #content-war .big-element #score{
 	padding-top: 50%;
 	text-align: center;
+}
+#content-war .big-element #score button{
+	width: 250px;
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	transition-duration: 0.5s;
 }
 #content-war .big-element #title {
 	width: 100%;
@@ -1196,7 +1246,6 @@ button:hover {
 	font-size: 115%;
 }
 #content-war .big-element #corp .war {
-	width: max-content;
 	height: 55px;
 	overflow: hidden;
 	display: flex;
@@ -1682,6 +1731,7 @@ background-color: #7BE12B;
 }
 #content-new_war .element .center select{
 	border: none;
+	width: 280px;
 	color: #231f20;
 	text-align: center;
 	background-color: transparent;

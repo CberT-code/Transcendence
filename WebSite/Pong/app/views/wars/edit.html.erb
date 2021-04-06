@@ -1,50 +1,60 @@
 <div id="content-war">
-	<div class="big-element">
-		<div id="title">
-			<h2>Available</h2>
-		</div>
-		<div id="title">
-			<h2>Choose <%= @war.players %> players</h2>
-		</div>
-		<% @i = 0%>
-		<div id="corp">
-			<% @available.each do |user| %>
-			<div class="war" id="<%= @i %>">
-				<div id="position">
-					<p><%= @i += 1 %></p>
-				</div>
-				<div id="target">
-					<p><%= user.nickname %></p>
-				</div>
-				<div id="targetbtn">
-
-				<% if (@team != nil && (@team.include? user.id)) %>
-					<button id="remove" value=<%= user.id %>>Remove</button>
-				<% else %>
-					<button id="add" value=<%= user.id %>>Add</button>
-				<% end %>
-				</div>
+	<% if @available.count > 0 %>
+		<div class="big-element">
+			<div id="title">
+				<h2>Available</h2>
 			</div>
-		<% end %>
+			<div id="title">
+				<h2>Choose <%= @war.players %> players</h2>
+			</div>
+			<% @i = 0%>
+			<div id="corp">
+				<% @available.each do |user| %>
+					<div class="war" id="<%= @i %>">
+						<div id="position">
+							<p><%= @i += 1 %></p>
+						</div>
+						<div id="target">
+							<p><%= user.nickname %></p>
+						</div>
+						<div id="targetbtn">
+
+						<% if (@team != nil && (@team.include? user.id)) %>
+							<button id="remove" value=<%= user.id %>>Remove</button>
+						<% else %>
+							<button id="add" value=<%= user.id %>>Add</button>
+						<% end %>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+	<div class="break"></div>
+	<div class="big-element" id="noBackground">
+		<div id="btn">
+			<button id="change_team" class="green_button" onClick="window.location='/#show_war/<%= @war.id %>'" >war</button>
 		</div>
 	</div>
 	<div class="break"></div>
-	<div class="big-element">
-		<div id="title">
-			<h2>Not Available</h2>
-		</div>
-		<% @i = 0%>
-		<div id="corp">
-			<% @notavailable.each do |user| %>
-			<div class="war" id="<%= @i %>">
-				<div id="position">
-					<p><%= @i += 1 %></p>
-				</div>
-				<div id="target">
-					<p><%= user.nickname %></p>
-				</div>
+	<% if @notavailable.count > 0 %>
+		<div class="big-element">
+			<div id="title">
+				<h2>Not Available</h2>
 			</div>
-		<% end %>
+			<% @i = 0%>
+			<div id="corp">
+				<% @notavailable.each do |user| %>
+				<div class="war" id="<%= @i %>">
+					<div id="position">
+						<p><%= @i += 1 %></p>
+					</div>
+					<div id="target">
+						<p><%= user.nickname %></p>
+					</div>
+				</div>
+			<% end %>
+			</div>
 		</div>
-	</div>
+	<% end %>
 </div>
