@@ -7,5 +7,6 @@ RUN gem install http
 RUN gem install json
 RUN gem install rake
 RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
+RUN mkdir /tmp/Pong
 CMD bash
-ENTRYPOINT cd /Pong ; bundle install; npm i underscore; yarn add jquery;  yarn add underscore; echo tati; yarn install --check-files;echo toto; rails s -b 0.0.0.0 -p 80;
+ENTRYPOINT cd /Pong ; bundle install; npm i underscore; yarn add jquery;  yarn add underscore; yarn install --check-files;rails db:migrate; rails s -b 0.0.0.0 -p 80;
