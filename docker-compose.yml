@@ -1,3 +1,4 @@
+ 
 version: "2.2"
 services:
   web:
@@ -5,10 +6,8 @@ services:
     environment:
       PONG_DATABASE_PASSWORD: password
       TZ: Europe/Paris
-      # FT_UID: eda6adb82931c26dbd5380defcf580d98ddc861b2892d86960abab3adc4f75c9
-      # FT_SECRET: 2c6edb43028a06220cb42a2ea9256a011f81443c76457818eb2b2d75e4125039
     ports:
-      - "1080:1080"
+      - "80:80"
     volumes:
       - ./WebSite/Pong/:/Pong
   postgresql:
@@ -22,8 +21,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       TZ: Europe/Paris
-  redis:
-    build: "./redis"
-    ports:
-      - "6379:6379"
-    restart: always
+  # redis:
+  #   build: "./redis"
+  #   ports:
+  #     - "6379:6379"
+  #   restart: always
