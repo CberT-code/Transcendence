@@ -54,11 +54,15 @@ class HistoriesController < ApplicationController
 		@game = History.find(params[:id])
 		@game.save!
 		status = redis.get("game_#{@game.id}")
+		time = Time.now
 		while status == "Looking For Opponent"
 			sleep 0.25
 			ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose?", frame: frame, status: status})
 			frame += 1
 			status = redis.get("game_#{params[:id]}")
+			if (Time.now.to_i - time.to_i > 30)
+				break
+			end
 		end
 		@game = History.find(params[:id])
 		ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", frame: frame, status: status, right_pp: @game.opponent.image})
@@ -66,6 +70,8 @@ class HistoriesController < ApplicationController
 	
 	def run
 		@game = History.find(params[:id])
+		@game.statut = 2
+		@game.save
 		if current_user == @game.host
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
@@ -97,6 +103,13 @@ class HistoriesController < ApplicationController
 				end
 				status = redis.get("game_#{@game.id}")
 				frame += 1
+			end
+			if (status == "running")
+				@game.statut = 3
+				@game.save
+			else
+				@game.statut = -1
+				@game.save
 			end
 			status = "ended"
 			redis.set("game_#{@game.id}", status)
@@ -137,7 +150,7 @@ class HistoriesController < ApplicationController
 				#add effect according to speed
 			else
 				score[1] += 1
-				reset(player, ball)
+				reset(player, ball, score)
 				return
 			end
 		elsif ball[0] >= 470.0
@@ -147,7 +160,7 @@ class HistoriesController < ApplicationController
 				#add effect according to speed
 			else
 				score[0] += 1
-				reset(player, ball)
+				reset(player, ball, score)
 				return
 			end
 		end
@@ -158,7 +171,7 @@ class HistoriesController < ApplicationController
 		end
 	end
 
-	def reset(player, ball)
+	def reset(player, ball, score)
 		ball[0] = 245.0
 		ball[1] = 195.0
 		ball[3] = 7.0
