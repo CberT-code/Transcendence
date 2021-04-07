@@ -16,7 +16,6 @@ class TchatController < ApplicationController
 			@user_id = current_user.id
 			@title = params[:title]
 			@type = params[:type].to_i
-			@blocked_users = ""
 			@date = Date.today
 			if (!Channel.find_by_title(@title))
 				@key = SecureRandom.urlsafe_base64(8)
@@ -59,29 +58,8 @@ class TchatController < ApplicationController
 		end
 	end
 	def getAdminBlockedUsers
-		if (!params[:id])
-			render html: "error-forbidden", :status => :unauthorized
-			return
-		end
-		@id = params[:id]
-		@user_id = current_user.id
-		@datas = Channel.find_by_id_and_user_id(@id, @user_id)
-		if (!@datas)
-			render html: "error-forbidden", :status => :unauthorized
-			return
-		end
-		@ret = Array.new
-		if (@datas.blocked_users.kind_of?(Array))
-			@tmp = @datas.blocked_users.split(",")
-			@tmp.each do |element|
-				@id = element.to_i
-				@data = User.find_by_id(@id)
-				if (@data)
-					@ret.push({"user_id" => @id, "username" => @data.nickname});
-				end
-			end
-		end
-		render json: @ret
+		render html: "1"
+		return
 	end
 	def sendMessageChannel
 		if (!params[:id] || !params[:key] || !params[:message])
@@ -92,7 +70,7 @@ class TchatController < ApplicationController
 			@message = params[:message]
 			@user_id = current_user.id.to_s
 			@datas = Channel.find_by_id(@id)
-			@sanction = Sanctions.find_by_id_user_id_target_id(@datas.id, @user_id)
+			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
 				if (@sanctions && @sanction.end_time <= Time.new.to_i && @sanction.sanction_type == 1)
@@ -145,6 +123,7 @@ class TchatController < ApplicationController
 	def removeMessageChannel
 		if (!params[:id] || !params[:channel_id])
 			render html: "error-fobidden", :status => :unauthorized
+			return
 		else
 			@id = params[:id]
 			@channel_id = params[:channel_id]
@@ -158,25 +137,44 @@ class TchatController < ApplicationController
 			end
 		end
 	end
-	def removeBlockedUser
-		if (!params[:key] || !params[:id])
-			render html: "error-forbidden", :status => :unauthorized
+	def ApplySanction
+		if (!params[:channel_id] || !params[:target_id] || !params[:type])
+			render html: "error-fobidden", :status => :unauthorized
 			return
 		end
-		@key = params[:key]
-		@id = params[:id]
-		@user_id = current_user.id
-		@datas = Channel.find_by_key(@key)
-		if (@datas && @datas.user_id == @user_id)
-			@tmp = @datas.blocked_users.split(",")
-			@tmp.delete(@id)
-			@datas.update({blocked_users: @tmp.join(",")})
-			@datas.save
-			render html: "1"
-			return
+		@channel_id = params[:channel_id]
+		@target_id = params[:target_id]
+		@type = params[:type].to_i
+		@datas = Channel.find_by_id(@channel_id)
+		if (@datas && @datas.user_id == current_user.id)
+			if (@target_id.to_i == current_user.id)
+				render html: "2"
+				return
+			end
+			if (@type == 1)
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				render html: "1"
+				return 
+			elsif (@type == 2)
+				@tmp = Sanctions.find_by_target_id_and_user_id(@target_id, @channel_id)
+				if (@tmp.sanction_type == 1)
+					@tmp.destroy
+				end
+				render html: "1"
+				return 
+			elsif (@type == 3)
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				render html: "1"
+				return 
+			elsif (@type == 4)
+				@tmp = Sanctions.find_by_target_id_and_user_id(@target_id, @channel_id)
+				if (@tmp.sanction_type == 2)
+					@tmp.destroy
+				end
+				render html: "1"
+				return 
+			end
 		end
-		render html: "error-forbidden", :status => :unauthorized
-		return
 	end
 	def UpdateChannelKey
 		if (!params[:id] || !params[:key])
@@ -215,9 +213,51 @@ class TchatController < ApplicationController
 		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
+	def isChannelAdmin
+		if (!params[:id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@id = params[:id]
+		@user_id = current_user.id
+		@datas = Channel.find_by_id(@id)
+		if (@datas)
+			if (@datas.user_id == @user_id)
+				render html: "1"
+				return
+			end
+			render html: "2"
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
+		return
+	end
+	def exchangeChannelAdmin
+		if (!params[:newAdmin] || !params[:channel_id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@newAdmin = params[:newAdmin]
+		@user_id = current_user.id
+		@channel_id = params[:channel_id]
+		@datas = Channel.find_by_id_and_user_id(@channel_id, @user_id)
+		@user_info = User.find_by_name(@newAdmin)
+		if (@datas)
+			if (@user_info)
+				@datas.update({user_id: @user_info.id})
+				@datas.save
+				render html: "1"
+				return
+			end
+			render html: "2"
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
+	end
 	def getChannelMessage
 		if (!params[:id] || !params[:key])
 			render html: "error-fobidden", :status => :unauthorized
+			return
 		else
 			@id = params[:id]
 			@key = params[:key]
@@ -227,16 +267,18 @@ class TchatController < ApplicationController
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
 				@is_admin = @channel.user_id == @user_id ? 1 : 0
-				@is_muted = (@channel.muted_users && @channel.muted_users.split(",").include?(@user_id.to_s)) ? 1 : 0
-				@is_blocked = (@channel.blocked_users && @channel.blocked_users.split(",").include?(@user_id.to_s)) ? 1 : 0
  				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
-					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_muted, "blocked" => @is_blocked})
+					@sanction = Sanctions.find_by_user_id_and_target_id(@channel.id, element.user_id)
+					@is_ban = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 1) ? 1 : 0
+					@is_mute = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 2) ? 1 : 0
+					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban})
 				end
 				render json: @ret
-			else
-				render html: "error-fobidden", :status => :unauthorized
+				return
 			end
+			render html: "error-fobidden", :status => :unauthorized
+			return
 		end
 	end
 end
