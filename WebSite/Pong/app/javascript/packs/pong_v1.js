@@ -6,6 +6,15 @@ var keys = [0, 0];
 
 import consumer from "../channels/consumer"
 
+document.getElementById("alone").addEventListener("click", foreverAlone, false);
+
+function foreverAlone() {
+	$("#right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+	$("#left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+	$('#game').css('visibility', 'visible');
+	$.post('/histories/run/' + id);
+}
+
 function sendMove(socket) {
 	var move;
 	if (keys[0] == keys[1])
@@ -22,18 +31,18 @@ var tmp = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
 		console.log("status : " + status);
 		$.post('/histories/wait/' + id);
 		$(document).keydown(function(event) {
-			if (event.key == 'q')
+			if (event.key == 'q' || event.key == 'z')
 				keys[0] = 1;
-			else if (event.key == 'a')
+			else if (event.key == 'a' || event.key == 's')
 				keys[1] = 1;
 			else
 				console.log("You pressed |" + event.key + "|");
 			sendMove(tmp);
 		});
 		$(document).keyup(function(event) {
-			if (event.key == 'q')
+			if (event.key == 'q' || event.key == 'z')
 				keys[0] = 0;
-			else if (event.key == 'a')
+			else if (event.key == 'a' || event.key == 's')
 				keys[1] = 0;
 			sendMove(tmp);
 		});
