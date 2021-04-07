@@ -10,6 +10,7 @@ RUN gem install json
 RUN gem install rake
 RUN sed -i -e s/SECLEVEL=2/SECLEVEL=1/g /etc/ssl/openssl.cnf
 RUN mkdir /tmp/Pong
+WORKDIR /Pong
 CMD bash
 ENTRYPOINT 	cd /Pong ; bundle install; npm i underscore; \
 			yarn add jquery;  yarn add underscore; \

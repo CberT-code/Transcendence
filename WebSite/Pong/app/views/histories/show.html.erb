@@ -1,5 +1,5 @@
 <%= stylesheet_link_tag "pong_v1.css" %>
-<%= content_tag :div, '', id: 'game_data', data: { statut: @game.statut, id: @game.id, player: @me.id } %>
+<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
 <div id="wrapper">
     <div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>")'></div>
     <div id="game">
