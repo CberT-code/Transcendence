@@ -1,0 +1,44 @@
+.game_resume {
+	position: absolute;
+    border: 2px solid red;
+	width: 400px;
+    height: 150px;
+    background-color: grey;
+    background-size: 100% 100%;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.PP {
+    height: 100px;
+    width:  100px;
+    top: 25px;
+    background-color:   pink;
+    background-size:    100% 100%;
+    border: 1px solid black;
+    position: absolute;
+}
+
+.l_PP {
+    left: 25px;
+}
+
+.r_PP {
+    right: 25px;
+}
+
+.history {
+	position: absolute;
+	text-align: center;
+	left: 25%;
+	width: 400px;
+	top: 70px;
+}
+
+.spectate {
+	position: absolute;
+	text-align: center;
+	width: 400px;
+	right: 25%;
+	top: 70px;
+}

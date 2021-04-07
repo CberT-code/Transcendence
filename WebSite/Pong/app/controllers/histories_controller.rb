@@ -11,8 +11,10 @@ class HistoriesController < ApplicationController
 		clean_list
 		@me = current_user
 		
-		@history = @me.hosted_games.all #TO DO : merge and sort both
-		@history_bis = @me.foreign_games.all
+		hosted = @me.hosted_games.all
+		foreign = @me.foreign_games.all
+		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
+		@spectate = @games #change that after dev
 	end
 	
 	def show
