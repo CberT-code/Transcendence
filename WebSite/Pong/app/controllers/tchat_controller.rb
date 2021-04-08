@@ -15,11 +15,15 @@ class TchatController < ApplicationController
 		else
 			@user_id = current_user.id
 			@title = params[:title]
-			@type = params[:type].to_i
+			@type = CGI.escapeHTML(params[:type]).to_i
 			@date = Date.today
-			if (!Channel.find_by_title(@title))
+			if (!safestr(@title))
+				render html: "3"
+				return
+			end
+			if (!Channel.find_by_title(@title) && (@type == 1 || @type == 2))
 				@key = SecureRandom.urlsafe_base64(8)
-				Channel.create(:type_channel=> @type,:title=> @title, :user_id=> @user_id, :key=> @key, :create_time=>@date)
+				Channel.create(:type_channel=> @type,:title=> @title.html_safe, :user_id=> @user_id, :key=> @key, :create_time=>@date)
 				render html: "1"
 			else
 				render html: "2"
@@ -30,7 +34,7 @@ class TchatController < ApplicationController
 		if (!params[:id])
 			render html: "error-forbidden", :status => :unauthorized
 		else
-			@id = params[:id]
+			@id = CGI.escapeHTML(params[:id])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.user_id == @user_id || @datas.type_channel == 2))
@@ -45,8 +49,8 @@ class TchatController < ApplicationController
 		if (!params[:id] || !params[:key])
 			render html: "error-forbidden", :status => :unauthorized
 		else
-			@id = params[:id]
-			@key = params[:key]
+			@id = CGI.escapeHTML(params[:id])
+			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.key == @key || @datas.user_id == @user_id))
@@ -65,9 +69,9 @@ class TchatController < ApplicationController
 		if (!params[:id] || !params[:key] || !params[:message])
 			render html: "error-fobidden", :status => :unauthorized
 		else
-			@id = params[:id]
-			@key = params[:key]
-			@message = params[:message]
+			@id = CGI.escapeHTML(params[:id])
+			@key = CGI.escapeHTML(params[:key])
+			@message = CGI.escapeHTML(params[:message])
 			@user_id = current_user.id.to_s
 			@datas = Channel.find_by_id(@id)
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
@@ -77,7 +81,7 @@ class TchatController < ApplicationController
 					render html: 2
 					return
 				end
-				Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message, :target_id=> @id, :message_type=> 1)
+				Messages.create(:user_id=> @user_id, :create_time=> @date, :message=> @message.html_safe, :target_id=> @id, :message_type=> 1)
 				render html: 1
 				return
 			end
@@ -86,25 +90,25 @@ class TchatController < ApplicationController
 		end
 	end
 	def userBlockChannel
-		@user_id = current_user.id.to_s
+		@user_id = current_user.id
 		if (!params[:id] || !params[:channelId] || !params[:type])
 			render html: "error-fobidden", :status => :unauthorized
 		elsif (params[:type] == "1" || params[:type] == "2")
-			@block_user = params[:id]
+			@block_user = CGI.escapeHTML(params[:id]).to_i
 			if (@user_id == @block_user)
 				render html: "3"
 				return
 			end
-			@channelId = params[:channelId]
+			@channelId = CGI.escapeHTML(params[:channelId])
 			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 			if (@datas)
-				Sanctions.create(:sanction_type=> @type.to_i, :user_id=> @datas.id, target_id: @block_user.to_i, :create_time=>@date)
+				Sanctions.create(:sanction_type=> @type.to_i, :user_id=> @datas.id, target_id: @block_user, :create_time=>@date)
 				render html: "1"
 				return 
 			end
 		elsif (params[:type] == "3")
-			@mute_user = params[:id]
-			@channelId = params[:channelId]
+			@mute_user = CGI.escapeHTML(params[:id])
+			@channelId = CGI.escapeHTML(params[:channelId])
 			if (@user_id == @mute_user)
 				render html: "3"
 				return
@@ -125,8 +129,8 @@ class TchatController < ApplicationController
 			render html: "error-fobidden", :status => :unauthorized
 			return
 		else
-			@id = params[:id]
-			@channel_id = params[:channel_id]
+			@id = CGI.escapeHTML(params[:id])
+			@channel_id = CGI.escapeHTML(params[:channel_id])
 			@user_id = current_user.id
 			if (Channel.find_by_user_id_and_id(@user_id, @channel_id))
 				Messages.find_by_id(@id).destroy
@@ -142,9 +146,9 @@ class TchatController < ApplicationController
 			render html: "error-fobidden", :status => :unauthorized
 			return
 		end
-		@channel_id = params[:channel_id]
-		@target_id = params[:target_id]
-		@type = params[:type].to_i
+		@channel_id = CGI.escapeHTML(params[:channel_id])
+		@target_id = CGI.escapeHTML(params[:target_id])
+		@type = CGI.escapeHTML(params[:type]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		if (@datas && @datas.user_id == current_user.id)
 			if (@target_id.to_i == current_user.id)
@@ -179,29 +183,32 @@ class TchatController < ApplicationController
 	def UpdateChannelKey
 		if (!params[:id] || !params[:key])
 			render html: "error-forbidden", :status => :unauthorized
+			return
 		else
-			@id = params[:id]
-			@key = params[:key]
+			@id = CGI.escapeHTML(params[:id])
+			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id_and_user_id(@id, @user_id)
 			if (@datas)
-				if (@key !~ /[!@#$%^&*()_+{}\[\]:;'"\/\\?><.,]/)
+				if (safestr(@key))
 					@datas.update({:key => @key})
 					@datas.save
 					render html: "1"
 					return
 				end
 				render html: "2"
+				return
 			end
 		end
 		render html: "error-forbidden", :status => :unauthorized
+		return
 	end
 	def UpdateChannelType
 		if (!params[:channelId])
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@channelId = params[:channelId]
+		@channelId = CGI.escapeHTML(params[:channelId])
 		@user_id = current_user.id
 		@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
 		if (@datas)

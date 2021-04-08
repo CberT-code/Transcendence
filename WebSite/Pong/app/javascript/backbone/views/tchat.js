@@ -228,8 +228,6 @@ ViewChannel = Backbone.View.extend(
                     'text'
                 );
         },
-
-
         UpdateChannelKey: function (e) {
             e.preventDefault();
             var key = $(e.currentTarget).val();
@@ -243,6 +241,9 @@ ViewChannel = Backbone.View.extend(
                         "id": id,
                     },
                     function (data) {
+                        if (data == 2) {
+                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                        }
                     },
                     'text'
                 );
@@ -330,8 +331,11 @@ ViewChannel = Backbone.View.extend(
                             $(".createChannel").css("display", "none");
                             notification("success", "Channel created !");
                             Backbone.history.loadUrl();
-                        } else
+                        } else if (data == 2) {
                             notification("error", "A channel have already this title...");
+                        } else {
+                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                        }
                     },
                     'text'
                 );
