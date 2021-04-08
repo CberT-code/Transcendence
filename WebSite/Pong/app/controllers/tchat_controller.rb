@@ -124,6 +124,24 @@ class TchatController < ApplicationController
 		end
 		render html: "error-fobidden", :status => :unauthorized
 	end
+	def removeChannel
+		if (!params[:channel_id] || !safestr(params[:channel_id]))
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@channel_id = params[:channel_id]
+		@user_id = current_user.id
+		@datas = Channel.find_by_id(@channel_id)
+		if (@datas && @datas.user_id == @user_id)
+			@tmp = Messages.where(["target_id = ?", @channel_id])
+ 			@tmp.each do |element|
+				element.destroy
+			end
+			@datas.destroy
+			render html: "1"
+			return
+		end
+	end
 	def removeMessageChannel
 		if (!params[:id] || !params[:channel_id])
 			render html: "error-fobidden", :status => :unauthorized

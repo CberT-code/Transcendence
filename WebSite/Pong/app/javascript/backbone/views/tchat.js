@@ -30,6 +30,7 @@ ViewChannel = Backbone.View.extend(
             "click .unmuteUserChannel": "unmuteUser",
             "click .ChannelAdminMode": "UpateChannelType",
             "click .newAdminSubmit": "newAdminSubmit",
+            "click .removeChannel": "removeChannel",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
         },
         viewPublicChannel: function (e) {
@@ -243,6 +244,25 @@ ViewChannel = Backbone.View.extend(
                     function (data) {
                         if (data == 2) {
                             notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                        }
+                    },
+                    'text'
+                );
+        },
+        removeChannel: function (e) {
+            e.preventDefault();
+            var id = $(".Channelid").val();
+            if (id != "")
+                $.post(
+                    "/tchat/channel/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "channel_id": id,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Channel remove !");
+                            Backbone.history.loadUrl();
                         }
                     },
                     'text'
