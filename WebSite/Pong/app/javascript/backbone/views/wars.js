@@ -10,18 +10,17 @@ ViewWars = Backbone.View.extend(
     initialize: function () {
 	},
     events: {
-		'click #Accept': 'Accept',
-		'click #Decline': 'Decline',
-		'click #remove': 'Remove',
-		'click #add': 'Add',
-		'click #attack': 'Attack',
-		'click #save_war': 'SaveWar',
+		'click #Accept': 'Wars_Update',
+		'click #Decline': 'Wars_Destroy',
+		'click #add': 'Wars_Add',
+		'click #remove': 'Wars_Remove',
 		'change #histories_points': 'Search',
 		'change #histories_nb_players': 'Search',
 		'keyup #wars_search': 'Wars_Search',
+		'click #attack': 'Wars_Create',
 
 	},
-	Accept: function (e) {
+	Wars_Update: function (e) {
 		e.preventDefault();
 		$.ajax(
 			{
@@ -29,7 +28,7 @@ ViewWars = Backbone.View.extend(
 				type: 'PATCH',
 				data: 
 				{
-					"id_war":  $(e.currentTarget).val(),
+					"war_id":  $(e.currentTarget).val(),
 					'authenticity_token': $('meta[name=csrf-token]').attr('content')
 				},
 				success: function (data) 
@@ -45,7 +44,7 @@ ViewWars = Backbone.View.extend(
 		);
 		
 	},
-	Decline: function (e) {
+	Wars_Destroy: function (e) {
 		e.preventDefault();
 		console.log($(e.currentTarget).val());
 		$.ajax(
@@ -54,7 +53,7 @@ ViewWars = Backbone.View.extend(
 				type: 'DELETE',
 				data: 
 				{
-					"id_war":  $(e.currentTarget).val(),
+					"war_id":  $(e.currentTarget).val(),
 					'authenticity_token': $('meta[name=csrf-token]').attr('content')
 				},
 				success: function (data) 
@@ -69,7 +68,7 @@ ViewWars = Backbone.View.extend(
 			},
 		);
 	},
-	Add: function (e) {
+	Wars_Add: function (e) {
 		e.preventDefault();
 		console.log($(e.currentTarget).val());
 		$.post(
@@ -90,7 +89,7 @@ ViewWars = Backbone.View.extend(
 			'text'
 		);
 	},
-	Remove: function (e) {
+	Wars_Remove: function (e) {
 		e.preventDefault();
 		console.log($(e.currentTarget).val());
 		$.post(
@@ -133,7 +132,7 @@ ViewWars = Backbone.View.extend(
 		),
 		'text'
 	},
-	Attack: function (e) {
+	Wars_Create: function (e) {
 		$.post(
 			'/wars',
 			{
@@ -151,15 +150,25 @@ ViewWars = Backbone.View.extend(
 				if (data == 'error_1')
 					notification("error", "Please choose the number of points you want to play for");
 				else if (data == 'error_2')
-					notification("error", "Please choose the number of players");
+					notification("error", "Number of players incorrect");
 				else if (data == 'error_3')
 					notification("error", "Please enter a start date minimum 2 days after today");
 				else if (data == 'error_4')
 					notification("error", "Please enter a end date minimum 2 days after the start");
 				else if (data == 'error_5')
 					notification("error", "Please enter a valid tournament");
+				else if (data == 'error_6')
+					notification("error", "Incorrect numbers of points");
+				else if (data == 'error_7')
+					notification("error", "You don't have enough point to play, please change the amount of points");
+				else if (data == 'error_8')
+					notification("error", "No guild found, try later.");
+				else if (data == 'error_9')
+					notification("error", "You dont have enough players in your team to play");
+				else if (data == 'error_10')
+					notification("error", "The guild you wanna attack can't be attacked with those parameters");
 				else
-				window.location.href = "#wars" ;
+					window.location.href = "#wars" ;
 			},
 		),
 		'text'

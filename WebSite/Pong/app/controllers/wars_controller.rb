@@ -5,7 +5,6 @@ class WarsController < ApplicationController
 		end
 		@guild = Guild.find_by_id(current_user.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
-
 	end
 	def index
 		if (@guild.id == -1 || (War.where('(guild_id1 = ? or guild_id2 = ?) and status = ?', @guild.id, @guild.id, 1).count != 0))
@@ -36,30 +35,39 @@ class WarsController < ApplicationController
 	def show
 		@war = War.find_by_id(params[:id]);
 
-		@date = DateTime.current + 2.days
+		@date = DateTime.current
 		@date = @date.change(hour: 17)
-		@war.update(start: @date, end: @date + 2.days)
-		@datedays = ((@war.start.to_date) - DateTime.current.to_date).to_i;
-		@datehours = ((@war.start.to_i) - DateTime.current.to_i).to_i;
+		# @war.update(start: DateTime.current + 1.minutes, end: @date + 2.days)
+		# @war.update(end: @date + 1.hours)
+		@startdays = ((@war.start.to_date) - DateTime.current.to_date).to_i;
+		@starthours = ((@war.start.to_i) - DateTime.current.to_i).to_i;
+		@enddays = ((@war.end.to_date) - DateTime.current.to_date).to_i;
+		@endhours = ((@war.end.to_i) - DateTime.current.to_i).to_i;
+
 
 		@guild1 = Guild.find_by_id(@war.guild_id1);
 		@guild2 = Guild.find_by_id(@war.guild_id2);
 		@inwars = War.where('(guild_id1 = ? or guild_id2 = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2)
-		@wars_history = History.where('id_war = ?', @war.id);
+		@wars_history = History.where('war_id = ?', @war.id);
 		@list_users1 = User.where(id: @war.team1);
 		@list_users2 = User.where(id: @war.team2);
 	end
 	def update
-		@war = War.find_by_id(params[:id_war]);
-		if (@admin && @war && @war.guild_id2 == @guild.id && @war.status == 0)
-			@war.update({'status': 1});
-		else
-			render html: "error-accept"
+		@war = War.find_by_id(params[:war_id]);
+		@guild1 = Guild.find_by_id(@war.guild_id1);
+		if (!@guild1.war_id && !@guild.war_id)
+			if (@admin && @war && @war.guild_id2 == @guild.id && @war.status == 0)
+				@guild.update({war_id: @war.id});
+				@guild1.update({war_id: @war.id});
+				@war.update({'status': 1});
+			else
+				render html: "error-accept"
+			end
 		end
 		render html: @war.id
 	end
 	def destroy
-		@war = War.find_by_id(params[:id_war]);
+		@war = War.find_by_id(params[:war_id]);
 		if (@admin && @war && (@war.guild_id1 == @guild.id || @war.guild_id2 == @guild.id) && @war.status == 0)
 			@war.destroy;
 		else
@@ -127,27 +135,50 @@ class WarsController < ApplicationController
 		render json: @ret
 	end
 	def create
+
 		if (params[:points] == "null")
 			render html: 'error_1';
-		elsif (params[:players] == "null")
+		elsif (params[:players] == "null" || (params[:players] != '5' && params[:players] != '10' && params[:players] != '15'))
 			render html: 'error_2';
+		elsif (params[:players].to_i > @guild.nbmember)
+			render html: 'error_9';
 		elsif ((params[:date_start].to_date - DateTime.current.to_date).to_i < 2)
 			render html: 'error_3';
 		elsif ((params[:date_end].to_date - params[:date_start].to_date).to_i < 2)
 			render html: 'error_4';
 		elsif (!Tournament.find_by_id(params[:tournament_id]))
 			render html: 'error_5';
+		elsif (params[:points] != '1000' && params[:points] != '5000' && params[:points] != '10000')
+			render html: 'error_6';
+		elsif (params[:points] != '1000' && params[:points].to_i > @guild.points)
+			render html: 'error_7';
 		elsif (params[:id] == "0")
-			@list_guild = Guild.where("nbmember >= ? and points >= ?", params[:players], params[:points]);
-			@id = rand(@list_guild.count);
-			while (@id == current_user.guild_id)
-				@id = rand(@list_guild.count);
+			if (params[:points].to_i > 1000)
+				@list_guild = Guild.where("nbmember >= ? and points >= ? and war_id = NULL", params[:players], params[:points]);
+			else
+				@list_guild = Guild.where("nbmember >= ? and war_id IS NULL", params[:players]);
 			end
-			@war = War.new;
-			@war.update({guild_id1: current_user.guild_id, guild_id2: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
-			@war.save;
+			puts "count";
+			puts @list_guild.count;
+			if (@list_guild.count <= 1)
+				render html: 'error_8';
+			else
+				@id = rand(@list_guild.count);
+				@guildattack = @list_guild[@id];
+				while (@guildattack == current_user.guild_id || @id == 0)
+					puts @id;
+					@id = rand(@list_guild.count);
+					@guildattack = @list_guild[@id];
+				end
+				@war = War.new;
+				@war.update({guild_id1: current_user.guild_id, guild_id2: @guildattack.id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+				@war.save;
+			end
 		else
 			@id = params[:id];
+			if ((params[:points] > 1000 && params[:points] > Guild.find_by_id(@id).points) || params[:players] > Guild.find_by_id(@id).nbmember)
+				render html: 'error_10';
+			end
 			@war = War.new;
 			@war.update({guild_id1: current_user.guild_id, guild_id2: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
 			@war.save;

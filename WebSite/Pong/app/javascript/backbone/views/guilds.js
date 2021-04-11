@@ -10,18 +10,18 @@ ViewGuilds = Backbone.View.extend(
     initialize: function () {
     },
     events: {
-		'click #create_guild': 'CreateGuild',
-		'click #quit_guild': 'GuildQuit',
-		'click #ban_guild': 'GuildBan',
-		'click #unban_guild': 'GuildUnban',
-		'click #join_guild': 'JoinGuild',
+		'click #create_guild': 'Guild_Create',
+		'click #quit_guild': 'Guild_Destroy',
+		'click #ban_guild': 'Guild_Ban',
+		'click #unban_guild': 'Guild_Unban',
+		'click #join_guild': 'Guild_Join',
 		'click #change_admin': 'list_change_admin',
-		'click #exec_change_admin': 'exec_change_admin',
-		'change #officer_select': 'OfficerSelect',
+		'click #exec_change_admin': 'Guild_Update',
 		'keyup #guild_search': 'Guild_Search',
-		'keyup #guilds_anagramme': 'Check_Anagramme',
+		'change #officer_select': 'Guild_Officer',
+		'keyup #guilds_anagramme': 'Guild_Anagramme',
     },
-	CreateGuild: function () {
+	Guild_Create: function () {
 		if ($("#guilds_name").val() == "")
 			notification("error", "Please complete the guild name...");
 		else if ($("#guilds_description").val() == "")
@@ -40,9 +40,9 @@ ViewGuilds = Backbone.View.extend(
 				function (data) 
 				{
 					if (data == 'error-1')
-						notification("error", "Please complete the guild name...");
+						notification("error", "The guild name can't be empty or contain specials characters");
 					else if (data == 'error-2')
-						notification("error", "Please complete the description...");
+						notification("error", "The guild story can't be empty or contain specials characters");
 					else if (data == 'error-3')
 						notification("error", "Wrong, max number of member...");
 					else if (data == 'error-4')
@@ -51,6 +51,8 @@ ViewGuilds = Backbone.View.extend(
 						notification("error", "Oversize description...");
 					else if (data == 'error-6')
 						notification("error", "Anagramme probleme.");
+					else if (data == 'error-7')
+						notification("error", "The guild anagramme can't be empty or contain specials characters");
 					else
 					{
 						$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
@@ -62,7 +64,7 @@ ViewGuilds = Backbone.View.extend(
 			);
 		}
 	},
-	GuildQuit: function () {
+	Guild_Destroy: function () {
 		$.ajax(
 			{
 				url: '/guilds/' + $("#id").val(),
@@ -91,7 +93,7 @@ ViewGuilds = Backbone.View.extend(
 			},
 		);
 	},
-	GuildBan: function () {
+	Guild_Ban: function () {
 		$.post(
 			'/guilds/ban',
 			{
@@ -129,7 +131,7 @@ ViewGuilds = Backbone.View.extend(
 			'text'
 		);
 	},
-	GuildUnban: function () {
+	Guild_Unban: function () {
 		$.post(
 			'/guilds/unban',
 			{
@@ -144,7 +146,7 @@ ViewGuilds = Backbone.View.extend(
 			'text'
 		);
 	},
-	JoinGuild: function () {
+	Guild_Join: function () {
 		$.post(
 			'/guilds/join',
 			{
@@ -174,7 +176,7 @@ ViewGuilds = Backbone.View.extend(
 		$("#guild_id_admin").css("display", "inline");
 		$("#exec_change_admin").css("display", "inline");
 	},
-	exec_change_admin: function () {
+	Guild_Update: function () {
 		$.ajax(
 			{
 				url: '/guilds/' + $("#id").val(),
@@ -217,7 +219,7 @@ ViewGuilds = Backbone.View.extend(
 		),
 		'text'
 	},
-	OfficerSelect: function (e) {
+	Guild_Officer: function (e) {
 		$.post(
 			'/guilds/officer',
 			{
@@ -236,7 +238,7 @@ ViewGuilds = Backbone.View.extend(
 		),
 		'text'
 	},
-	Check_Anagramme: function (e) {
+	Guild_Anagramme: function (e) {
 
 		$.post(
 			'/guilds/anagramme',

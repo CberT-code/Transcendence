@@ -29,7 +29,9 @@ class UsersController < ApplicationController
 				User.find_by_id(@user.id).update({"available": params[:checked]});
 				render html: "success";
 			elsif (params.has_key?(:username))
-				if (params[:username] == "")
+				if (!safestr(params[:username]))
+					render html: "special-characters"
+				elsif (params[:username] == "")
 					render html: "error-incomplete";
 				elsif (!User.find_by_nickname(params[:username]))
 					@user.update({"nickname": params[:username]});
@@ -49,10 +51,8 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				Stat.find_by_id(@user.stat_id).destroy;
-				@user.update({"deleted": TRUE});
-				destroy_user_session_path;
-				render html: "success";
+				@user.destroy()
+				redirect_to destroy_user_session_path
 			end
 		else
 			render html: "error-forbidden";

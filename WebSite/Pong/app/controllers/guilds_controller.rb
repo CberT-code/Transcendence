@@ -15,14 +15,18 @@ class GuildsController < ApplicationController
 			render 'error/403', :status => :unauthorized
 		end
 	end
-	
+
 	def create
 		if (current_user.guild_id) then
 			render 'error/403', :status => :unauthorized
 		end
-		if (params[:guildname] == "")
+		if (params[:guildname] == "" || !safestr(params[:guildname]))
 			render html: "error-1";
-		elsif (params[:guildstory] == "")
+		elsif (params[:anagramme].length > 5 || Guild.find_by_anagramme(params[:anagramme]))
+			render html: "error-6";
+		elsif (!safestr(params[:anagramme]))
+			render html: "error-7";
+		elsif (params[:guildstory] == "" || !safesentence(params[:guildstory]))
 			render html: "error-2";
 		elsif (params[:maxmember] != '5' && params[:maxmember] != '10' && params[:maxmember] != '15' )
 			render html: "error-3";
@@ -30,8 +34,6 @@ class GuildsController < ApplicationController
 			render html: "error-4";
 		elsif (params[:guildstory].length > 250 )
 			render html: "error-5";
-		elsif (params[:anagramme].length > 5 || Guild.find_by_anagramme(params[:anagramme]))
-			render html: "error-6";
 		else
 			@guild = Guild.new;
 			@stat = Stat.new;
@@ -62,7 +64,7 @@ class GuildsController < ApplicationController
 		
 		@new_admin = User.find_by_id(params[:id_admin]);
 		@guild = Guild.find_by_id(@new_admin.guild_id);
-		if ((@current_user.guild_id == @guild.id && @guild.id_admin == current_user.id  ) || @admin == 1)
+		if ((current_user.guild_id == @guild.id && @guild.id_admin == current_user.id  ) || @admin == 1)
 			@guild.update({'id_admin': @new_admin.id});
 			render html: @guild.id;
 		else
@@ -70,31 +72,29 @@ class GuildsController < ApplicationController
 		end
 	end
 
-	# destroy need a solution to kill user if it's the user or the super admin
 	def destroy
 		@usertodelete = User.find_by_id(params[:id]);
 		@guild = Guild.find_by_id(@usertodelete.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
 		@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
-		if (@usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete != @guild.id_admin))) then
-			if (@guild.id_admin == @usertodelete.id && @guild.nbmember != 1)
-				render html: "error-admin";
-			else
-				if (@guild.nbmember == 1 ) then
-					@guild.update(nbmember: 0, id_admin: 0, deleted: true);
-					@guild.officers.delete(@usertodelete.id);
-				else
-					@guild.update(nbmember: @guild.nbmember - 1);
-					@guild.officers.delete(@usertodelete.id);
-				end
-				@usertodelete.update({"guild_id": '-1'});
-				render html: 2;
-			end
-		elsif (@usertodelete.id == current_user.id)
+		if (@guild.id_admin == @usertodelete.id && @guild.nbmember != 1)
+			render html: "error-admin";
+		elsif (@usertodelete.id == current_user.id && @guild.nbmember != 1)
 			@guild.update(nbmember: @guild.nbmember - 1);
 			@guild.officers.delete(@usertodelete.id);
-			@usertodelete.update({"guild_id": '-1'});
+			@usertodelete.update({"guild_id": nil});
 			render html: 1;
+		elsif (@usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete != @guild.id_admin))) then
+			if (@guild.nbmember == 1 ) then
+				@guild.update(nbmember: 0, id_admin: 0, deleted: true);
+				@guild.officers.delete(@usertodelete.id);
+				render html: 1;
+			else
+				@guild.update(nbmember: @guild.nbmember - 1);
+				@guild.officers.delete(@usertodelete.id);
+				render html: 2;
+			end
+			@usertodelete.update({"guild_id": nil});
 		else
 			render html: 1;
 		end
@@ -103,7 +103,7 @@ class GuildsController < ApplicationController
 
 	def ban
 		@usertoban = User.find_by_id(params[:id]);
-		@guild = Guild.find_by_id(@usertoban.guild_id);
+		@guild = @usertoban.guild_id;
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
 		if (@usertoban.guild_id && @admin == 1) then
 			if (@guild.id_admin == @usertoban.id && @guild.nbmember != 1)
@@ -115,14 +115,13 @@ class GuildsController < ApplicationController
 					render html: "error-yourself";
 				else
 					@guild.update(nbmember: @guild.nbmember - 1);
-					@usertoban.update({"guild_id": '-1'});
+					@usertoban.update({"guild_id": nil});
 					if (@guild.banned.count == 0)
 						@guild.update({banned: [@usertoban.id]});
 					else
 						@guild.banned.push(@usertoban.id);
 					end
 				end
-				# @guild.delete({banned: [@usertoban.id]});
 				@guild.save();
 			end
 		else
@@ -159,12 +158,10 @@ class GuildsController < ApplicationController
 	end
 
 	def search
-		@list_guild = Guild.where("LOWER(name) LIKE LOWER(?)", params[:search] + "%");
+		@list_guild = Guild.where("LOWER(name) LIKE LOWER(?) AND DELETED IS FALSE","%" + params[:search] + "%");
 		@ret = Array.new
 		@list_guild.each do |guild|
-			if (guild.id != current_user.guild_id)
-				@ret.push(["id" => guild.id, "name" => guild.name, "nbmember" => guild.nbmember])
-			end
+			@ret.push(["id" => guild.id, "name" => CGI.escapeHTML(guild.name), "nbmember" => guild.nbmember])
 		end
 		render json: @ret
 	end

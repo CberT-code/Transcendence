@@ -7,7 +7,7 @@
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.select :nb_players, options_for_select([['Max members','null'],['5','5'],['10','10'],['15','15']], :selected => '') %>
+				<%= f.select :nb_players, options_for_select([['Max members','null'],['5',5],['10',10],['15',15]], :selected => '') %>
 			</div>
 		</div>
 		<div class="element">
@@ -17,7 +17,7 @@
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.date_field :date_start, min: Date.today + 2.days, max: Date.today + 17.days, value: Date.today + 2.days %>
+				<%= f.date_field :date_start, min: Date.today, max: Date.today + 17.days, value: Date.today + 2.days %>
 				<%= f.date_field :date_end, min: Date.today + 4.days, max: Date.today + 19.days, value: Date.today + 4.days  %>
 			</div>
 		</div>

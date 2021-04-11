@@ -27,13 +27,17 @@
 			<% else %>
 				<h1><span class="text-red"><%= @war.points_guild1 %> </span> / <span class="text-green"><%= @war.points_guild2 %></span></h1>
 			<% end%>
-			<% if @war.status == 1 && @datedays >= 2%>
-				<h1 class="text-orange">Start in : <%= @datedays %> days</h1>
+			<% if @war.status == 1 && @startdays >= 1 %>
+				<h1 class="text-orange">Start in : <%= @startdays %> days</h1>
 				<button id="change_team" class="green_button" onClick="window.location='/#edit_war/<%= @war.id %>'" >Change My Team</button>
-			<% elsif @war.status == 1 && @datedays < 2%>
-				<h1 class="text-orange">Start in : <%= @datehours / (60 * 60) %> heures</h1>
-			<% elsif @war.status == 2 %>
+			<% elsif @war.status == 1 && @startdays < 1 %>
+				<h1 class="text-orange">Start in : <%= @starthours / (60 * 60) %> hours</h1>
+			<% elsif @war.status == 2 && @enddays >= 1 %>
 				<h1 class="text-green">In war</h1>
+				<h1 class="text-green">Finish in : <%= @enddays %> days</h1>
+			<% elsif @war.status == 2 && @enddays < 1 %>
+				<h1 class="text-green">In war</h1>
+				<h1 class="text-green">Finish in : <%= @endhours / (60 * 60) %> hours</h1>
 			<% elsif @war.status == 3 %>
 				<h1 class="text-red">Finished</h1>
 			<% end %>

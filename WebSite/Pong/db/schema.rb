@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_06_173918) do
+ActiveRecord::Schema.define(version: 2021_04_10_124557) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 2021_04_06_173918) do
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.bigint "war_id"
+    t.index ["war_id"], name: "index_guilds_on_war_id"
   end
 
   create_table "histories", force: :cascade do |t|
@@ -57,8 +59,10 @@ ActiveRecord::Schema.define(version: 2021_04_06_173918) do
     t.integer "ball_y_dir"
     t.integer "host_score"
     t.integer "opponent_score"
+    t.bigint "war_id"
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
+    t.index ["war_id"], name: "index_histories_on_war_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -122,7 +126,7 @@ ActiveRecord::Schema.define(version: 2021_04_06_173918) do
     t.string "name"
     t.string "picture_url"
     t.bigint "guild_id"
-    t.bigint "stat_id", null: false
+    t.bigint "stat_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -145,6 +149,8 @@ ActiveRecord::Schema.define(version: 2021_04_06_173918) do
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 
+  add_foreign_key "guilds", "wars"
+  add_foreign_key "histories", "wars"
   add_foreign_key "users", "guilds"
   add_foreign_key "users", "stats"
   add_foreign_key "wars", "tournaments"

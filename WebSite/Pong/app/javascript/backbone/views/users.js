@@ -30,10 +30,11 @@ ViewAccount = Backbone.View.extend({
 						notification("error", "Forbidden");
 					else
 						notification("success", "Account Deleted");
+					window.location.href = "/";
 				},
 			},
 		);
-		window.location.href = "#home";
+		window.location.href = "/";
 	},
 	ModifUsername: function () {
 		$(".fa-pen").css("display", "none");
@@ -67,6 +68,8 @@ ViewAccount = Backbone.View.extend({
 						notification("error", "Please complete the form...");
 					else if (data == "error-username_exist")
 						notification("error", "This username already exist");
+					else if (data == "special-characters")
+						notification("error", "The username can't contain specials characters.");
 				},
 			},
 		);	
