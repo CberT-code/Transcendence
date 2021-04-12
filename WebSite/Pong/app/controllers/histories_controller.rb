@@ -34,36 +34,42 @@ class HistoriesController < ApplicationController
 		end
 	end
 
-	def new
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		@me = current_user
-		game_found = "no"
-		History.all.each do |target|
-			if target.host != @me && target.statut == 0
-				@game = target
-				@game.opponent = @me
-				redis.set("game_#{@game.id}", "ready")
-				@game.save!
-				game_found = "ok"
-				ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
-				redirect_to @game
-				break
+	def find_or_create
+		@tournament = params['tournament_id'].to_i;
+		if (!Tournament.find_by_id(@tournament))
+			render html: "error_tournament"
+		else
+			redis = Redis.new(	url:  ENV['REDIS_URL'],
+								port: ENV['REDIS_PORT'],
+								db:   ENV['REDIS_DB'])
+			@me = current_user
+			game_found = "no"
+			History.all.each do |target|
+				if target.host != @me && target.statut == 0 && target.tournament_id == @tournament
+					@game = target
+					@game.opponent = @me
+					redis.set("game_#{@game.id}", "ready")
+					@game.save!
+					game_found = "ok"
+					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
+					render html: @game.id
+					return
+				end
 			end
-		end
-		if game_found != "ok"
-			@game = @me.hosted_games.new(statut: 0, opponent: @me, host_height: 150, oppo_height: 150,
-			ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
-			@game.save!
-			redis.set("game_#{@game.id}", "Looking For Opponent")
-			redirect_to @game
+			if game_found != "ok"
+				@game = @me.hosted_games.new(statut: 0, opponent: @me, host_height: 150, oppo_height: 150,
+					ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0, tournament_id: @tournament)
+					@game.save!
+					redis.set("game_#{@game.id}", "Looking For Opponent")
+				render html: @game.id
+			end
 		end
 	end
 	
 	def run
 		@game = History.find(params[:id])
 		@game.statut = 2
+		@tournament = Tournament.find_by_id(@game.tournament_id);
 		if current_user == @game.host
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
@@ -74,16 +80,16 @@ class HistoriesController < ApplicationController
 			move = Array["static", "static"]
 			player = Array[75, 75]
 			score = Array[0, 0, 30] # score[2] serves as a countdown
-			ball = Array[245.0, 195.0, 4.0, 7.0] # [x, y, angle, speed]
+			ball = Array[245.0, 195.0, 4.0, @tournament.speed] # [x, y, angle, speed]
 			
-			while score[0] < 4 && score[1] < 4 && status == "running"
+			while score[0] < @tournament.maxpoints && score[1] < @tournament.maxpoints && status == "running"
 				move[1] = redis.get("player_#{@game.opponent.id}")
 				move[0] = redis.get("player_#{@game.host.id}")
 				time = Time.now
 				if score[2] != 0
 					score[2] -= 1
 				else
-					calc(move, player, ball, score)
+					calc(move, player, ball, score, @tournament.speed)
 				end
 				ActionCable.server.broadcast("pong_#{@game.id}", {	body: "Left : #{move[0]} -- Right : #{move[0]}",
 																	frame: frame, status: status,
@@ -111,7 +117,7 @@ class HistoriesController < ApplicationController
 		end
 	end
 	
-	def calc(move, player, ball, score)
+	def calc(move, player, ball, score, speed)
 		for i in 0..1
 			if move[i] == "up"
 				player[i] += 10
@@ -124,10 +130,10 @@ class HistoriesController < ApplicationController
 				player[i] = 300
 			end
 		end
-		move_ball(ball, score, player)
+		move_ball(ball, score, player, speed)
 	end
 
-	def move_ball(ball, score, player)
+	def move_ball(ball, score, player, speed)
 		ball[0] += Math.cos(ball[2]) * ball[3]
 		ball[1] += Math.sin(ball[2]) * ball[3]
 		pi = Math::PI
@@ -139,7 +145,7 @@ class HistoriesController < ApplicationController
 				#add effect according to speed
 			else
 				score[1] += 1
-				reset(player, ball, score)
+				reset(player, ball, score, speed)
 				return
 			end
 		elsif ball[0] >= 470.0
@@ -149,7 +155,7 @@ class HistoriesController < ApplicationController
 				#add effect according to speed
 			else
 				score[0] += 1
-				reset(player, ball, score)
+				reset(player, ball, score, speed)
 				return
 			end
 		end
@@ -160,10 +166,10 @@ class HistoriesController < ApplicationController
 		end
 	end
 
-	def reset(player, ball, score)
+	def reset(player, ball, score, speed)
 		ball[0] = 245.0
 		ball[1] = 195.0
-		ball[3] = 7.0
+		ball[3] = speed
 		player[0] = 75
 		player[1] = 75
 		score[2] = 30

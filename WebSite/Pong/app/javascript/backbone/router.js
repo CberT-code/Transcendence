@@ -26,7 +26,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"edit_war/:id": "edit_war",
 	"error/403": "error403",
 	//play
-	// "new_play": "new_play",
+	"new_game": "new_game",
+	"show_game/:id": "show_game",
 },
 home: function() {
 	$.get("/").then(function(data){
@@ -119,9 +120,14 @@ play: function(id) {
 		$("main").html("<div id='content-history'>" + ($(data).find("#content-history").html()) + "</div>");
 	});
 },
-// new_play: function(id) {
-// 	$.get("/histories/new").then(function(data){
-// 		$("main").html("<div id='content-history'>" + ($(data).find("#content-history").html()) + "</div>");
-// 	});
-// },
+new_game: function(id) {
+	$.get("/histories/new").then(function(data){
+		$("main").html("<div id='content-game'>" + ($(data).find("#content-game").html()) + "</div>");
+	});
+},
+show_game: function(id) {
+	$.get("/histories/" +  id, { id: id}).then(function(data){
+		$("main").html("<div id='content-game_show'>" + ($(data).find("#content-game_show").html()) + "</div>");
+	});
+},
 });

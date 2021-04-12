@@ -50,4 +50,5 @@ Rails.application.routes.draw do
 	resources :histories
 	post "/histories/run/:id", to: "histories#run"
 	post "/histories/wait/:id", to: "histories#wait"
+	post "/histories/find_or_create", to: "histories#find_or_create"
 end

@@ -1,44 +1,48 @@
-<%= stylesheet_link_tag "history_index.css" %>
-<div class="game_link">
-	<%= link_to 'NEW_GAME', '/histories/new' %>
-</div>
-<% top = 150 %>
-<div class="history">
-	<h1>Recent games :</h1>
-</div>
-<% @games.each do |game| %>
-	<% if game.statut == 2%>
-		<div class="game_link">
-			<%= link_to 'CONTINUE', game %>
-		</div>
-	<% else %>
+<div id="content-history">
+	<%= stylesheet_link_tag "history_index.css" %>
+	<div class="game_link">
+		<%= link_to 'NEW_GAME', '/histories/new' %>
+	</div>
+		<input id="tournament_id" type="hidden" value='1'>
+		<button id="new_game" class="green_button">Create Game</button>
+	<% top = 150 %>
+	<div class="history">
+		<h1>Recent games :</h1>
+	</div>
+	<% @games.each do |game| %>
+		<% if game.statut == 2%>
+			<div class="game_link">
+				<%= link_to 'CONTINUE', game %>
+			</div>
+		<% else %>
+			<%= link_to game do %>
+				<div class="game_resume history" style="top: <%= top %>px">
+					<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
+					</div>
+					<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+					<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
+					<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
+					</div>
+				</div>
+			<% end %>
+		<% top += 160 %>
+		<% end %>
+	<% end %>
+	<% top = 150 %>
+	<div class="spectate">
+		<h1>Spectate :</h1>
+	</div>
+	<% @spectate.each do |game| %>
 		<%= link_to game do %>
-			<div class="game_resume history" style="top: <%= top %>px">
+			<div class="game_resume spectate" style="top: <%= top %>px">
 				<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
 				</div>
 				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-				<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
+				<h1><%= "LIVE"%></h1>
 				<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
 				</div>
 			</div>
 		<% end %>
-	<% top += 160 %>
+		<% top += 160 %>
 	<% end %>
-<% end %>
-<% top = 150 %>
-<div class="spectate">
-	<h1>Spectate :</h1>
 </div>
-<% @spectate.each do |game| %>
-	<%= link_to game do %>
-		<div class="game_resume spectate" style="top: <%= top %>px">
-			<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
-			</div>
-			<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-			<h1><%= "LIVE"%></h1>
-			<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
-			</div>
-		</div>
-	<% end %>
-	<% top += 160 %>
-<% end %>

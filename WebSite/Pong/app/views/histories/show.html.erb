@@ -1,31 +1,33 @@
-<%= stylesheet_link_tag "pong_v1.css" %>
-<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
-<div id="wrapper">
-    <div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>")'></div>
-    <div id="game">
-        <div class="goal"></div>
-        <div id="left_player" class="player"></div>
-        <div id="ball"></div>
-        <div class="goal" style='left: calc(var(--game_width) - var(--player_width)'></div>
-        <div id="right_player" class="player"></div>
-    </div>
-    <% if @game.opponent == @game.host %>
-        <div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/norminet.jpg")'></div>
-    <% else %>
-        <div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.image %>")'></div>
-    <% end %>
+<div id="content-game_show">
+	<%= stylesheet_link_tag "pong_v1.css" %>
+	<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
+	<div id="wrapper">
+		<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>")'></div>
+		<div id="game">
+			<div class="goal"></div>
+			<div id="left_player" class="player"></div>
+			<div id="ball"></div>
+			<div class="goal" style='left: calc(var(--game_width) - var(--player_width)'></div>
+			<div id="right_player" class="player"></div>
+		</div>
+		<% if @game.opponent == @game.host %>
+			<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/norminet.jpg")'></div>
+		<% else %>
+			<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.image %>")'></div>
+		<% end %>
+	</div>
+	<div>
+		<center><h2 id="score">
+		<% if @game.statut == 0 %>
+			Waiting For Opponent
+		<% end %>
+		</h2></center>
+	</div>
+	<button id="alone">J'ai pas d'amis</button>
+	<div>
+		<p>TESTING : <%= @me.id %></p>
+		<div id='dev'></div>
+		<div id='foo'></div>
+	</div>
+	<%= javascript_pack_tag 'pong_v1' %>
 </div>
-<div>
-    <center><h2 id="score">
-    <% if @game.statut == 0 %>
-        Waiting For Opponent
-    <% end %>
-    </h2></center>
-</div>
-<button id="alone">J'ai pas d'amis</button>
-<div>
-    <p>TESTING : <%= @me.id %></p>
-    <div id='dev'></div>
-    <div id='foo'></div>
-</div>
-<%= javascript_pack_tag 'pong_v1' %>
