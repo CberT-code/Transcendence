@@ -11,13 +11,27 @@ class HistoriesController < ApplicationController
 		clean_list
 		@me = current_user
 		
-		@history = @me.hosted_games.all #TO DO : merge and sort both
-		@history_bis = @me.foreign_games.all
+		hosted = @me.hosted_games.all
+		foreign = @me.foreign_games.all
+		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
+		@spectate = @games #change that after dev
 	end
 	
 	def show
+		redis = Redis.new(	url:  ENV['REDIS_URL'],
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
 		@me = current_user
 		@game = History.find(params[:id])
+		if (@game.statut == 3)
+			@status = "ended"
+			@left = @game.host_score
+			@right = @game.opponent_score
+		elsif (@game.statut == -1)
+			@status = "There was an error with this game"
+		else
+			@status = redis.get("game_#{@game.id}")
+		end
 	end
 
 	def new
@@ -33,12 +47,13 @@ class HistoriesController < ApplicationController
 				redis.set("game_#{@game.id}", "ready")
 				@game.save!
 				game_found = "ok"
+				ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
 				redirect_to @game
 				break
 			end
 		end
 		if game_found != "ok"
-			@game = @me.hosted_games.new(statut: -1, opponent: @me, host_height: 150, oppo_height: 150,
+			@game = @me.hosted_games.new(statut: 0, opponent: @me, host_height: 150, oppo_height: 150,
 			ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
 			@game.save!
 			redis.set("game_#{@game.id}", "Looking For Opponent")
@@ -46,32 +61,9 @@ class HistoriesController < ApplicationController
 		end
 	end
 	
-	def wait
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		frame = 0
-		@game = History.find(params[:id])
-		@game.save!
-		status = redis.get("game_#{@game.id}")
-		time = Time.now
-		while status == "Looking For Opponent"
-			sleep 0.25
-			ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose?", frame: frame, status: status})
-			frame += 1
-			status = redis.get("game_#{params[:id]}")
-			if (Time.now.to_i - time.to_i > 30)
-				break
-			end
-		end
-		@game = History.find(params[:id])
-		ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", frame: frame, status: status, right_pp: @game.opponent.image})
-	end
-	
 	def run
 		@game = History.find(params[:id])
 		@game.statut = 2
-		@game.save
 		if current_user == @game.host
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
@@ -81,8 +73,8 @@ class HistoriesController < ApplicationController
 			frame = 0
 			move = Array["static", "static"]
 			player = Array[75, 75]
-			score = Array[0, 0, 30]
-			ball = Array[245.0, 195.0, 4.0, 7.0]
+			score = Array[0, 0, 30] # score[2] serves as a countdown
+			ball = Array[245.0, 195.0, 4.0, 7.0] # [x, y, angle, speed]
 			
 			while score[0] < 4 && score[1] < 4 && status == "running"
 				move[1] = redis.get("player_#{@game.opponent.id}")
@@ -106,18 +98,15 @@ class HistoriesController < ApplicationController
 			end
 			if (status == "running")
 				@game.statut = 3
-				@game.save
 			else
 				@game.statut = -1
-				@game.save
 			end
+			@game.host_score = score[0]
+			@game.opponent_score = score[1]
+			@game.save
 			status = "ended"
-			redis.set("game_#{@game.id}", status)
-			ActionCable.server.broadcast("pong_#{@game.id}", {	body: "Left : #{move[0]} -- Right : #{move[1]}",
-																frame: frame, status: status,
-																left_y: player[0], right_y: player[1],
-																ball_x: ball[0].to_i, ball_y: ball[1].to_i,
-																score: "#{score[0]} - #{score[1]}"})
+			ActionCable.server.broadcast("pong_#{@game.id}",
+				{ body: "Left : #{move[0]} -- Right : #{move[1]}", status: status})
 			redis.del("game_#{@game.id}")
 		end
 	end

@@ -1,15 +1,44 @@
-<div id="content-history">
-<button onClick="window.location='/#new_play'">New Game</button>
+<%= stylesheet_link_tag "history_index.css" %>
+<div class="game_link">
 	<%= link_to 'NEW_GAME', '/histories/new' %>
-	<% @history.each do |game| %>
-		<li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
-	<% end %>
-	<% @history_bis.each do |game| %>
-		<li><%= link_to game.id, game %>: <%= game.host_id %> vs <%= game.opponent_id %></li>
-	<% end %>
-	<div>
-		<p>TESTING : <%= @me.id %></p>
-		<div id='dev'></div>
-		<div id='foo'></div>
-	</div>
 </div>
+<% top = 150 %>
+<div class="history">
+	<h1>Recent games :</h1>
+</div>
+<% @games.each do |game| %>
+	<% if game.statut == 2%>
+		<div class="game_link">
+			<%= link_to 'CONTINUE', game %>
+		</div>
+	<% else %>
+		<%= link_to game do %>
+			<div class="game_resume history" style="top: <%= top %>px">
+				<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
+				</div>
+				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+				<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
+				<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
+				</div>
+			</div>
+		<% end %>
+	<% top += 160 %>
+	<% end %>
+<% end %>
+<% top = 150 %>
+<div class="spectate">
+	<h1>Spectate :</h1>
+</div>
+<% @spectate.each do |game| %>
+	<%= link_to game do %>
+		<div class="game_resume spectate" style="top: <%= top %>px">
+			<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
+			</div>
+			<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+			<h1><%= "LIVE"%></h1>
+			<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
+			</div>
+		</div>
+	<% end %>
+	<% top += 160 %>
+<% end %>

@@ -79,4 +79,7 @@ Rails.application.configure do
   # Rails.application.configure do
   #   config.cache_store = :redis_cache_store, { url: "redis://redis:6379/0" }
   # end
+
+  # Silence ActionCable
+#   ActionCable.server.config.logger = Logger.new(nil)
 end

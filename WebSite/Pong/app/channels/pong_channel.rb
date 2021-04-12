@@ -8,7 +8,15 @@ class PongChannel < ApplicationCable::Channel
   end
 
   def receive(data)
-    @redis.set("player_#{data['player']}", "#{data['move']}")
+	if (@redis.get("game_#{data['room']}") == "Looking For Opponent" &&
+		data['status'] == "gone")
+		@redis.set("game_#{data['room']}", "quit")
+		game = Histories.find(data['room'])
+		game.statut = -1
+		game.save
+	else
+		@redis.set("player_#{data['player']}", "#{data['move']}")
+	end
   end
 
   def unsubscribed
