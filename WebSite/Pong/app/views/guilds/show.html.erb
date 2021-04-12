@@ -83,16 +83,16 @@
 				<% @wars_histories.each do |wars_history| %>
 					<div id="war">
 					<% if (Guild.find_by_id(wars_history.host_id) && Guild.find_by_id(wars_history.opponent_id)) %>
-						<% @color1 = wars_history.score_host_id > wars_history.score_opponent_id ? "green" : "red"; %>
-						<% @color2 = wars_history.score_host_id < wars_history.score_opponent_id ? "green" : "red" ; %>
+						<% @color1 = wars_history.host_score > wars_history.opponent_score ? "green" : "red"; %>
+						<% @color2 = wars_history.host_score < wars_history.opponent_score ? "green" : "red" ; %>
 						<div id="position">
 							<p><%= @i += 1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.score_host_id %></p>
+							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.score_opponent_id %></p>
+							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
 						</div>
 					<% end %>
 					</div>

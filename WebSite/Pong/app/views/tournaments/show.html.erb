@@ -1,0 +1,42 @@
+<div id="content-tournament">
+	<div class="big-element" id="guild">
+		<div id="title">
+			<h2 id="guild_name">
+				Informations
+			</h2>
+		</div>
+		<div id="corp">
+			<p>Nom : <%= @tournament.name %></p>
+			<p>Description : <%= @tournament.description %></p>
+			<p>Max Points : <%= @tournament.maxpoints %></p>
+			<p>Speed : <%= @tournament.speed %></p>
+		</div>
+	</div>
+	<div class="break"></div>
+	<input id="tournament_id" type="hidden" value='<%= @tournament.id %>'>
+	<button id="new_game" class="green_button">New Game</button>
+	<div class="break"></div>
+	<% if @wars_histories.count > 0 %>
+		<div class="big-element">
+			<div id="title">
+				<h2>Last wars</h2>
+			</div>
+			<div id="corp">
+				<% @i=0%>
+				<% @wars_histories.each do |wars_history| %>
+					<div class="war">
+						<div id="position">
+							<p><%= @i += 1 %></p>
+						</div>
+						<div id="target">
+							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
+						</div>
+						<div id="target">
+							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+</div>

@@ -1119,6 +1119,233 @@ button:hover {
 	font-size: 115%;
 }
 
+#content-tournament {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: baseline;
+	overflow: hidden;
+	width: 100%;
+	height: 100%;
+	padding-top: 25px;
+}
+#content-tournament .break {
+	flex-grow: 1;
+	flex-basis: 100%
+}
+#content-tournament .big-element {
+	height: 420px;
+	width: 450px;
+    border-radius: 9px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 15px;
+}
+#content-tournament .big-element#noBackground{
+	background-color: transparent;
+	border: none;
+}
+#content-tournament .big-element #btn button{
+	width: 250px;
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #score{
+	padding-top: 50%;
+	text-align: center;
+}
+#content-tournament .big-element #score button{
+	width: 250px;
+	margin: auto;
+	border: none;
+	outline: none;
+	padding-left: 45px;
+	padding-right: 45px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	font-size: 110%;
+	border-radius: 6px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #title {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournament .big-element #title h2 {
+	margin: auto;
+	font-size: 135%;
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	border-bottom: solid 2px #231f20;
+	padding-bottom: 10px;
+	padding-right: 15px;
+	padding-left: 15px;
+}
+#content-tournament .big-element #corp {
+	width: 100%;
+	height: calc(100% - 15%);
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: none;
+}
+#content-tournament .big-element #corp #user {
+	width: max-content;
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-tournament .big-element #corp #user #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-tournament .big-element #corp #user #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-tournament .big-element #corp #user #username {
+	width: 300px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournament .big-element #corp #user #username p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-tournament .big-element #corp .war {
+	height: 55px;
+	overflow: hidden;
+	display: flex;
+	border-radius: 3px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 15px;
+	background-color: #ccc;
+	font-family: "Roboto-Medium";
+	color: #231f20;
+}
+#content-tournament .big-element #corp .war #position {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+#content-tournament .big-element #corp .war #position p {
+	margin: auto;
+	color: white;
+	font-size: 115%;
+}
+#content-tournament .big-element #corp .war #target {
+	width: 255px;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournament .big-element #corp .war #target p {
+	margin: auto;
+	font-size: 115%;
+}
+#content-tournament .big-element #corp .war #targetbtn {
+	width: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournament .big-element #corp .war #targetbtn button {
+width: 100px;
+}
+#content-tournament .big-element #corp .war #targetbtn #add {
+background-color: #7BE12B;
+}
+#content-tournament .big-element #corp .war #targetbtn #remove {
+background-color: #c51515;
+}
+#content-tournament .big-element #corp .war #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #corp .war #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #corp #user #action {
+	height: 100%;
+	width: 80px;
+	overflow: hidden;
+	display: flex;
+}
+#content-tournament .big-element #corp #user #action i {
+	margin: auto;
+	font-size: 115%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #corp #user #action i:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-tournament .big-element #center{
+	margin: auto;
+	height: 100%;
+	overflow: hidden;
+	display: flex;
+	width: 50%;
+}
+#content-tournament .big-element .element-line{
+	height: min-content;
+	word-wrap: break-word;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 25px;
+	padding-right: 25px;
+}
+#content-tournament .big-element .element-line #green{
+	color: #7BE12E;
+}
+#content-tournament .big-element .element-line #red{
+	color: #c51515;
+}
+
+
 /* *********** */
 /* Content-War */
 /* *********** */

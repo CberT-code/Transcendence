@@ -25,6 +25,8 @@ ViewTournaments = Backbone.View.extend({
 					"tournamentdescription": $("#tournament_description").val(),
 					"start": $("#tournament_start").val(),
 					"end": $("#tournament_end").val(),
+					"maxpoints": $("#maxpoints").val(),
+					"speed": $("#speed").val(),
 				},
 				function (data) {
 					if (data == 'error-1')
@@ -36,7 +38,9 @@ ViewTournaments = Backbone.View.extend({
 					else if (data == 'error-4')
 						notification("error", "This name is already used...");
 					else if (data == 'error-5')
-						notification("error", "Oversize description...");
+						notification("error", "Wrong number of max points.");
+					else if (data == 'error-6')
+						notification("error", "Wrong speed for the game.");
 					else{
 						// $('#header-tournament').attr('onClick',"window.location='/#show_tournament/" + data + "'");
 						window.location.href = "#tournaments" ;

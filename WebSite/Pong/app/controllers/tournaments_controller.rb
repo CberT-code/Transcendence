@@ -20,21 +20,26 @@ class TournamentsController < ApplicationController
 			render html: "error-3";
 		elsif (params[:end] == "")
 			render html: "error-4";
+		elsif (params[:maxpoints].to_i < 1 || params[:maxpoints].to_i > 15)
+			render html: "error-5";
+		elsif (params[:speed].to_i < 4 || params[:speed].to_i > 20)
+			render html: "error-6";
 		else
 			@tournament = Tournament.new;
-			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end]});
+			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end], maxpoints: params[:maxpoints], speed: params[:speed]});
 			@tournament.save;
 			render html: @tournament.id;
 		end
 	end
 	def show
+		@tournament = Tournament.find_by_id(params[:id]);
+		@wars_histories = History.where('tournament_id = ?', @tournament.id);
+	end
 
-	end
 	def destroy
-	
 	end
+
 	def join
-		
 	end
 
 end

@@ -20,6 +20,9 @@
 					<div id="info">
 						<p><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</p>
 					</div>
+					<div id="info" >
+						<button  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >Voir</button>
+					</div>
 				</div>
 				<% end %>
 			</div>

@@ -4,7 +4,7 @@ function notification(typef, textf) {
 	notification.show();
 }
 
-ViewGuilds = Backbone.View.extend(
+ViewGames = Backbone.View.extend(
 {
     el: $(document),
     initialize: function () {

@@ -12,6 +12,16 @@
 		</div>
 		<div class="element">
 			<div class="center">
+				<%= select_tag "maxpoints", options_for_select((4..15).step(1)) %>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
+				<%= select_tag "speed", options_for_select((2..20).step(0.5)) %>
+			</div>
+		</div>
+		<div class="element">
+			<div class="center">
 				<%= f.select :start, options_for_select([['When start?',''],['now', Time.now ],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
 				<%= f.select :end, options_for_select([['How long?',''],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
 			</div>

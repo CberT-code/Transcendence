@@ -2,6 +2,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	initialize: function() {
 		this.ViewAccount = new ViewAccount();
 		this.ViewGuilds = new ViewGuilds();
+		this.ViewGuilds = new ViewGames();
 		this.ViewWars = new ViewWars();
 		this.ViewTournaments = new ViewTournaments();
 		this.ViewChannel = new ViewChannel();
@@ -19,6 +20,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	//tournaments
 	"tournaments": "tournaments",
 	"new_tournament": "new_tournament",
+	"show_tournament/:id": "show_tournament",
 	//wars
 	"wars": "wars",
 	"new_war": "new_war",
@@ -87,6 +89,11 @@ tournaments: function() {
 new_tournament: function() {
 	$.get("/tournaments/new").then(function(data){
 		$("main").html("<div id='content-new_tournament'>" + ($(data).find("#content-new_tournament").html()) + "</div>");
+	});
+},
+show_tournament: function(id) {
+	$.get("/tournaments/" +  id, { id: id}).then(function(data){
+		$("main").html("<div id='content-tournament'>" + ($(data).find("#content-tournament").html()) + "</div>");
 	});
 },
 // WARS
