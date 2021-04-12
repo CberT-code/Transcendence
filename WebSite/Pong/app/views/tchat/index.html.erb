@@ -12,7 +12,8 @@
 
                     <% @channel.each do |element| %>
                     <%
-                    if (!element.blocked_users || element.blocked_users == "" || (element.blocked_users.kind_of?(Array) && !element.blocked_users.split(",").include?(current_user.id.to_s)))
+                    @datas = Sanctions.find_by_user_id_and_target_id(element.id, @current_user.id)
+                    if (!(@datas && @datas.end_time <= Time.now.to_i && @datas.sanction_type == 1))
                     if (element.type_channel==1 && element.user_id != current_user.id) 
                     %>
                     <div id="channel" class="privateChannel">
@@ -29,9 +30,9 @@
                         <input type="hidden" value="<%= element.id %>">
                         <div id="icon">
                             <% if (element.type_channel==1) %>
-                            <i class="fas fa-unlock"></i>
-                            <% else %>
                             <i class="fas fa-lock"></i>
+                            <% else %>
+                            <i class="fas fa-unlock"></i>
                             <% end %>
                         </div>
                         <div id="info">
@@ -85,6 +86,12 @@
             </div>
             <div id="mode">
                 <button class="ChannelAdminMode"></button>
+                <button class="removeChannel">delete channel</button>
+            </div>
+            <div id="mode">
+                <button class="banSwitch">ban users</button>
+                <button class="muteSwitch">mute users</button>
+
             </div>
             <div id="swapAdmin">
                 <div id="input-text">

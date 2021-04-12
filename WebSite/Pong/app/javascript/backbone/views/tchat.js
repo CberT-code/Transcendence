@@ -20,15 +20,17 @@ ViewChannel = Backbone.View.extend(
             "click .cancelMessage": "cancelChannel",
             "click .submitMessage": "submitMessage",
             "click .removeMessage": "removeMessage",
-            "click .blockUserChannel": "blockUserChannel",
+            "click .blockUserChannel": "banUser",
             "click .cancelPrivateChannel": "cancelPrivChannel",
             "click .submitPrivateChannel": "submitPrivateChannel",
             "click .submitAdminChannel": "submitAdminChannel",
-            "click .removeBlocked": "removeBlocked",
+            "click .removeBlocked": "unbanUser",
             "click .cancelAdminChannel": "cancelAdminChannel",
-            "click .muteUserChannel": "muteUserChannel",
-            "click .unmuteUserChannel": "unmuteUserChannel",
+            "click .muteUserChannel": "muteUser",
+            "click .unmuteUserChannel": "unmuteUser",
             "click .ChannelAdminMode": "UpateChannelType",
+            "click .newAdminSubmit": "newAdminSubmit",
+            "click .removeChannel": "removeChannel",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
         },
         viewPublicChannel: function (e) {
@@ -38,6 +40,7 @@ ViewChannel = Backbone.View.extend(
             $("#messages").empty();
             $(".channel").css("display", "flex");
             this.model.fetch({ "url": "/tchat/channel/get/" + id });
+            window.app.models.ChannelisAdmin.fetch({ "url": "/tchat/channel/admin/" + id });
         },
         viewPrivateChannel: function (e) {
             e.preventDefault();
@@ -87,6 +90,28 @@ ViewChannel = Backbone.View.extend(
             var id = $(".Channelid").val();
             window.app.models.ChannelAdminBlock.fetch({ "url": "/tchat/channel/blocked/" + id });
         },
+        newAdminSubmit: function () {
+            if ($(".newAdmin").val() != "" && $(".Channelid").val() != "")
+                $.post(
+                    "/tchat/channel/admin/swap",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "newAdmin": $(".newAdmin").val(),
+                        "channel_id": $(".Channelid").val()
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Channel admin role exchange !");
+                            Backbone.history.loadUrl();
+                        } else {
+                            notification("error", "This user doesn't exist...");
+                        }
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+        },
         removeMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
@@ -108,70 +133,98 @@ ViewChannel = Backbone.View.extend(
                     'text'
                 );
         },
-        removeBlocked: function (e) {
+        banUser: function (e) {
             e.preventDefault();
-            var id = $(e.currentTarget).val();
+            var target_id = $(e.currentTarget).val()
+            var channel_id = $(".Channelid").val();
             var key = $(".Channelkey").val();
-            if (id != "" && key != "")
+            if (channel_id != "" && key != "")
                 $.post(
-                    "/tchat/channel/blocked/" + key,
+                    "/tchat/channel/sanction/",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "id": id,
+                        "channel_id": channel_id,
+                        "target_id": target_id,
+                        "type": 1
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "User removed !");
+                            notification("success", "User banned !");
+                            Backbone.history.loadUrl();
+                        } else {
+                            notification("error", "You cannot ban yourself...");
+                        }
+                    },
+                    'text'
+                );
+        },
+        unbanUser: function (e) {
+            e.preventDefault();
+            var target_id = $(e.currentTarget).val()
+            var channel_id = $(".Channelid").val();
+            var key = $(".Channelkey").val();
+            if (channel_id != "" && key != "")
+                $.post(
+                    "/tchat/channel/sanction/",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "channel_id": channel_id,
+                        "target_id": target_id,
+                        "type": 2
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User is unbanne !");
                             Backbone.history.loadUrl();
                         }
                     },
                     'text'
                 );
         },
-        blockUserChannel: function (e) {
-            var id = $(e.currentTarget).val();
-            var channelId = $(".Channelid").val();
-            if (id != "" && channelId != "")
+        muteUser: function (e) {
+            e.preventDefault();
+            var target_id = $(e.currentTarget).val()
+            var channel_id = $(".Channelid").val();
+            var key = $(".Channelkey").val();
+            if (channel_id != "" && key != "")
                 $.post(
-                    "/tchat/channel/user",
+                    "/tchat/channel/sanction/",
                     {
                         'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channelId": channelId,
-                        "id": id,
-                        "type": 1
-                    },
-                    function (data) {
-                        if (data == 1) {
-                            notification("success", "User blocked !");
-                            Backbone.history.loadUrl();
-                        } else if (data == 2)
-                            notification("error", "This user is already block...");
-                        else
-                            notification("error", "You cannot block yourself...");
-                    },
-                    'text'
-                );
-        },
-        muteUserChannel: function (e) {
-            var id = $(e.currentTarget).val();
-            var channelId = $(".Channelid").val();
-            if (id != "" && id != "")
-                $.post(
-                    "/tchat/channel/user",
-                    {
-                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channelId": channelId,
-                        "id": id,
-                        "type": 2
+                        "channel_id": channel_id,
+                        "target_id": target_id,
+                        "type": 3
                     },
                     function (data) {
                         if (data == 1) {
                             notification("success", "User muted !");
                             Backbone.history.loadUrl();
-                        } else if (data == 2)
-                            notification("error", "This user is already mute...");
-                        else
+                        } else {
                             notification("error", "You cannot mute yourself...");
+                        }
+                    },
+                    'text'
+                );
+        },
+        unmuteUser: function (e) {
+            e.preventDefault();
+            var target_id = $(e.currentTarget).val()
+            var channel_id = $(".Channelid").val();
+            var key = $(".Channelkey").val();
+            if (channel_id != "" && key != "")
+                $.post(
+                    "/tchat/channel/sanction/",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "channel_id": channel_id,
+                        "target_id": target_id,
+                        "type": 4
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "User is unmute !");
+                            Backbone.history.loadUrl();
+                        }
                     },
                     'text'
                 );
@@ -189,6 +242,28 @@ ViewChannel = Backbone.View.extend(
                         "id": id,
                     },
                     function (data) {
+                        if (data == 2) {
+                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                        }
+                    },
+                    'text'
+                );
+        },
+        removeChannel: function (e) {
+            e.preventDefault();
+            var id = $(".Channelid").val();
+            if (id != "")
+                $.post(
+                    "/tchat/channel/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "channel_id": id,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "Channel remove !");
+                            Backbone.history.loadUrl();
+                        }
                     },
                     'text'
                 );
@@ -276,8 +351,11 @@ ViewChannel = Backbone.View.extend(
                             $(".createChannel").css("display", "none");
                             notification("success", "Channel created !");
                             Backbone.history.loadUrl();
-                        } else
+                        } else if (data == 2) {
                             notification("error", "A channel have already this title...");
+                        } else {
+                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                        }
                     },
                     'text'
                 );

@@ -33,22 +33,25 @@ ChannelModel = Backbone.Model.extend({
     }
 });
 
+ChannelisAdmin = Backbone.Model.extend({
+    parse: function(response) {
+        if (response == "1")
+            $(".submitAdminChannel").css("display", "block");
+    }
+});
+
 ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
         console.log(response);
-        if (Array.isArray(response)) {
-            console.log(response[0]);
-            if (response[0].admin == 1) {
-                $(".submitAdminChannel").css("display", "block");
-            }
+        if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
                 var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
                     ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
                     if (element.blocked == 1)
-                        ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unblock</button>";
+                        ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unban</button>";
                     else
-                        ret += "<button class='blockUserChannel' value='" + element.author_id + "'>block</button>";
+                        ret += "<button class='blockUserChannel' value='" + element.author_id + "'>ban</button>";
                     if (element.muted == 1)
                         ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
                     else
@@ -82,16 +85,18 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
             $(".Channeltitle").html(response.title);
             $(".Channelkey").attr("value", response.key);
             $(".submitMessage").attr("value", response.id);
-            if (response.type_channel == 1)
-                $(".ChannelAdminMode").html("change to private");
-            else
+            console.log(response);
+            if (response.type_channel == "1")
                 $(".ChannelAdminMode").html("change to public");
+            else
+                $(".ChannelAdminMode").html("change to private");
             window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + response.id + "/" + response.key });
         }
     }
 });
 
 window.app.models.ChannelPrivateMessageModel = new ChannelPrivateMessageModel;
+window.app.models.ChannelisAdmin = new ChannelisAdmin;
 window.app.models.ChannelMessageModel = new ChannelMessageModel;
 window.app.models.ChannelModel = new ChannelModel;
 window.app.models.ChannelAdminBlock = new ChannelAdminBlock;
