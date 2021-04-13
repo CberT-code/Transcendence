@@ -13,6 +13,7 @@ class PagesController < ApplicationController
 	end
 
 	def home
+		@me = current_user
 		# @session = session["devise.marvin_data"]	
 	end
 

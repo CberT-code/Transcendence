@@ -1,30 +1,23 @@
 <div id="content-history">
 	<%= stylesheet_link_tag "history_index.css" %>
-	<div class="game_link">
-		<%= link_to 'NEW_GAME', '/histories/new' %>
-	</div>
-		<input id="tournament_id" type="hidden" value='1'>
-		<button id="new_game" class="green_button">Create Game</button>
+	<button id="ranked_game" class="green_button">Ranked Game</button>
+	<button id="practice_game" class="green_button">Practice Game</button>
 	<% top = 150 %>
 	<div class="history">
 		<h1>Recent games :</h1>
 	</div>
 	<% @games.each do |game| %>
 		<% if game.statut == 2%>
-			<div class="game_link">
-				<%= link_to 'CONTINUE', game %>
-			</div>
+			<button class="green_button" onClick="window.location='/#show_game/<%= game.id %>'">Continue</button>
 		<% else %>
-			<%= link_to game do %>
-				<div class="game_resume history" style="top: <%= top %>px">
-					<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
-					</div>
-					<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-					<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
-					<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
-					</div>
+			<div class="game_resume history" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
+				<div class="PP l_PP" style='background-image: url("<%= game.host.picture_url %>")'>
 				</div>
-			<% end %>
+				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+				<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
+				<div class="PP r_PP" style='background-image: url("<%= game.opponent.picture_url %>")'>
+				</div>
+			</div>
 		<% top += 160 %>
 		<% end %>
 	<% end %>
@@ -33,16 +26,14 @@
 		<h1>Spectate :</h1>
 	</div>
 	<% @spectate.each do |game| %>
-		<%= link_to game do %>
-			<div class="game_resume spectate" style="top: <%= top %>px">
-				<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
-				</div>
-				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-				<h1><%= "LIVE"%></h1>
-				<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
-				</div>
+		<div class="game_resume spectate" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
+			<div class="PP l_PP" style='background-image: url("<%= game.host.picture_url %>")'>
 			</div>
-		<% end %>
+			<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+			<h1><%= "LIVE"%></h1>
+			<div class="PP r_PP" style='background-image: url("<%= game.opponent.picture_url %>")'>
+			</div>
+		</div>
 		<% top += 160 %>
 	<% end %>
 </div>

@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-	has_many :games
 	has_many :hosted_games, class_name: 'History', foreign_key: 'host_id'
 	has_many :foreign_games, class_name: 'History', foreign_key: 'opponent_id'
 	belongs_to :guild, optional: true

@@ -13,9 +13,26 @@ user_list = [
 ]
 
 user_list.each do |uid, name|
-	User.create(email: "#{name}@student.42.fr", guild_id: -1, role: 0, provider: "marvin", uid: uid, name: name, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+	usr = User.find_by_name(name)
+	if (usr != nil)
+		usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+	else
+		usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+		usr.save!
+	end
 end
 
-Tournament.create(name: "friendly", description: "default set of rules for friendly games", maxpoints: 11, speed: 7.0)
-Tournament.create(name: "ranked", description: "default set of rules for ranked games", maxpoints: 11, speed: 7.0)
-Tournament.create(name: "duel", description: "default set of rules for duels", maxpoints: 11, speed: 7.0)
+trnmt_list = [
+	["friendly", 1, "default set of rules for friendly games", 11, 1.5],
+	["ranked", 2, "default set of rules for ranked games", 11, 1.5],
+	["duel", 3, "default set of rules for duels", 11, 1.5]
+]
+
+trnmt_list.each do |name, id, desc, pts, speed|
+	tr = Tournament.find_by_id(id)
+	if (tr != nil)
+		tr.update(name: name, tournament_type: name, description: desc, maxpoints: pts, speed: speed)
+	else
+		Tournament.create(name: name, id: id, type: name, description: desc, maxpoints: pts, speed: speed)
+	end
+end
