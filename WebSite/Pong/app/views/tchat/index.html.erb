@@ -46,6 +46,19 @@
             </div>
         </div>
     </div>
+    <div id="center" class="privateMessages">
+        <div id="element">
+            <div id="title">
+                <h2>Private messages</h2>
+            </div>
+            <div id="corp">
+                <div id="action">
+                </div>
+                <div id="list">
+                </div>
+           </div>
+        </div>
+    </div>
     <div id="center" class="createChannel">
         <div id="element">
             <div id="title">
@@ -117,6 +130,34 @@
             <div id="action">
                 <input type="hidden" class="adminId" value="">
                 <button type="button" class="cancelAdminChannel">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="center" class="sanctionChannel">
+        <div id="element">
+            <div id="title">
+                <h2 class="sanctionTitle"></h2>
+            </div>
+            <div id="addSanction">
+                <input class="SanctionNickname" type="text" placeholder="Username for the sanction..." maxlength="60">
+                <br/>
+                <select class="SanctionTime">
+                    <option value="">--Please choose an amount of time--</option>
+                    <option value="dog">1 minute</option>
+                    <option value="cat">5 minutes</option>
+                    <option value="hamster">30 minutes</option>
+                    <option value="parrot">1 heure</option>
+                    <option value="spider">4 heures</option>
+                    <option value="goldfish">6 heures</option>
+                    <option value="goldfish">12 heures</option>
+                    <option value="goldfish">24 heures</option>
+                </select>
+                <button class="SanctionSubmit">make sanction</button>
+            </div>
+            <div id="sanctionList">
+            </div>
+            <div id="action">
+                <button class="cancelSanction">cancel</button>
             </div>
         </div>
     </div>

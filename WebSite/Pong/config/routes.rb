@@ -25,11 +25,13 @@ Rails.application.routes.draw do
 	post "/tchat/channel/type", to: "tchat#UpdateChannelType"
 	post "/tchat/channel/admin/swap", to: "tchat#exchangeChannelAdmin"
 	post "/tchat/channel/remove", to: "tchat#removeChannel"
+	post "/tchat/channel/sanction/create", to: "tchat#addSanction"
 	get "/tchat/channel/blocked/:id", to: "tchat#getAdminBlockedUsers"
 	get "/tchat/channel/get/:id", to: "tchat#getChannel"
 	get "/tchat/channel/get/:id/:key", to: "tchat#getPrivateChannel"
 	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"
 	get "/tchat/channel/admin/:id", to: "tchat#isChannelAdmin"
+	get "/tchat/channel/sanctions/get/:id/:type", to: "tchat#getSanctions"
 
 	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 

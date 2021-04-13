@@ -5,13 +5,84 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+guild_list = [
+	["first", "first", 5],
+	["second", "secon", 5],
+	["third", "third", 15],
+	["fourth", "fourt", 15]
+]
+guild_list.each do |name, anagramme, nb|
+	guild = Guild.find_by_name(name)
+	@stat = Stat.new;
+	@stat.save;
+	if (guild != nil)
+		guild.update(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb)
+	else
+		guild = Guild.new(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb)
+		guild.save!
+	end
+end
 
 user_list = [
-  ["hbaudet@student.42.fr", "$2a$12$elUhLXrKhwCM2fQo06KB9uD8hd1Kkw9gq.ASAH8g/FwfFcYnIYYEq", -1, 1, "marvin", 60326, "hbaudet", "https://cdn.intra.42.fr/users/large_hbaudet.jpg", "hbaudet", "https://cdn.intra.42.fr/users/hbaudet.jpg" ],
-  ["jereligi@student.42.fr", "$2a$12$dY1ya5zr/CiqkkxozUkcDeihWDC1mQByDhP/n5Fi69biNnHrFf1DC", -1, 2, "marvin", 57651, "jereligi", "https://cdn.intra.42.fr/users/large_jereligi.jpg", "jereligi", "https://cdn.intra.42.fr/users/jereligi.jpg" ],
-  ["cchudant@student.42.fr", "", -1, 3, "marvin", 58176, "cchudant", "https://cdn.intra.42.fr/users/large_norminet.jpg", "cchudant", "https://cdn.intra.42.fr/users/norminet.jpg" ],
-]
-
-user_list.each do |email, password, id_guild, id_stats, provider, uid, name, picture_url, nickname, image|
-  User.create(email: email, password: password, id_guild: id_guild, id_stats: id_stats, provider: provider, uid: uid, name: name, picture_url: picture_url, nickname: nickname, image: image)
-end
+	[57610, "cbertola"],
+	[60326, "hbaudet"],
+	[57651, "jereligi"],
+	[58176, "cchudant"],
+	[60326, "user1"],
+	[60326, "user2"],
+	[60326, "user3"],
+	[60326, "user4"],
+	[60326, "user5"],
+	[60326, "user6"],
+	[60326, "user7"],
+	[60326, "user8"],
+	[60326, "user9"],
+	[60326, "user10"],
+	[60326, "user11"],
+	[60326, "user12"],
+	[60326, "user13"],
+	[60326, "user14"],
+	[60326, "user15"],
+	[60326, "user16"],
+	[60326, "user17"],
+	[60326, "user18"],
+	[60326, "user19"],
+	[60326, "user20"],
+	[60326, "user21"],
+	[60326, "user22"],
+	[60326, "user23"],
+	[60326, "user24"],
+	[60326, "user25"],
+	[60326, "user26"],
+	[60326, "user27"],
+	[60326, "user28"],
+	[60326, "user29"],
+	[60326, "user30"]
+  ]
+  
+  user_list.each do |uid, name|
+	  usr = User.find_by_name(name)
+	  @stat = Stat.new;
+	  @stat.save;
+	  if (usr != nil)
+		  usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+	  else
+		  usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+		  usr.save!
+	  end
+  end
+  
+  trnmt_list = [
+	  ["friendly", 1, "default set of rules for friendly games", 11, 7.0],
+	  ["ranked", 2, "default set of rules for ranked games", 11, 7.0],
+	  ["duel", 3, "default set of rules for duels", 11, 7.0]
+  ]
+  
+  trnmt_list.each do |name, id, desc, pts, speed|
+	  tr = Tournament.find_by_id(id)
+	  if (tr != nil)
+		  tr.update(name: name, description: desc, maxpoints: pts, speed: speed)
+	  else
+		  Tournament.create(name: name, id: id, description: desc, maxpoints: pts, speed: speed)
+	  end
+  end

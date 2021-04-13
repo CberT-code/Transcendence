@@ -31,6 +31,10 @@ ViewChannel = Backbone.View.extend(
             "click .ChannelAdminMode": "UpateChannelType",
             "click .newAdminSubmit": "newAdminSubmit",
             "click .removeChannel": "removeChannel",
+            "click .banSwitch": "banSwitch",
+            "click .muteSwitch": "muteSwitch",
+            "click .cancelSanction": "cancelSanction",
+            "click .SanctionSubmit": "SanctionSubmit",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
         },
         viewPublicChannel: function (e) {
@@ -361,5 +365,52 @@ ViewChannel = Backbone.View.extend(
                 );
             else
                 notification("error", "Please complete the form...");
-        }
+        },
+        cancelSanction: function() {
+            $(".sanctionChannel").css("display", "none");
+            $(".default").css("display", "block");
+        },
+        muteSwitch: function() {
+            console.log("MuteSwitch");
+            $(".adminChannel").css("display", "none");
+            $(".sanctionChannel").css("display", "block");
+            $(".sanctionTitle").html("mute - sanction");
+            $(".SanctionSubmit").val(2);
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/2" });
+        },
+        banSwitch: function() {
+            console.log("BanSwitch");
+            $(".adminChannel").css("display", "none");
+            $(".sanctionChannel").css("display", "block");
+            $(".sanctionTitle").html("ban - sanction");
+            $(".SanctionSubmit").val(1);
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/1" });
+        },
+        SanctionSubmit: function(e) {
+            console.log("SanctionSubmit");
+            e.preventDefault();
+            var type = $(e.currentTarget).val();
+            var id = $(".Channelid").val();
+            if (type != "" && $(".SanctionTime").val() != "" && $(".SanctionNickname").val() != "" && id != "")
+                $.post(
+                    "/tchat/channel/sanction/create",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "nickname": $(".SanctionNickname").val(),
+                        "type": type,
+                        "time": $(".SanctionTime").val(),
+                        "id": id
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "The sanction has been applicate !");
+                            Backbone.history.loadUrl();
+                        } else
+                            notification("error", "This user doesn't exist...");
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+        },
     });

@@ -306,4 +306,45 @@ class TchatController < ApplicationController
 			return
 		end
 	end
+	def getSanctions
+		if (!params[:type] || !params[:id] || !safestr(params[:id]) || !safestr(params[:type]))
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@type = params[:type]
+		@channel_id = params[:id]
+		@datas = Sanctions.find_by_user_id_and_sanction_type(@channel_id, @type)
+		if (@datas)
+			@ret = Array.new
+			@datas.each do |element|
+				@tmp = User.find_by_id(element.target_id)
+				@ret.push({"id" => element.id, "target_name" => element.nickname, "sanction_type" => @element.sanction_type})
+			end
+			render json: @ret
+			return
+		end
+	end
+	def addSanction
+		if (!params[:id] || !params[:nickname] || !params[:time] || !params[:type] || !safestr(params[:id]) || !safestr(params[:nickname]) || !safestr(params[:time]) || !safestr(params[:type]))
+			render html: "errorr-forbidden", :status => :unauthorized
+			return
+		end
+		@channel_id = params[:id]
+		@nickname = params[:nickname]
+		@type = params[:type]
+		@time = params[:time].to_i
+		@datas = Channel.find_by_id(@channel_id)
+		@user_datas = User.find_by_nickname(@nickname)
+		if (@datas && @datas.user_id == current_user.id)
+			if (!@user_datas)
+				render html: "2"
+				return
+			end
+			Sanctions.create(:sanction_type=> @type,:user_id=> @channel_id, :target_id=> @user_datas.id, :end_time=> (Time.now.to_i + @time), :create_time=> Date.today)
+			render html: "1"
+			return
+		end
+		render html: "errror-forbidden", :status => :unauthorized
+		return
+	end
 end
