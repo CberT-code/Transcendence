@@ -35,8 +35,8 @@ class HistoriesController < ApplicationController
 	end
 
 	def find_or_create
-		@tournament = params['tournament_id'].to_i;
-		if (!Tournament.find_by_id(@tournament))
+		tourn = Tournament.find_by_name(params['name'])
+		if (!tourn)
 			render html: "error_tournament"
 		else
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
