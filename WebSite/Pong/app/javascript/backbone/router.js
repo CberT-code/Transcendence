@@ -1,5 +1,5 @@
 window.app.ApplicationRouter = Backbone.Router.extend({
-	initialize: function() {
+	initialize: function () {
 		this.ViewAccount = new ViewAccount();
 		this.ViewGuilds = new ViewGuilds();
 		this.ViewGuilds = new ViewGames();

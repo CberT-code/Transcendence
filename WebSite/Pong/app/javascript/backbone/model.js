@@ -23,10 +23,11 @@ ChannelModel = Backbone.Model.extend({
         $(".Channelkey").attr("value", response.key);
         $(".Channelid").attr("value", response.id);
         $(".submitMessage").attr("value", response.id);
-        if (response.type_channel == 1)
-            $(".ChannelAdminMode").html("change to private");
-        else
+        if (response.type_channel == 1) {
             $(".ChannelAdminMode").html("change to public");
+        } else {
+            $(".ChannelAdminMode").html("change to private");
+        }
         var id = response.id;
         var key = response.key;
         window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
@@ -85,12 +86,23 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
             $(".Channeltitle").html(response.title);
             $(".Channelkey").attr("value", response.key);
             $(".submitMessage").attr("value", response.id);
-            console.log(response);
-            if (response.type_channel == "1")
+            console.log("check private " + response.type_channel);
+            if (response.type_channel == 1)
                 $(".ChannelAdminMode").html("change to public");
             else
                 $(".ChannelAdminMode").html("change to private");
             window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + response.id + "/" + response.key });
+        }
+    }
+});
+
+ChannelSanctionsList = Backbone.Model.extend({
+    parse: function (response) {
+        console.log(response);
+        if (response && response.length > 0 && Array.isArray(response)) {
+            response.forEach(function (element) {
+                console.log(element);
+            });
         }
     }
 });
@@ -100,3 +112,4 @@ window.app.models.ChannelisAdmin = new ChannelisAdmin;
 window.app.models.ChannelMessageModel = new ChannelMessageModel;
 window.app.models.ChannelModel = new ChannelModel;
 window.app.models.ChannelAdminBlock = new ChannelAdminBlock;
+window.app.models.ChannelSanctionsList = new ChannelSanctionsList;
