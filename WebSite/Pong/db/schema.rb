@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_12_095526) do
+ActiveRecord::Schema.define(version: 2021_04_13_163050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -129,6 +129,8 @@ ActiveRecord::Schema.define(version: 2021_04_12_095526) do
     t.string "picture_url"
     t.bigint "guild_id"
     t.bigint "stat_id"
+    t.string "status"
+    t.integer "friends", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

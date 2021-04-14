@@ -59,6 +59,20 @@
 				</div>
 			</div>
 		<% end %>
+			<div id="element">
+				<div id="name">
+					<h2>Friends</h2>
+				</div>
+				<div id="container">
+				<% @user.friends.each do |friends| %>
+					<% @user = User.find(friends).nickname; %>
+					<div id="line">
+						<p><span class="text-bold text-green"><i class="fas fa-crown"></i> <%= @user %></span></p>
+						<p><span class="text-bold text-red"><i class="fas fa-times"></i> <%= @user %></span></p>
+					</div>
+				<% end %>
+				</div>
+			</div>
 		<% if @histories.count > 0 %>
 			<div id="container-history">
 				<div id="head">
