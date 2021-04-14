@@ -1,3 +1,4 @@
+
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 #
@@ -6,68 +7,74 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 guild_list = [
-	["first", "first", 5],
-	["second", "secon", 5],
-	["third", "third", 15],
-	["fourth", "fourt", 15]
+	["first", "first", 5, 1],
+	["second", "secon", 5, 2],
+	["third", "third", 15, 3],
+	["fourth", "fourt", 15, 4]
 ]
-guild_list.each do |name, anagramme, nb|
+guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
 	@stat = Stat.new;
 	@stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb)
+		guild.update(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
 	else
-		guild = Guild.new(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb)
+		guild = Guild.new(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
 		guild.save!
 	end
 end
 
 user_list = [
-	[57610, "cbertola"],
-	[60326, "hbaudet"],
-	[57651, "jereligi"],
-	[58176, "cchudant"],
-	[60326, "user1"],
-	[60326, "user2"],
-	[60326, "user3"],
-	[60326, "user4"],
-	[60326, "user5"],
-	[60326, "user6"],
-	[60326, "user7"],
-	[60326, "user8"],
-	[60326, "user9"],
-	[60326, "user10"],
-	[60326, "user11"],
-	[60326, "user12"],
-	[60326, "user13"],
-	[60326, "user14"],
-	[60326, "user15"],
-	[60326, "user16"],
-	[60326, "user17"],
-	[60326, "user18"],
-	[60326, "user19"],
-	[60326, "user20"],
-	[60326, "user21"],
-	[60326, "user22"],
-	[60326, "user23"],
-	[60326, "user24"],
-	[60326, "user25"],
-	[60326, "user26"],
-	[60326, "user27"],
-	[60326, "user28"],
-	[60326, "user29"],
-	[60326, "user30"]
+	[57610, "cbertola", 1],
+	[60326, "hbaudet", 1],
+	[57651, "jereligi", 1],
+	[58176, "cchudant", 1],
+	[60326, "user1", 1],
+	[60326, "user2", 2],
+	[60326, "user3", 2],
+	[60326, "user4", 2],
+	[60326, "user5", 2],
+	[60326, "user6", 2],
+	[60326, "user7", 3],
+	[60326, "user8", 3],
+	[60326, "user9", 3],
+	[60326, "user10", 3],
+	[60326, "user11", 3],
+	[60326, "user12", 3],
+	[60326, "user13", 3],
+	[60326, "user14", 3],
+	[60326, "user15", 3],
+	[60326, "user16", 3],
+	[60326, "user17", 3],
+	[60326, "user18", 3],
+	[60326, "user19", 3],
+	[60326, "user20", 3],
+	[60326, "user21", 3],
+	[60326, "user22", 4],
+	[60326, "user23", 4],
+	[60326, "user24", 4],
+	[60326, "user25", 4],
+	[60326, "user26", 4],
+	[60326, "user27", 4],
+	[60326, "user28", 4],
+	[60326, "user29", 4],
+	[60326, "user30", 4],
+	[60326, "user31", 4],
+	[60326, "user32", 4],
+	[60326, "user33", 4],
+	[60326, "user34", 4],
+	[60326, "user35", 4],
+	[60326, "user36", 4]
   ]
   
-  user_list.each do |uid, name|
+  user_list.each do |uid, name, guild|
 	  usr = User.find_by_name(name)
 	  @stat = Stat.new;
 	  @stat.save;
 	  if (usr != nil)
-		  usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+		  usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
 	  else
-		  usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name)
+		  usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg",  image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
 		  usr.save!
 	  end
   end

@@ -7,7 +7,8 @@ class TchatController < ApplicationController
 		end
 	end
 	def index
-		@channel = Channel.all.order("id");
+		@channel = Channel.all.order("id")
+		@messages = Messages.where(user_id: current_user.id, message_type: 2).or(Messages.where(target_id: current_user.id, message_type: 2))
 	end
 	def channelCreate
 		if (!params[:title] || !params[:type])

@@ -42,21 +42,9 @@
                     <% end %>
 	            	<% end %>
                     <% end %>
+
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="center" class="privateMessages">
-        <div id="element">
-            <div id="title">
-                <h2>Private messages</h2>
-            </div>
-            <div id="corp">
-                <div id="action">
-                </div>
-                <div id="list">
-                </div>
-           </div>
         </div>
     </div>
     <div id="center" class="createChannel">
@@ -176,6 +164,32 @@
                 <button type="button" class="submitMessage">send</button>
                 <button type="button" class="submitAdminChannel">Admin</button>
             </div>
+        </div>
+    </div>
+
+
+    <div id="center" class="privateMessages">
+        <div id="element">
+            <div id="title">
+                <h2>Private messages</h2>
+            </div>
+            <div id="corp">
+                <div id="action">
+                    <div id="input-text">
+                        <div id="left">
+                            <input type="text" placeholder="Username of your new interlocutor...">
+                        </div>
+                        <div id="right">
+                            <button><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+                <div id="list">
+                    <% @messages.each do |element| %>
+                        <%= element.id %>
+                    <% end %>
+                </div>
+           </div>
         </div>
     </div>
 </div>

@@ -2019,7 +2019,6 @@ background-color: #7BE12B;
 	display: flex;
 	width: 100%;
 	height: min-content;
-	padding-top: 25px;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: center;
@@ -2331,4 +2330,36 @@ background-color: #7BE12B;
 	overflow-x: hidden;
 	display: grid;
 	grid-gap: 15px;
+}
+.privateMessages #element #corp #action #input-text {
+	width: 80%;
+	height: 45px;
+	overflow: hidden;
+	display: flex;
+	margin-left: auto;
+	margin-right: auto;
+}
+.privateMessages #element #corp #action #input-text #left {
+	width: 80%;
+	overflow: hidden;
+	height: 100%;
+	display: flex;
+}
+.privateMessages #element #corp #action #input-text #left input {
+	height: 90%;
+	width: 100%;
+	overflow: hidden;
+	margin: auto;
+}
+.privateMessages #element #corp #action #input-text #right {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+.privateMessages #element #corp #action #input-text #right button {
+	margin: auto;
+	height: 90%;
+	width: 80%;
+	overflow: hidden;
 }
