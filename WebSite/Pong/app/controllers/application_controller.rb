@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 			end
 			if (war.team2.count < war.players)
 				while war.team2.count < war.players do
-					User.where('guild_id = ?', war.guild_id2).each do |user|
+					User.where('guild_id = ?', war.guild2_id).each do |user|
 						if (!war.team2.include?user.id)
 							war.team2.push(user.id);
 						end
@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
 				@guild = Guild.find_by_id(war.guild1_id);
 				@guild.update(points: @guild.points + war.points)
 			elsif (war.points_guild1 < war.points_guild2)
-				@guild = Guild.find_by_id(war.guild_id2);
+				@guild = Guild.find_by_id(war.guild2_id);
 				@guild.update(points: @guild.points + war.points)
 			end
 			war.update(status: 3);

@@ -74,7 +74,7 @@ class HistoriesController < ApplicationController
 					@game = target
 					redis.set("game_#{@game.id}", "ready")
 					game_found = "ok"
-					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.picture_url})
+					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
 					render html: @game.id
 					return
 				end

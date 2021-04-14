@@ -3,7 +3,7 @@
 	<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
 	<%= content_tag :div, '', id: 'players', data: { host: @game.host_id, opponent: @game.opponent_id } %>
 	<div id="wrapper">
-		<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.picture_url %>")'></div>
+		<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>")'></div>
 		<div id="game">
 			<div class="goal"></div>
 			<div id="left_player" class="player"></div>
@@ -14,7 +14,7 @@
 		<% if @game.opponent == @game.host %>
 			<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/norminet.jpg")'></div>
 		<% else %>
-			<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.picture_url %>")'></div>
+			<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.image %>")'></div>
 		<% end %>
 	</div>
 	<div>

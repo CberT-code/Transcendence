@@ -7,73 +7,73 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+admin_name = "hbaudet"
+
+if User.where(id: 1).exists?
+	User.find(1).destroy
+end
 stat = Stat.new()
 stat.save
-# moi = User.find(1)
-# if moi != nil
-	# moi.update(email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
-# else
-	# moi = User.create(id: 1, email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
-# end
+moi = User.create(id: 1, role: 1, email: "#{admin_name}@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: admin_name, stat_id: stat.id, image: "https://cdn.intra.42.fr/users/#{admin_name}.jpg", nickname: admin_name)
 
 guild_list = [
-	["first", "first", 5, 1],
-	["second", "secon", 5, 2],
-	["third", "third", 15, 3],
-	["fourth", "fourth", 15, 4]
+	["first", "first", 5, "cbertola"],
+	["second", "second", 5, "hbaudet"],
+	["third", "third", 15, "llepage"],
+	["fourth", "fourth", 15, "salty"]
 ]
 guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
 	@stat = Stat.new;
 	@stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
+		guild.update(name: name, anagramme: anagramme, admin: moi, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 	else
-		guild = Guild.new(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
+		guild = Guild.new(name: name, anagramme: anagramme, admin: moi, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 		guild.save!
 	end
 end
 
 user_list = [
-	[57610, "cbertola", 1],
-	[57651, "jereligi", 1],
-	[58176, "cchudant", 1],
-	[60326, "salty", 1],
-	[60326, "melissa", 2],
-	[60326, "edm", 2],
-	[60326, "neo", 2],
-	[60326, "user5", 2],
-	[60326, "user6", 2],
-	[60326, "user7", 3],
-	[60326, "user8", 3],
-	[60326, "user9", 3],
-	[60326, "user10", 3],
-	[60326, "user11", 3],
-	[60326, "user12", 3],
-	[60326, "user13", 3],
-	[60326, "user14", 3],
-	[60326, "user15", 3],
-	[60326, "user16", 3],
-	[60326, "user17", 3],
-	[60326, "user18", 3],
-	[60326, "user19", 3],
-	[60326, "user20", 3],
-	[60326, "user21", 3],
-	[60326, "user22", 4],
-	[60326, "user23", 4],
-	[60326, "user24", 4],
-	[60326, "user25", 4],
-	[60326, "user26", 4],
-	[60326, "user27", 4],
-	[60326, "user28", 4],
-	[60326, "user29", 4],
-	[60326, "user30", 4],
-	[60326, "user31", 4],
-	[60326, "user32", 4],
-	[60326, "user33", 4],
-	[60326, "user34", 4],
-	[60326, "user35", 4],
-	[60326, "user36", 4]
+	[57610, "cbertola", 1, 1],
+	[57651, "jereligi", 1, 0],
+	[58176, "cchudant", 1, 0],
+	[60326, "salty", 4, 0],
+	[60326, "melissa", 2, 0],
+	[60326, "edm", 2, 0],
+	[60326, "neo", 2, 0],
+	[60326, "llepage", 2, 1],
+	[60326, "hbaudet", 3, 1],
+	[60326, "user7", 3, 0],
+	[60326, "user8", 3, 0],
+	[60326, "user9", 3, 0],
+	[60326, "user10", 3, 0],
+	[60326, "user11", 3, 0],
+	[60326, "user12", 3, 0],
+	[60326, "user13", 3, 0],
+	[60326, "user14", 3, 0],
+	[60326, "user15", 3, 0],
+	[60326, "user16", 3, 0],
+	[60326, "user17", 3, 0],
+	[60326, "user18", 3, 0],
+	[60326, "user19", 3, 0],
+	[60326, "user20", 3, 0],
+	[60326, "user21", 3, 0],
+	[60326, "user22", 4, 0],
+	[60326, "user23", 4, 0],
+	[60326, "user24", 4, 0],
+	[60326, "user25", 4, 0],
+	[60326, "user26", 4, 0],
+	[60326, "user27", 4, 0],
+	[60326, "user28", 4, 0],
+	[60326, "user29", 4, 0],
+	[60326, "user30", 4, 0],
+	[60326, "user31", 4, 0],
+	[60326, "user32", 4, 0],
+	[60326, "user33", 4, 0],
+	[60326, "user34", 4, 0],
+	[60326, "user35", 4, 0],
+	[60326, "user36", 4, 0]
   ]
   
   user_list.each do |uid, name, guild|
@@ -88,10 +88,14 @@ user_list = [
 	  end
   end
   
+  guild_list.each do |name, anagramme, nb, admin|
+	guild = Guild.find_by_name(name)
+	guild.update(admin: User.find_by_name(admin))
+	end
+
+
   trnmt_list = [
-	  ["friendly", 1, "default set of rules for friendly games", 11, 7.0],
-	  ["ranked", 2, "default set of rules for ranked games", 11, 7.0],
-	  ["duel", 3, "default set of rules for duels", 11, 7.0]
+	  ["normal_games", 1, "default set of rules for standard games", 11, 1.7]
   ]
   
   trnmt_list.each do |name, id, desc, pts, speed|

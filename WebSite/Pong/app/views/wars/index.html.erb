@@ -18,7 +18,7 @@
 				<div id="war">
 					<div id="position">
 						<p><%= @i += 1 %></p>
-						<%= @enemy = war.guild1_id == @guild.id ? war.guild1_id : war.guild_id2; %>
+						<%= @enemy = war.guild1_id == @guild.id ? war.guild1_id : war.guild2_id; %>
 					</div>
 					<div id="target">
 						<p><%= Guild.find_by_id(@enemy).name %></p>
@@ -61,7 +61,7 @@
 						<p><%= Guild.find_by_id(war.guild1_id).name %></p>
 					</div>
 					<div id="target">
-						<p><%= Guild.find_by_id(war.guild_id2).name %></p>
+						<p><%= Guild.find_by_id(war.guild2_id).name %></p>
 					</div>
 					<div id="target">
 						<p><%= war.points_guild1 %> / <%= war.points_guild2 %></p>

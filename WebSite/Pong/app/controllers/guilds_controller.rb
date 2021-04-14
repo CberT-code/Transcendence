@@ -103,7 +103,7 @@ class GuildsController < ApplicationController
 
 	def ban
 		@usertoban = User.find_by_id(params[:id]);
-		@guild = @usertoban.guild_id;
+		@guild = @usertoban.guild;
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
 		if (@usertoban.guild_id && @admin == 1) then
 			if (@guild.id_admin == @usertoban.id && @guild.nbmember != 1)

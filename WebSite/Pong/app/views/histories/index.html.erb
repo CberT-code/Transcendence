@@ -11,11 +11,11 @@
 			<button class="green_button" onClick="window.location='/#show_game/<%= game.id %>'">Continue</button>
 		<% else %>
 			<div class="game_resume history" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
-				<div class="PP l_PP" style='background-image: url("<%= game.host.picture_url %>")'>
+				<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
 				</div>
 				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
 				<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
-				<div class="PP r_PP" style='background-image: url("<%= game.opponent.picture_url %>")'>
+				<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
 				</div>
 			</div>
 		<% top += 160 %>
@@ -27,11 +27,11 @@
 	</div>
 	<% @spectate.each do |game| %>
 		<div class="game_resume spectate" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
-			<div class="PP l_PP" style='background-image: url("<%= game.host.picture_url %>")'>
+			<div class="PP l_PP" style='background-image: url("<%= game.host.image %>")'>
 			</div>
 			<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
 			<h1><%= "LIVE"%></h1>
-			<div class="PP r_PP" style='background-image: url("<%= game.opponent.picture_url %>")'>
+			<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>")'>
 			</div>
 		</div>
 		<% top += 160 %>

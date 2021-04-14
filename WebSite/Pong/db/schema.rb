@@ -35,6 +35,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "nbmember", default: 0, null: false
     t.integer "id_admin", null: false
     t.boolean "deleted", default: false, null: false
+    t.integer "officers", default: [], array: true
+    t.integer "banned", default: [], array: true
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -132,7 +134,6 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
-    t.string "picture_url"
     t.bigint "guild_id"
     t.bigint "stat_id"
     t.string "status"
