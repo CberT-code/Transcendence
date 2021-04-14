@@ -158,6 +158,8 @@ class WarsController < ApplicationController
 			render html: 'error_4';
 		elsif (!Tournament.find_by_id(params[:tournament_id]))
 			render html: 'error_5';
+		elsif ((Tournament.find_by_id(params[:tournament_id]).end.to_date - params[:date_end].to_date) < 0)
+			render html: 'error_5_2';
 		elsif (params[:points] != '1000' && params[:points] != '5000' && params[:points] != '10000')
 			render html: 'error_6';
 		elsif (params[:points] != '1000' && params[:points].to_i > @guild.points)

@@ -117,8 +117,8 @@
 			<div class="element-line">
 				<%= form_for @guild do |f| %>
 					<%= f.select :id_admin, options_for_select(@list_users.map{ |u| [u.nickname, u.id] }, :selected => @user.id) %>
-						<% end %>
-							<button class="grey_button" id="exec_change_admin">OK</button>
+				<% end %>
+				<button class="grey_button" id="exec_change_admin">OK</button>
 			</div>
 		<% end %>
 	</div>

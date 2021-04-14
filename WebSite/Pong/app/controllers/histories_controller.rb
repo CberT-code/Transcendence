@@ -15,6 +15,7 @@ class HistoriesController < ApplicationController
 		foreign = @me.foreign_games.all
 		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
 		@spectate = History.where(statut: 2) #change that after dev
+		@tournament = Tournament.where("'end' > ?", DateTime.current);
 	end
 	
 	def show

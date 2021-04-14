@@ -59,6 +59,28 @@
 				</div>
 			</div>
 		<% end %>
+			<div id="element">
+				<div id="name">
+					<h2>Friends</h2>
+				</div>
+				<div id="container">
+				<% @user.friends.each do |friends| %>
+					<% @user = User.find(friends); %>
+					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
+					<%= @status = redis.get("player_#{@user.id}") %>
+					<div id="line">
+							<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
+								<p><span class="text-bold text-green"><i class="fas fa-crown"></i> <%= @user.nickname %></span></p>
+							<% elsif @status != nil %>
+								<p><span class="text-bold"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
+							<% else %>
+								<p><span class="text-bold text-red"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
+							<% end %>
+
+					</div>
+				<% end %>
+				</div>
+			</div>
 		<% if @histories.count > 0 %>
 			<div id="container-history">
 				<div id="head">

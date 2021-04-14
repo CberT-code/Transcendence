@@ -2003,13 +2003,15 @@ background-color: #7BE12B;
 	width: 100%;
 	overflow: hidden;
 	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: wrap;
 }
 #content-tchat #center {
 	height: min-content;
 	width: max-content;
 	max-width: 100%;
 	overflow: hidden;
-	margin: auto;
 }
 #content-tchat #center #element {
 	height: min-content;
@@ -2244,7 +2246,6 @@ background-color: #7BE12B;
 	display: flex;
 	width: 100%;
 	height: min-content;
-	padding-top: 25px;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: center;
@@ -2481,4 +2482,111 @@ background-color: #7BE12B;
 }
 #content-tchat #action .submitAdminChannel {
 	display: none;
+}
+.sanctionChannel {
+	display: none;
+}
+.sanctionChannel #addSanction {
+	width: 100%;
+	height: min-content;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	overflow: hidden;
+	display: grid;
+	grid-gap: 15px;
+	color: #231f20;
+}
+.sanctionChannel #addSanction input {
+	height: 100%;
+    width: 60%;
+    border: none;
+    overflow: hidden;
+    background-color: transparent;
+    font-family: "Roboto-Medium";
+    font-size: 95%;
+	color: #231f20;
+	border-bottom: solid 2px #231f20;
+	outline: none;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 12px;
+	padding-right: 12px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.sanctionChannel #addSanction select {
+	outline: none;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	color: #231f20;
+	font-family: "Roboto-Medium";
+	background-color: transparent;
+	border: none;
+	border-bottom: solid 2px #231f20;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 12px;
+	padding-right: 12px;
+	height: min-content;
+	width: 64%;
+}
+.sanctionChannel #addSanction button {
+	margin-left: auto;
+	margin-right: auto;
+	border: none;
+	height: min-content;
+	width: 64%;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-transform: uppercase;
+	color: white;
+	font-family: "Roboto-Medium";
+	font-size: 115%;
+	border-radius: 6px;
+	cursor: pointer;
+	background-color: #231f20;
+	transition-duration: 0.5s;
+}
+.sanctionChannel #sanctionList {
+	width: 100%;
+	height: min-content;
+	max-height: 300px;
+	overflow-y: hidden;
+	scrollbar-width: none;
+	overflow-x: hidden;
+	display: grid;
+	grid-gap: 15px;
+}
+.privateMessages #element #corp #action #input-text {
+	width: 80%;
+	height: 45px;
+	overflow: hidden;
+	display: flex;
+	margin-left: auto;
+	margin-right: auto;
+}
+.privateMessages #element #corp #action #input-text #left {
+	width: 80%;
+	overflow: hidden;
+	height: 100%;
+	display: flex;
+}
+.privateMessages #element #corp #action #input-text #left input {
+	height: 90%;
+	width: 100%;
+	overflow: hidden;
+	margin: auto;
+}
+.privateMessages #element #corp #action #input-text #right {
+	height: 100%;
+	width: 20%;
+	overflow: hidden;
+	display: flex;
+}
+.privateMessages #element #corp #action #input-text #right button {
+	margin: auto;
+	height: 90%;
+	width: 80%;
+	overflow: hidden;
 }

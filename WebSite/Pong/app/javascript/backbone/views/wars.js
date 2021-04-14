@@ -157,6 +157,8 @@ ViewWars = Backbone.View.extend(
 					notification("error", "Please enter a end date minimum 2 days after the start");
 				else if (data == 'error_5')
 					notification("error", "Please enter a valid tournament");
+				else if (data == 'error_5_2')
+					notification("error", "The tournament will finish before the war, please change the tournament or the end date of the war.");
 				else if (data == 'error_6')
 					notification("error", "Incorrect numbers of points");
 				else if (data == 'error_7')

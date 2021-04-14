@@ -34,9 +34,9 @@ ViewTournaments = Backbone.View.extend({
 					else if (data == 'error-2')
 						notification("error", "Please complete the description...");
 					else if (data == 'error-3')
-						notification("error", "Wrong, max number of member...");
+						notification("error", "Wrong, start day...");
 					else if (data == 'error-4')
-						notification("error", "This name is already used...");
+						notification("error", "Wrong, end day...");
 					else if (data == 'error-5')
 						notification("error", "Wrong number of max points.");
 					else if (data == 'error-6')
