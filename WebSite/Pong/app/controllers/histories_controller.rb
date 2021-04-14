@@ -40,13 +40,15 @@ class HistoriesController < ApplicationController
 	def duel
 		clean_list(-1)
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
+		port: ENV['REDIS_PORT'],
+		db:   ENV['REDIS_DB'])
 		tourn = Tournament.find(params['id'].to_i)
 		opponent = User.find(params['opponent'].to_i)
+		@me = current_user			
+		war_id = params.fetch(:war_id, -1)
 		@game = tourn.games.new(statut: 1, host: @me, opponent: opponent,
 			host_score: 0, opponent_score: 0, ranked: params[:ranked] == "true" ? true : false,
-			war_id: params['war_id'].to_i)
+			war_id: war_id)
 		@game.save!
 		redis.set("game_#{@game.id}", "ready")
 		render html: @game.id
@@ -60,11 +62,12 @@ class HistoriesController < ApplicationController
 		else
 			redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 			@me = current_user
+			war_id = params.fetch(:war_id, -1)
 			game_found = "no"
 			tourn.games.each do |target|
 				if target.host != @me && target.statut == 0 &&
 						target.ranked == (params[:ranked] == "true") &&
-						target.war_id == params['war_id'].to_i
+						target.war_id == war_id
 					target.opponent = @me
 					target.statut = 1
 					target.save!
@@ -79,7 +82,7 @@ class HistoriesController < ApplicationController
 			if game_found != "ok"
 				@game = tourn.games.new(statut: 0, host: @me, opponent: @me,
 					host_score: 0, opponent_score: 0, ranked: params[:ranked] == "true" ? true : false,
-					war_id: params['war_id'].to_i)
+					war_id: war_id)
 					@game.save!
 					redis.set("game_#{@game.id}", "Looking For Opponent")
 				render html: @game.id
@@ -160,7 +163,7 @@ class HistoriesController < ApplicationController
 		if game.ranked
 			puts "\n\nwinner elo : #{winner.elo} - loser elo : #{loser.elo}"
 			for player in [loser, winner]
-				if (game.war_id == player.guild.war_id)
+				if game.war_id == player.guild.war_id # game.war.guild1 == player.guild || game.war.guild2 == player.guild
 					# war
 				elsif (game.tournament_id != 1)
 					# tournament
