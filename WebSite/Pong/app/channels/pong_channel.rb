@@ -1,4 +1,5 @@
 class PongChannel < ApplicationCable::Channel
+
   def subscribed
     stream_from "pong_#{params[:room]}"
     @redis = Redis.new(url:  ENV['REDIS_URL'],

@@ -7,12 +7,12 @@ class WarsController < ApplicationController
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
 	end
 	def index
-		if (@guild.id == -1 || (War.where('(guild_id1 = ? or guild_id2 = ?) and status = ?', @guild.id, @guild.id, 1).count != 0))
+		if (@guild.id == -1 || (War.where('(guild1_id = ? or guild_id2 = ?) and status = ?', @guild.id, @guild.id, 1).count != 0))
 			render html: "error-forbidden";
 		end
-		@wars_history = War.where('(guild_id1 = ? or guild_id2 = ?) and status = ?', @guild.id, @guild.id, 3);
-		@wars_request = War.where('(guild_id1 = ? or guild_id2 = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1);
-		@request_sent = War.where('(guild_id1 = ?) and (status = ?)', @guild.id, 0);
+		@wars_history = War.where('(guild1_id = ? or guild_id2 = ?) and status = ?', @guild.id, @guild.id, 3);
+		@wars_request = War.where('(guild1_id = ? or guild_id2 = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1);
+		@request_sent = War.where('(guild1_id = ?) and (status = ?)', @guild.id, 0);
 	end
 	def new
 		if (@admin == 0) then
@@ -24,7 +24,7 @@ class WarsController < ApplicationController
 	end
 	def edit
 		@war = War.find_by_id(params[:id]);
-		@team = @war.guild_id1 == @guild.id ? @war.team1 : @war.team2 ;
+		@team = @war.guild1_id == @guild.id ? @war.team1 : @war.team2 ;
 		if (@admin && @war.status == 1)
 			@available = User.where('guild_id = ? and available = ?', current_user.guild_id, true)
 			@notavailable = User.where('guild_id = ? and available = ?', current_user.guild_id, false)
@@ -45,16 +45,16 @@ class WarsController < ApplicationController
 		@endhours = ((@war.end.to_i) - DateTime.current.to_i).to_i;
 
 
-		@guild1 = Guild.find_by_id(@war.guild_id1);
+		@guild1 = Guild.find_by_id(@war.guild1_id);
 		@guild2 = Guild.find_by_id(@war.guild_id2);
-		@inwars = War.where('(guild_id1 = ? or guild_id2 = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2)
+		@inwars = War.where('(guild1_id = ? or guild_id2 = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2)
 		@wars_history = History.where('war_id = ?', @war.id);
 		@list_users1 = User.where(id: @war.team1);
 		@list_users2 = User.where(id: @war.team2);
 	end
 	def update
 		@war = War.find_by_id(params[:war_id]);
-		@guild1 = Guild.find_by_id(@war.guild_id1);
+		@guild1 = Guild.find_by_id(@war.guild1_id);
 		if (!@guild1.war_id && !@guild.war_id)
 			if (@admin && @war && @war.guild_id2 == @guild.id && @war.status == 0)
 				@guild.update({war_id: @war.id});
@@ -68,7 +68,7 @@ class WarsController < ApplicationController
 	end
 	def destroy
 		@war = War.find_by_id(params[:war_id]);
-		if (@admin && @war && (@war.guild_id1 == @guild.id || @war.guild_id2 == @guild.id) && @war.status == 0)
+		if (@admin && @war && (@war.guild1_id == @guild.id || @war.guild_id2 == @guild.id) && @war.status == 0)
 			@war.destroy;
 		else
 			render html: "error-delete"
@@ -77,8 +77,8 @@ class WarsController < ApplicationController
 	end
 	def add
 		@user = User.find_by_id(params[:id]);
-		@war = War.where('(guild_id1 = ? or guild_id2 = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
-		@team = @war[0].guild_id1 == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
+		@war = War.where('(guild1_id = ? or guild_id2 = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
+		@team = @war[0].guild1_id == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
 		if (@team != nil)
 			if (@team.include? @user.id)
 				render html: '1';
@@ -96,8 +96,8 @@ class WarsController < ApplicationController
 	end
 	def remove
 		@user = User.find_by_id(params[:id]);
-		@war = War.where('(guild_id1 = ? or guild_id2 = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
-		@team = @war[0].guild_id1 == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
+		@war = War.where('(guild1_id = ? or guild_id2 = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
+		@team = @war[0].guild1_id == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
 		if (!(@war[0].team1.include? @user.id) && !(@war[0].team2.include? @user.id))
 			render html: '1';
 		else
@@ -173,7 +173,7 @@ class WarsController < ApplicationController
 					@guildattack = @list_guild[@id];
 				end
 				@war = War.new;
-				@war.update({guild_id1: current_user.guild_id, guild_id2: @guildattack.id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+				@war.update({guild1_id: current_user.guild_id, guild_id2: @guildattack.id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
 				@war.save;
 			end
 		else
@@ -182,7 +182,7 @@ class WarsController < ApplicationController
 				render html: 'error_10';
 			end
 			@war = War.new;
-			@war.update({guild_id1: current_user.guild_id, guild_id2: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+			@war.update({guild1_id: current_user.guild_id, guild_id2: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
 			@war.save;
 		end
 	end

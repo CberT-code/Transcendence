@@ -6,33 +6,42 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+stat = Stat.new()
+stat.save
+# moi = User.find(1)
+# if moi != nil
+	# moi.update(email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
+# else
+	# moi = User.create(id: 1, email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
+# end
+
 guild_list = [
 	["first", "first", 5, 1],
 	["second", "secon", 5, 2],
 	["third", "third", 15, 3],
-	["fourth", "fourt", 15, 4]
+	["fourth", "fourth", 15, 4]
 ]
 guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
 	@stat = Stat.new;
 	@stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
+		guild.update(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 	else
-		guild = Guild.new(name: name, anagramme: anagramme, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
+		guild = Guild.new(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 		guild.save!
 	end
 end
 
 user_list = [
 	[57610, "cbertola", 1],
-	[60326, "hbaudet", 1],
 	[57651, "jereligi", 1],
 	[58176, "cchudant", 1],
-	[60326, "user1", 1],
-	[60326, "user2", 2],
-	[60326, "user3", 2],
-	[60326, "user4", 2],
+	[60326, "salty", 1],
+	[60326, "melissa", 2],
+	[60326, "edm", 2],
+	[60326, "neo", 2],
 	[60326, "user5", 2],
 	[60326, "user6", 2],
 	[60326, "user7", 3],
@@ -72,9 +81,9 @@ user_list = [
 	  @stat = Stat.new;
 	  @stat.save;
 	  if (usr != nil)
-		  usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg", image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
+		  usr.update(email: "#{name}@student.42.fr", uid: uid, name: name, stat_id: @stat.id, image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
 	  else
-		  usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, stat_id: @stat.id, picture_url: "https://cdn.intra.42.fr/users/#{name}.jpg",  image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
+		  usr = User.new(email: "#{name}@student.42.fr", password: "password", provider: "marvin", uid: uid, name: name, stat_id: @stat.id,  image: "https://cdn.intra.42.fr/users/#{name}.jpg", nickname: name, guild_id: guild)
 		  usr.save!
 	  end
   end

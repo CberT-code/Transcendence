@@ -34,16 +34,22 @@ class HistoriesController < ApplicationController
 		else
 			@status = redis.get("game_#{@game.id}")
 		end
-		ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: @status, right_pp: @game.opponent.image})
+		ActionCable.server.broadcast("pong_#{@game.id}",
+			{status: @status, right_pp: @game.opponent.image})
 	end
 
 	def duel
+		clean_list(-1)
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
+		port: ENV['REDIS_PORT'],
+		db:   ENV['REDIS_DB'])
 		tourn = Tournament.find(params['id'].to_i)
-		@game = tourn.games.new(statut: 1, host: @me, opponent: params['opponent'], host_height: 150, oppo_height: 150,
-			ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
+		opponent = User.find(params['opponent'].to_i)
+		@me = current_user			
+		war_id = params.fetch(:war_id, -1)
+		@game = tourn.games.new(statut: 1, host: @me, opponent: opponent,
+			host_score: 0, opponent_score: 0, ranked: params[:ranked] == "true" ? true : false,
+			war_id: war_id)
 		@game.save!
 		redis.set("game_#{@game.id}", "ready")
 		render html: @game.id
@@ -55,26 +61,29 @@ class HistoriesController < ApplicationController
 		if (!tourn)
 			render html: "error_tournament"
 		else
-			redis = Redis.new(	url:  ENV['REDIS_URL'],
-								port: ENV['REDIS_PORT'],
-								db:   ENV['REDIS_DB'])
+			redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 			@me = current_user
+			war_id = params.fetch(:war_id, -1)
 			game_found = "no"
 			tourn.games.each do |target|
-				if target.host != @me && target.statut == 0
+				if target.host != @me && target.statut == 0 &&
+						target.ranked == (params[:ranked] == "true") &&
+						target.war_id == war_id
 					target.opponent = @me
+					target.statut = 1
 					target.save!
 					@game = target
 					redis.set("game_#{@game.id}", "ready")
 					game_found = "ok"
-					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
+					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.picture_url})
 					render html: @game.id
 					return
 				end
 			end
 			if game_found != "ok"
-				@game = tourn.games.new(statut: 0, host: @me, opponent: @me, host_height: 150, oppo_height: 150,
-					ball_x: 245, ball_y: 195, ball_x_dir: 1, ball_y_dir: 1, host_score: 0, opponent_score: 0)
+				@game = tourn.games.new(statut: 0, host: @me, opponent: @me,
+					host_score: 0, opponent_score: 0, ranked: params[:ranked] == "true" ? true : false,
+					war_id: war_id)
 					@game.save!
 					redis.set("game_#{@game.id}", "Looking For Opponent")
 				render html: @game.id
@@ -86,7 +95,7 @@ class HistoriesController < ApplicationController
 		@game = History.find(params[:id])
 		@game.statut = 2
 		@tournament = Tournament.find_by_id(@game.tournament_id);
-		# if current_user == @game.host # UNCOMMENT THIS LINE OR DIE
+		if current_user == @game.host # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
 								db:   ENV['REDIS_DB'])
@@ -126,16 +135,17 @@ class HistoriesController < ApplicationController
 			@game.host_score = score[0]
 			@game.opponent_score = score[1]
 			@game.save!
-			end_game_function(@game)
 			status = "ended"
 			ActionCable.server.broadcast("pong_#{@game.id}",
 				{ body: "Game ended", status: status})
 			redis.del("game_#{@game.id}")
-		# end # UNCOMMENT THIS LINE OR DIE
+			end_game_function(@game)
+			render html: "score: #{score[0]} - #{score[1]} - #{status} - #{@game.statut}"
+		end # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 	end
 	
 	def stop
-		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
+		# ActionCable.server.remote_connections.where(channel_type: "default").disconnect
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
@@ -143,7 +153,7 @@ class HistoriesController < ApplicationController
 	end
 
 	def end_game_function(game)
-		ActionCable.server.remote_connections.where(current_user: current_user).disconnect
+		ActionCable.server.remote_connections.where(current_user: current_user).disconnect #do something for that....
 		if (game.opponent_score > game.host_score)
 			loser = game.host
 			winner = game.opponent
@@ -151,22 +161,21 @@ class HistoriesController < ApplicationController
 			winner = game.host
 			loser = game.opponent
 		end
-		if game.tournament.tournament_type == "ranked"
-			if winner.elo < loser.elo
-				elo = (loser.elo - winner.elo / 2).to_i
-			elsif winner.leo > loser.elo
-				elo = (50 / winner.elo - loser.elo).to_i
-			else
-				elo = 60
+		if game.ranked
+			puts "\n\nwinner elo : #{winner.elo} - loser elo : #{loser.elo}"
+			for player in [loser, winner]
+				if game.war_id == player.guild.war_id # game.war.guild1 == player.guild || game.war.guild2 == player.guild
+					# war
+				elsif (game.tournament_id != 1)
+					# tournament
+				else
+				# regular ranked
+					elo = (winner.elo - loser.elo) * (-0.15) + 40.0
+					player.elo += (elo *= -1)
+					player.save!
+				end
 			end
-			winner.elo += elo
-			loser.elo -= elo
-			winner.save!
-			loser.save!
-		elsif game.tournament.tournament_type == "guildwar"
-			# do stuff with winner/loser guilds
-		elsif game.tournament.tournament_type == "custom"
-			# do stuff with the tournament
+			puts "winner elo : #{winner.elo} - loser elo : #{loser.elo}\n\n"
 		end
 	end
 

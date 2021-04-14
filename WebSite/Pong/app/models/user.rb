@@ -1,7 +1,8 @@
 class User < ApplicationRecord
+	has_many :t_users, class_name: 'TournamentUser', foreign_key: 'user_id'
 	has_many :hosted_games, class_name: 'History', foreign_key: 'host_id'
 	has_many :foreign_games, class_name: 'History', foreign_key: 'opponent_id'
-	belongs_to :guild, optional: true
+	belongs_to :guild, class_name: 'Guild', foreign_key: 'guild_id', optional: true
 	belongs_to :stat, optional: true
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
