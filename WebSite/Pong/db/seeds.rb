@@ -17,9 +17,9 @@ guild_list.each do |name, anagramme, nb, admin|
 	@stat = Stat.new;
 	@stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
+		guild.update(name: name, anagramme: anagramme, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
 	else
-		guild = Guild.new(name: name, anagramme: anagramme, id_admin: 1, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
+		guild = Guild.new(name: name, anagramme: anagramme, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb, id_admin: admin)
 		guild.save!
 	end
 end

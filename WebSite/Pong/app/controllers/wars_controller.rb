@@ -155,10 +155,6 @@ class WarsController < ApplicationController
 		elsif (params[:points] != '1000' && params[:points].to_i > @guild.points)
 			render html: 'error_7';
 		elsif (params[:id] == "0")
-			puts "POPOPOPOPOPOPOPOPOPOPOPOOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOPOOPOPOPOPOPOPOPOPOPOPOPO"
-			puts Tournament.find_by_id(params[:tournament_id]).end.to_date;
-			puts  params[:date_end].to_date;
-			puts (Tournament.find_by_id(params[:tournament_id]).end.to_date - params[:date_end].to_date)
 			if (params[:points].to_i > 1000)
 				@list_guild = Guild.where("nbmember >= ? and points >= ? and war_id = NULL", params[:players], params[:points]);
 			else
