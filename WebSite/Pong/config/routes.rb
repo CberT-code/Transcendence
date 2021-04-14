@@ -30,12 +30,15 @@ Rails.application.routes.draw do
 	get "/tchat/channel/get/:id/:key", to: "tchat#getPrivateChannel"
 	get "/tchat/channel/message/get/:id/:key", to: "tchat#getChannelMessage"
 	get "/tchat/channel/admin/:id", to: "tchat#isChannelAdmin"
-
 	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 
 	resources :guilds
+
 	resources :tournaments
+	
 	resources :users
+	get "/users/status/:id", to: "users#status"
+
 	resources :wars
 	post "/wars/add", to: "wars#add"
 	post "/wars/remove", to: "wars#remove"
@@ -45,10 +48,12 @@ Rails.application.routes.draw do
 	post "/guilds/unban", to: "guilds#unban"
 	post "/guilds/officer", to: "guilds#officer"
 	post "/guilds/anagramme", to: "guilds#anagramme"
+
 	resources :tchat
 
 	resources :histories
 	post "/histories/run/:id", to: "histories#run"
+	post "/histories/stop/:id", to: "histories#stop"
 	post "/histories/wait/:id", to: "histories#wait"
 	post "/histories/find_or_create", to: "histories#find_or_create"
 end

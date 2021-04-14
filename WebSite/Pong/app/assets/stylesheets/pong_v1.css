@@ -1,49 +1,31 @@
-:root {
-    --player_width: 20px;
-    --game_width: 500px;
-    --game_height: 400px;
-    --ball_width: 10px;
-    --player_height: 100px;
-    --profile_pic:  220px;
-}
-
-@font-face {
-    font-family: "joystick_monospace";
-    src: url('../fonts/joystick_monospace.ttf');
-}
-
-
 .score {
     font-family: "joystick_monospace";
 }
 
+
 #wrapper {
     position: relative;
-    width: calc(2 * var(--game_width));
-    height: var(--game_height);
     border: 2px solid red;
     margin-left: auto;
     margin-right: auto
 }
 
 #game{
-    width: var(--game_width);
-    height: var(--game_height);
-    left:   calc(var(--game_width) / 2);
+    width: 50%;
+    height: 100%;
+    left:   25%;
     border: 1px solid grey;
     background-color: black;
     background-size: 100% 100%;
     background-image: url('42_revert.webp');
     position: absolute;
-    margin: auto;
-    visibility: hidden;
     z-index: 0;
 }
 
 .player{
-    width: var(--player_width);
-    height: var(--player_height);
-    top: calc((var(--game_height) - var(--player_height)) / 2 );
+    width: 2%;
+    height: 25%;
+    top: 37.5%;
     position: absolute;
     background-color: purple;
     z-index: 3;
@@ -56,34 +38,34 @@
 
 #right_player{
     background-color: green;
-    left: calc(var(--game_width) - var(--player_width));
+    left: 98%;
 }
 
 #ball{
-    width: var(--ball_width);
-    height: var(--ball_width);
+    width: 1.4%;
+    height: 1.75%;
     background-color: pink;
     position: absolute;
-    top: calc(var(--game_height) / 3);
+    top: 49.25%;
+    left: 49.4%;
     border-radius: 500px;
-    left: 0px;
     z-index: 2;
 }
 
 .goal {
-    height: var(--game_height);
-    width: 1px;
+    height: 100%;
+    width: 0.08%;
     background-color: red;
-    top: 0px;
-    left: var(--player_width);
+    left: 2%;
     position: absolute;
     z-index: 1;
 }
 
 .profile_pic {
-    height: var(--profile_pic);
-    width:  var(--profile_pic);
-    top: calc((var(--game_height) - var(--profile_pic)) / 2);
+    width:  20%;
+	height: 50%;
+	left: 2.5%;
+    top: 20%;
     background-color:   pink;
     background-image:   url("42_Logo.svg");
     background-size:    100% 100%;
@@ -91,10 +73,6 @@
     position: absolute;
 }
 
-#left_PP {
-    left: 15px;
-}
-
 #right_PP {
-    right: 15px;
+    left: 77.5%;
 }

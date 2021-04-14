@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2021_04_13_163050) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maxpoints"
     t.float "speed"
+    t.string "tournament_type"
   end
 
   create_table "users", force: :cascade do |t|

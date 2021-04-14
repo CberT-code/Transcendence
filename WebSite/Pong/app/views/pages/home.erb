@@ -1,2 +1,4 @@
 <div id="content-account">
+	<%= javascript_pack_tag 'online_check' %>
+	<%= content_tag :div, '', id: 'player_data', data: { id: @me.id } %>
 </div>

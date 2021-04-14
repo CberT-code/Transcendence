@@ -6,20 +6,26 @@ function notification(typef, textf) {
 
 ViewGames = Backbone.View.extend(
 {
+	globalvar: "testyolo",
+
     el: $(document),
     initialize: function () {
     },
+	close: function() {
+		clearInterval(waiting);
+	},
     events: {
-		'click #new_game': 'Game_new',
+		'click #ranked_game': 'Game_new_ranked',
+		'click #practice_game': 'Game_new_practice',
     },
-	Game_new: function (e) {
+	Game_new_ranked: function (e) {
 
-		console.log($("#tournament_id").val())
+		console.log("new ranked game");
 		$.post(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"tournament_id": $("#tournament_id").val(),
+				"name": "ranked"
 			},
 			function (data) 
 			{
@@ -30,4 +36,40 @@ ViewGames = Backbone.View.extend(
 			},
 		);
 	},
+	Game_new_practice: function (e) {
+
+		console.log("new practice game");
+		$.post(
+			'/histories/find_or_create',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": "1"
+			},
+			function (data) 
+			{
+				if (data == "error_tournament")
+					notification("error", "This tournament id doesn't exist.");
+				else
+					window.location.href = "#show_game/" + data ;
+			},
+		);
+	},
+	Game_new_ranked: function (e) {
+
+		console.log("new ranked game");
+		$.post(
+			'/histories/find_or_create',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": "2"
+			},
+			function (data) 
+			{
+				if (data == "error_tournament")
+					notification("error", "This tournament id doesn't exist.");
+				else
+					window.location.href = "#show_game/" + data ;
+			},
+		);
+	}
 });
