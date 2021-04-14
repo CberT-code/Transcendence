@@ -25,7 +25,7 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"name": "ranked"
+				"id": "1", "ranked": "true", "war_id": "-1"
 			},
 			function (data) 
 			{
@@ -43,25 +43,7 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "1"
-			},
-			function (data) 
-			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
-				else
-					window.location.href = "#show_game/" + data ;
-			},
-		);
-	},
-	Game_new_ranked: function (e) {
-
-		console.log("new ranked game");
-		$.post(
-			'/histories/find_or_create',
-			{
-				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "2"
+				"id": "1", "ranked": "false", "war_id": "-1"
 			},
 			function (data) 
 			{

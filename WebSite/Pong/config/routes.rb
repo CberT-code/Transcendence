@@ -56,4 +56,5 @@ Rails.application.routes.draw do
 	post "/histories/stop/:id", to: "histories#stop"
 	post "/histories/wait/:id", to: "histories#wait"
 	post "/histories/find_or_create", to: "histories#find_or_create"
+	post "/histories/duel", to: "histories#duel"
 end

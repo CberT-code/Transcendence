@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_111320) do
+ActiveRecord::Schema.define(version: 2021_04_13_092821) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,17 +34,13 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "maxmember", default: 5, null: false
     t.integer "nbmember", default: 0, null: false
     t.integer "id_admin", null: false
+    t.integer "officers", default: [], array: true
+    t.integer "banned", default: [], array: true
     t.boolean "deleted", default: false, null: false
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "war_id"
-    t.bigint "guild1_id"
-    t.bigint "guild2_id"
-    t.bigint "admin_id"
-    t.index ["admin_id"], name: "index_guilds_on_admin_id"
-    t.index ["guild1_id"], name: "index_guilds_on_guild1_id"
-    t.index ["guild2_id"], name: "index_guilds_on_guild2_id"
     t.index ["war_id"], name: "index_guilds_on_war_id"
   end
 
@@ -55,11 +51,18 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "statut"
     t.bigint "host_id"
     t.bigint "opponent_id"
+    t.integer "host_height"
+    t.integer "oppo_height"
+    t.integer "ball_x"
+    t.integer "ball_y"
+    t.integer "ball_x_dir"
+    t.integer "ball_y_dir"
     t.integer "host_score"
     t.integer "opponent_score"
-    t.boolean "ranked"
+    t.bigint "war_id"
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
+    t.index ["war_id"], name: "index_histories_on_war_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -90,15 +93,6 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  create_table "tournament_users", force: :cascade do |t|
-    t.integer "losses", default: 0
-    t.integer "wins", default: 0
-    t.integer "user_id"
-    t.integer "tournament_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "tournaments", force: :cascade do |t|
     t.string "name", null: false
     t.string "description", null: false
@@ -108,6 +102,7 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maxpoints"
     t.float "speed"
+    t.string "tournament_type"
   end
 
   create_table "users", force: :cascade do |t|
@@ -144,10 +139,10 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
   end
 
   create_table "wars", force: :cascade do |t|
-    t.integer "guild1_id", null: false
+    t.integer "guild_id1", null: false
     t.integer "team1", default: [], array: true
     t.integer "points_guild1", default: 0, null: false
-    t.integer "guild2_id", null: false
+    t.integer "guild_id2", null: false
     t.integer "team2", default: [], array: true
     t.integer "points_guild2", default: 0, null: false
     t.datetime "start"
@@ -159,6 +154,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 
+  add_foreign_key "guilds", "wars"
+  add_foreign_key "histories", "wars"
   add_foreign_key "users", "guilds"
   add_foreign_key "users", "stats"
   add_foreign_key "wars", "tournaments"

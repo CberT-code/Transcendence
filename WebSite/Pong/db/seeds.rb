@@ -9,6 +9,9 @@
 user_list = [
   [60326, "hbaudet"],
   [57651, "jereligi"],
+  [34567, "cbertola"],
+  [34578, "llepage"],
+  [45687, "salty"],
   [58176, "cchudant"]
 ]
 
@@ -23,16 +26,14 @@ user_list.each do |uid, name|
 end
 
 trnmt_list = [
-	["friendly", 1, "default set of rules for friendly games", 11, 1.5],
-	["ranked", 2, "default set of rules for ranked games", 11, 1.5],
-	["duel", 3, "default set of rules for duels", 11, 1.5]
+	["normal", 1, "default set of rules for ladder games", 11, 1.5],
 ]
 
 trnmt_list.each do |name, id, desc, pts, speed|
 	tr = Tournament.find_by_id(id)
 	if (tr != nil)
-		tr.update(name: name, tournament_type: name, description: desc, maxpoints: pts, speed: speed)
+		tr.update(name: name, description: desc, maxpoints: pts, speed: speed)
 	else
-		Tournament.create(name: name, id: id, type: name, description: desc, maxpoints: pts, speed: speed)
+		Tournament.create(name: name, id: id, description: desc, maxpoints: pts, speed: speed)
 	end
 end
