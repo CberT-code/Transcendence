@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 		if (@timetostart < 1)
 			if (war.team1.count < war.players)
 				while war.team1.count < war.players do
-					User.where('guild_id = ?', war.guild_id1).each do |user|
+					User.where('guild_id = ?', war.guild1_id).each do |user|
 						if (!war.team1.include?user.id)
 							war.team1.push(user.id);
 						end
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
 		@timetostart2 = ((war.end.to_i) - DateTime.current.to_i).to_i;
 		if (@timetostart2 < 1)
 			if (war.points_guild1 > war.points_guild2)
-				@guild = Guild.find_by_id(war.guild_id1);
+				@guild = Guild.find_by_id(war.guild1_id);
 				@guild.update(points: @guild.points + war.points)
 			elsif (war.points_guild1 < war.points_guild2)
 				@guild = Guild.find_by_id(war.guild_id2);
