@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_111320) do
+ActiveRecord::Schema.define(version: 2021_04_14_190045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,8 +60,10 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "host_score"
     t.integer "opponent_score"
     t.boolean "ranked"
+    t.bigint "war_id"
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
+    t.index ["war_id"], name: "index_histories_on_war_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -137,8 +139,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.bigint "guild_id"
     t.bigint "stat_id"
     t.string "status"
-    t.integer "friends", default: [], array: true
     t.integer "elo", default: 1000
+    t.integer "friends", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
