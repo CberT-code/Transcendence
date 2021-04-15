@@ -23,7 +23,8 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "1", "ranked": "true"
+				"id": $("#tournaments_end").val(),
+				"ranked": "true"
 			},
 			function (data) 
 			{
@@ -41,7 +42,8 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "1", "ranked": "false"
+				"id": $("#tournaments_end").val(),
+				"ranked": "false"
 			},
 			function (data) 
 			{

@@ -9,6 +9,8 @@ class CreateGuilds < ActiveRecord::Migration[6.1]
 			t.integer :maxmember,		null: false, default: 5
 			t.integer :nbmember,		null: false, default: 0
 			t.integer :id_admin,		null: false
+			t.integer :officers,		array: true, default: []
+			t.integer :banned,			array: true, default: []
 			t.boolean :deleted,			null: false, default: FALSE
 			t.integer :officers,		array: true, default: []
 			t.integer :banned,			array: true, default: []

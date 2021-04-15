@@ -6,7 +6,7 @@ class TournamentsController < ApplicationController
 	end
 
 	def index
-		@tournaments = Tournament.all.order('name')
+		@tournaments = Tournament.all.order('name').order(:id).reverse_order
 	end
 	def new
 		@tournament = Tournament.new

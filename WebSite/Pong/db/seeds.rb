@@ -84,11 +84,12 @@ if User.find(1) != nil
 end
 stat = Stat.new()
 stat.save
-superadmin = User.create(id: 1, role: 1,
-	email: "#{admin_name}@student.42.fr", password: "password",
-	provider: "marvin", uid: 00000, name: admin_name,
-	stat_id: stat.id, image: "https://cdn.intra.42.fr/users/#{admin_name}.jpg",
-	nickname: admin_name, elo: 2000)
+# moi = User.find(1)
+# if moi != nil
+	# moi.update(email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
+# else
+	moi = User.create(id: 1, email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
+# end
 
 guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
@@ -130,19 +131,14 @@ guild_list.each do |name, anagramme, nb, admin|
 	guild.update(admin: User.find_by_name(admin))
 end
 
-trnmt_list.each do |name, id, desc, pts, speed, start, end_date|
-	tr = Tournament.find_by_id(id)
-	if (tr != nil)
-		tr.update(name: name, description: desc,
-		maxpoints: pts, speed: speed, start: start,
-		end: end_date)
-	else
-		Tournament.create(name: name, id: id,
-		description: desc, maxpoints: pts, speed: speed,
-		start: start, end: end_date)
-	end
-end
-
+@date = DateTime.new(1902,1,1,1,1,1);
+  trnmt_list = [
+	  ["Normal", "11 points to win", 11, 7.0, @date],
+  ]
+  
+  trnmt_list.each do |name, desc, pts, speed, start|
+	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start)
+  end 
 war_list.each do |id, guild1, guild2, tr|
 	war = War.find_by_id(id)
 	if (war != nil)

@@ -3,7 +3,12 @@ class GuildsController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
-		@admin = current_user.role;
+		@guild = Guild.find_by_id(current_user.guild_id);
+		if (@guild)
+			@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
+		else
+			@admin = current_user.role == 1 ? 1 : 0;
+		end
 	end
 
 	def index

@@ -36,7 +36,13 @@ ViewChannel = Backbone.View.extend(
             "click .cancelSanction": "cancelSanction",
             "click .SanctionSubmit": "SanctionSubmit",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
-        },
+            "keyup .message": "KeyPressEnter",
+		},
+		KeyPressEnter : function(event){
+			if(event.keyCode == 13){
+				this.$(".submitMessage").click();
+			}
+		},
         viewPublicChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();

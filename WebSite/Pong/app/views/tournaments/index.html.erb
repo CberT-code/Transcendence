@@ -15,10 +15,11 @@
 						<p><%= tournament.name %></p>
 					</div>
 					<div id="info">
-						<p><%= tournament.description %></p>
-					</div>
-					<div id="info">
-						<p><%= (tournament.end.to_date - tournament.start.to_date).to_i %> days left</p>
+						<% if (tournament.end && (tournament.start.to_i - DateTime.current.to_i).to_i < 0) %>
+							<p class="text-red"><%= (tournament.end.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24)%> days left</p>
+						<% elsif ((tournament.start.to_i - DateTime.current.to_i).to_i > 0) %>
+							<p class="text-green2">Start in : <%=(tournament.start.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24) %> days</p>
+						<% end%>
 					</div>
 					<div id="info" >
 						<button  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >Voir</button>
