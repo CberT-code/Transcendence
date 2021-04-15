@@ -15,7 +15,7 @@ class HistoriesController < ApplicationController
 		foreign = @me.foreign_games.all
 		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
 		@spectate = History.where(statut: 2) #change that after dev
-		@tournament = Tournament.where("'end' > ?", DateTime.current);
+		@tournament = Tournament.where("('end' > ? and start < ?) or 'end' IS NULL", DateTime.current, DateTime.current);
 	end
 	
 	def show
@@ -75,7 +75,7 @@ class HistoriesController < ApplicationController
 					@game = target
 					redis.set("game_#{@game.id}", "ready")
 					game_found = "ok"
-					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.picture_url})
+					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
 					render html: @game.id
 					return
 				end

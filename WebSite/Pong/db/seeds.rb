@@ -11,9 +11,9 @@ stat = Stat.new()
 stat.save
 # moi = User.find(1)
 # if moi != nil
-	# moi.update(email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
+	# moi.update(email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
 # else
-	# moi = User.create(id: 1, email: "hbaudet@student.42.fr", password: "password", provider: "marvin", uid: 60326, name: "hbaudet", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/hbaudet.jpg", nickname: "hbaudet")
+	moi = User.create(id: 1, email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
 # end
 
 guild_list = [
@@ -35,7 +35,7 @@ guild_list.each do |name, anagramme, nb, admin|
 end
 
 user_list = [
-	[57610, "cbertola", 1],
+	[60326, "hbaudet", 1],
 	[57651, "jereligi", 1],
 	[58176, "cchudant", 1],
 	[60326, "salty", 1],
@@ -89,16 +89,9 @@ user_list = [
   end
   
   trnmt_list = [
-	  ["friendly", 1, "default set of rules for friendly games", 11, 7.0],
-	  ["ranked", 2, "default set of rules for ranked games", 11, 7.0],
-	  ["duel", 3, "default set of rules for duels", 11, 7.0]
+	  ["Normal", "11 points to win", 11, 7.0],
   ]
   
-  trnmt_list.each do |name, id, desc, pts, speed|
-	  tr = Tournament.find_by_id(id)
-	  if (tr != nil)
-		  tr.update(name: name, description: desc, maxpoints: pts, speed: speed)
-	  else
-		  Tournament.create(name: name, id: id, description: desc, maxpoints: pts, speed: speed)
-	  end
-  end
+  trnmt_list.each do |name, desc, pts, speed|
+	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed)
+  end 

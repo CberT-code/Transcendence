@@ -34,6 +34,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "maxmember", default: 5, null: false
     t.integer "nbmember", default: 0, null: false
     t.integer "id_admin", null: false
+    t.integer "officers", default: [], array: true
+    t.integer "banned", default: [], array: true
     t.boolean "deleted", default: false, null: false
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
@@ -132,12 +134,11 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
-    t.string "picture_url"
     t.bigint "guild_id"
     t.bigint "stat_id"
     t.string "status"
-    t.integer "friends", default: [], array: true
     t.integer "elo", default: 1000
+    t.integer "friends", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
