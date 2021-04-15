@@ -6,8 +6,6 @@ function notification(typef, textf) {
 
 ViewGames = Backbone.View.extend(
 {
-	globalvar: "testyolo",
-
     el: $(document),
     initialize: function () {
     },

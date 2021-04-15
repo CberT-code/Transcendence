@@ -34,6 +34,9 @@ class HistoriesController < ApplicationController
 			@status = "There was an error with this game"
 		else
 			@status = redis.get("game_#{@game.id}")
+			if @status == nil
+				@status = "running"
+			end
 		end
 		ActionCable.server.broadcast("pong_#{@game.id}",
 			{status: @status, right_pp: @game.opponent.image})
@@ -42,8 +45,8 @@ class HistoriesController < ApplicationController
 	def duel
 		clean_list(-1)
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
-		port: ENV['REDIS_PORT'],
-		db:   ENV['REDIS_DB'])
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
 		tourn = Tournament.find(params['id'].to_i)
 		opponent = User.find(params['opponent'].to_i)
 		@me = current_user			
@@ -76,7 +79,8 @@ class HistoriesController < ApplicationController
 					@game = target
 					redis.set("game_#{@game.id}", "ready")
 					game_found = "ok"
-					ActionCable.server.broadcast("pong_#{@game.id}", {body: "what is my purpose again?", status: "ready", right_pp: @game.opponent.image})
+					ActionCable.server.broadcast("pong_#{@game.id}",
+						{status: "ready", right_pp: @game.opponent.image})
 					render html: @game.id
 					return
 				end
@@ -117,8 +121,7 @@ class HistoriesController < ApplicationController
 				else
 					calc(move, player, ball, score, @tournament.speed)
 				end
-				ActionCable.server.broadcast("pong_#{@game.id}", {	body: "Left : #{move[0]} -- Right : #{move[0]}",
-																	frame: frame, status: status,
+				ActionCable.server.broadcast("pong_#{@game.id}", {	frame: frame, status: status,
 																	left_y: "#{player[0]}%", right_y: "#{player[1]}%",
 																	ball_x: "#{ball[0]}%", ball_y: "#{ball[1]}%",
 																	score: "#{score[0]} - #{score[1]}"})
@@ -136,50 +139,13 @@ class HistoriesController < ApplicationController
 			@game.host_score = score[0]
 			@game.opponent_score = score[1]
 			@game.save!
-			status = "ended"
-			ActionCable.server.broadcast("pong_#{@game.id}",
-				{ body: "Game ended", status: status})
 			redis.del("game_#{@game.id}")
 			end_game_function(@game)
-			render html: "score: #{score[0]} - #{score[1]} - #{status} - #{@game.statut}"
+			render html: "score: #{score[0]} - #{score[1]} - #{"ended"} - #{@game.statut}"
 		end # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 	end
 	
-	def stop
-		# ActionCable.server.remote_connections.where(channel_type: "default").disconnect
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		redis.set("game_#{params[:id]}", "ended")
-	end
-
-	def end_game_function(game)
-		ActionCable.server.remote_connections.where(current_user: current_user).disconnect #do something for that....
-		if (game.opponent_score > game.host_score)
-			loser = game.host
-			winner = game.opponent
-		else
-			winner = game.host
-			loser = game.opponent
-		end
-		if game.ranked
-			puts "\n\nwinner elo : #{winner.elo} - loser elo : #{loser.elo}"
-			for player in [loser, winner]
-				if game.war_id == player.guild.war_id # game.war.guild1 == player.guild || game.war.guild2 == player.guild
-					# war
-				elsif (game.tournament_id != 1)
-					# tournament
-				else
-				# regular ranked
-					elo = (winner.elo - loser.elo) * (-0.15) + 40.0
-					player.elo += (elo *= -1)
-					player.save!
-				end
-			end
-			puts "winner elo : #{winner.elo} - loser elo : #{loser.elo}\n\n"
-		end
-	end
-
+	
 	def calc(move, player, ball, score, speed)
 		for i in 0..1
 			if move[i] == "up"
@@ -193,10 +159,10 @@ class HistoriesController < ApplicationController
 				player[i] = 75
 			end
 		end
-		move_ball(ball, score, player, speed)
+		move_ball(move, ball, score, player, speed)
 	end
-
-	def move_ball(ball, score, player, speed)
+	
+	def move_ball(move, ball, score, player, speed)
 		ball[0] += Math.cos(ball[2]) * ball[3]
 		ball[1] += Math.sin(ball[2]) * ball[3]
 		pi = Math::PI
@@ -206,6 +172,11 @@ class HistoriesController < ApplicationController
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.01
 				#add effect according to speed
+				if move[0] == "up"
+					ball[2] += 0.2
+				elsif move[0] == "down"
+					ball[2] -= 0.2
+				end
 			else
 				score[1] += 1
 				reset(player, ball, score, speed)
@@ -216,6 +187,11 @@ class HistoriesController < ApplicationController
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.01
 				#add effect according to speed
+				if move[1] == "up"
+					ball[2] -= 0.2
+				elsif move[0] == "down"
+					ball[2] += 0.2
+				end
 			else
 				score[0] += 1
 				reset(player, ball, score, speed)
@@ -228,7 +204,7 @@ class HistoriesController < ApplicationController
 			ball[2] = (tpi - ball[2]) % tpi
 		end
 	end
-
+	
 	def reset(player, ball, score, speed)
 		ball[0] = 49.25
 		ball[1] = 49.4
@@ -237,15 +213,55 @@ class HistoriesController < ApplicationController
 		player[1] = 37
 		score[2] = 30
 	end
-		
+	
+	def stop
+		redis = Redis.new(	url:  ENV['REDIS_URL'],
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
+		redis.set("game_#{params[:id]}", "ended")
+	end
+
+	def end_game_function(game)
+		elo = 0
+		if (game.opponent_score > game.host_score)
+			loser = game.host
+			winner = game.opponent
+		else
+			winner = game.host
+			loser = game.opponent
+		end
+		if game.ranked
+			if game.war_id == winner.guild.war_id
+				end_of_war_game(game, winner.guild, loser.guild, game.war_id)
+			elsif (game.tournament_id != 1)
+				end_of_tournament_game(TournamentUser.find_by_user_id(winner.id), TournamentUser.find_by_user_id(loser.id))
+			else
+			# regular ranked
+				elo = (winner.elo - loser.elo) * (-0.15) + 40.0
+				winner.elo += elo
+				loser.elo -= elo
+				winner.save!
+				loser.save!
+			end
+		end
+		ActionCable.server.broadcast("pong_#{game.id}", {status: "ended", elo: elo, winner: winner.id, loser: loser.id, w_name: winner.name})
+	end
+
+	def end_of_war_game(game, w_guild, l_guild, war)
+	end
+
+	def end_of_tournament_game(t_winner, t_loser)
+		t_winner.wins += 1
+		t_loser.losses += 1
+		t_winner.save
+		t_loser.save
+	end
 
 	def clean_list(id)
-		puts "\n\n clean_list #{id}\n\n"
 		History.all.each do |game|
 			if (game.host == game.opponent && game.host == current_user && game.id != id) ||
 				game.statut == -1
-				ActionCable.server.broadcast("pong_#{game.id}", {body: "what is my purpose again?", status: "deleted"})
-				puts "\n\ndeleted game id #{game.id} -- #{id}\n\n"
+				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
 				game.destroy
 			end
 		end
