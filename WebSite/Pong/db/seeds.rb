@@ -7,6 +7,11 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
+admin_name = "hbaudet"
+
+if User.where(id: 1).exists?
+	User.find(1).destroy
+end
 stat = Stat.new()
 stat.save
 # moi = User.find(1)
@@ -17,19 +22,19 @@ stat.save
 # end
 
 guild_list = [
-	["first", "first", 5, 1],
-	["second", "secon", 5, 2],
-	["third", "third", 15, 3],
-	["fourth", "fourth", 15, 4]
+	["first", "first", 5, "cbertola"],
+	["second", "second", 5, "hbaudet"],
+	["third", "third", 15, "llepage"],
+	["fourth", "fourth", 15, "salty"]
 ]
 guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
 	@stat = Stat.new;
 	@stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
+		guild.update(name: name, anagramme: anagramme, admin: moi, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 	else
-		guild = Guild.new(name: name, anagramme: anagramme, admin: User.find(1), description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
+		guild = Guild.new(name: name, anagramme: anagramme, admin: moi, description: name, id_stats: @stat.id, maxmember: nb, nbmember: nb)
 		guild.save!
 	end
 end
@@ -88,6 +93,12 @@ user_list = [
 	  end
   end
   
+  guild_list.each do |name, anagramme, nb, admin|
+	guild = Guild.find_by_name(name)
+	guild.update(admin: User.find_by_name(admin))
+	end
+
+
   trnmt_list = [
 	  ["Normal", "11 points to win", 11, 7.0],
   ]

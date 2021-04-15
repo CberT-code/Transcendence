@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_14_111320) do
+ActiveRecord::Schema.define(version: 2021_04_14_190045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "officers", default: [], array: true
     t.integer "banned", default: [], array: true
     t.boolean "deleted", default: false, null: false
+    t.integer "officers", default: [], array: true
+    t.integer "banned", default: [], array: true
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -60,8 +62,10 @@ ActiveRecord::Schema.define(version: 2021_04_14_111320) do
     t.integer "host_score"
     t.integer "opponent_score"
     t.boolean "ranked"
+    t.bigint "war_id"
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
+    t.index ["war_id"], name: "index_histories_on_war_id"
   end
 
   create_table "messages", force: :cascade do |t|

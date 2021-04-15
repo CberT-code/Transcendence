@@ -6,6 +6,7 @@ class WarsController < ApplicationController
 		@guild = Guild.find_by_id(current_user.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
 	end
+
 	def index
 		if (@guild.id == -1 || (War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 1).count != 0))
 			render html: "error-forbidden";
@@ -14,6 +15,7 @@ class WarsController < ApplicationController
 		@wars_request = War.where('(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1);
 		@request_sent = War.where('(guild1_id = ?) and (status = ?)', @guild.id, 0);
 	end
+
 	def new
 		if (@admin == 0) then
 			render 'pages/not_authentificate', :status => :unauthorized
@@ -22,6 +24,7 @@ class WarsController < ApplicationController
 		@list_guild = Guild.where('nbmember >= ?', 5);
 		@list_tournament = Tournament.all();
 	end
+
 	def edit
 		@war = War.find_by_id(params[:id]);
 		@team = @war.guild1_id == @guild.id ? @war.team1 : @war.team2 ;
@@ -32,6 +35,7 @@ class WarsController < ApplicationController
 			render html: "error-forbidden";
 		end
 	end
+
 	def show
 		@war = War.find_by_id(params[:id]);
 
@@ -52,6 +56,7 @@ class WarsController < ApplicationController
 		@list_users1 = User.where(id: @war.team1);
 		@list_users2 = User.where(id: @war.team2);
 	end
+
 	def update
 		@war = War.find_by_id(params[:war_id]);
 		@guild1 = Guild.find_by_id(@war.guild1_id);
@@ -66,6 +71,7 @@ class WarsController < ApplicationController
 		end
 		render html: @war.id
 	end
+
 	def destroy
 		@war = War.find_by_id(params[:war_id]);
 		if (@admin && @war && (@war.guild1_id == @guild.id || @war.guild2_id == @guild.id) && @war.status == 0)
@@ -75,6 +81,7 @@ class WarsController < ApplicationController
 		end
 		render html: "ok"
 	end
+
 	def add
 		@user = User.find_by_id(params[:id]);
 		@war = War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
@@ -94,6 +101,7 @@ class WarsController < ApplicationController
 		end
 			@war[0].save
 	end
+
 	def remove
 		@user = User.find_by_id(params[:id]);
 		@war = War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
@@ -106,6 +114,7 @@ class WarsController < ApplicationController
 			render html: '0';
 		end
 	end
+
 	def search
 		if (params[:points] == "null")
 			if (params[:players] == "null")
@@ -134,6 +143,7 @@ class WarsController < ApplicationController
 		end
 		render json: @ret
 	end
+
 	def create
 
 		if (params[:points] == "null")

@@ -7,6 +7,7 @@ var right_pp = "";
 var keys = [0, 0];
 var waiting_id = 0;
 var waiting;
+var ready = 1;
 
 import consumer from "../channels/consumer"
 
@@ -43,63 +44,65 @@ function sendMove(socket) {
 	socket.send({player: player_id, move: move, room: id, status: status});
 }
 
+if (ready) {
+	var actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
+		connected() {
+			// console.log("status : " + status);
+			if (player_id == host_id || player_id == opponent_id) {
+			$(document).keydown(function(event) {
+				if (event.key == 'q' || event.key == 'z')
+					keys[0] = 1;
+				else if (event.key == 'a' || event.key == 's')
+					keys[1] = 1;
+				else
+					console.log("You pressed |" + event.key + "|");
+				sendMove(actionCable);
+			});
+			$(document).keyup(function(event) {
+				if (event.key == 'q' || event.key == 'z')
+					keys[0] = 0;
+				else if (event.key == 'a' || event.key == 's')
+					keys[1] = 0;
+				sendMove(actionCable);
+			});
+			}
+			else {
+				console.log("player : " + player_id);
+				console.log("host : " + host_id);
+				console.log("opponent : " + opponent_id);
+			}
+		},
 
-var actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
-	connected() {
-		// console.log("status : " + status);
-		if (player_id == host_id || player_id == opponent_id) {
-		$(document).keydown(function(event) {
-			if (event.key == 'q' || event.key == 'z')
-				keys[0] = 1;
-			else if (event.key == 'a' || event.key == 's')
-				keys[1] = 1;
-			else
-				console.log("You pressed |" + event.key + "|");
-			sendMove(actionCable);
-		});
-		$(document).keyup(function(event) {
-			if (event.key == 'q' || event.key == 'z')
-				keys[0] = 0;
-			else if (event.key == 'a' || event.key == 's')
-				keys[1] = 0;
-			sendMove(actionCable);
-		});
+	disconnected() {
+			console.log("Disconnected from PongChannel, room " + id + " status " + status);
+		},
+
+	received(data) {
+		status = data['status'];
+		$("#foo").html(data['body'] + " " + " status : " + status);
+		if (status == "running" ) {
+			display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
+		}
+		else if (status == "ready" ) {
+			clearInterval(waiting);
+			right_pp = "url(\"" + data['right_pp'] + "\")";
+			$("#right_PP").css("background-image", right_pp);
+			$('#game').css('visibility', 'visible');
+			$.post('/histories/run/' + id);
+			console.log("received data from socket: game ready, post sent");
+		}
+		else if (status == "ended") {
+			$('#game').css('visibility', 'hidden');
+			endgame();
+			ready = 0;
+			actionCable.unsubscribe();
 		}
 		else {
-			console.log("player : " + player_id);
-			console.log("host : " + host_id);
-			console.log("opponent : " + opponent_id);
+			console.log("Status : " + status);
 		}
-	},
-
-disconnected() {
-		console.log("Disconnected from PongChannel, room " + id + " status " + status);
-	},
-
-received(data) {
-	status = data['status'];
-	$("#foo").html(data['body'] + " " + " status : " + status);
-	if (status == "running" ) {
-		display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 	}
-	else if (status == "ready" ) {
-		clearInterval(waiting);
-		right_pp = "url(\"" + data['right_pp'] + "\")";
-		$("#right_PP").css("background-image", right_pp);
-		$('#game').css('visibility', 'visible');
-		$.post('/histories/run/' + id);
-		console.log("received data from socket: game ready, post sent");
-	}
-	else if (status == "ended") {
-		$('#game').css('visibility', 'hidden');
-		endgame();
-		actionCable.unsubscribe();
-	}
-	else {
-		console.log("Status : " + status);
-	}
+	});
 }
-});
 
 
 function endgame() {
