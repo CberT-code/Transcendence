@@ -3,9 +3,9 @@
 }
 
 
-#wrapper {
+.wrapper {
     position: relative;
-    border: 2px solid red;
+    border: 6px solid grey;
     margin-left: auto;
     margin-right: auto
 }
@@ -18,8 +18,25 @@
     background-color: black;
     background-size: 100% 100%;
     background-image: url('42_revert.webp');
+	visibility: hidden;
     position: absolute;
     z-index: 0;
+}
+
+.p_end_game
+
+#end_game{
+    width: 50%;
+    height: 100%;
+    left:   25%;
+	font-size: 11vh;
+	color: green;
+    border: 1px solid grey;
+	visibility: hidden;
+    position: absolute;
+    z-index: 0;
+	text-align: center;
+	font-weight: 1000;
 }
 
 .player{
@@ -75,4 +92,24 @@
 
 #right_PP {
     left: 77.5%;
+}
+
+.ranked {
+    border-color: blue;
+	border-style: double
+}
+
+.tournament {
+    border-color: black;
+	border-style: double;
+}
+
+.guildwar {
+    border-color: green;
+	border-style: double
+}
+
+.practice {
+	border-color: grey;
+	border-style: inset
 }

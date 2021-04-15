@@ -13,41 +13,25 @@ import consumer from "../channels/consumer"
 
 document.getElementById("alone").addEventListener("click", foreverAlone, false);
 document.getElementById("stop").addEventListener("click", stopGame, false);
-$(window).resize(resize_game)
+$(window).resize(resize_game);
 
-function stopGame() {
-	console.log(status);
-	clearInterval(waiting);
-	$('#game').css('visibility', 'hidden');
-	$.post('/histories/stop/' + id);
+resize_game();
+if (status == "Looking For Opponent") {
+	waiting = setInterval(wait, 120); }
+else if (status == "ready" || status == "running") {
+	$('#game').css('visibility', 'visible');
+	// $.post('/histories/run/' + id); // REMOVE THIS, ONLY FOR DEBUG!!!
 }
-
-function foreverAlone() {
-	console.log(status);
-	if (status != "running") {
-		$("#right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
-		$("#left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
-		$('#game').css('visibility', 'visible');
-		clearInterval(waiting);
-		$.post('/histories/run/' + id);
-	}
-}
-
-function sendMove(socket) {
-	var move;
-	if (keys[0] == keys[1])
-		move = "static";
-	else if (keys[0] == 1)
-		move = "down";
-	else
-		move = "up";
-	socket.send({player: player_id, move: move, room: id, status: status});
+else if (status == "ended") {
+	var left = $('#game_data').data('left');
+	var right = $('#game_data').data('right');
+	$('#score').html(left + " - " + right);
+	ready = 0;
 }
 
 if (ready) {
 	var actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: id}, {
 		connected() {
-			// console.log("status : " + status);
 			if (player_id == host_id || player_id == opponent_id) {
 			$(document).keydown(function(event) {
 				if (event.key == 'q' || event.key == 'z')
@@ -93,20 +77,69 @@ if (ready) {
 		}
 		else if (status == "ended") {
 			$('#game').css('visibility', 'hidden');
-			endgame();
+			endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
+			ready = 0;
+			actionCable.unsubscribe();
+		}
+		else if (status == "deleted") {
 			ready = 0;
 			actionCable.unsubscribe();
 		}
 		else {
-			console.log("Status : " + status);
+			console.log("Rceived data when it shoudn't have. Status : " + status);
 		}
 	}
 	});
 }
 
+function stopGame() {
+	clearInterval(waiting);
+	$('#game').css('visibility', 'hidden');
+	$.post('/histories/stop/' + id);
+}
 
-function endgame() {
+function foreverAlone() {
+	if (status != "running") {
+		$("#right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+		$("#left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+		$('#game').css('visibility', 'visible');
+		clearInterval(waiting);
+		$.post('/histories/run/' + id);
+	}
+}
+
+function sendMove(socket) {
+	var move;
+	if (keys[0] == keys[1])
+		move = "static";
+	else if (keys[0] == 1)
+		move = "down";
+	else
+		move = "up";
+	socket.send({player: player_id, move: move, room: id, status: status});
+}
+
+function endgame(winner, loser, elo, w_name) {
 	console.log("Game ended, there will be a nice endgame animation, yay");
+	$('#end_game').css('visibility', 'visible');
+	var msg = "";
+	if (player_id == winner) {
+		msg = "<p class=\"p_end_game\">You Won !</p>";
+		if (elo != "0") {
+			msg += "<p> +" + elo + " points!</p>";
+		}
+	}
+	else if (player_id == loser) {
+		$('#end_game').css('color', 'red');
+		msg = "<p class=\"p_end_game\">You Lost !</p>";
+		if (elo != "0") {
+			msg += "<p class=\"p_end_game\"> -" + elo + " points!</p>";
+		}
+	}
+	else {
+		msg = w_name + " Won !"
+	}
+	$('#end_game').html(msg);
 }
 
 function display(left_y, right_y, ball_x, ball_y, score) {
@@ -123,7 +156,6 @@ function wait() {
 	}
 	if (waiting_id == 0) {
 		$('#score').html('Waiting for opponent \\');
-		console.log(status);
     }
     if (waiting_id == 1) {
 		$('#score').html('Waiting for opponent |');
@@ -140,24 +172,24 @@ function wait() {
 function resize_game() {
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-	if (width < 2.5 * height) {
-		document.getElementById("wrapper").style.width = (width * 0.7) + "px";
-		document.getElementById("wrapper").style.height = (width * 0.28) + "px";
+	if (width < 550) {
+		$('#end_game').css('font-size', '2vh');
+	}
+	else if (width < 900) {
+		$('#end_game').css('font-size', '5vh');
+	}
+	else if (width < 1300) {
+		$('#end_game').css('font-size', '8vh');
 	}
 	else {
-		document.getElementById("wrapper").style.width = (height * 1.75) + "px";
-		document.getElementById("wrapper").style.height = (height * 0.7) + "px";
+		$('#end_game').css('font-size', '11vh');
 	}
-}
-resize_game();
-if (status == "Looking For Opponent") {
-	waiting = setInterval(wait, 120); }
-else if (status == "ready" || status == "running") {
-	$('#game').css('visibility', 'visible');
-	// $.post('/histories/run/' + id); // REMOVE THIS, ONLY FOR DEBUG!!!
-}
-else if (status == "ended") {
-	var left = $('#game_data').data('left');
-	var right = $('#game_data').data('right');
-	$('#score').html(left + " - " + right);
+	if (width < 2.5 * height) {
+		document.getElementById("wrapper_box").style.width = (width * 0.7) + "px";
+		document.getElementById("wrapper_box").style.height = (width * 0.28) + "px";
+	}
+	else {
+		document.getElementById("wrapper_box").style.width = (height * 1.75) + "px";
+		document.getElementById("wrapper_box").style.height = (height * 0.7) + "px";
+	}
 }

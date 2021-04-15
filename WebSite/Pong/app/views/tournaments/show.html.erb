@@ -29,10 +29,10 @@
 							<p><%= @i += 1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
+							<p><%= Guild.find_by_id(wars_history.host.guild_id).name %> : <%= wars_history.host_score %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
+							<p><%= Guild.find_by_id(wars_history.opponent.guild_id).name %> : <%= wars_history.opponent_score %></p>
 						</div>
 					</div>
 				<% end %>
