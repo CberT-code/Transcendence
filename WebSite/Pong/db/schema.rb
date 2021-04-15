@@ -37,8 +37,6 @@ ActiveRecord::Schema.define(version: 2021_04_14_190045) do
     t.integer "officers", default: [], array: true
     t.integer "banned", default: [], array: true
     t.boolean "deleted", default: false, null: false
-    t.integer "officers", default: [], array: true
-    t.integer "banned", default: [], array: true
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

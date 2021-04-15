@@ -98,11 +98,11 @@ user_list = [
 	guild.update(admin: User.find_by_name(admin))
 	end
 
-
+@date = DateTime.new(1902,1,1,1,1,1);
   trnmt_list = [
-	  ["Normal", "11 points to win", 11, 7.0],
+	  ["Normal", "11 points to win", 11, 7.0, @date],
   ]
   
-  trnmt_list.each do |name, desc, pts, speed|
-	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed)
+  trnmt_list.each do |name, desc, pts, speed, start|
+	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start)
   end 
