@@ -1,67 +1,78 @@
 <div id="content-history">
 	<%= stylesheet_link_tag "history_index.css" %>
-	<%= form_for :tournaments do |f| %>
-		<%= f.select :end, options_for_select(@tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
-	<% end %>
-	<button id="ranked_game" class="green_button">Ranked Game</button>
-	<button id="practice_game" class="green_button">Practice Game</button>
-	<% top = 150 %>
+	<div class="new_game">
+		<%= form_for :tournaments do |f| %>
+			<%= f.select :end, options_for_select(@tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
+		<% end %>
+	</div>
+	<div class="new_game ranked_g">
+		<button id="ranked_game" class="button">Ranked Game</button>
+	</div>
+	<div class="new_game practice_g">
+		<button id="practice_game" class="button">Practice Game</button>
+	</div>
+	<button id="continue" class="button">Continue !</button>
 	<div id="history_title" class="title history">
 		<h1>Last games</h1>
 	</div>
-	<% @games.each do |game| %>
-		<% g_class = "" %>
-		<% if game.ranked %>
-			<% g_class += "ranked " %>
-		<% else %>
-			<% g_class += "practice "%>
-		<% end %>
-		<% if game.tournament_id != 1 %>
-			<% g_class += "tournament " %>
-		<% end %>
-		<% if game.war_id != -1 %>
-			<% g_class += "guildwar " %>
-		<% end %>
-		<% if game.statut == 2%>
-			<button class="green_button" onClick="window.location='/#show_game/<%= game.id %>'">Continue</button>
-		<% else %>
-			<div class="game_resume history <%= g_class %>" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
-				<div class="PP l_PP" style='background-image: url("<%= game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
-				</div>
-				<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-				<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
-				<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
-				</div>
-			</div>
-		<% top += 180 %>
-		<% end %>
-	<% end %>
-	<% top = 150 %>
+	<div class="game_list history">
+		<div class="list_wrapper">
+			<% @games.each do |game| %>
+				<% g_class = "" %>
+				<% if game.ranked %>
+					<% g_class += "ranked " %>
+				<% else %>
+					<% g_class += "practice "%>
+				<% end %>
+				<% if game.tournament_id != 1 %>
+					<% g_class += "tournament " %>
+				<% end %>
+				<% if game.war_id != -1 %>
+					<% g_class += "guildwar " %>
+				<% end %>
+				<% if game.statut == 2%>
+					<%= content_tag :div, 'CONTINUE', id: 'continue_trigger', data: {id: game.id }%>
+				<% else %>
+					<div class="game_resume <%= g_class %>" onClick="window.location='/#show_game/<%= game.id %>'">
+						<div class="PP l_PP" style='background-image: url("<%= game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
+						</div>
+						<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+						<h1><%= "#{game.host_score} - #{game.opponent_score}"%></h1>
+						<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
+						</div>
+					</div>
+				<% end %>
+			<% end %>
+		</div>
+	</div>
 	<div id="spectate_title" class="title spectate">
 		<h1>Spectate</h1>
 	</div>
-	<% @spectate.each do |game| %>
-		<% g_class = "" %>
-		<% if game.ranked %>
-			<% g_class += "ranked " %>
-		<% else %>
-			<% g_class += "practice "%>
-		<% end %>
-		<% if game.tournament_id != 1 %>
-			<% g_class += "tournament " %>
-		<% end %>
-		<% if game.war_id != -1 %>
-			<% g_class += "guildwar " %>
-		<% end %>
-		<div class="game_resume spectate <%= g_class %>" style="top: <%= top %>px" onClick="window.location='/#show_game/<%= game.id %>'">
-			<div class="PP l_PP" style='background-image: url("<%= game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
-			</div>
-			<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
-			<h1><%= "LIVE"%></h1>
-			<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
-			</div>
+	<div class="game_list spectate">
+		<div class="list_wrapper">
+			<% @spectate.each do |game| %>
+				<% g_class = "" %>
+				<% if game.ranked %>
+					<% g_class += "ranked " %>
+				<% else %>
+					<% g_class += "practice "%>
+				<% end %>
+				<% if game.tournament_id != 1 %>
+					<% g_class += "tournament " %>
+				<% end %>
+				<% if game.war_id != -1 %>
+					<% g_class += "guildwar " %>
+				<% end %>
+				<div class="game_resume <%= g_class %>" onClick="window.location='/#show_game/<%= game.id %>'">
+					<div class="PP l_PP" style='background-image: url("<%= game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
+					</div>
+					<h3><%= game.host_id %> vs <%= game.opponent_id %></h3>
+					<h1><%= "LIVE"%></h1>
+					<div class="PP r_PP" style='background-image: url("<%= game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
+					</div>
+				</div>
+			<% end %>
 		</div>
-		<% top += 180 %>
-	<% end %>
+	</div>
 	<%= javascript_pack_tag 'histories_index' %>
 </div>

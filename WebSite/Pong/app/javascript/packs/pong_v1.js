@@ -11,20 +11,20 @@ var ready = 1;
 
 import consumer from "../channels/consumer"
 
-document.getElementById("alone").addEventListener("click", foreverAlone, false);
-document.getElementById("stop").addEventListener("click", stopGame, false);
+document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
+document.querySelector("#content-game_show #stop").addEventListener("click", stopGame, false);
 $(window).resize(resize_game);
 
 resize_game();
 if (status == "Looking For Opponent") {
 	waiting = setInterval(wait, 120); }
 else if (status == "ready" || status == "running") {
-	$('#game').css('visibility', 'visible');
+	$('#content-game_show #game').css('visibility', 'visible');
 	// $.post('/histories/run/' + id); // REMOVE THIS, ONLY FOR DEBUG!!!
 }
 else if (status == "ended") {
-	var left = $('#game_data').data('left');
-	var right = $('#game_data').data('right');
+	var left = $('#content-game_show #game_data').data('left');
+	var right = $('#content-game_show #game_data').data('right');
 	$('#score').html(left + " - " + right);
 	ready = 0;
 }
@@ -63,20 +63,19 @@ if (ready) {
 
 	received(data) {
 		status = data['status'];
-		$("#foo").html(data['body'] + " " + " status : " + status);
 		if (status == "running" ) {
 			display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 		}
 		else if (status == "ready" ) {
 			clearInterval(waiting);
 			right_pp = "url(\"" + data['right_pp'] + "\")";
-			$("#right_PP").css("background-image", right_pp);
-			$('#game').css('visibility', 'visible');
+			$("#content-game_show #right_PP").css("background-image", right_pp);
+			$('#content-game_show #game').css('visibility', 'visible');
 			$.post('/histories/run/' + id);
 			console.log("received data from socket: game ready, post sent");
 		}
 		else if (status == "ended") {
-			$('#game').css('visibility', 'hidden');
+			$('#content-game_show #game').css('visibility', 'hidden');
 			endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 			ready = 0;
 			actionCable.unsubscribe();
@@ -94,15 +93,15 @@ if (ready) {
 
 function stopGame() {
 	clearInterval(waiting);
-	$('#game').css('visibility', 'hidden');
+	$('#content-game_show #game').css('visibility', 'hidden');
 	$.post('/histories/stop/' + id);
 }
 
 function foreverAlone() {
 	if (status != "running") {
-		$("#right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
-		$("#left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
-		$('#game').css('visibility', 'visible');
+		$("#content-game_show #right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+		$("#content-game_show #left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
+		$('#content-game_show #game').css('visibility', 'visible');
 		clearInterval(waiting);
 		$.post('/histories/run/' + id);
 	}
@@ -121,7 +120,7 @@ function sendMove(socket) {
 
 function endgame(winner, loser, elo, w_name) {
 	console.log("Game ended, there will be a nice endgame animation, yay");
-	$('#end_game').css('visibility', 'visible');
+	$('#content-game_show #end_game').css('visibility', 'visible');
 	var msg = "";
 	if (player_id == winner) {
 		msg = "<p class=\"p_end_game\">You Won !</p>";
@@ -130,7 +129,7 @@ function endgame(winner, loser, elo, w_name) {
 		}
 	}
 	else if (player_id == loser) {
-		$('#end_game').css('color', 'red');
+		$('#content-game_show #end_game').css('color', 'red');
 		msg = "<p class=\"p_end_game\">You Lost !</p>";
 		if (elo != "0") {
 			msg += "<p class=\"p_end_game\"> -" + elo + " points!</p>";
@@ -139,14 +138,14 @@ function endgame(winner, loser, elo, w_name) {
 	else {
 		msg = w_name + " Won !"
 	}
-	$('#end_game').html(msg);
+	$('#content-game_show #end_game').html(msg);
 }
 
 function display(left_y, right_y, ball_x, ball_y, score) {
-	$("#left_player").css({"top": left_y});
-    $("#right_player").css({"top": right_y});
-    $("#ball").css({"left": ball_x, "top": ball_y});
-    $("#score").html(score);
+	$("#content-game_show #left_player").css({"top": left_y});
+    $("#content-game_show #right_player").css({"top": right_y});
+    $("#content-game_show #ball").css({"left": ball_x, "top": ball_y});
+    $("#content-game_show #score").html(score);
 }
 
 function wait() {
@@ -155,16 +154,16 @@ function wait() {
 		return ;
 	}
 	if (waiting_id == 0) {
-		$('#score').html('Waiting for opponent \\');
+		$('#content-game_show #score').html('Waiting for opponent \\');
     }
     if (waiting_id == 1) {
-		$('#score').html('Waiting for opponent |');
+		$('#content-game_show #score').html('Waiting for opponent |');
     }
     if (waiting_id == 2) {
-		$('#score').html('Waiting for opponent /');
+		$('#content-game_show #score').html('Waiting for opponent /');
     }
     if (waiting_id == 3) {
-		$('#score').html('Waiting for opponent -');
+		$('#content-game_show #score').html('Waiting for opponent -');
     }
 	waiting_id = (waiting_id + 1) % 4;
 }
@@ -173,23 +172,23 @@ function resize_game() {
 	var width = window.innerWidth;
 	var height = window.innerHeight;
 	if (width < 550) {
-		$('#end_game').css('font-size', '2vh');
+		$('#content-game_show #end_game').css('font-size', '2vh');
 	}
 	else if (width < 900) {
-		$('#end_game').css('font-size', '5vh');
+		$('#content-game_show #end_game').css('font-size', '5vh');
 	}
 	else if (width < 1300) {
-		$('#end_game').css('font-size', '8vh');
+		$('#content-game_show #end_game').css('font-size', '8vh');
 	}
 	else {
-		$('#end_game').css('font-size', '11vh');
+		$('#content-game_show #end_game').css('font-size', '11vh');
 	}
 	if (width < 2.5 * height) {
-		document.getElementById("wrapper_box").style.width = (width * 0.7) + "px";
-		document.getElementById("wrapper_box").style.height = (width * 0.28) + "px";
+		document.querySelector("#content-game_show #wrapper_box").style.width = (width * 0.7) + "px";
+		document.querySelector("#content-game_show #wrapper_box").style.height = (width * 0.28) + "px";
 	}
 	else {
-		document.getElementById("wrapper_box").style.width = (height * 1.75) + "px";
-		document.getElementById("wrapper_box").style.height = (height * 0.7) + "px";
+		document.querySelector("#content-game_show #wrapper_box").style.width = (height * 1.75) + "px";
+		document.querySelector("#content-game_show #wrapper_box").style.height = (height * 0.7) + "px";
 	}
 }

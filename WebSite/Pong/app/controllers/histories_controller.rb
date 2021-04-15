@@ -170,7 +170,8 @@ class HistoriesController < ApplicationController
 		if ball[0] <= 2
 			if ball[1].to_i - player[0] <= 25 && ball[1].to_i - player[0] >= 0
 				ball[2] = (pi - ball[2] + tpi) % tpi
-				ball[3] *= 1.01
+				ball[3] *= 1.02
+				ball[0] = ball[0] * -1 + 2
 				#add effect according to speed
 				if move[0] == "up"
 					ball[2] += 0.2
@@ -185,7 +186,8 @@ class HistoriesController < ApplicationController
 		elsif ball[0] >= 96.6
 			if ball[1].to_i - player[1] <= 25 && ball[1].to_i - player[1] >= 0
 				ball[2] = (pi - ball[2] + tpi) % tpi
-				ball[3] *= 1.01
+				ball[3] *= 1.02
+				ball[0] = 193.2 - ball[0]
 				#add effect according to speed
 				if move[1] == "up"
 					ball[2] -= 0.2
@@ -232,7 +234,7 @@ class HistoriesController < ApplicationController
 		end
 		if game.ranked
 			if game.war_id == winner.guild.war_id
-				end_of_war_game(game, winner.guild, loser.guild, game.war_id)
+				end_of_war_game(winner.guild, game.war_id)
 			elsif (game.tournament_id != 1)
 				end_of_tournament_game(TournamentUser.find_by_user_id(winner.id), TournamentUser.find_by_user_id(loser.id))
 			else
@@ -247,7 +249,12 @@ class HistoriesController < ApplicationController
 		ActionCable.server.broadcast("pong_#{game.id}", {status: "ended", elo: elo, winner: winner.id, loser: loser.id, w_name: winner.name})
 	end
 
-	def end_of_war_game(game, w_guild, l_guild, war)
+	def end_of_war_game(w_guild, war)
+		if w_guild.id == war.guild1_id
+			war.points_guild1 += 1
+		else
+			war.points_guild2 += 1
+		end
 	end
 
 	def end_of_tournament_game(t_winner, t_loser)
