@@ -10,6 +10,8 @@ Rails.application.routes.draw do
 	get "/play", to: "pages#play"
 	get "/501", to: "error#403"
 
+	post "/users/enable_otp/:id", to: "users#enable_otp"
+
 	# post "/account/delete", to: "post#deleteAccount"
 	# post "/account/changeusername", to: "post#ChangeUsername"
 	# post "/account/history", to: "post#HistoryUser"

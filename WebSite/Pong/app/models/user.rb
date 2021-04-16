@@ -1,4 +1,7 @@
 class User < ApplicationRecord
+  devise :two_factor_authenticatable,
+         :otp_secret_encryption_key => ENV['FT_KEY']
+
 	has_many :t_users, class_name: 'TournamentUser', foreign_key: 'user_id'
 	has_many :hosted_games, class_name: 'History', foreign_key: 'host_id'
 	has_many :foreign_games, class_name: 'History', foreign_key: 'opponent_id'
@@ -6,17 +9,19 @@ class User < ApplicationRecord
 	belongs_to :stat, optional: true
 	# Include default devise modules. Others available are:
 	# :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-	devise :database_authenticatable, :registerable,
+	devise :registerable,
 		   :recoverable, :rememberable, :validatable, :trackable,
 		   :omniauthable, omniauth_providers: [:marvin]
-		   
+	
 	def self.from_omniauth(auth)
 	  where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
 		user.email = auth.info.email
 		user.uid = auth.uid
 		user.password = Devise.friendly_token[0,20]
 		user.nickname = auth.info.nickname
+		user.name = user.nickname
 		user.image = auth.info.image
+		user.otp_required_for_login = false
 		
 		@stat = Stat.new
 		@stat.save
