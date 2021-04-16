@@ -11,6 +11,11 @@ class TournamentsController < ApplicationController
 	def new
 		@tournament = Tournament.new
 	end
+	def playerJoin
+		if (TournamentUser.where("user_id = ? and tournament_id = ?", current_user.id, params[:id_tournament]).count == 0) 
+			TournamentUser.create({tournament_id: params[:id_tournament], user_id: current_user.id })
+		end
+	end
 	def create
 		if (params[:tournamentname] == "")
 			render html: "error-1";

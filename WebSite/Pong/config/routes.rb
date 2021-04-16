@@ -38,7 +38,8 @@ Rails.application.routes.draw do
 	resources :guilds
 
 	resources :tournaments
-	
+	post "/tournaments/playerJoin/", to: "tournaments#playerJoin"
+
 	resources :users
 	get "/users/status/:id", to: "users#status"
 
