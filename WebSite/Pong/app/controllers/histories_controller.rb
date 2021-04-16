@@ -233,6 +233,7 @@ class HistoriesController < ApplicationController
 			loser = game.opponent
 		end
 		if game.ranked
+			# do stuff with stat # Voir avec Cyrille
 			if game.war_id == winner.guild.war_id
 				end_of_war_game(winner.guild, game.war_id)
 			elsif (game.tournament_id != 1)
@@ -259,7 +260,9 @@ class HistoriesController < ApplicationController
 
 	def end_of_tournament_game(t_winner, t_loser)
 		t_winner.wins += 1
+		t_winner.diff = t_winner.wins - t_winer.losses
 		t_loser.losses += 1
+		t_loser.diff  = t_loser.wins - t_loser.losses
 		t_winner.save
 		t_loser.save
 	end
