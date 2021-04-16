@@ -34,9 +34,9 @@ ActiveRecord::Schema.define(version: 2021_04_14_190045) do
     t.integer "maxmember", default: 5, null: false
     t.integer "nbmember", default: 0, null: false
     t.integer "id_admin", null: false
+    t.boolean "deleted", default: false, null: false
     t.integer "officers", default: [], array: true
     t.integer "banned", default: [], array: true
-    t.boolean "deleted", default: false, null: false
     t.datetime "creation"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

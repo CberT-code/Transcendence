@@ -1,16 +1,89 @@
-.game_resume {
-	position: absolute;
-	border-width: 6px;
-	width: 400px;
-    height: 150px;
-    background-color: grey;
-    background-size: 100% 100%;
-	text-align: center;
-	vertical-align: middle;
-	z-index: 2;
+#content-history #continue {
+	/* display: none; */
+	background-color: rgb(250, 0, 0);
+	height: 60px;
+	width: 300px;
 }
 
-.PP {
+#content-history #continue_trigger {
+	display: none;
+}
+
+#content-history #continue:hover {
+	background-color: rgb(180, 0, 0);
+}
+
+#content-history .new_game {
+	width: 412px;
+	height: 40px;
+	position: absolute;
+}
+#content-history .button {
+	position: absolute;
+	height: 100%;
+	width: 50%;
+	margin-left: 25%;
+	font-size: 3vh;
+	background-color: grey;
+	border-radius: 30px;
+}
+
+#content-history .button:hover {
+	background-color: cadetblue;
+}
+
+#content-history .game_resume {
+	position: relative;
+	border-width: 6px;
+    height: 150px;
+	width: 368px;
+	margin-left: 10px;
+	margin-right: 10px;
+    background-color: cadetblue;
+	text-align: center;
+	vertical-align: middle;
+	z-index: 3;
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+#content-history .game_list {
+	top: 250px;
+	position: absolute;
+    background-color: rgb(83, 38, 0);
+	border: black 6px solid;
+	width: 400px;
+	z-index: 0;
+}
+
+#content-history .list_wrapper {
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#content-history .list_wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+#content-history .title {
+	border: 6px inset black;
+	background-color: cadetblue;
+	position: absolute;
+	text-align: center;
+	width: 400px;
+	top: 170px;
+}
+
+#content-history .history {
+	left: 25%;
+}
+
+#content-history .spectate {
+	right: 25%;
+}
+
+#content-history .PP {
     height: 100px;
     width:  100px;
     top: 25px;
@@ -20,47 +93,30 @@
     position: absolute;
 }
 
-.l_PP {
+#content-history .l_PP {
     left: 25px;
 }
 
-.r_PP {
+#content-history .r_PP {
     right: 25px;
 }
 
-.title {
-    border: 5px inset black;
-	background-color: grey;
-	position: absolute;
-	text-align: center;
-	width: 400px;
-	top: 70px;
-}
-
-.history {
-	left: 25%;
-}
-
-.spectate {
-	right: 25%;
-}
-
-.ranked {
+#content-history .ranked {
     border-color: blue;
 	border-style: double
 }
 
-.tournament {
+#content-history .tournament {
     border-color: black;
 	border-style: double;
 }
 
-.guildwar {
+#content-history .guildwar {
     border-color: green;
 	border-style: double
 }
 
-.practice {
+#content-history .practice {
 	border-color: grey;
 	border-style: inset
 }
