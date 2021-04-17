@@ -13,6 +13,30 @@
 		</div>
 	</div>
 	<div class="break"></div>
+	<% if @tournament_histories.count > 0 %>
+		<div class="big-element">
+			<div id="title">
+				<h2>Ranking</h2>
+			</div>
+			<div id="corp">
+				<% @i=0%>
+				<% @tournament_histories.each do |tournament_history| %>
+					<% @user = User.find(tournament_history.user_id) %>
+					<div class="war">
+						<div id="position">
+							<p><%= @i += 1 %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= @user.id %>'"><%= @user.nickname %></p>
+						</div>
+						<div id="target">
+							<p>points : <%= tournament_history.difference %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
 	<% if @wars_histories.count > 0 %>
 		<div class="big-element">
 			<div id="title">
@@ -23,7 +47,6 @@
 				<% @wars_histories.each do |wars_history| %>
 					<% @user = User.find(wars_history.host_id) %>
 					<% @user2 = User.find(wars_history.opponent_id) %>
-
 					<div class="war">
 						<div id="position">
 							<p><%= @i += 1 %></p>

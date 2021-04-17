@@ -14,6 +14,7 @@ ViewAccount = Backbone.View.extend({
 		'click #user_available': 'UserAvailable',
 		'click #add_friend': 'AddFriend',
 		'click #del_friend': 'DelFriend',
+		'click #duel_game_user': 'duel_game_user',
 	},
 	DeleteAccount: function () {
 		$.ajax(
@@ -129,4 +130,23 @@ ViewAccount = Backbone.View.extend({
 			'text'
 		);
 	},
+	duel_game_user: function (e) {
+		var id_opponent = $(e.currentTarget).val();
+		$.post(
+			'/histories/duel',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#tournaments_end").val(),
+				"opponent": id_opponent,
+				"ranked": "false"
+			},
+			function (data) 
+			{
+				if (data == "error_tournament")
+					notification("error", "This tournament id doesn't exist.");
+				else
+					window.location.href = "#show_game/" + data ;
+			},
+		);
+	}
 });

@@ -38,7 +38,8 @@ class TournamentsController < ApplicationController
 	end
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@wars_histories = History.where('tournament_id = ?', @tournament.id);
+		@tournament_histories = TournamentUser.where('tournament_id = ?', @tournament.id).order(:difference).reverse_order;
+		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order;
 	end
 
 	def destroy

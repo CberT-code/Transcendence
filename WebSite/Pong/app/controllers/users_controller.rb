@@ -32,6 +32,8 @@ class UsersController < ApplicationController
 			@guild = @user.guild;
 			@current = current_user.id == @user.id ? 1 : 0;
 			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
+			@date = DateTime.new(1902,1,1,1,1,1);
+			@tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
 		else
 			render 'error/403', :status => :unauthorized
 		end

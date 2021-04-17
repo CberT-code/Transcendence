@@ -142,11 +142,6 @@ ActiveRecord::Schema.define(version: 2021_04_16_220731) do
     t.string "status"
     t.integer "elo", default: 1000
     t.integer "friends", default: [], array: true
-    t.string "encrypted_otp_secret"
-    t.string "encrypted_otp_secret_iv"
-    t.string "encrypted_otp_secret_salt"
-    t.integer "consumed_timestep"
-    t.boolean "otp_required_for_login"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

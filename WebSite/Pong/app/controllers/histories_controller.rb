@@ -51,7 +51,7 @@ class HistoriesController < ApplicationController
 		opponent = User.find(params['opponent'].to_i)
 		@me = current_user			
 		war_id = params.fetch(:war_id, -1)
-		@game = tourn.games.new(statut: 1, host: @me, opponent: opponent,
+		@game = tourn.games.new(statut: 1, host: @me, opponent: opponent, tournament_id: tourn.id,
 			host_score: 0, opponent_score: 0, ranked: params[:ranked] == "true" ? true : false,
 			war_id: war_id)
 		@game.save!

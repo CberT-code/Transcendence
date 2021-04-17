@@ -76,16 +76,20 @@
 				<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
 				<%= @status = redis.get("player_#{@user.id}") %>
 				<div id="line">
-						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
-						<% elsif @status != nil %>
-							<p><span class="text-bold"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
-						<% else %>
-							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
+					<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
+						<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+					<% elsif @status != nil %>
+						<p><span class="text-bold"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+					<% else %>
+						<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+					<% end %>
+					<%= form_for :tournaments do |f| %>
+						<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
 						<% end %>
-
-				</div>
+						<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Game</button>
+					</div>
 			<% end %>
+				</div>
 			</div>
 		</div>
 		<% if @histories.count > 0 %>
