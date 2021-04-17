@@ -177,11 +177,17 @@ header a {
 .text-orange {
 	color: #e1922b ;
 }
+.text-blue {
+	color: #155cc5 ;
+}
 .text-red {
 	color: #c51515 ;
 }
 .back-green {
 	background-color: #7BE12B ;
+}
+.back-blue {
+	background-color: #155cc5 ;
 }
 .back-red {
 	background-color: #c51515 ;
@@ -389,7 +395,6 @@ button:hover {
 	padding-top: 10px;
 	padding-bottom: 10px;
 	text-transform: uppercase;
-	background-color: #c51515;
 	color: white;
 	cursor: pointer;
 	font-family: "Roboto-Medium";
@@ -397,6 +402,7 @@ button:hover {
 	border-radius: 6px;
 	transition-duration: 0.5s;
 }
+
 #content-user #corp #element #container button:hover{
 	transition-duration: 0.5s;
 	opacity: 0.7;

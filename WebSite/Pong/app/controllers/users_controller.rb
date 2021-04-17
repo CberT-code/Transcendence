@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 		end
 		@admin = current_user.role;
 		@user = User.find_by_id(params[:id]);
+		@me = User.find(current_user.id);
 	end
 
 	def status
@@ -70,6 +71,32 @@ class UsersController < ApplicationController
 			end
 		else
 			render html: "error-forbidden";
+		end
+	end
+
+	def addfriend
+		@user = User.find(params[:id]);
+		if (!(@me.friends.include?@user.id) && @user.id != current_user.id)
+			@me.friends.push(@user.id)
+			@me.save
+			render html: 1;
+		else
+			render html: 2;
+		end
+	end
+	def delfriend
+		@user = User.find(params[:id]);
+		puts @me.friends.include?@user.id;
+		puts @user.id != current_user.id;
+		puts "TEST";
+		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
+			puts "TESTOUOUOUUO";
+			@me.friends.delete(@user.id)
+			@me.save
+			render html: 1;
+		else
+			puts "TESTOUgfergregergergre";
+			render html: 2;
 		end
 	end
 end

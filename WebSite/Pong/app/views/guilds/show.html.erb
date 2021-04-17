@@ -35,7 +35,7 @@
 					<% end %>
 				</div>
 				<div id="username">
-					<p><%= @guild.anagramme + " - " + user.nickname %></p>
+					<p><%= user.nickname %></p>
 				</div>
 				<% if (@admin_guild == 1 || @admin == 1 || (@officer == 1 && !(@guild.officers.include?user.id) && @guild.id_admin != user.id)) %>
 				<div id="action">
@@ -81,21 +81,21 @@
 			<div id="corp">
 				<% @i=0%>
 				<% @wars_histories.each do |wars_history| %>
+					<% if (Guild.find_by_id(wars_history.guild1_id) && Guild.find_by_id(wars_history.guild2_id) ) %>
 					<div id="war">
-					<% if (Guild.find_by_id(wars_history.host_id) && Guild.find_by_id(wars_history.opponent_id)) %>
-						<% @color1 = wars_history.host_score > wars_history.opponent_score ? "green" : "red"; %>
-						<% @color2 = wars_history.host_score < wars_history.opponent_score ? "green" : "red" ; %>
+						<% @color1 = wars_history.points_guild1 > wars_history.points_guild2 ? "green" : "red"; %>
+						<% @color2 = wars_history.points_guild1 < wars_history.points_guild2 ? "green" : "red" ; %>
 						<div id="position">
 							<p><%= @i += 1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
+							<p><%= Guild.find_by_id(wars_history.guild1_id).name %> : <%= wars_history.points_guild1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
+							<p><%= Guild.find_by_id(wars_history.guild2_id).name %> : <%= wars_history.points_guild2 %></p>
 						</div>
-					<% end %>
 					</div>
+					<% end %>
 				<% end %>
 			</div>
 		</div>

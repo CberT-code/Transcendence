@@ -241,9 +241,10 @@ ViewGuilds = Backbone.View.extend(
 	Guild_Anagramme: function (e) {
 
 		$.post(
-			'/histories/find_or_create',
+			'/guilds/anagramme',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"anagramme": $("#guilds_anagramme").val(),
 			},
 			function (data) 
 			{

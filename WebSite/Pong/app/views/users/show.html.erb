@@ -42,45 +42,52 @@
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 || @admin == 1 %>
+		<% if @current == 1 || !(@me.friends.include?@user.id) || @admin == 1 %>
 			<div id="element">
 				<div id="name">
 					<h2>actions</h2>
 				</div>
-				<div class="element-line">
-					<span>Available for war?</span>
-					<label class="switch">
-						<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
-						<span class="slider"></span>
-					</label>
-				</div>
-				<div class="display-flex" id="container">
-					<button id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button>
-				</div>
-			</div>
-		<% end %>
-			<div id="element">
-				<div id="name">
-					<h2>Friends</h2>
-				</div>
-				<div id="container">
-				<% @user.friends.each do |friends| %>
-					<% @user = User.find(friends); %>
-					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
-					<%= @status = redis.get("player_#{@user.id}") %>
-					<div id="line">
-							<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-								<p><span class="text-bold text-green"><i class="fas fa-crown"></i> <%= @user.nickname %></span></p>
-							<% elsif @status != nil %>
-								<p><span class="text-bold"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
-							<% else %>
-								<p><span class="text-bold text-red"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
-							<% end %>
-
+				<% if @current == 1 || @admin == 1 %>
+					<div class="element-line">
+						<span>Available for war?</span>
+						<label class="switch">
+							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
+							<span class="slider"></span>
+						</label>
 					</div>
+				<% end %>
+				<div class="display-flex" id="container">
+				<% if @current == 1 || @admin == 1 %>
+					<button class="back-red"id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+				<% end %>
+				<% if @current != 1 && !(@me.friends.include?@user.id) %>
+					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
 				<% end %>
 				</div>
 			</div>
+		<% end %>
+		<div id="element">
+			<div id="name">
+				<h2>Friends</h2>
+			</div>
+			<div id="container">
+			<% @user.friends.each do |friends| %>
+				<% @user = User.find(friends); %>
+				<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
+				<%= @status = redis.get("player_#{@user.id}") %>
+				<div id="line">
+						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
+							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
+						<% elsif @status != nil %>
+							<p><span class="text-bold"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
+						<% else %>
+							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button> </p>
+						<% end %>
+
+				</div>
+			<% end %>
+			</div>
+		</div>
 		<% if @histories.count > 0 %>
 			<div id="container-history">
 				<div id="head">

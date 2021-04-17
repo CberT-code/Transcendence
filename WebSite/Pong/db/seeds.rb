@@ -16,15 +16,15 @@ guild_list = [ 			# [ name, tag, max_members, admin ]
 	["fourth", "fourth", 15, "salty"]
 ]
 user_list = [ 			# [ UID, name, guild, role ]
-	[12421, "salty", "fourth", 0],
-	[12421, "melberg", "second", 0],
+	[12421, "salty", "first", 0],
+	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
-	[12421, "neo", "second", 0],
-	[12421, "llepage", "third", 1],
+	[12421, "neo", "first", 0],
+	[12421, "llepage", "second", 1],
 	[60326, "hbaudet", "second", 1],
-	[12421, "sophie", "first", 0],
-	[12421, "bibiche", "third", 0],
-	[12421, "user9", "third", 0],
+	[12421, "sophie", "second", 0],
+	[12421, "bibiche", "second", 0],
+	[12421, "user9", "second", 0],
 	[12421, "user10", "third", 0],
 	[12421, "user11", "third", 0],
 	[12421, "user12", "third", 0],
@@ -37,9 +37,9 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "user19", "third", 0],
 	[12421, "user20", "third", 0],
 	[12421, "user21", "third", 0],
-	[12421, "charly", "fourth", 0],
-	[12421, "user23", "fourth", 0],
-	[12421, "user24", "fourth", 0],
+	[12421, "charly", "third", 0],
+	[12421, "user23", "third", 0],
+	[12421, "user24", "third", 0],
 	[12421, "user25", "fourth", 0],
 	[12421, "user26", "fourth", 0],
 	[12421, "user27", "fourth", 0],
@@ -50,6 +50,11 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "user32", "fourth", 0],
 	[12421, "user33", "fourth", 0],
 	[12421, "user34", "fourth", 0],
+	[12421, "user35", "fourth", 0],
+	[12421, "user36", "fourth", 0],
+	[12421, "user37", "fourth", 0],
+	[12421, "user38", "fourth", 0],
+	[12421, "user39", "fourth", 0]
   ]
 war_list = [			# [ id, guild1, guild2, tournament_id]
   	[1, "first", "second", 2],

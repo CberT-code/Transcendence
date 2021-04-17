@@ -3,7 +3,7 @@ class GuildsController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
-		@guild = Guild.find_by_id(current_user.guild_id);
+		@guild = Guild.find_by_id(params[:id]);
 		if (@guild)
 			@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
 		else
@@ -59,7 +59,7 @@ class GuildsController < ApplicationController
 		end
 		@user = User.find_by_id(current_user.id);
 		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
-		@wars_histories = History.where('host_id = ? or opponent_id = ?', @guild.id, @guild.id);
+		@wars_histories = War.where('guild1_id = ? or guild2_id  = ?', @guild.id, @guild.id);
 		@list_users = User.where('guild_id = ?', @guild.id);
 		@ban_users = @guild.banned;
 		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
@@ -90,8 +90,10 @@ class GuildsController < ApplicationController
 			@usertodelete.update({"guild_id": nil});
 			render html: 1;
 		elsif (@usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete != @guild.id_admin))) then
+			puts "iciiiiiiiiiiii"
 			if (@guild.nbmember == 1 ) then
-				@guild.update(nbmember: 0, id_admin: 0, deleted: true);
+				puts "laaaaaaaaaaaaaaaa"
+				@guild.update(deleted: true);
 				@guild.officers.delete(@usertodelete.id);
 				render html: 1;
 			else
@@ -197,7 +199,7 @@ class GuildsController < ApplicationController
 		@anagramme = params[:anagramme]
 		if (@anagramme.length > 5)
 			render html: "toolong"
-		elsif Guild.find_by_anagramme(@anagramme)
+		elsif Guild.where(anagramme: @anagramme, deleted: false).first
 			render html: "used"
 		end
 	end
