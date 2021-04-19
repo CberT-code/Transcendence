@@ -8,7 +8,16 @@ class TchatController < ApplicationController
 	end
 	def index
 		@channel = Channel.all.order("id")
-		@messages = Messages.where(user_id: current_user.id, message_type: 2).or(Messages.where(target_id: current_user.id, message_type: 2))
+		@tmp = Messages.where(user_id: current_user.id, message_type: 2).all.or(Messages.where(target_id: current_user.id, message_type: 2).all)
+		@messages = Array.new
+		@tmp.each do |element|
+			@datas = element.user_id == current_user.id ? User.find_by_id(element.target_id) : User.find_by_id(element.user_id)
+			if (!findInArrayObj(@messages, @datas.nickname))
+				@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id})
+			end
+		end
+		render "tchat/index"
+		return
 	end
 	def channelCreate
 		if (!params[:title] || !params[:type])
@@ -159,6 +168,23 @@ class TchatController < ApplicationController
 				render html: "error-fobidden", :status => :unauthorized
 			end
 		end
+	end
+	def removeMessage
+		if (!params[:id])
+			render html: "error-fobidden", :status => :unauthorized
+			return
+		end
+		@id = CGI.escapeHTML(params[:id])
+		@message = Messages.find_by_id(@id)
+		if (@message)
+			if (@message.user_id == current_user.id)
+				@message.destroy
+				render html: "1"
+				return
+			end
+		end
+		render html: "error-fobidden", :status => :unauthorized
+		return
 	end
 	def ApplySanction
 		if (!params[:channel_id] || !params[:target_id] || !params[:type])
@@ -327,7 +353,7 @@ class TchatController < ApplicationController
 	end
 	def addSanction
 		if (!params[:id] || !params[:nickname] || !params[:time] || !params[:type] || !safestr(params[:id]) || !safestr(params[:nickname]) || !safestr(params[:time]) || !safestr(params[:type]))
-			render html: "errorr-forbidden", :status => :unauthorized
+			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
 		@channel_id = params[:id]
@@ -346,6 +372,36 @@ class TchatController < ApplicationController
 			return
 		end
 		render html: "errror-forbidden", :status => :unauthorized
+		return
+	end
+	def privateConversationGet
+		if (!params[:target_id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@user_id = current_user.id
+		@target_id = params[:target_id]
+		@messages = Messages.where(user_id: current_user.id, target_id: @target_id, message_type: 2).all.or(Messages.where(user_id: @target_id, target_id: current_user.id, message_type: 2).all)
+		if (@messages)
+			@ret = Array.new
+			@messages.each do |element|
+				@ret.push({"id" => element.id, "author" => element.user_id, "content" => element.message, "date" => element.create_time, "admin" => (element.user_id == current_user.id ? 1 : 2)})
+			end
+			render json: @ret
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
+		return
+	end
+	def privateConversationSend
+		if (!params[:message] || !params[:target_id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@target_id = params[:target_id]
+		@message = params[:message]
+		Messages.create(:user_id=> current_user.id, :create_time=> Date.today, :message=> @message.html_safe, :target_id=> @target_id, :message_type=> 2)
+		render html: "1"
 		return
 	end
 end

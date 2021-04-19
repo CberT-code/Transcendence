@@ -186,10 +186,35 @@
                 </div>
                 <div id="list">
                     <% @messages.each do |element| %>
-                        <%= element.id %>
+                        <div id="message">
+                            <div id="icon">
+                                <img src="<%= element['image'] %>" alt="user icon">
+                            </div>                            
+                            <div id="username">
+                                <p><%= element['nickname'] %></p>
+                            </div>
+                            <input type="hidden" value="<%= element['target_id'] %>">
+                            <input type="hidden" value="<%= element['nickname'] %>">
+                        </div>
                     <% end %>
                 </div>
            </div>
+        </div>
+    </div>
+
+    <div id="center" class="privateConversation">
+        <div id="element">
+            <div id="title">
+                <h2 class="ConversationWith"></h2>
+            </div>
+            <div id="messages" class="PrivateMessages">
+            </div>
+            <div id="action" class="actionChannel">
+                <input type="text" class="PrivateConvMessage" placeholder="Your message..." maxlength="90">
+                <input type="hidden" class="PrivateConvTargetId" value="">
+                <button type="button" class="CancelConversation">Cancel</button>
+                <button type="button" class="submitConversationMessage">send</button>
+            </div>
         </div>
     </div>
 </div>

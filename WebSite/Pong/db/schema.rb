@@ -131,8 +131,8 @@ ActiveRecord::Schema.define(version: 2021_04_13_163050) do
     t.bigint "guild_id"
     t.bigint "stat_id"
     t.string "status"
-    t.integer "friends", default: [], array: true
     t.integer "elo", default: 1000
+    t.integer "friends", default: [], array: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

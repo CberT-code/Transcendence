@@ -2590,3 +2590,46 @@ background-color: #7BE12B;
 	width: 80%;
 	overflow: hidden;
 }
+.privateMessages #element #corp #list #message {
+	height: 55px;
+	width: 90%;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	background-color: #ccc;
+	border-radius: 9px;
+	margin-top: 15px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #message:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #message #icon {
+	height: 100%;
+	width: 15%;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+.privateMessages #element #corp #list #message #icon img {
+	margin: auto;
+	height: 70%;
+	border-radius: 100%;
+}
+.privateMessages #element #corp #list #message #username {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+	display: flex;
+}
+.privateMessages #element #corp #list #message #username p {
+    margin: auto;
+    font-family: "Roboto-Medium";
+    font-size: 115%;
+}
+.privateConversation {
+	display: none;
+}

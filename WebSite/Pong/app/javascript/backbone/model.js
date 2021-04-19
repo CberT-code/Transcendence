@@ -35,7 +35,7 @@ ChannelModel = Backbone.Model.extend({
 });
 
 ChannelisAdmin = Backbone.Model.extend({
-    parse: function(response) {
+    parse: function (response) {
         if (response == "1")
             $(".submitAdminChannel").css("display", "block");
     }
@@ -48,7 +48,7 @@ ChannelMessageModel = Backbone.Model.extend({
             response.forEach(function (element) {
                 var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
-                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeChannelMessage'>remove</button>";
                     if (element.blocked == 1)
                         ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unban</button>";
                     else
@@ -98,7 +98,6 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
 
 ChannelSanctionsList = Backbone.Model.extend({
     parse: function (response) {
-        console.log(response);
         if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
                 console.log(element);
@@ -107,6 +106,24 @@ ChannelSanctionsList = Backbone.Model.extend({
     }
 });
 
+PrivateConversation = Backbone.Model.extend({
+    parse: function (response) {
+        console.log(response);
+        if (response.length > 0 && Array.isArray(response)) {
+            response.forEach(function (element) {
+                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
+                if (element.admin == 1) {
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
+                    ret += "</div>";
+                }
+                ret += "</div>";
+                $(".PrivateMessages").append(ret);
+            });
+        }
+    }
+});
+
+window.app.models.PrivateConversation = new PrivateConversation;
 window.app.models.ChannelPrivateMessageModel = new ChannelPrivateMessageModel;
 window.app.models.ChannelisAdmin = new ChannelisAdmin;
 window.app.models.ChannelMessageModel = new ChannelMessageModel;

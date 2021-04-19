@@ -19,6 +19,7 @@ ViewChannel = Backbone.View.extend(
             "click .privateChannel": "viewPrivateChannel",
             "click .cancelMessage": "cancelChannel",
             "click .submitMessage": "submitMessage",
+            "click .removeChannelMessage": "removeChannelMessage",
             "click .removeMessage": "removeMessage",
             "click .blockUserChannel": "banUser",
             "click .cancelPrivateChannel": "cancelPrivChannel",
@@ -35,7 +36,10 @@ ViewChannel = Backbone.View.extend(
             "click .muteSwitch": "muteSwitch",
             "click .cancelSanction": "cancelSanction",
             "click .SanctionSubmit": "SanctionSubmit",
+            "click #message": "viewMessage",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
+            "click .CancelConversation": "CancelConversation",
+            "click .submitConversationMessage": "submitConversationMessage",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -116,7 +120,7 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
-        removeMessage: function (e) {
+        removeChannelMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
             var channel_id = $(".Channelid").val();
@@ -366,27 +370,27 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
-        cancelSanction: function() {
+        cancelSanction: function () {
             $(".sanctionChannel").css("display", "none");
             $(".default").css("display", "block");
         },
-        muteSwitch: function() {
+        muteSwitch: function () {
             console.log("MuteSwitch");
             $(".adminChannel").css("display", "none");
             $(".sanctionChannel").css("display", "block");
             $(".sanctionTitle").html("mute - sanction");
             $(".SanctionSubmit").val(2);
-            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/2" });
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/2" });
         },
-        banSwitch: function() {
+        banSwitch: function () {
             console.log("BanSwitch");
             $(".adminChannel").css("display", "none");
             $(".sanctionChannel").css("display", "block");
             $(".sanctionTitle").html("ban - sanction");
             $(".SanctionSubmit").val(1);
-            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/1" });
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/1" });
         },
-        SanctionSubmit: function(e) {
+        SanctionSubmit: function (e) {
             console.log("SanctionSubmit");
             e.preventDefault();
             var type = $(e.currentTarget).val();
@@ -413,4 +417,60 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
+        viewMessage: function (e) {
+            e.preventDefault();
+            var id = $($(e.currentTarget).children()[2]).val();
+            var username = $($(e.currentTarget).children()[3]).val();
+            $(".privateMessages").css("display", "none");
+            $(".privateConversation").css("display", "block");
+            $(".ConversationWith").html(username);
+            $(".PrivateConvTargetId").val(id);
+            window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + id });
+        },
+        CancelConversation: function () {
+            $(".privateMessages").css("display", "block");
+            $(".privateConversation").css("display", "none");
+            $(".PrivateMessages").empty();
+        },
+        submitConversationMessage: function () {
+            var target_id = $(".PrivateConvTargetId").val();
+            var message = $(".PrivateConvMessage").val();
+            if (message != "")
+                $.post(
+                    "/tchat/message/send",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "target_id": target_id,
+                        "message": message,
+                    },
+                    function (data) {
+                        notification("success", "Message send !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+
+        },
+        removeMessage: function (e) {
+            e.preventDefault();
+            var message_id = $(e.currentTarget).val();
+            if (message_id != "")
+                $.post(
+                    "/tchat/message/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "id": message_id,
+                    },
+                    function (data) {
+                        notification("success", "Message send !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+
+        }
     });
