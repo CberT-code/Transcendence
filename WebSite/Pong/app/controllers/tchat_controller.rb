@@ -398,10 +398,29 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@target_id = params[:target_id]
-		@message = params[:message]
-		Messages.create(:user_id=> current_user.id, :create_time=> Date.today, :message=> @message.html_safe, :target_id=> @target_id, :message_type=> 2)
+		@target_id = CGI.escapeHTML(params[:target_id])
+		@message = CGI.escapeHTML(params[:message])
+		Messages.create(:user_id=> current_user.id, :create_time=> Date.today, :message=> @message, :target_id=> @target_id, :message_type=> 2)
 		render html: "1"
+		return
+	end
+	def privateConversationInit
+		if (!params[:username])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@username = CGI.escapeHTML(params[:username])
+		@datas = User.find_by_nickname(@username)
+		if (@datas)
+			if (current_user.id == @datas.id)
+				render html: "3"
+				return
+			end
+			@ret = {"id" => @datas.id, "nickname" => @datas.nickname}
+			render json: @ret
+			return
+		end
+		render html: "2"
 		return
 	end
 end

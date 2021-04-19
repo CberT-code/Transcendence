@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 	get "/tchat/channel/admin/:id", to: "tchat#isChannelAdmin"
 	get "/tchat/channel/sanctions/get/:id/:type", to: "tchat#getSanctions"
 	get "/tchat/message/get/:target_id", to: "tchat#privateConversationGet"
+	get "/tchat/message/init/:username", to: "tchat#privateConversationInit" 
 
 
 	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"

@@ -123,6 +123,24 @@ PrivateConversation = Backbone.Model.extend({
     }
 });
 
+initNewConversation = Backbone.Model.extend({
+    parse: function (response) {
+        if (response == "2") {
+            notification("error", "This username doesn't exist...");
+        } else if (response == "3") {
+            notification("error", "You cannot speak with yourself...");
+        } else {
+            var username = response.nickname;
+            var id = response.id;
+            $(".privateMessages").css("display", "none");
+            $(".privateConversation").css("display", "block");
+            $(".ConversationWith").html(username);
+            $(".PrivateConvTargetId").val(id);
+        }
+    }
+});
+
+window.app.models.initNewConversation = new initNewConversation;
 window.app.models.PrivateConversation = new PrivateConversation;
 window.app.models.ChannelPrivateMessageModel = new ChannelPrivateMessageModel;
 window.app.models.ChannelisAdmin = new ChannelisAdmin;

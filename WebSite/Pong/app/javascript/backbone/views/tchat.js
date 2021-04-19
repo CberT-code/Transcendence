@@ -39,6 +39,7 @@ ViewChannel = Backbone.View.extend(
             "click #message": "viewMessage",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
             "click .CancelConversation": "CancelConversation",
+            "click .InitNewConversation": "InitNewConversation",
             "click .submitConversationMessage": "submitConversationMessage",
         },
         viewPublicChannel: function (e) {
@@ -472,5 +473,10 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
 
+        },
+        InitNewConversation: function () {
+            var username = $(".UsernameNewConversation").val();
+            if (username != "")
+                window.app.models.initNewConversation.fetch({ "url": "/tchat/message/init/" + username });
         }
     });
