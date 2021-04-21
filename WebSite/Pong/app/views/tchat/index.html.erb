@@ -185,7 +185,9 @@
                     </div>
                 </div>
                 <div id="list">
-                    <% @messages.each do |element| %>
+                    <% @messages.each do |element|
+                        if (element["blocked"] == 1)
+                    %>
                         <div id="message">
                             <div id="icon">
                                 <img src="<%= element['image'] %>" alt="user icon">
@@ -196,6 +198,17 @@
                             <input type="hidden" value="<%= element['target_id'] %>">
                             <input type="hidden" value="<%= element['nickname'] %>">
                         </div>
+                        <% else %>
+                        <div id="blockMessage">
+                            <div id="icon">
+                                <img src="<%= element['image'] %>" alt="user icon">
+                            </div>                            
+                            <div id="username">
+                                <p><%= element['nickname'] %></p>
+                            </div>
+                            <input type="hidden" value="<%= element['target_id'] %>">
+                        </div>
+                        <% end %>
                     <% end %>
                 </div>
            </div>

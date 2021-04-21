@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 	post "/tchat/channel/sanction/create", to: "tchat#addSanction"
 	post "/tchat/message/send", to: "tchat#privateConversationSend"
 	post "/tchat/message/remove", to: "tchat#removeMessage"
+	post "/tchat/message/block", to: "tchat#blockUser"
+	post "/tchat/message/unblock", to: "tchat#unblockUser"
  	get "/tchat/channel/blocked/:id", to: "tchat#getAdminBlockedUsers"
 	get "/tchat/channel/get/:id", to: "tchat#getChannel"
 	get "/tchat/channel/get/:id/:key", to: "tchat#getPrivateChannel"
@@ -37,6 +39,7 @@ Rails.application.routes.draw do
 	get "/tchat/message/get/:target_id", to: "tchat#privateConversationGet"
 	get "/tchat/message/init/:username", to: "tchat#privateConversationInit" 
 
+	get "/tmp/:user_id/:target_id", to: "tchat#tmp"
 
 	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 

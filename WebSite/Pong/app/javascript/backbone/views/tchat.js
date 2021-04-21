@@ -41,6 +41,8 @@ ViewChannel = Backbone.View.extend(
             "click .CancelConversation": "CancelConversation",
             "click .InitNewConversation": "InitNewConversation",
             "click .submitConversationMessage": "submitConversationMessage",
+            "click .blockUser": "blockUser",
+            "click #blockMessage": "unblockUser",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -478,5 +480,39 @@ ViewChannel = Backbone.View.extend(
             var username = $(".UsernameNewConversation").val();
             if (username != "")
                 window.app.models.initNewConversation.fetch({ "url": "/tchat/message/init/" + username });
+        },
+        blockUser: function (e) {
+            e.preventDefault();
+            var user_id = $(e.currentTarget).val();
+            if (user_id != "")
+                $.post(
+                    "/tchat/message/block",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "user_id": user_id,
+                    },
+                    function (data) {
+                        notification("success", "User blocked !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+        },
+        unblockUser: function (e) {
+            e.preventDefault();
+            var user_id = $($(e.currentTarget).children()[2]).val();
+            if (user_id != "")
+                $.post(
+                    "/tchat/message/unblock",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "user_id": user_id,
+                    },
+                    function (data) {
+                        notification("success", "User unblocked !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
         }
     });

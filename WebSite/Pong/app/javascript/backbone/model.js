@@ -108,15 +108,16 @@ ChannelSanctionsList = Backbone.Model.extend({
 
 PrivateConversation = Backbone.Model.extend({
     parse: function (response) {
-        console.log(response);
         if (response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
-                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
+                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div><div id='action'>";
                 if (element.admin == 1) {
-                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
-                    ret += "</div>";
+                    ret += "<button value='" + element.id + "' class='removeMessage'>remove</button>";
                 }
-                ret += "</div>";
+                if (element.block == 1) {
+                    ret += "<button value='" + element.author_id + "' class='blockUser'>block</button>";
+                }
+                ret += "</div></div>";
                 $(".PrivateMessages").append(ret);
             });
         }
