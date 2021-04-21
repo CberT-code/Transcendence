@@ -11,16 +11,17 @@ var ready = 1;
 
 import consumer from "../channels/consumer"
 
+clearInterval(waiting);
 document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
 document.querySelector("#content-game_show #stop").addEventListener("click", stopGame, false);
 $(window).resize(resize_game);
+console.log("loaded page, status :" + status);
 
 resize_game();
 if (status == "Looking For Opponent") {
 	waiting = setInterval(wait, 120); }
 else if (status == "ready" || status == "running") {
 	$('#content-game_show #game').css('visibility', 'visible');
-	// $.post('/histories/run/' + id); // REMOVE THIS, ONLY FOR DEBUG!!!
 }
 else if (status == "ended") {
 	var left = $('#content-game_show #game_data').data('left');
@@ -58,23 +59,26 @@ if (ready) {
 		},
 
 	disconnected() {
+			clearInterval(waiting);
 			console.log("Disconnected from PongChannel, room " + id + " status " + status);
 		},
 
 	received(data) {
 		status = data['status'];
+		console.log(status);
 		if (status == "running" ) {
 			display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 		}
 		else if (status == "ready" ) {
 			clearInterval(waiting);
 			right_pp = "url(\"" + data['right_pp'] + "\")";
-			$("#content-game_show #right_PP").css("background-image", right_pp);
+			$("#content-game_show #right_PP").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 			$('#content-game_show #game').css('visibility', 'visible');
 			$.post('/histories/run/' + id);
 			console.log("received data from socket: game ready, post sent");
 		}
 		else if (status == "ended") {
+			clearInterval(waiting);
 			$('#content-game_show #game').css('visibility', 'hidden');
 			endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 			ready = 0;
@@ -98,7 +102,8 @@ function stopGame() {
 }
 
 function foreverAlone() {
-	if (status != "running") {
+	if (status != "running" && ready) {
+		$('#content-game_show #end_game').css('visibility', 'hidden');
 		$("#content-game_show #right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
 		$("#content-game_show #left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
 		$('#content-game_show #game').css('visibility', 'visible');
@@ -148,24 +153,40 @@ function display(left_y, right_y, ball_x, ball_y, score) {
     $("#content-game_show #score").html(score);
 }
 
+function timeout() {
+	// handle timeout
+	// send request to server to get time left
+	return -1;
+}
+
 function wait() {
-	if (status == "deleted") {
-		clearInterval(waiting);
-		return ;
+	var timer = timeout();
+	if (timer != -1) {
+		$('#content-game_show #score').html(timer.toString() + "s before enemy guilds forfeits");
 	}
-	if (waiting_id == 0) {
-		$('#content-game_show #score').html('Waiting for opponent \\');
-    }
-    if (waiting_id == 1) {
-		$('#content-game_show #score').html('Waiting for opponent |');
-    }
-    if (waiting_id == 2) {
-		$('#content-game_show #score').html('Waiting for opponent /');
-    }
-    if (waiting_id == 3) {
-		$('#content-game_show #score').html('Waiting for opponent -');
-    }
-	waiting_id = (waiting_id + 1) % 4;
+	else if (timer == 0) {
+		//forfeit!
+		//endgame : clearinterval, unsub to game channel
+	}
+	else {
+		if (status == "deleted") {
+			clearInterval(waiting);
+			return ;
+		}
+		if (waiting_id == 0) {
+			$('#content-game_show #score').html('Waiting for opponent \\');
+		}
+		if (waiting_id == 1) {
+			$('#content-game_show #score').html('Waiting for opponent |');
+		}
+		if (waiting_id == 2) {
+			$('#content-game_show #score').html('Waiting for opponent /');
+		}
+		if (waiting_id == 3) {
+			$('#content-game_show #score').html('Waiting for opponent -');
+		}
+		waiting_id = (waiting_id + 1) % 4;
+	}
 }
 
 function resize_game() {

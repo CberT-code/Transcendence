@@ -1,0 +1,60 @@
+#content-ladder #wrapper {
+	position: absolute;
+	border: 6px solid black;
+	height: 600px;
+	width: 400px;
+	left: 400px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#content-ladder .player {
+	position: absolute;
+	border: 3px solid blue;
+	width: 350px;
+	height: 100px;
+	left: 25px;
+	font-weight: 900;
+	font-size: 24px;
+}
+
+#content-ladder .pp {
+	position: absolute;
+	width: 100px;
+	height: 100px;
+	background-size: 100%;
+}
+
+#content-ladder .nickname {
+	position: absolute;
+	width: 250px;
+	height: 60px;
+	left: 100px;
+	border: 1px solid goldenrod;
+	text-align: center;
+	line-height: 60px;
+	color: black;
+}
+
+#content-ladder .stats {
+	position: absolute;
+	line-height: 40px;
+	text-align: center;
+	left: 100px;
+	width: 250px;
+	height: 40px;
+	top: 60px;
+	border: 1px solid pink;
+}
+
+#content-ladder .wins {
+	color: green;
+}
+
+#content-ladder .losses {
+	color: red;
+}
+
+#content-ladder #wrapper::-webkit-scrollbar {
+    display: none;
+}

@@ -9,10 +9,10 @@
 
 admin_name = "sudo"
 trnmt_list = [ 			# [ name, id, description, max points, base speed, start, end ]
-	["normal_games", 1, "default set of rules for standard games", 11, 1.7, "01/01/2000", "31/12/2042"],
+	["Standard Rules", 1, "default set of rules for standard games", 11, 1.7, "01/01/2000", "31/12/2042"],
 	["Sudden death", 2, "single point games", 1, 1.7, "11/04/2021", "25/05/2021"],
 	["Crazy", 3, "test your reflexes", 11, 5.5, "11/04/2021", "25/05/2021"],
-	["Russian roulette", 4, "more luck than skill", 5, 8.0, "25/05/2021", "01/06/2021"]
+	["Russian roulette", 4, "more luck than skill", 5, 9.0, "25/05/2021", "01/06/2021"]
 ]
 guild_list = [ 			# [ name, tag, max_members, admin ]
 	["first", "first", 5, "cbertola"],
@@ -58,12 +58,12 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "user34", "fourth", 0],
   ]
 war_list = [			# [ id, guild1, guild2, tournament_id]
-  	[1, "first", "second", 2],
-	[2, "second", "first", 3],
-	[3, "fourth", "third", 4],
-	[4, "third", "fourth", 1],
-	[5, "third", "first", 2],
-	[6, "second", "fourth", 3]
+  	[1, "first", "second", 2, "18/04/2021", "15/05/2021"],
+	[2, "second", "first", 3, "18/04/2021", "15/05/2021"],
+	[3, "fourth", "third", 4, "18/04/2021", "15/05/2021"],
+	[4, "third", "fourth", 1, "18/04/2021", "15/05/2021"],
+	[5, "third", "first", 2, "18/04/2021", "15/05/2021"],
+	[6, "second", "fourth", 3, "18/04/2021", "15/05/2021"]
 ]
 games_list = [			# [ host, opponent, host score, opponent score, tournament id, war id, ranked, status ]
 	["cbertola", "hbaudet", 11, 4, 1, -1, false, 3],
@@ -92,12 +92,12 @@ superadmin = User.create(id: 1, email: "#{admin_name}@student.42.fr",
 
 guild_list.each do |name, anagramme, nb, admin|
 	guild = Guild.find_by_name(name)
-	@stat = Stat.new;
-	@stat.save;
+	stat = Stat.new;
+	stat.save;
 	if (guild != nil)
 		guild.update(name: name, anagramme: anagramme,
 			admin: superadmin, description: name,
-			id_stats: @stat.id, maxmember: nb, nbmember: nb)
+			id_stats: stat.id, maxmember: nb, nbmember: nb)
 	else
 		guild = Guild.new(name: name, anagramme: anagramme,
 			admin: superadmin, description: name,
@@ -108,17 +108,17 @@ end
 
 user_list.each do |uid, name, guild|
 	usr = User.find_by_name(name)
-	@stat = Stat.new;
-	@stat.save;
 	if (usr != nil)
 		usr.update(email: "#{name}@student.42.fr",
-		uid: uid, name: name, stat_id: @stat.id,
+		uid: uid, name: name,
 		image: "https://cdn.intra.42.fr/users/#{name}.jpg",
 		nickname: name, guild: Guild.find_by_name(guild), elo: rand(800..1200))
 	else
+		stat = Stat.new;
+		stat.save;
 		usr = User.new(email: "#{name}@student.42.fr",
 		password: "password", provider: "marvin", uid: uid,
-		name: name, stat_id: @stat.id,
+		name: name, stat_id: stat.id,
 		image: "https://cdn.intra.42.fr/users/#{name}.jpg",
 		nickname: name, guild: Guild.find_by_name(guild), elo: rand(800..1200))
 		usr.save!
@@ -130,16 +130,31 @@ guild_list.each do |name, anagramme, nb, admin|
 	guild.update(admin: User.find_by_name(admin))
 end
 
-war_list.each do |id, guild1, guild2, tr|
+trnmt_list.each do |name, id, desc, pts, speed, start, end_date|
+	tr = Tournament.find_by_id(id)
+	if (tr != nil)
+		tr.update(name: name, description: desc,
+		maxpoints: pts, speed: speed, start: start,
+		end: end_date)
+	else
+		Tournament.create(name: name, id: id,
+		description: desc, maxpoints: pts, speed: speed,
+		start: start, end: end_date)
+	end
+end
+
+war_list.each do |id, guild1, guild2, tr, start, end_date|
 	war = War.find_by_id(id)
 	if (war != nil)
 		war.update(guild1: Guild.find_by_name(guild1),
 		guild2: Guild.find_by_name(guild2),
-		points: 50, players: 10, tournament_id: tr)
+		points: 50, players: 10, tournament_id: tr,
+		start: start, end: end_date)
 	else
 		War.create(guild1: Guild.find_by_name(guild1),
 		id: id, guild2: Guild.find_by_name(guild2),
-		points: 50, players: 10, tournament_id: tr)
+		points: 50, players: 10, tournament_id: tr,
+		start: start, end: end_date)
 	end
 end
 

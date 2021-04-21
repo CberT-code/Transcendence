@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_140907) do
+ActiveRecord::Schema.define(version: 2021_04_21_092432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,13 +54,15 @@ ActiveRecord::Schema.define(version: 2021_04_16_140907) do
     t.integer "tournament_id", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "statut"
+    t.integer "statut", default: 0
     t.bigint "host_id"
     t.bigint "opponent_id"
-    t.integer "host_score"
-    t.integer "opponent_score"
+    t.integer "host_score", default: 0
+    t.integer "opponent_score", default: 0
     t.boolean "ranked"
     t.bigint "war_id"
+    t.boolean "war_match", default: false
+    t.integer "timeout", default: -1
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
     t.index ["war_id"], name: "index_histories_on_war_id"
@@ -165,6 +167,11 @@ ActiveRecord::Schema.define(version: 2021_04_16_140907) do
     t.integer "players", null: false
     t.integer "status", default: 0, null: false
     t.bigint "tournament_id", null: false
+    t.integer "timeout", default: 30
+    t.boolean "allow_ext", default: true
+    t.integer "forfeitedGames1", default: 0
+    t.integer "forfeitedGames2", default: 0
+    t.boolean "ongoingMatch", default: false
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 

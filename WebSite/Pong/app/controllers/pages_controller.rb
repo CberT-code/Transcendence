@@ -13,6 +13,10 @@ class PagesController < ApplicationController
 	def connexion
 	end
 
+	def ladder
+		@players = User.all.sort_by { |u| u.elo}.reverse
+	end
+
 	def home
 		@me = current_user
 		
