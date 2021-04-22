@@ -41,12 +41,8 @@ ActiveRecord::Schema.define(version: 2021_04_21_092432) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "war_id"
-    t.bigint "guild1_id"
-    t.bigint "guild2_id"
     t.bigint "admin_id"
     t.index ["admin_id"], name: "index_guilds_on_admin_id"
-    t.index ["guild1_id"], name: "index_guilds_on_guild1_id"
-    t.index ["guild2_id"], name: "index_guilds_on_guild2_id"
     t.index ["war_id"], name: "index_guilds_on_war_id"
   end
 

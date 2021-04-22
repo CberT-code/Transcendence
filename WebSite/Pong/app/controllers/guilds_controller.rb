@@ -54,8 +54,8 @@ class GuildsController < ApplicationController
 		end
 		@user = current_user;
 		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
-		@wars_histories = History.where('host_id = ? or opponent_id = ?', @guild.id, @guild.id);
-		@list_users = @guild.users.all;
+		@wars_histories = War.where('guild1_id = ? or guild2_id = ?', @guild.id, @guild.id);
+		@list_users = @guild.users.all
 		@ban_users = @guild.banned;
 		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
 	end

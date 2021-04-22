@@ -44,6 +44,7 @@ class UsersController < ApplicationController
 	end
 
 	def show
+		@user = current_user
 		if (!@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;

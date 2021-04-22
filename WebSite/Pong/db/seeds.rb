@@ -114,7 +114,7 @@ guild_list.each do |name, anagramme, nb, admin|
 	else
 		guild = Guild.new(name: name, anagramme: anagramme,
 			id_admin: 1, description: name,
-			id_stats: @stat.id, maxmember: nb, nbmember: nb)
+			id_stats: stat.id, maxmember: nb, nbmember: nb)
 		guild.save!
 	end
 end
