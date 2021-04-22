@@ -27,9 +27,9 @@ class ApplicationController < ActionController::Base
 							war.team2.push(user.id)
 						end
 					end
-				end
-				if war.guild2.users.size < war.players
-					break
+					if war.guild2.users.size < war.players
+						break
+					end
 				end
 			end
 			war.update(status: 2)

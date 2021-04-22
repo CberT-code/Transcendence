@@ -5,6 +5,8 @@ class UsersController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
+		@me = current_user
+		@admin = @me.role
 	end
 
 	def enable_otp
@@ -44,7 +46,7 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = current_user
+		@user = User.find_by_id(params[:id])
 		if (!@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;
@@ -58,6 +60,7 @@ class UsersController < ApplicationController
 	end
 
 	def update
+		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1)
 			if (params.has_key?(:checked))
@@ -81,12 +84,13 @@ class UsersController < ApplicationController
 	end
 
 	def destroy
+		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1)
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@user.destroy()
+				@user.destroy
 				redirect_to destroy_user_session_path
 			end
 		else
@@ -104,18 +108,14 @@ class UsersController < ApplicationController
 			render html: 2;
 		end
 	end
+
 	def delfriend
 		@user = User.find(params[:id]);
-		puts @me.friends.include?@user.id;
-		puts @user.id != current_user.id;
-		puts "TEST";
 		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
-			puts "TESTOUOUOUUO";
 			@me.friends.delete(@user.id)
 			@me.save
 			render html: 1;
 		else
-			puts "TESTOUgfergregergergre";
 			render html: 2;
 		end
 	end
