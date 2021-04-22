@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_16_220731) do
+ActiveRecord::Schema.define(version: 2021_04_21_092432) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,12 +41,8 @@ ActiveRecord::Schema.define(version: 2021_04_16_220731) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "war_id"
-    t.bigint "guild1_id"
-    t.bigint "guild2_id"
     t.bigint "admin_id"
     t.index ["admin_id"], name: "index_guilds_on_admin_id"
-    t.index ["guild1_id"], name: "index_guilds_on_guild1_id"
-    t.index ["guild2_id"], name: "index_guilds_on_guild2_id"
     t.index ["war_id"], name: "index_guilds_on_war_id"
   end
 
@@ -54,13 +50,15 @@ ActiveRecord::Schema.define(version: 2021_04_16_220731) do
     t.integer "tournament_id", default: 1, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.integer "statut"
+    t.integer "statut", default: 0
     t.bigint "host_id"
     t.bigint "opponent_id"
-    t.integer "host_score"
-    t.integer "opponent_score"
+    t.integer "host_score", default: 0
+    t.integer "opponent_score", default: 0
     t.boolean "ranked"
     t.bigint "war_id"
+    t.boolean "war_match", default: false
+    t.integer "timeout", default: -1
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
     t.index ["war_id"], name: "index_histories_on_war_id"
@@ -142,6 +140,11 @@ ActiveRecord::Schema.define(version: 2021_04_16_220731) do
     t.string "status"
     t.integer "elo", default: 1000
     t.integer "friends", default: [], array: true
+    t.string "encrypted_otp_secret"
+    t.string "encrypted_otp_secret_iv"
+    t.string "encrypted_otp_secret_salt"
+    t.integer "consumed_timestep"
+    t.boolean "otp_required_for_login"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -161,6 +164,11 @@ ActiveRecord::Schema.define(version: 2021_04_16_220731) do
     t.integer "players", null: false
     t.integer "status", default: 0, null: false
     t.bigint "tournament_id", null: false
+    t.integer "timeout", default: 30
+    t.boolean "allow_ext", default: true
+    t.integer "forfeitedGames1", default: 0
+    t.integer "forfeitedGames2", default: 0
+    t.boolean "ongoingMatch", default: false
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 

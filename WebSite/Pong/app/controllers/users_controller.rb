@@ -1,11 +1,28 @@
 class UsersController < ApplicationController
+	skip_before_action :verify_authenticity_token
+
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
-		@admin = current_user.role;
-		@user = User.find_by_id(params[:id]);
-		@me = User.find(current_user.id);
+	end
+
+	def enable_otp
+		me = User.find_by_id(params[:id])
+		if me.nil?
+			render json: {status: "error", info: "user not found"}
+		else
+			issuer = 'Transcendence'
+			label = "#{issuer}:#{me.email}"
+			if me.otp_required_for_login
+				puts "\n\nOTP ALREADY IN USE\n\n\n"
+			end
+			me.otp_required_for_login = true
+			me.otp_secret = User.generate_otp_secret
+			me.save!
+			
+			render json: {status: "ok", info: me.otp_provisioning_uri(label, issuer: issuer)}
+		end
 	end
 
 	def status
@@ -27,6 +44,7 @@ class UsersController < ApplicationController
 	end
 
 	def show
+		@user = current_user
 		if (!@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;

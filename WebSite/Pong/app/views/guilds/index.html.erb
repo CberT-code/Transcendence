@@ -27,7 +27,7 @@
 					<p><%= guild.name %></p>
 				</div>
 				<div id="information">
-					<p><%= guild.nbmember %> / <%= guild.maxmember %></p>
+					<p><%= guild.users.size %> / <%= guild.maxmember %></p>
 				</div>
 				<div id="action" onClick="window.location='/#show_guild/<%= guild.id %>'">
 					<p>voir</p>

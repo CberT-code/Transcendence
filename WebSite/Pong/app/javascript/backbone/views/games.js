@@ -15,6 +15,7 @@ ViewGames = Backbone.View.extend(
     events: {
 		'click #ranked_game': 'Game_new_ranked',
 		'click #practice_game': 'Game_new_practice',
+		'click #duel_test': 'Duel_test',
     },
 	Game_new_ranked: function (e) {
 
@@ -24,14 +25,14 @@ ViewGames = Backbone.View.extend(
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				"id": $("#tournaments_end").val(),
-				"ranked": "true"
+				"ranked": "true", "war_match": "no"
 			},
 			function (data) 
 			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
+				if (data.status == "error")
+					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data ;
+					window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
 	},
@@ -43,14 +44,33 @@ ViewGames = Backbone.View.extend(
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				"id": $("#tournaments_end").val(),
-				"ranked": "false"
+				"ranked": "false", "war_match": "no"
 			},
 			function (data) 
 			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
+				if (data.status == "error")
+					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data ;
+					window.location.href = "#show_game/" + data.id.toString() ;
+			},
+		);
+	},
+	Duel_test: function (e) {
+
+		console.log("testing duel");
+		$.post(
+			'/histories/duel',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#tournaments_end").val(),
+				"opponent": "3"
+			},
+			function (data) 
+			{
+				if (data.status == "error")
+					notification("Error", data.info);
+				else
+					window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
 	}
