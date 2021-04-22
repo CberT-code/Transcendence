@@ -49,6 +49,8 @@ class UsersController < ApplicationController
 			@guild = @user.guild;
 			@current = current_user.id == @user.id ? 1 : 0;
 			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
+			@date = DateTime.new(1902,1,1,1,1,1);
+			@tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
 		else
 			render 'error/403', :status => :unauthorized
 		end
@@ -88,6 +90,32 @@ class UsersController < ApplicationController
 			end
 		else
 			render html: "error-forbidden";
+		end
+	end
+
+	def addfriend
+		@user = User.find(params[:id]);
+		if (!(@me.friends.include?@user.id) && @user.id != current_user.id)
+			@me.friends.push(@user.id)
+			@me.save
+			render html: 1;
+		else
+			render html: 2;
+		end
+	end
+	def delfriend
+		@user = User.find(params[:id]);
+		puts @me.friends.include?@user.id;
+		puts @user.id != current_user.id;
+		puts "TEST";
+		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
+			puts "TESTOUOUOUUO";
+			@me.friends.delete(@user.id)
+			@me.save
+			render html: 1;
+		else
+			puts "TESTOUgfergregergergre";
+			render html: 2;
 		end
 	end
 end

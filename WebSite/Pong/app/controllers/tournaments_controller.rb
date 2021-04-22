@@ -11,6 +11,11 @@ class TournamentsController < ApplicationController
 	def new
 		@tournament = Tournament.new
 	end
+	def playerJoin
+		if (TournamentUser.where("user_id = ? and tournament_id = ?", current_user.id, params[:id_tournament]).count == 0) 
+			TournamentUser.create({tournament_id: params[:id_tournament], user_id: current_user.id })
+		end
+	end
 	def create
 		if (params[:tournamentname] == "")
 			render html: "error-1";
@@ -33,7 +38,8 @@ class TournamentsController < ApplicationController
 	end
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@wars_histories = History.where('tournament_id = ?', @tournament.id);
+		@tournament_histories = TournamentUser.where('tournament_id = ?', @tournament.id).order(:difference).reverse_order;
+		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order;
 	end
 
 	def destroy

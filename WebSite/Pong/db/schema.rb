@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2021_04_21_092432) do
     t.integer "tournament_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "difference", default: 0
   end
 
   create_table "tournaments", force: :cascade do |t|

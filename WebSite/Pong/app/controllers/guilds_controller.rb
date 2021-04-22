@@ -191,7 +191,7 @@ class GuildsController < ApplicationController
 		@anagramme = params[:anagramme]
 		if (@anagramme.length > 5)
 			render html: "toolong"
-		elsif Guild.find_by_anagramme(@anagramme)
+		elsif Guild.where(anagramme: @anagramme, deleted: false).first
 			render html: "used"
 		end
 	end

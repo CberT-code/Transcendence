@@ -41,9 +41,12 @@ Rails.application.routes.draw do
 	resources :guilds
 
 	resources :tournaments
-	
+	post "/tournaments/playerJoin/", to: "tournaments#playerJoin"
+
 	resources :users
 	get "/users/status/:id", to: "users#status"
+	post "/users/addfriend", to: "users#addfriend"
+	post "/users/delfriend", to: "users#delfriend"
 
 	resources :wars
 	post "/wars/add", to: "wars#add"

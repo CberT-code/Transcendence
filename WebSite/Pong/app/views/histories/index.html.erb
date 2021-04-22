@@ -1,8 +1,10 @@
 <div id="content-history">
 	<%= stylesheet_link_tag "history_index.css" %>
-	<div class="new_game">
-		<%= form_for :tournaments do |f| %>
-			<%= f.select :end, options_for_select(@tournament.map{ |u| [u.name, u.id] }, :selected => 1) %>
+    <div class="new_game">
+	<%= form_for :tournaments do |f| %>
+		<%= f.select :end, options_for_select(@tournament.map{
+			 |u| [u.name, u.id] if TournamentUser.where("tournament_id = ? and user_id = ?", u.id, current_user.id).count > 0 }.reject(&:nil?), :selected => 1) %>
+
 		<% end %>
 	</div>
 	<button id="duel_test" style="position: absolute; top: 350px">DUEL_test</button>

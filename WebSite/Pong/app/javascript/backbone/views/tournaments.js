@@ -10,6 +10,7 @@ ViewTournaments = Backbone.View.extend({
 	},
     events: {
 		'click #create_tournament': 'Create_tournament',
+		'click #playerJoin': 'PlayerJoin',
     },
 	Create_tournament: function () {
 		if ($("#tournamentName").val() == "")
@@ -50,4 +51,17 @@ ViewTournaments = Backbone.View.extend({
 			);
 		}
 	},
+	PlayerJoin: function () {
+		$.post(
+			'/tournaments/playerJoin/',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id_tournament": $("#playerJoin").val(),
+			},
+			function (data) {
+				Backbone.history.loadUrl();
+			},
+		'text'
+		);
+	}
 });

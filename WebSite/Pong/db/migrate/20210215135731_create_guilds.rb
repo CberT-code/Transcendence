@@ -12,6 +12,7 @@ class CreateGuilds < ActiveRecord::Migration[6.1]
 			t.integer :officers,		array: true, default: []
 			t.integer :banned,			array: true, default: []
 			t.boolean :deleted,			null: false, default: FALSE
+			
 			t.datetime :creation
 
 			t.timestamps

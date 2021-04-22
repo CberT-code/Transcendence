@@ -12,6 +12,9 @@ ViewAccount = Backbone.View.extend({
 		'click #cancel_modif_username': 'CancelModifUsername',
 		'click #confirm_modif_username': 'ConfirmModifUsername',
 		'click #user_available': 'UserAvailable',
+		'click #add_friend': 'AddFriend',
+		'click #del_friend': 'DelFriend',
+		'click #duel_game_user': 'duel_game_user',
 	},
 	DeleteAccount: function () {
 		$.ajax(
@@ -91,5 +94,59 @@ ViewAccount = Backbone.View.extend({
 					},
 				},
 			);
-    },
+	},
+	AddFriend: function (e) {
+		$.post(
+			"/users/addfriend/",
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#id").val()
+			},
+			function (data) {
+				if (data == 1) {
+					Backbone.history.loadUrl();
+				} else {
+					notification("error", "You cannot add this player...");
+				}
+			},
+			'text'
+		);
+	},
+	DelFriend: function (e) {
+		var id = $(e.currentTarget).val();
+		$.post(
+			"/users/delfriend/",
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": id,
+			},
+			function (data) {
+				if (data == 1) {
+					Backbone.history.loadUrl();
+				} else {
+					notification("error", "You cannot delete this player...");
+				}
+			},
+			'text'
+		);
+	},
+	duel_game_user: function (e) {
+		var id_opponent = $(e.currentTarget).val();
+		$.post(
+			'/histories/duel',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#tournaments_end").val(),
+				"opponent": id_opponent,
+				"ranked": "false"
+			},
+			function (data) 
+			{
+				if (data == "error_tournament")
+					notification("error", "This tournament id doesn't exist.");
+				else
+					window.location.href = "#show_game/" + data ;
+			},
+		);
+	}
 });
