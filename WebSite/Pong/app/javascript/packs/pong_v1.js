@@ -8,6 +8,8 @@ var keys = [0, 0];
 var waiting_id = 0;
 var waiting;
 var ready = 1;
+var timeout_check = -1;
+
 
 import consumer from "../channels/consumer"
 
@@ -79,6 +81,8 @@ if (ready) {
 		}
 		else if (status == "ended") {
 			clearInterval(waiting);
+			right_pp = "url(\"" + data['right_pp'] + "\")";
+			$("#content-game_show #right_PP").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 			$('#content-game_show #game').css('visibility', 'hidden');
 			endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 			ready = 0;
@@ -125,6 +129,7 @@ function sendMove(socket) {
 
 function endgame(winner, loser, elo, w_name) {
 	console.log("Game ended, there will be a nice endgame animation, yay");
+	$('#content-game_show #game').css('visibility', 'hidden');
 	$('#content-game_show #end_game').css('visibility', 'visible');
 	var msg = "";
 	if (player_id == winner) {
@@ -140,8 +145,11 @@ function endgame(winner, loser, elo, w_name) {
 			msg += "<p class=\"p_end_game\"> -" + elo + " points!</p>";
 		}
 	}
+	else if (w_name == "Timeout") {
+		msg = "<p class=\"p_end_game\">Enemy forfeited!</p>"
+	}
 	else {
-		msg = w_name + " Won !"
+		msg = "<p class=\"p_end_game\">" + w_name + " Won!</p>";
 	}
 	$('#content-game_show #end_game').html(msg);
 }
@@ -154,39 +162,42 @@ function display(left_y, right_y, ball_x, ball_y, score) {
 }
 
 function timeout() {
-	// handle timeout
-	// send request to server to get time left
-	return -1;
+	if (waiting_id % 8 == 0) {
+		$.post("/histories/timeout/" + id, {id: id}, function e(data) {
+			if (data.status == "ok") {
+				timeout_check = data.time_left;
+			}
+			else if (data.status == "forfeit") {
+				$('#content-game_show #score').html("Victory by forfeit!");
+			}
+		});
+	}
 }
 
 function wait() {
-	var timer = timeout();
-	if (timer != -1) {
-		$('#content-game_show #score').html(timer.toString() + "s before enemy guilds forfeits");
-	}
-	else if (timer == 0) {
-		//forfeit!
-		//endgame : clearinterval, unsub to game channel
+	timeout();
+	if (timeout_check != "-1") {
+		$('#content-game_show #score').html(timeout_check + "s before enemy guild forfeits");
 	}
 	else {
 		if (status == "deleted") {
 			clearInterval(waiting);
 			return ;
 		}
-		if (waiting_id == 0) {
+		if (waiting_id % 4 == 0) {
 			$('#content-game_show #score').html('Waiting for opponent \\');
 		}
-		if (waiting_id == 1) {
+		if (waiting_id % 4 == 1) {
 			$('#content-game_show #score').html('Waiting for opponent |');
 		}
-		if (waiting_id == 2) {
+		if (waiting_id % 4 == 2) {
 			$('#content-game_show #score').html('Waiting for opponent /');
 		}
-		if (waiting_id == 3) {
+		if (waiting_id % 4 == 3) {
 			$('#content-game_show #score').html('Waiting for opponent -');
 		}
-		waiting_id = (waiting_id + 1) % 4;
 	}
+	waiting_id += 1;
 }
 
 function resize_game() {

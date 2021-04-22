@@ -181,6 +181,7 @@ ViewWars = Backbone.View.extend(
 		console.log("defying enemy guild to a war match!");
 		var tournament_id = $('#war_data').data('tournamentid');
 		var timeout = $('#war_data').data('timeout');
+		var war_id = $('#war_data').data('id');
 		console.log(tournament_id);
 		console.log(timeout);
 		$.post(

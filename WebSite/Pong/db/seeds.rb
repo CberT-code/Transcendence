@@ -8,11 +8,13 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 admin_name = "sudo"
+date = DateTime.new(1902,1,1,1,1,1);
 trnmt_list = [ 			# [ name, id, description, max points, base speed, start, end ]
-	["Standard Rules", 1, "default set of rules for standard games", 11, 1.7, "01/01/2000", "31/12/2042"],
-	["Sudden death", 2, "single point games", 1, 1.7, "11/04/2021", "25/05/2021"],
+	["Standard Rules", 1, "default set of rules for standard games", 11, 1.7, @date, nil],
+	["Sudden death", 2, "single point games", 1, 1.7, "11/04/2021", "21/04/2021"],
 	["Crazy", 3, "test your reflexes", 11, 5.5, "11/04/2021", "25/05/2021"],
-	["Russian roulette", 4, "more luck than skill", 5, 9.0, "25/05/2021", "01/06/2021"]
+	["Russian roulette", 4, "more luck than skill", 5, 9.0, "25/05/2021", "01/06/2021"],
+	["Mort Subite", 5, "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
 ]
 guild_list = [ 			# [ name, tag, max_members, admin ]
 	["first", "first", 5, "cbertola"],
@@ -82,22 +84,19 @@ games_list = [			# [ host, opponent, host score, opponent score, tournament id, 
 	["melberg", "user34", 11, 0, 3, 6, true, 2],
 	["neo", "charly", 3, 2, 1, -1, true, 2]
 ]
-	@date = DateTime.new(1902,1,1,1,1,1);
-	trnmt_list = [
-		["Normal", "11 points to win", 11, 7.0, @date, nil],
-		["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
-	]
-  
-trnmt_list.each do |name, desc, pts, speed, start, endd|
-	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
-end 
+
+if User.find_by_id(1) != nil
+	User.find(1).destroy
+end
+
 
 stat = Stat.new()
 stat.save
-
-
-moi = User.create(email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
-moi.save
+superadmin = User.create(id: 1, email: "#{admin_name}@student.42.fr",
+	password: "password", provider: "marvin", uid: 00001,
+	name: admin_name, stat_id: stat.id,
+	image: "https://cdn.intra.42.fr/users/#{admin_name}.jpg",
+	nickname: admin_name)
 
 tournamentUser = TournamentUser.new();
 tournamentUser.update(user_id: 1, tournament_id: 1);

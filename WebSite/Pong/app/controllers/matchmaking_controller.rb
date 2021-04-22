@@ -21,7 +21,7 @@ class MatchmakingController < ApplicationController
 			war_id = -1
 			war_match = false
 		end
-		@game = tourn.games.new(statut: 1, host: @me, opponent: opponent,
+		@game = tourn.games.new(statut: 0, host: @me, opponent: opponent,
 			host_score: 0, opponent_score: 0, ranked: false,
 			war_id: war_id, war_match: war_match)
 		@game.save!
@@ -50,6 +50,11 @@ class MatchmakingController < ApplicationController
 		war_id = params.fetch(:war_id, -1)
 		timeout = params.fetch(:timeout, -1)
 		war_match = params.fetch(:war_match, "no") == "no" ? false : true
+
+		if war_match && war_id == -1
+			render json: {status: "error", info: "Invalid war ID"}
+			return
+		end
 		
 		if war_match && !checkValidity(war_id)
 			render json: {status: "error", info: "Your guild cannot start a war match at the moment"}
@@ -75,7 +80,7 @@ class MatchmakingController < ApplicationController
 				return
 			end
 		end
-		@game = tourn.games.new(host: @me, opponent: @me,
+		@game = tourn.games.new(host: @me, opponent: @me, statut: 0,
 			ranked: params[:ranked] == "true" ? true : false,
 			war_id: war_id, war_match: war_match, timeout: timeout)
 		@game.save!
@@ -88,7 +93,7 @@ class MatchmakingController < ApplicationController
 		if game.timeout == -1
 			render json: {status: "ok", time_left: -1}
 		elsif Time.now - game.created_at < game.timeout
-			render json: {status: "ok", time_left: (Time.now - game.created_at).to_i}
+			render json: {status: "ok", time_left: (game.timeout - (Time.now - game.created_at)).to_i}
 		else
 			if game.war.guild1 == game.host.guild
 				opponent_guild = game.war.guild2
@@ -99,7 +104,7 @@ class MatchmakingController < ApplicationController
 			game.opponent_score = -1
 			game.save!
 			game.end_game_function
-			render json: {status: "forfeit"}
+			render json: {status: "forfeit", winner: game.host.guild.name}
 		end
 	end
 end

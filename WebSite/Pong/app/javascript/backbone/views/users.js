@@ -132,20 +132,20 @@ ViewAccount = Backbone.View.extend({
 	},
 	duel_game_user: function (e) {
 		var id_opponent = $(e.currentTarget).val();
+		console.log("opppnent : " + id_opponent);
 		$.post(
 			'/histories/duel',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				"id": $("#tournaments_end").val(),
-				"opponent": id_opponent,
-				"ranked": "false"
+				"opponent": id_opponent
 			},
 			function (data) 
 			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
-				else
-					window.location.href = "#show_game/" + data ;
+				if (data.status == "error")
+				notification("Error", data.info);
+			else
+				window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
 	}

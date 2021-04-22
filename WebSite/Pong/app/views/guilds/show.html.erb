@@ -27,12 +27,12 @@
 					<% elsif (@admin == 1 || @officer == 1 || @admin_guild == 1) %>
 						<p>
 							<select id="officer_select" onClick="document.getElementById('user_id').value = <%= user.id %>">
-								<option value="officer <%= (@guild.officers.include?user.id) ? "selected" : "" %>">Officer</option> 
-								<option value="user <%= (@guild.officers.include?user.id)  ? "" : "selected" %>">User</option>
+								<option value="officer" <%= (@guild.officers.include? user.id) ? "selected" : "" %> > Officer</option> 
+								<option value="user" <%= (@guild.officers.include? user.id)  ? "" : "selected" %> > User</option>
 							</select>
 						</p>
 					<% else %>
-							<p> <%= (@guild.officers.include?user.id) ? "Officer" : "User" %></p>
+							<p> <%= (@guild.officers.include? user.id) ? "Officer" : "User" %></p>
 					<% end %>
 				</div>
 				<div id="username">
