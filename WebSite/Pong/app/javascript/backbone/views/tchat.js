@@ -36,13 +36,14 @@ ViewChannel = Backbone.View.extend(
             "click .muteSwitch": "muteSwitch",
             "click .cancelSanction": "cancelSanction",
             "click .SanctionSubmit": "SanctionSubmit",
-            "click #message": "viewMessage",
+            "click .glbmessage": "viewMessage",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
             "click .CancelConversation": "CancelConversation",
             "click .InitNewConversation": "InitNewConversation",
             "click .submitConversationMessage": "submitConversationMessage",
             "click .blockUser": "blockUser",
             "click #blockMessage": "unblockUser",
+            "click .UserInformation": "userInformations",
         },
         viewPublicChannel: function (e) {
             e.preventDefault();
@@ -428,6 +429,7 @@ ViewChannel = Backbone.View.extend(
             $(".privateConversation").css("display", "block");
             $(".ConversationWith").html(username);
             $(".PrivateConvTargetId").val(id);
+            console.log("View Message !");
             window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + id });
         },
         CancelConversation: function () {
@@ -514,5 +516,12 @@ ViewChannel = Backbone.View.extend(
                     },
                     'text'
                 );
+        },
+        userInformations: function (e) {
+            e.preventDefault();
+            var user_id = $(e.currentTarget).val();
+            console.log("User informations " + user_id + " !");
+            window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
+            $("#userProfil").css("display", "block");
         }
     });

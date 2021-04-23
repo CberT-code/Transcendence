@@ -334,7 +334,8 @@ class TchatController < ApplicationController
 					@sanction = Sanctions.find_by_user_id_and_target_id(@channel.id, element.user_id)
 					@is_ban = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 1) ? 1 : 0
 					@is_mute = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 2) ? 1 : 0
-					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban})
+					@own = element.user_id == current_user.id ? 1 : 2
+					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban, "own" => 1})
 				end
 				render json: @ret
 				return
@@ -451,12 +452,29 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@user_id = params[:user_id]
-		@datas = Sanctions.where(sanction_type: 3, user_id: current_user.id, target_id: @user_id.to_i)
+		@user_id = CGI.escapeHTML(params[:user_id]).to_i
+		@datas = Sanctions.where(sanction_type: 3, user_id: current_user.id, target_id: @user_id)
 		@datas.each do |element|
 			element.destroy
 		end
 		render html: "1"
+		return
+	end
+	def profilGet
+		if (!params[:user_id])
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
+		@user_id = CGI.escapeHTML(params[:user_id]).to_i
+		@datas = User.find_by_id(@user_id)
+		if (@datas)
+			@guild = @datas.guild_id != 1 ? Guild.find_by_id(@datas.guild_id) : 0
+			@stats = @datas.stat
+			@ret = {"id" => @user_id, "username" => @datas.nickname, "image" => @datas.image, "guild" => @guild, "stats" => @stats}
+			render json: @ret
+			return
+		end
+		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
 	def tmp

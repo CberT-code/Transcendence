@@ -188,7 +188,7 @@
                     <% @messages.each do |element|
                         if (element["blocked"] == 1)
                     %>
-                        <div id="message">
+                        <div id="message" class="glbmessage">
                             <div id="icon">
                                 <img src="<%= element['image'] %>" alt="user icon">
                             </div>                            
@@ -214,7 +214,6 @@
            </div>
         </div>
     </div>
-
     <div id="center" class="privateConversation">
         <div id="element">
             <div id="title">
@@ -227,6 +226,20 @@
                 <input type="hidden" class="PrivateConvTargetId" value="">
                 <button type="button" class="CancelConversation">Cancel</button>
                 <button type="button" class="submitConversationMessage">send</button>
+            </div>
+        </div>
+    </div>
+    <div id="center">
+        <div id="userProfil">
+            <div id="header">
+                <div id="icon">
+                    <img class="UserIcon" alt="user icon" src="">
+                </div>
+                <div id="title">
+                    <h1 class="UserTitle"></h1>
+                </div>
+            </div>
+            <div id="informations">
             </div>
         </div>
     </div>
