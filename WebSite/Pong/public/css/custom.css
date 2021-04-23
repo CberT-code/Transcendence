@@ -2749,3 +2749,29 @@ background-color: #7BE12B;
 	font-family: "Roboto-Medium";
 	text-align: center;
 }
+#content-tchat #center #userProfil #action {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #userProfil #action button {
+	width: 90%;
+	margin: auto;
+    border: none;
+    outline: none;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    font-family: "Roboto-Medium";
+    font-size: 110%;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+	background-color: #7BE12E;
+    transition-duration: 0.5s;
+}
