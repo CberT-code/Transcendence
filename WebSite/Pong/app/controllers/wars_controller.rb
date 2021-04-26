@@ -196,4 +196,7 @@ class WarsController < ApplicationController
 			@war.save;
 		end
 	end
+
+
+
 end

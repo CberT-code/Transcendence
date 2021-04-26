@@ -11,6 +11,8 @@ gem 'cgi'
 gem 'omniauth'
 gem 'omniauth-marvin', '~> 1.0.2'
 gem 'jquery'
+gem 'rake', '~> 13.0.3'
+gem 'whenever', require: false
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 6.1.1'
 # Use postgresql as the database for Active Record

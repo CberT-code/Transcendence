@@ -17,6 +17,10 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  database: pong_development
+  username: postgres
+  password: <%= ENV['PONG_DATABASE_PASSWORD'] %>
+  port: 5432
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
