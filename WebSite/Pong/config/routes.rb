@@ -8,7 +8,10 @@ Rails.application.routes.draw do
 	end
 	# get "/account", to: "pages#account"
 	get "/play", to: "pages#play"
+	get "/ladder", to: "pages#ladder"
 	get "/501", to: "error#403"
+
+	post "/users/enable_otp/:id", to: "users#enable_otp"
 
 	# post "/account/delete", to: "post#deleteAccount"
 	# post "/account/changeusername", to: "post#ChangeUsername"
@@ -42,6 +45,8 @@ Rails.application.routes.draw do
 
 	resources :users
 	get "/users/status/:id", to: "users#status"
+	post "/users/addfriend", to: "users#addfriend"
+	post "/users/delfriend", to: "users#delfriend"
 
 	resources :wars
 	post "/wars/add", to: "wars#add"
@@ -56,9 +61,9 @@ Rails.application.routes.draw do
 	resources :tchat
 
 	resources :histories
-	post "/histories/run/:id", to: "histories#run"
-	post "/histories/stop/:id", to: "histories#stop"
-	post "/histories/wait/:id", to: "histories#wait"
-	post "/histories/find_or_create", to: "histories#find_or_create"
-	post "/histories/duel", to: "histories#duel"
+	post "/histories/run/:id", to: "game#run"
+	post "/histories/stop/:id", to: "game#stop"
+	post "/histories/find_or_create", to: "matchmaking#find_or_create"
+	post "/histories/duel", to: "matchmaking#duel"
+	post "/histories/timeout/:id", to: "matchmaking#timeout"
 end

@@ -1,0 +1,21 @@
+<div id="content-ladder">
+	<div id="wrapper">
+		<% index = 1%>
+		<% @players.each do |playa| %>
+			<div class="player" style="top: <%= -100 + index * 110 %>px">
+				<div class="pp" style='background-image: url("<%= playa.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
+				</div>
+				<div class="nickname">
+					<span class="name">#<%= index %> <%= playa.nickname %></span> -
+					<span class="elo"><%= playa.elo%></span>
+				</div>
+				<div class="stats">
+					<span class="wins"><%= playa.stat.victory %></span>/<span class="losses"><%= playa.stat.defeat %></span>
+				</div>
+			</div>
+			<% index += 1 %>
+		<% end %>
+	</div>
+	<%= javascript_pack_tag 'ladder' %>
+	<%= stylesheet_link_tag "ladder.css" %>
+</div>

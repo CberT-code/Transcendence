@@ -13,6 +13,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"show_user/:id": "show_user",
 	"tchat": "tchat",
 	"play": "play",
+	"ladder": "ladder",
 	//guilds
 	"guilds": "guilds",
 	"new_guild": "new_guild",
@@ -60,6 +61,13 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	play: function() {
 		$.get("/play").then(function(data){
 			$("main").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");
+		});
+	},
+
+	// LADDER
+	ladder: function() {
+		$.get("/ladder").then(function(data) {
+			$("main").html("<div id='content-ladder'>" + ($(data).find("#content-ladder").html()) + "</div>");
 		});
 	},
 

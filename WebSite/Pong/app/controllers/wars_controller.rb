@@ -188,7 +188,7 @@ class WarsController < ApplicationController
 			end
 		else
 			@id = params[:id];
-			if ((params[:points] > 1000 && params[:points] > Guild.find_by_id(@id).points) || params[:players] > Guild.find_by_id(@id).nbmember)
+			if ((params[:points].to_i > 1000 && params[:points].to_i > Guild.find_by_id(@id).points) || params[:players].to_i > Guild.find_by_id(@id).nbmember)
 				render html: 'error_10';
 			end
 			@war = War.new;
