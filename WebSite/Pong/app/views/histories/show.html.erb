@@ -2,8 +2,20 @@
 	<%= stylesheet_link_tag "pong_v1.css" %>
 	<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
 	<%= content_tag :div, '', id: 'players', data: { host: @game.host_id, opponent: @game.opponent_id } %>
-	<div id="wrapper">
-		<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.picture_url %>")'></div>
+	<% g_class = "" %>
+	<% if @game.ranked %>
+		<% g_class += "ranked " %>
+	<% else %>
+		<% g_class += "practice "%>
+	<% end %>
+	<% if @game.tournament_id != 1 %>
+		<% g_class += "tournament " %>
+	<% end %>
+	<% if @game.war_id != -1 %>
+		<% g_class += "guildwar " %>
+	<% end %>
+	<div id="wrapper_box" class="wrapper <%= g_class %>">
+		<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
 		<div id="game">
 			<div class="goal"></div>
 			<div id="left_player" class="player"></div>
@@ -11,10 +23,11 @@
 			<div class="goal" style='left: 98%'></div>
 			<div id="right_player" class="player"></div>
 		</div>
+		<div id="end_game"></div>
 		<% if @game.opponent == @game.host %>
-			<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/norminet.jpg")'></div>
+			<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
 		<% else %>
-			<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.picture_url %>")'></div>
+			<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
 		<% end %>
 	</div>
 	<div>
@@ -26,10 +39,7 @@
 	</div>
 	<button id="alone">J'ai pas d'amis</button>
 	<button id="stop">STOP</button>
-	<div>
-		<p>TESTING : <%= @me.id %></p>
-		<div id='dev'></div>
-		<div id='foo'></div>
+	<div id="dev">
 	</div>
 	<%= javascript_pack_tag 'pong_v1' %>
 </div>

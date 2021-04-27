@@ -44,7 +44,13 @@ ViewChannel = Backbone.View.extend(
             "click .blockUser": "blockUser",
             "click #blockMessage": "unblockUser",
             "click .UserInformation": "userInformations",
+            "keyup .message": "KeyPressEnter",
         },
+		KeyPressEnter : function(event){
+			if(event.keyCode == 13){
+				this.$(".submitMessage").click();
+			}
+		},
         viewPublicChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();

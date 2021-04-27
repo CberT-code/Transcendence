@@ -12,7 +12,7 @@
 	</div>
 	<div id="big-element">
 		<div id="title">
-			<h2>Users <%= @guild.nbmember %> / <%= @guild.maxmember %></h2>
+			<h2>Users <%= @guild.users.size%> / <%= @guild.maxmember %></h2>
 		</div>
 		<div id="corp">
 			<% @i =0 %>
@@ -24,24 +24,25 @@
 				<div id="username">
 					<% if user.id == @guild.id_admin%>
 						<p>Admin</p>
-					<% elsif (@admin == 1 || (@officer == 1 && !(@guild.officers.include?user.id) && @guild.id_admin != user.id)) %>
+					<% elsif (@admin == 1 || @officer == 1 || @admin_guild == 1) %>
 						<p>
-							<select id="officer_select" onClick="document.getElementById('id').value = <%= user.id %>">
-								<option value="officer" <%= (@guild.officers.include?user.id) ? "selected" : "" %>>Officer</option> 
-								<option value="user" <%= (@guild.officers.include?user.id)  ? "" : "selected" %>>User</option>
+							<select id="officer_select" onClick="document.getElementById('user_id').value = <%= user.id %>">
+								<option value="officer" <%= (@guild.officers.include? user.id) ? "selected" : "" %> > Officer</option> 
+								<option value="user" <%= (@guild.officers.include? user.id)  ? "" : "selected" %> > User</option>
 							</select>
+						</p>
 					<% else %>
-							<p> <%= (@guild.officers.include?user.id) ? "Officer" : "User" %></p>
+							<p> <%= (@guild.officers.include? user.id) ? "Officer" : "User" %></p>
 					<% end %>
 				</div>
 				<div id="username">
-					<p><%= @guild.anagramme + " - " + user.nickname %></p>
+					<p><%= user.nickname %></p>
 				</div>
-				<% if (@admin_guild == 1 || @admin == 1 || (@officer == 1 && !(@guild.officers.include?user.id) && @guild.id_admin != user.id)) %>
-				<div id="action">
-					<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= user.id %>"><i class="fas fa-times"></i></button>
-					<button class="red_button" id="ban_guild" onClick="document.getElementById('id').value = <%= user.id %>">BAN</button>
-				</div>
+				<% if (@admin_guild == 1 || @admin == 1 || @officer == 1) %>
+					<div id="action">
+						<button class="red_button" id="quit_guild" onClick="document.getElementById('user_id').value = <%= user.id %>"><i class="fas fa-times"></i></button>
+						<button class="red_button" id="ban_guild" onClick="document.getElementById('user_id').value = <%= user.id %>">BAN</button>
+					</div>
 				<% end %>
 			</div>
 			<% end %>
@@ -55,17 +56,17 @@
 			<div id="corp">
 				<% @i = 0 %>
 				<% @ban_users.each do |id| %>
-				<% @user = User.find_by_id(id) %>
+				<% b_user = User.find_by_id(id) %>
 				<div id="user">
 					<div id="position">
 						<p><%= @i += 1 %></p>
 					</div>
 					<div id="username">
-						<p><%= @user.nickname %></p>
+						<p><%= b_user.nickname %></p>
 					</div>
 					<div id="action">
 					
-						<button class="red_button" id="unban_guild" onClick="document.getElementById('id').value = <%= @user.id %>">UNBAN</button>
+						<button class="red_button" id="unban_guild" onClick="document.getElementById('user_id').value = <%= b_user.id %>">UNBAN</button>
 					</div>
 				</div>
 				<% end %>
@@ -81,21 +82,21 @@
 			<div id="corp">
 				<% @i=0%>
 				<% @wars_histories.each do |wars_history| %>
-					<div id="war">
-					<% if (Guild.find_by_id(wars_history.host_id) && Guild.find_by_id(wars_history.opponent_id)) %>
-						<% @color1 = wars_history.host_score > wars_history.opponent_score ? "green" : "red"; %>
-						<% @color2 = wars_history.host_score < wars_history.opponent_score ? "green" : "red" ; %>
-						<div id="position">
-							<p><%= @i += 1 %></p>
-						</div>
-						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
-						</div>
-						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
+					<% if (Guild.find_by_id(wars_history.guild1_id) && Guild.find_by_id(wars_history.guild2_id) ) %>
+						<div id="war">
+							<% @color1 = wars_history.points_guild1 > wars_history.points_guild2 ? "green" : "red"; %>
+							<% @color2 = wars_history.points_guild1 < wars_history.points_guild2 ? "green" : "red" ; %>
+							<div id="position">
+								<p><%= @i += 1 %></p>
+							</div>
+							<div id="target">
+								<p><%= Guild.find_by_id(wars_history.guild1_id).name %> : <%= wars_history.points_guild1 %></p>
+							</div>
+							<div id="target">
+								<p><%= Guild.find_by_id(wars_history.guild2_id).name %> : <%= wars_history.points_guild2 %></p>
+							</div>
 						</div>
 					<% end %>
-					</div>
 				<% end %>
 			</div>
 		</div>
@@ -106,19 +107,20 @@
 		</div>
 		<div id="corp">
 			<% if @my_guild == 1%>
-			<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
+				<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
 			<% elsif !current_user.guild_id %>
-			<button class="green_button" id="join_guild">join this guild</button>
+				<button class="green_button" id="join_guild">join this guild</button>
 			<% end %>
 			<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
-			<input id="id" type="hidden" maxlenght="10" value="<%= @guild.id %>">
+			<input id="id" type="hidden" maxlength="10" value="<%= @guild.id %>">
+			<input id="user_id" type="hidden" maxlength="10">
 		<% if (@admin_guild == 1 || @admin == 1) %>
 			<button class="red_button" id="change_admin">Change Admin</button>
 			<div class="element-line">
 				<%= form_for @guild do |f| %>
 					<%= f.select :id_admin, options_for_select(@list_users.map{ |u| [u.nickname, u.id] }, :selected => @user.id) %>
-						<% end %>
-							<button class="grey_button" id="exec_change_admin">OK</button>
+				<% end %>
+				<button class="grey_button" id="exec_change_admin">OK</button>
 			</div>
 		<% end %>
 	</div>

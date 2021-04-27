@@ -13,26 +13,49 @@
 		</div>
 	</div>
 	<div class="break"></div>
-	<input id="tournament_id" type="hidden" value='<%= @tournament.id %>'>
-	<button id="new_game" class="green_button">New Game</button>
-	<div class="break"></div>
-	<% if @wars_histories.count > 0 %>
+	<% if @tournament_histories.count > 0 %>
 		<div class="big-element">
 			<div id="title">
-				<h2>Last wars</h2>
+				<h2>Ranking</h2>
 			</div>
 			<div id="corp">
 				<% @i=0%>
-				<% @wars_histories.each do |wars_history| %>
+				<% @tournament_histories.each do |tournament_history| %>
+					<% @user = User.find(tournament_history.user_id) %>
 					<div class="war">
 						<div id="position">
 							<p><%= @i += 1 %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.host_id).name %> : <%= wars_history.host_score %></p>
+							<p onClick="window.location='/#show_user/<%= @user.id %>'"><%= @user.nickname %></p>
 						</div>
 						<div id="target">
-							<p><%= Guild.find_by_id(wars_history.opponent_id).name %> : <%= wars_history.opponent_score %></p>
+							<p>points : <%= tournament_history.difference %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+	<% if @wars_histories.count > 0 %>
+		<div class="big-element">
+			<div id="title">
+				<h2>Last games</h2>
+			</div>
+			<div id="corp">
+				<% @i=0%>
+				<% @wars_histories.each do |wars_history| %>
+					<% @user = User.find(wars_history.host_id) %>
+					<% @user2 = User.find(wars_history.opponent_id) %>
+					<div class="war">
+						<div id="position">
+							<p><%= @i += 1 %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= wars_history.host_id %>'"><%= @user.nickname %> : <%= wars_history.host_score %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= wars_history.opponent_id %>'"><%= @user2.nickname %> : <%= wars_history.opponent_score %></p>
 						</div>
 					</div>
 				<% end %>

@@ -6,10 +6,15 @@ class TournamentsController < ApplicationController
 	end
 
 	def index
-		@tournaments = Tournament.all.order('name')
+		@tournaments = Tournament.all.order('name').order(:id).reverse_order
 	end
 	def new
 		@tournament = Tournament.new
+	end
+	def playerJoin
+		if (TournamentUser.where("user_id = ? and tournament_id = ?", current_user.id, params[:id_tournament]).count == 0) 
+			TournamentUser.create({tournament_id: params[:id_tournament], user_id: current_user.id })
+		end
 	end
 	def create
 		if (params[:tournamentname] == "")
@@ -22,7 +27,7 @@ class TournamentsController < ApplicationController
 			render html: "error-4";
 		elsif (params[:maxpoints].to_i < 1 || params[:maxpoints].to_i > 15)
 			render html: "error-5";
-		elsif (params[:speed].to_i < 2 || params[:speed].to_i > 21)
+		elsif (params[:speed].to_i < 1 || params[:speed].to_i > 11)
 			render html: "error-6";
 		else
 			@tournament = Tournament.new;
@@ -33,7 +38,8 @@ class TournamentsController < ApplicationController
 	end
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@wars_histories = History.where('tournament_id = ?', @tournament.id);
+		@tournament_histories = TournamentUser.where('tournament_id = ?', @tournament.id).order(:difference).reverse_order;
+		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order;
 	end
 
 	def destroy

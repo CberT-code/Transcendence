@@ -11,8 +11,8 @@
 						<h1 class="username"><%= @user.nickname %> <i id="modif_username" class="fas fa-pen"></i></h1>
 						<div id="container">
 							<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
-								<i id="confirm_modif_username" class="fas fa-check"></i>
-								<i id="cancel_modif_username" class="fas fa-times fa-times-switch"></i>
+							<i id="confirm_modif_username" class="fas fa-check"></i>
+							<i id="cancel_modif_username" class="fas fa-times fa-times-switch"></i>
 						</div>
 					<% else %>
 						<h1 class="username"><%= @user.nickname %></h1>
@@ -29,86 +29,94 @@
 			</div>
 			<div id="container">
 				<div id="line">
-					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Parties jouez :</span> <%= (@user_stat.victory + @user_stat.defeat) %></p>
+					<p><span class="text-bold"><i class="fas fa-gamepad"></i> Games played :</span> <%= (@user_stat.victory + @user_stat.defeat) %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victoires :</span> <%= @user_stat.victory %></p>
+					<p><span class="text-bold text-green"><i class="fas fa-crown"></i> Victories :</span> <%= @user_stat.victory %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defaites :</span> <%= @user_stat.defeat %></p>
+					<p><span class="text-bold text-red"><i class="fas fa-times"></i> Defeats :</span> <%= @user_stat.defeat %></p>
 				</div>
 				<div id="line">
-					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournois gagnés :</span> <%= @user_stat.tournament %></p>
+					<p><span class="text-bold text-gold"><i class="fas fa-trophy"></i> Tournaments won :</span> <%= @user_stat.tournament %></p>
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 || @admin == 1 %>
+		<% if @current == 1 || !(@me.friends.include?@user.id) || @admin == 1 %>
 			<div id="element">
 				<div id="name">
 					<h2>actions</h2>
 				</div>
-				<div class="element-line">
-					<span>Available for war?</span>
-					<label class="switch">
-						<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
-						<span class="slider"></span>
-					</label>
-				</div>
+				<% if @current == 1 || @admin == 1 %>
+					<div class="element-line">
+						<span>Available for war?</span>
+						<label class="switch">
+							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
+							<span class="slider"></span>
+						</label>
+					</div>
+				<% end %>
 				<div class="display-flex" id="container">
-					<button id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button>
+					<% if @current == 1 || @admin == 1 %>
+						<button class="back-red"id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+					<% end %>
+					<% if @current != 1 && !(@me.friends.include?@user.id) %>
+						<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
+					<% end %>
 				</div>
 			</div>
 		<% end %>
-			<div id="element">
-				<div id="name">
-					<h2>Friends</h2>
-				</div>
-				<div id="container">
+		<div id="element">
+			<div id="name">
+				<h2>Friends</h2>
+			</div>
+			<div id="container">
 				<% @user.friends.each do |friends| %>
 					<% @user = User.find(friends); %>
 					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
 					<%= @status = redis.get("player_#{@user.id}") %>
 					<div id="line">
-							<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-								<p><span class="text-bold text-green"><i class="fas fa-crown"></i> <%= @user.nickname %></span></p>
-							<% elsif @status != nil %>
-								<p><span class="text-bold"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
-							<% else %>
-								<p><span class="text-bold text-red"><i class="fas fa-times"></i> <%= @user.nickname %></span></p>
-							<% end %>
-
+						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
+							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+						<% else %>
+							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+						<% end %>
+						<%= form_for :tournaments do |f| %>
+							<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+						<% end %>
+						<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Game</button>
 					</div>
 				<% end %>
-				</div>
 			</div>
-		<% if @histories.count > 0 %>
-			<div id="container-history">
-				<div id="head">
-					<h2>historique games</h2>
-				</div>
-				<div id="history">
-					<% @histories.each do |history| %>
-						<div id="game">
-							<div id="icon">
-								<% if (history.host_score > history.opponent_score) %>
-								<i id="" class="fas fa-check"></i>
-								<% else %>
-								<i class="fas fa-times"></i>
-								<% end %>
-							</div>
-							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
-							</div>
-							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
-							</div>
-							<div id="score">
-								<p><%= history.host_score %> / <%= history.opponent_score %></p>
-							</div>
-						</div>
-					<% end %>
-				</div>
-			</div>
-		<% end %>
+		</div>
 	</div>
+	<% if @histories.count > 0 %>
+		<div id="container-history">
+			<div id="head">
+				<h2>historique games</h2>
+			</div>
+			<div id="history">
+				<% @histories.each do |history| %>
+					<div id="game">
+						<div id="icon">
+							<% if (history.host_score > history.opponent_score) %>
+							<i id="" class="fas fa-check"></i>
+							<% else %>
+							<i class="fas fa-times"></i>
+							<% end %>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
+						</div>
+						<div id="score">
+							<p><%= history.host_score %> / <%= history.opponent_score %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
 </div>

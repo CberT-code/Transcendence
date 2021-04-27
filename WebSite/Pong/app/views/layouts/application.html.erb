@@ -1,54 +1,55 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Pong</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-	<link rel="stylesheet" href="/css/custom.css">
-	<link rel="stylesheet" href="/css/notifs.css">
-	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+	<head>
+		<title>Pong</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<link rel="stylesheet" href="/css/custom.css">
+		<link rel="stylesheet" href="/css/notifs.css">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+		<%= csrf_meta_tags %>
+		<%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
-  </head>
+		<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+		<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+	</head>
+	<body>
+		<% if user_signed_in?%>
+			<header>
+				<div id="left">
+					<h1 onClick="window.location='/#'"><%= link_to 'PongGame', root_path %></h1>
+				</div>
+				<div id="right">
+					<% if current_user.role == 1 %>
+						<button onClick="window.location='/#accounts'" >Accounts</button>
+					<% else %>
+						<button onClick="window.location='/#show_user/<%= current_user.id %>'" >Account</button>
+					<% end %>
+					<button onClick="window.location='/#tchat'">Chat</button>
+					<button onClick="window.location='/#play'" >Play</button>
+					<button onClick="window.location='/#ladder'" >Ladder</button>
+					<% if !current_user.guild_id %>
+						<button id="header-guild" onClick="window.location='/#guilds'">Guilds</button>
+						<button id="header-wars" class="displayOff" onClick="window.location='/#wars'">Wars</button>
+					<% else %>
+						<button id="header-guild" onClick="window.location='/#show_guild/<%= current_user.guild_id %>'">Guilds</button>
+						<% @inwars = War.where('(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2) %>
+						<% if ( @inwars.count != 0) %>
+							<button id="header-wars" class="displayOn" onClick="window.location='/#show_war/<%= @inwars.ids[0] %>'">Wars</button>
+						<% else %>
+							<button id="header-wars" class="displayOn" onClick="window.location='/#wars'">Wars</button>
+						<% end %>
+					<% end %>
+					<button onClick="window.location='/#tournaments'">Tournaments</button>
+					<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 
-  <body>
-   <% if user_signed_in? %>
-	<header>
-		<div id="left">
-			<h1 onClick="window.location='/#'"><%= link_to 'PongGame', root_path %></h1>
-		</div>
-		<div id="right">
-			<% if current_user.role == 1 %>
-				<button onClick="window.location='/#accounts'" >Accounts</button>
-			<% else %>
-				<button onClick="window.location='/#show_user/<%= current_user.id %>'" >Account</button>
-			<% end %>
-			<button onClick="window.location='/#tchat'">Chat</button>
-			<button onClick="window.location='/#play'" >Play</button>
-			<% if !current_user.guild_id %>
-				<button id="header-guild" onClick="window.location='/#guilds'">Guilds</button>
-				<button id="header-wars" class="displayOff" onClick="window.location='/#wars'">Wars</button>
-			<% else %>
-				<button id="header-guild" onClick="window.location='/#show_guild/<%= current_user.guild_id %>'">Guilds</button>
-				<% @inwars = War.where('(guild_id1 = ? or guild_id2 = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2) %>
-				<% if ( @inwars.count != 0) %>
-					<button id="header-wars" class="displayOn" onClick="window.location='/#show_war/<%= @inwars.ids[0] %>'">Wars</button>
-				<% else %>
-					<button id="header-wars" class="displayOn" onClick="window.location='/#wars'">Wars</button>
-				<% end %>
-			<% end %>
-			<button onClick="window.location='/#tournaments'">Tournaments</button>
-			<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
-
-		</div>
-		</header>
-	<% end %>
-	<main>
-		<%= yield %>
-	</main>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
-  </body>
+				</div>
+			</header>
+		<% else %>
+		<% end %>
+		<main>
+			<%= yield %>
+		</main>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+	</body>
 </html>

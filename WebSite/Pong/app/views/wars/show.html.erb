@@ -1,4 +1,9 @@
 <div id="content-war">
+	<%= content_tag :div, '', id: 'war_data', data: {id: @war.id, tournamentid: @war.tournament_id, timeout: @war.timeout} %>
+	<div id="element">
+		<button class="green_button" id="warMatch_button">Challenge enemy guild!</button>
+	</div>
+
 	<div class="big-element" id="guild">
 		<div id="title">
 			<h2 id="guild_name">
@@ -21,7 +26,7 @@
 	</div>
 	<div class="big-element" id="noBackground">
 		<div id="score">
-			<h1><%= Tournament.find_by_id(@war.tournament_id).name %></h1>
+			<h1><%= @war.tournament.name %></h1>
 			<% if @war.points_guild1 > @war.points_guild2 %>
 				<h1><span class="text-green"><%= @war.points_guild1 %> </span> / <span class="text-red"><%= @war.points_guild2 %></span></h1>
 			<% else %>
@@ -83,7 +88,7 @@
 						<p><%= User.find_by_id(fight.opponent_id).nickname %></p>
 					</div>
 					<div id="target">
-						<p><%= fight.score_host_id %> / <%= fight.score_opponent_id %></p>
+						<p><%= fight.host_score %> / <%= fight.opponent_score %></p>
 					</div>
 				</div>
 			<% end %>

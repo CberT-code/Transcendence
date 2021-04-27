@@ -6,8 +6,6 @@ function notification(typef, textf) {
 
 ViewGames = Backbone.View.extend(
 {
-	globalvar: "testyolo",
-
     el: $(document),
     initialize: function () {
     },
@@ -16,7 +14,7 @@ ViewGames = Backbone.View.extend(
 	},
     events: {
 		'click #ranked_game': 'Game_new_ranked',
-		'click #practice_game': 'Game_new_practice',
+		'click #practice_game': 'Game_new_practice'
     },
 	Game_new_ranked: function (e) {
 
@@ -25,14 +23,15 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"name": "ranked"
+				"id": $("#tournaments_end").val(),
+				"ranked": "true", "war_match": "no"
 			},
 			function (data) 
 			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
+				if (data.status == "error")
+					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data ;
+					window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
 	},
@@ -43,32 +42,15 @@ ViewGames = Backbone.View.extend(
 			'/histories/find_or_create',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "1"
+				"id": $("#tournaments_end").val(),
+				"ranked": "false", "war_match": "no"
 			},
 			function (data) 
 			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
+				if (data.status == "error")
+					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data ;
-			},
-		);
-	},
-	Game_new_ranked: function (e) {
-
-		console.log("new ranked game");
-		$.post(
-			'/histories/find_or_create',
-			{
-				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": "2"
-			},
-			function (data) 
-			{
-				if (data == "error_tournament")
-					notification("error", "This tournament id doesn't exist.");
-				else
-					window.location.href = "#show_game/" + data ;
+					window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
 	}

@@ -72,13 +72,14 @@ ViewGuilds = Backbone.View.extend(
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				success: function (data)
 				{
-					if (data == 'error-admin')
+					console.log("info : " + data.info);
+					if (data.status == "error")
 					{
 						notification("error", "Your team needs a leader. Give them a new leader before leaving...");
 						$("#guild_id_admin").css("display", "inline");
 						$("#exec_change_admin").css("display", "inline");
 					}
-					else if (data == 2)
+					else if (data.status == '2')
 					{
 						$("#header-wars").toggle();
 						Backbone.history.loadUrl();
@@ -226,14 +227,17 @@ ViewGuilds = Backbone.View.extend(
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				'select': $(e.currentTarget).val(),
 				"idguild": $("#guild_id").val(),
-				"id": $("#id").val(),
+				"id": $("#user_id").val(),
 			},
 			function (data) 
 			{
-				if (data == "changed ok")
-					notification("success", "Changement ok");
-				if (data == "forbidden")
-					notification("error", "forbidden");
+				console.log("guild member status change: " + data.status)
+				if (data.status == "change ok")
+					notification("success", data.user + " role updated to " + data.role);
+				else if (data.status == "forbidden")
+					notification("error", "Cannot set " + data.user + " to " + data.role);
+				else if (data.status == "no change")
+					notification("success", data.user + " was already " + data.role);
 			},
 		),
 		'text'
@@ -241,9 +245,10 @@ ViewGuilds = Backbone.View.extend(
 	Guild_Anagramme: function (e) {
 
 		$.post(
-			'/histories/find_or_create',
+			'/guilds/anagramme',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"anagramme": $("#guilds_anagramme").val(),
 			},
 			function (data) 
 			{

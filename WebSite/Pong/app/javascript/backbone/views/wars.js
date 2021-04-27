@@ -1,3 +1,5 @@
+var war_id = $('#war_data').data('id');
+
 function notification(typef, textf) {
 	var notification = new Noty({ theme: 'mint', type: typef, text: textf });
 	notification.setTimeout(4500);
@@ -18,7 +20,7 @@ ViewWars = Backbone.View.extend(
 		'change #histories_nb_players': 'Search',
 		'keyup #wars_search': 'Wars_Search',
 		'click #attack': 'Wars_Create',
-
+		'click #warMatch_button' : 'warMatch_Start'
 	},
 	Wars_Update: function (e) {
 		e.preventDefault();
@@ -175,4 +177,31 @@ ViewWars = Backbone.View.extend(
 		),
 		'text'
 	},
+	warMatch_Start: function() {
+		console.log("defying enemy guild to a war match!");
+		var tournament_id = $('#war_data').data('tournamentid');
+		var timeout = $('#war_data').data('timeout');
+		var war_id = $('#war_data').data('id');
+		console.log(tournament_id);
+		console.log(timeout);
+		$.post(
+			'/histories/find_or_create',
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": tournament_id,
+				"ranked": "true", "war_match": "yes", "war_id": war_id,
+				"timeout": timeout
+			},
+			function (data) 
+			{
+				if (data.status == "error")
+					notification("Error", data.info + " - " + tournament_id);
+				else {
+					notification("Succes", "Starting game #" + data.id);
+					window.location.href = "#show_game/" + data.id.toString();
+					//do something to notify enemy guild?
+				}
+			},
+		);
+	}
 });
