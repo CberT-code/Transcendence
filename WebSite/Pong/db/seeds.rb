@@ -23,11 +23,12 @@ guild_list = [ 			# [ name, tag, max_members, admin ]
 	["fourth", "fourth", 15, "salty"]
 ]
 user_list = [ 			# [ UID, name, guild, role ]
-	[12421, "salty", "first", 0],
+	[12421, "salty", "fourth", 0],
+	[23456, "cbertola", "first", 1],
 	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
 	[12421, "neo", "first", 0],
-	[12421, "llepage", "second", 1],
+	[12421, "llepage", "third", 1],
 	[60326, "hbaudet", "second", 1],
 	[12421, "sophie", "second", 0],
 	[12421, "bibiche", "second", 0],
@@ -97,6 +98,7 @@ superadmin = User.create(id: 1, email: "#{admin_name}@student.42.fr",
 	name: admin_name, stat_id: stat.id,
 	image: "https://cdn.intra.42.fr/users/#{admin_name}.jpg",
 	nickname: admin_name)
+superadmin.save
 
 tournamentUser = TournamentUser.new();
 tournamentUser.update(user_id: 1, tournament_id: 1);
@@ -118,8 +120,9 @@ guild_list.each do |name, anagramme, nb, admin|
 	end
 end
 
+id = 2
 user_list.each do |uid, name, guild|
-	usr = User.find_by_name(name)
+	usr = User.find_by_id(id)
 	if (usr != nil)
 		usr.update(email: "#{name}@student.42.fr",
 		uid: uid, name: name,
@@ -128,7 +131,7 @@ user_list.each do |uid, name, guild|
 	else
 		stat = Stat.new;
 		stat.save;
-		usr = User.new(email: "#{name}@student.42.fr",
+		usr = User.new(id: id, email: "#{name}@student.42.fr",
 		password: "password", provider: "marvin", uid: uid,
 		name: name, stat_id: stat.id,
 		image: "https://cdn.intra.42.fr/users/#{name}.jpg",
@@ -138,6 +141,7 @@ user_list.each do |uid, name, guild|
 		tournamentUser.update(user_id: usr.id, tournament_id: 1);
 		tournamentUser.save
 	end
+	id += 1
 end
 
 guild_list.each do |name, anagramme, nb, admin|

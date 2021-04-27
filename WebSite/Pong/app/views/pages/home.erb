@@ -1,15 +1,3 @@
-<div id="content-account">
-	<div id="dev">
-		<p>This is a test, can you see me?</p>
-		<div id="qrcode">
-			<%= @qrcode %>
-		</div>
-	</div>
-
-	<button class="green_button" id="enable_otp">Enable 2FA</button>
-
+<div id="content-home">
 	<%= javascript_pack_tag 'online_check' %>
-	<%= javascript_pack_tag 'qrcode' %>
-	<%= javascript_pack_tag 'enable_otp' %>
-	<%= content_tag :div, '', id: 'player_data', data: { id: @me.id } %>
 </div>

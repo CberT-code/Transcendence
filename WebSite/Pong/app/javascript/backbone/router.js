@@ -46,6 +46,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	accounts: function() {
 		$.get("/users").then(function(data){
+			console.log(data);
 			$("main").html("<div id='content-users'>" + ($(data).find("#content-users").html()) + "</div>");
 		});
 	},

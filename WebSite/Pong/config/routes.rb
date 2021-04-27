@@ -6,12 +6,17 @@ Rails.application.routes.draw do
 	devise_scope :user do
     	delete "sign_out", :to => "devise/sessions#destroy", :as => :destroy_user_session_path
 	end
+
+
+	post "/otp_check/", to: "pages#otp_check"
 	# get "/account", to: "pages#account"
 	get "/play", to: "pages#play"
 	get "/ladder", to: "pages#ladder"
 	get "/501", to: "error#403"
 
 	post "/users/enable_otp/:id", to: "users#enable_otp"
+	post "/users/disable_otp/:id", to: "users#disable_otp"
+	post "/users/confirm_otp/:id", to: "users#confirm_otp"
 
 	# post "/account/delete", to: "post#deleteAccount"
 	# post "/account/changeusername", to: "post#ChangeUsername"

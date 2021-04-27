@@ -2,6 +2,8 @@ class WarsController < ApplicationController
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
+		elsif @me.locked
+			render "/pages/otp"
 		end
 		@guild = Guild.find_by_id(current_user.guild_id);
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;

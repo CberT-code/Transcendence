@@ -31,7 +31,6 @@ Website/Pong/public/assets
 Website/Pong/.byebug_history
 
 # Ignore master key for decrypting credentials and more.
-Website/Pong/config/master.key
 
 Website/Pong/public/packs
 Website/Pong/public/packs-test

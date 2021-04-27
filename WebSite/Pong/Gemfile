@@ -68,3 +68,4 @@ gem 'redis-namespace'
 gem 'redis-rails'
 # gem 'google-authenticator-rails'
 gem 'devise-two-factor'
+gem 'whenever', require: false

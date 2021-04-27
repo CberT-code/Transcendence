@@ -5,25 +5,62 @@ class UsersController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
-		@me = current_user
-		@admin = @me.role
+		if @me
+			@admin = @me.role
+		else
+			@admin = 0
+		end
+	end
+
+	before_action :otp_login, only: [:show, :index]
+
+	def otp_login
+		if @me.otp_required_for_login && @me.locked
+			render "/pages/otp"
+		end
 	end
 
 	def enable_otp
 		me = User.find_by_id(params[:id])
 		if me.nil?
 			render json: {status: "error", info: "user not found"}
+		elsif me.otp_required_for_login
+			render json: {status: "error", info: "OTP already setup, disable it first"}
 		else
 			issuer = 'Transcendence'
-			label = "#{issuer}:#{me.email}"
-			if me.otp_required_for_login
-				puts "\n\nOTP ALREADY IN USE\n\n\n"
-			end
-			me.otp_required_for_login = true
+			label = "Pong! - #{me.nickname}"
 			me.otp_secret = User.generate_otp_secret
 			me.save!
 			
 			render json: {status: "ok", info: me.otp_provisioning_uri(label, issuer: issuer)}
+		end
+	end
+
+	def confirm_otp
+		user = User.find_by_id(params[:id])
+		if !user
+			render json: {status: "error", info: "user not found"}
+		elsif user.otp_required_for_login
+			render json: {status: "error", info: "OTP already setup, disable it first"}
+		elsif params[:otp] == user.current_otp
+			user.update(otp_required_for_login: true)
+			render json: {status: "ok", info: "OTP setup!"}
+		else
+			render json: {status: "error", info: "OTP confirmation failed, please retry"}
+		end
+	end
+
+	def disable_otp
+		user = User.find_by_id(params[:id])
+		if !user
+			render json: {status: "error", info: "user not found"}
+		elsif !user.otp_required_for_login
+			render json: {status: "error", info: "No OTP enabled, are you f*cking around with hidden buttons?"}
+		elsif params[:otp] == user.current_otp
+			user.update(otp_required_for_login: false)
+			render json: {status: "ok", info: "OTP succesfully disabled"}
+		else
+			render json: {status: "error", info: "OTP confirmation failed, please retry"}
 		end
 	end
 
@@ -47,10 +84,10 @@ class UsersController < ApplicationController
 
 	def show
 		@user = User.find_by_id(params[:id])
-		if (!@user.deleted)
+		if (@user != nil && !@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;
-			@current = current_user.id == @user.id ? 1 : 0;
+			@current = @me.id == @user.id ? 1 : 0;
 			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
 			@date = DateTime.new(1905,1,1,1,1,1);
 			@tournament = Array.new
