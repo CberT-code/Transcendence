@@ -44,6 +44,7 @@ ViewChannel = Backbone.View.extend(
             "click .blockUser": "blockUser",
             "click #blockMessage": "unblockUser",
             "click .UserInformation": "userInformations",
+            "click .proposeGame": "duel_game_user",
             "keyup .message": "KeyPressEnter",
         },
 		KeyPressEnter : function(event){
@@ -528,6 +529,22 @@ ViewChannel = Backbone.View.extend(
             var user_id = $(e.currentTarget).val();
             console.log("User informations " + user_id + " !");
             window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
+            $(".proposeGame").attr("value", user_id);
             $("#userProfil").css("display", "block");
+        },
+        duel_game_user: function (e) {
+            var id_opponent = $(e.currentTarget).val();
+            $.post(
+                '/histories/duel',
+                {
+                    'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                    "id": 1,
+                    "opponent": id_opponent
+                },
+                function (data) 
+                {
+                    notification("success", "Game have been propose !");
+                },
+            );
         }
     });
