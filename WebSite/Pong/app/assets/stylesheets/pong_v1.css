@@ -1,8 +1,17 @@
+#content-game_show {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+}
+#content-game_show #center {
+    margin: auto;
+    width: max-content;
+    height: min-content;
+}
 #content-game_show .score {
     font-family: "joystick_monospace";
 }
-
-
 #content-game_show .wrapper {
     position: relative;
     border: 6px solid grey;
@@ -109,6 +118,7 @@
 }
 
 #content-game_show .practice {
-	border-color: grey;
-	border-style: inset
+	background-color: white;
+    overflow: hidden;
+    border-radius: 9px;
 }
