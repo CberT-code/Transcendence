@@ -192,6 +192,9 @@ header a {
 .back-red {
 	background-color: #c51515 ;
 }
+.back-black {
+	background-color: #231f20;
+}
 .text-gold {
 	color: #fab50c ;
 }

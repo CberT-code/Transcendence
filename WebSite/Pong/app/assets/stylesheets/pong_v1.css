@@ -106,19 +106,36 @@
     border-color: blue;
 	border-style: double
 }
-
 #content-game_show .tournament {
     border-color: black;
 	border-style: double;
 }
-
 #content-game_show .guildwar {
     border-color: green;
 	border-style: double
 }
-
 #content-game_show .practice {
 	background-color: white;
     overflow: hidden;
     border-radius: 9px;
+}
+#content-game_show button {
+    margin: auto;
+    border: none;
+    outline: none;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    font-family: "Roboto-Medium";
+    font-size: 115%;
+    border-radius: 6px;
+    transition-duration: 0.5s;
+}
+#content-game_show button:hover {
+    opacity: 0.7;
+    transition-duration: 0.5s;
 }
