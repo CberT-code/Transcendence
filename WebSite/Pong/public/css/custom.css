@@ -2830,6 +2830,29 @@ background-color: #7BE12B;
 	overflow: hidden;
 	position: relative;
 }
+#content-history #actions .types {
+	width: 100%;
+	overflow: hidden;
+	height: 40%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-history #actions .types form {
+	width: 50%;
+	height: min-content;
+	overflow: hidden;
+}
+#content-history #actions .types select {
+	background-color: #231f20;
+	height: 35px;
+	width: 100%;
+	border: none;
+	color: white;
+	text-align: center;
+	border-radius: 9px;
+}
 #content-history #actions #buttons {
 	height: min-content;
 	width: 100%;
