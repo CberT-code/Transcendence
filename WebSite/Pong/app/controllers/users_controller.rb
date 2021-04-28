@@ -64,20 +64,6 @@ class UsersController < ApplicationController
 		end
 	end
 
-	def status
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		status = redis.get("player_#{params[:id]}")
-		if (status == "static" || status == "up" || status == "down")
-			render html: "in_game"
-		elsif status != nil
-			render html: status
-		else
-			render html: "offline"
-		end
-	end
-
 	def index
 		@Users = User.where("deleted = ?", FALSE);
 	end

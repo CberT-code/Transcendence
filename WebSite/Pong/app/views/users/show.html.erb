@@ -96,21 +96,21 @@
 				<h2>Friends</h2>
 			</div>
 			<div id="container">
-				<% @user.friends.each do |friends| %>
-					<% @user = User.find(friends); %>
-					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
-					<%= @status = redis.get("player_#{@user.id}") %>
-					<div id="line">
-						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-						<% else %>
-							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-						<% end %>
-						<%= form_for :tournaments do |f| %>
-							<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
-						<% end %>
-						<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Game</button>
-					</div>
+				<% @user.friends.each do |friend_id| %>
+					<% friend = User.find_by_id(friend_id); %>
+					<% if friend != nil %>
+						<div id="line">
+							<% if (friend.status() == "online" || friend.status() == "in_game") %>
+								<p><span class="text-bold text-green"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+								<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Duel!</button>
+								<%= form_for :tournaments do |f| %>
+									<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+								<% end %>
+							<% else %>
+								<p><span class="text-bold text-red"> <%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+							<% end %>
+						</div>
+					<% end %>
 				<% end %>
 			</div>
 		</div>

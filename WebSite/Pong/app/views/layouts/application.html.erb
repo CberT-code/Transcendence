@@ -10,14 +10,15 @@
 		<%= csp_meta_tag %>
 
 		<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-		<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+		<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'%>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
 	</head>
 	<body>
 		<% if user_signed_in? %>
+			<div id="notif_banner"></div>
 			<header>
 				<div id="left">
-					<h1 onClick="window.location='/#'"><%= link_to 'PongGame', root_path %></h1>
+					<h1 onClick="window.location='/#show_user/<%= current_user.id %>'">Pong Game!</h1>
 				</div>
 				<div id="right">
 					<% if current_user.role == 1 %>
@@ -50,5 +51,7 @@
 			<%= yield %>
 		</main>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/noty/3.1.4/noty.min.js"></script>
+		<%= javascript_pack_tag 'online_check' %>
+		<%= content_tag :div, '', id: 'player_data_general', data: {id: @me.id, guild_id: @me.guild_id} %>
 	</body>
 </html>

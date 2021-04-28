@@ -18,27 +18,29 @@ class MatchmakingController < ApplicationController
 		@me = current_user
 		if @me.guild && @me.guild.war && opponent.guild && @me.guild.war == opponent.guild.war
 			war_id = @me.guild.war_id
-			war_match = true
+			war_match = false
 		else
 			war_id = -1
 			war_match = false
 		end
 		@game = tourn.games.new(statut: 0, host: @me, opponent: opponent,
 			host_score: 0, opponent_score: 0, ranked: false,
-			war_id: war_id, war_match: war_match)
+			war_id: war_id, war_match: war_match, timeout: 30)
 		@game.save!
 		redis.set("game_#{@game.id}", "Looking For Opponent")
 		render json: {status: "Duel created!", id: @game.id}
 	end
 
 	def checkValidity(war_id)
-		war = War.find(war_id)
+		war = War.find_by_id(war_id)
 		if war.ongoingMatch
 			return false
 		elsif war.start > Time.now || war.end < Time.now
 			return false
 		elsif war.isWarTime()
 			return true
+		else
+			return false
 		end
 	end
 
@@ -96,6 +98,8 @@ class MatchmakingController < ApplicationController
 			render json: {status: "ok", time_left: -1}
 		elsif Time.now - game.created_at < game.timeout
 			render json: {status: "ok", time_left: (game.timeout - (Time.now - game.created_at)).to_i}
+		elsif game.war_id == -1
+			render json: {status: "forfeit", winner: game.host.nickname}
 		else
 			if game.war.guild1 == game.host.guild
 				opponent_guild = game.war.guild2

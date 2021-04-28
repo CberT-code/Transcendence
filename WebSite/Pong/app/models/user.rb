@@ -30,5 +30,19 @@ class User < ApplicationRecord
 		end
 	end
 
+	def isOnline
+		redis = Redis.new(	url:  ENV['REDIS_URL'],
+							port: ENV['REDIS_PORT'],
+							db:   ENV['REDIS_DB'])
+		status = redis.get("player_#{params[:id]}")
+		if (status == "static" || status == "up" || status == "down")
+			return "in_game"
+		elsif status != nil
+			return status
+		else
+			return "offline"
+		end
+	end
+
   end
   
