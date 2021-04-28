@@ -1,19 +1,23 @@
 <div id="content-history">
 	<%= stylesheet_link_tag "history_index.css" %>
-    <div class="new_game">
-	<%= form_for :tournaments do |f| %>
-		<%= f.select :end, options_for_select(@tournament.map{
-			 |u| [u.name, u.id] if TournamentUser.where("tournament_id = ? and user_id = ?", u.id, current_user.id).count > 0 }.reject(&:nil?), :selected => 1) %>
+	<div id="actions">
+		<div class="new_game">
+		<%= form_for :tournaments do |f| %>
+			<%= f.select :end, options_for_select(@tournament.map{
+				|u| [u.name, u.id] if TournamentUser.where("tournament_id = ? and user_id = ?", u.id, current_user.id).count > 0 }.reject(&:nil?), :selected => 1) %>
 
-		<% end %>
+			<% end %>
+		</div>
+		<div id="buttons">
+			<div class="new_game ranked_g">
+				<button id="ranked_game" class="button">Ranked Game</button>
+			</div>
+			<div class="new_game practice_g">
+				<button id="practice_game" class="button">Practice Game</button>
+			</div>
+			<button id="continue" class="button">Continue !</button>
+		</div>
 	</div>
-	<div class="new_game ranked_g">
-		<button id="ranked_game" class="button">Ranked Game</button>
-	</div>
-	<div class="new_game practice_g">
-		<button id="practice_game" class="button">Practice Game</button>
-	</div>
-	<button id="continue" class="button">Continue !</button>
 	<div id="container">
 		<div id="element">
 			<div id="history_title" class="title history">

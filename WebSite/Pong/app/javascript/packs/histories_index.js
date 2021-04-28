@@ -84,13 +84,5 @@ function place_buttons(width, tmp){
 	else {
 		$('.new_game').show();
 		$('#continue').hide();
-		if (width > 1200) {
-			$('.ranked_g').css({'left' : tmp, 'top' : '80px'});
-			$('.practice_g').css({'right' : tmp, 'top' : '80px'});
-		}
-		else {
-			$('.ranked_g').css({'left' : ((width / 2) - 206).toString() + "px", 'top' : '70px'});
-			$('.practice_g').css({'right' : ((width / 2) - 206).toString() + "px", 'top' : '120px'});
-		}
 	}
 }
