@@ -47,6 +47,8 @@ Rails.application.routes.draw do
 	get "/users/status/:id", to: "users#status"
 	post "/users/addfriend", to: "users#addfriend"
 	post "/users/delfriend", to: "users#delfriend"
+	post "/users/ban", to: "users#ban"
+	post "/users/unban", to: "users#unban"
 
 	resources :wars
 	post "/wars/add", to: "wars#add"

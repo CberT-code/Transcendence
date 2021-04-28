@@ -19,4 +19,5 @@ yarn install --check-files;\
 rails db:migrate;\
 rails db:seed;\
 whenever --update-crontab;\
+service cron restart;\
 rails s -b 0.0.0.0 -p 80;

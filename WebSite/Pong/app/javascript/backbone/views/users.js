@@ -15,6 +15,8 @@ ViewAccount = Backbone.View.extend({
 		'click #add_friend': 'AddFriend',
 		'click #del_friend': 'DelFriend',
 		'click #duel_game_user': 'duel_game_user',
+		'click #ban_user': 'BanUser',
+		'click #unban_user': 'UnbanUser',
 	},
 	DeleteAccount: function () {
 		$.ajax(
@@ -148,5 +150,39 @@ ViewAccount = Backbone.View.extend({
 					window.location.href = "#show_game/" + data ;
 			},
 		);
-	}
+	},
+	BanUser: function (e) {
+		$.post(
+			"/users/ban/",
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#id").val()
+			},
+			function (data) {
+				if (data == "error_admin") {
+					notification("error", "You cannot ban this player...");
+				} else {
+					Backbone.history.loadUrl();
+				}
+			},
+			'text'
+		);
+	},
+	UnbanUser: function (e) {
+		$.post(
+			"/users/unban/",
+			{
+				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+				"id": $("#id").val()
+			},
+			function (data) {
+				if (data == "error_admin") {
+					notification("error", "You cannot unban this player...");
+				} else {
+					Backbone.history.loadUrl();
+				}
+			},
+			'text'
+		);
+	},
 });

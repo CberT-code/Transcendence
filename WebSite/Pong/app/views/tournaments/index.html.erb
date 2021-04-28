@@ -16,9 +16,9 @@
 						</div>
 						<div id="info">
 							<% if (tournament.end && (tournament.start.to_i - DateTime.current.to_i).to_i < 0) %>
-								<p class="text-red"><%= (tournament.end.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24)%> days left</p>
+								<p class="text-red"><%= ((tournament.end.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24)) + 1%> days left</p>
 							<% elsif ((tournament.start.to_i - DateTime.current.to_i).to_i > 0) %>
-								<p class="text-green2">Start in : <%=(tournament.start.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24) %> days</p>
+								<p class="text-green2">Start in : <%=((tournament.start.to_i - DateTime.current.to_i).to_i / (60 * 60 * 24)) + 1%> days</p>
 							<% end%>
 						</div>
 						<div id="info" >

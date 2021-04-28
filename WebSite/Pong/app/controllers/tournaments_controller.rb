@@ -31,7 +31,12 @@ class TournamentsController < ApplicationController
 			render html: "error-6";
 		else
 			@tournament = Tournament.new;
-			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end], maxpoints: params[:maxpoints], speed: params[:speed]});
+			@status = 0;
+
+			if ((params[:start].to_date - DateTime.current.to_date).to_i == 0)
+				@status = 1;
+			end
+			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end], maxpoints: params[:maxpoints], speed: params[:speed], status: @status});
 			@tournament.save;
 			render html: @tournament.id;
 		end

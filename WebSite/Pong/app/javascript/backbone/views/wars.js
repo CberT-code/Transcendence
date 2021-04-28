@@ -171,6 +171,8 @@ ViewWars = Backbone.View.extend(
 					notification("error", "You dont have enough players in your team to play");
 				else if (data == 'error_10')
 					notification("error", "The guild you wanna attack can't be attacked with those parameters");
+				else if (data == 'error_inwar')
+					notification("error", "The guild is already in a war");
 				else
 					window.location.href = "#wars" ;
 			},

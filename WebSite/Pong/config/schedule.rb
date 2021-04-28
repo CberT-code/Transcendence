@@ -20,6 +20,15 @@
 # Learn more: http://github.com/javan/whenever
 set :output, "log/cron.log"
 set :environment, 'development'
-every 1.minute do
+every 1.day, at: '10:00 am' do
     rake 'war:checktime'
+end
+every 1.day, at: '03:00 pm' do
+    rake 'war:startwartime'
+end
+every 1.day, at: '05:00 pm' do
+    rake 'war:stopwartime'
+end
+every 1.day, at: '10:00 pm' do
+    rake 'tournament:statustournament'
 end

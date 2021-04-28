@@ -8,12 +8,12 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 admin_name = "sudo"
-trnmt_list = [ 			# [ name, id, description, max points, base speed, start, end ]
-	["Standard Rules", 1, "default set of rules for standard games", 11, 1.7, "01/01/2000", "31/12/2042"],
-	["Sudden death", 2, "single point games", 1, 1.7, "11/04/2021", "25/05/2021"],
-	["Crazy", 3, "test your reflexes", 11, 5.5, "11/04/2021", "25/05/2021"],
-	["Russian roulette", 4, "more luck than skill", 5, 9.0, "25/05/2021", "01/06/2021"]
-]
+# trnmt_list = [ 			# [ name, id, description, max points, base speed, start, end ]
+# 	["Standard Rules", 1, "default set of rules for standard games", 11, 1.7, "01/01/2000", "31/12/2042"],
+# 	["Sudden death", 2, "single point games", 1, 1.7, "11/04/2021", "25/05/2021"],
+# 	["Crazy", 3, "test your reflexes", 11, 5.5, "11/04/2021", "25/05/2021"],
+# 	["Russian roulette", 4, "more luck than skill", 5, 9.0, "25/05/2021", "01/06/2021"]
+# ]
 guild_list = [ 			# [ name, tag, max_members, admin ]
 	["first", "first", 5, "cbertola"],
 	["second", "second", 5, "hbaudet"],
@@ -88,9 +88,9 @@ games_list = [			# [ host, opponent, host score, opponent score, tournament id, 
 		["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
 	]
   
-trnmt_list.each do |name, desc, pts, speed, start, endd|
-	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
-end 
+# trnmt_list.each do |name, desc, pts, speed, start, endd|
+# 	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
+# end 
 
 stat = Stat.new()
 stat.save
@@ -146,18 +146,18 @@ guild_list.each do |name, anagramme, nb, admin|
 	guild.update(admin: User.find_by_name(admin))
 end
 
-trnmt_list.each do |name, id, desc, pts, speed, start, end_date|
-	tr = Tournament.find_by_id(id)
-	if (tr != nil)
-		tr.update(name: name, description: desc,
-		maxpoints: pts, speed: speed, start: start,
-		end: end_date)
-	else
-		Tournament.create(name: name, id: id,
-		description: desc, maxpoints: pts, speed: speed,
-		start: start, end: end_date)
-	end
-end
+# trnmt_list.each do |name, id, desc, pts, speed, start, end_date|
+# 	tr = Tournament.find_by_id(id)
+# 	if (tr != nil)
+# 		tr.update(name: name, description: desc,
+# 		maxpoints: pts, speed: speed, start: start,
+# 		end: end_date)
+# 	else
+# 		Tournament.create(name: name, id: id,
+# 		description: desc, maxpoints: pts, speed: speed,
+# 		start: start, end: end_date)
+# 	end
+# end
 
 war_list.each do |id, guild1, guild2, tr, start, end_date|
 	war = War.find_by_id(id)

@@ -191,8 +191,10 @@ ViewGuilds = Backbone.View.extend(
 				{
 					if (data == "error-badguild")
 						notification("error", "Your not autorize to modify this user");
-					window.location.href = "#show_guild/" + data ;
-					notification("success", "Administrator changed");
+					else{
+						Backbone.history.loadUrl();
+						notification("success", "Administrator changed");
+					}
 				},
 			},
 		);

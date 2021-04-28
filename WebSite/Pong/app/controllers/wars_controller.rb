@@ -40,7 +40,11 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:id]);
 
 		@date = DateTime.current
-		@date = @date.change(hour: 17)
+		puts @date;
+		puts @date;
+		puts @war.start;
+		puts @war.start;
+		@date = @date.change(hour: 12)
 		# @war.update(start: DateTime.current + 1.minutes, end: @date + 2.days)
 		# @war.update(end: @date + 1.hours)
 		@startdays = ((@war.start.to_date) - DateTime.current.to_date).to_i;
@@ -145,8 +149,14 @@ class WarsController < ApplicationController
 	end
 
 	def create
-
-		if (params[:points] == "null")
+		puts  War.where("status = ? AND guild1_id = ? ",0, @guild.id).count
+		puts  War.where("status = ? AND guild1_id = ? ",0, @guild.id).count
+		puts  War.where("status = ? AND guild1_id = ? ",0, @guild.id).count
+		puts  War.where("status = ? AND guild1_id = ? ",0, @guild.id).count
+		if (@guild.war_id != nil || War.where("status = ? AND guild1_id = ? ",0, @guild.id).count > 0)
+			puts  "POPOPOPOPOPOPOPOPOPOPOPO"
+			render html: 'error_inwar';
+		elsif (params[:points] == "null")
 			render html: 'error_1';
 		elsif (params[:players] == "null" || (params[:players] != '5' && params[:players] != '10' && params[:players] != '15'))
 			render html: 'error_2';
@@ -170,20 +180,20 @@ class WarsController < ApplicationController
 			else
 				@list_guild = Guild.where("nbmember >= ? and war_id IS NULL", params[:players]);
 			end
-			puts "count";
-			puts @list_guild.count;
 			if (@list_guild.count <= 1)
 				render html: 'error_8';
 			else
 				@id = rand(@list_guild.count);
 				@guildattack = @list_guild[@id];
 				while (@guildattack == current_user.guild_id || @id == 0)
-					puts @id;
 					@id = rand(@list_guild.count);
 					@guildattack = @list_guild[@id];
 				end
 				@war = War.new;
-				@war.update({guild1_id: current_user.guild_id, guild2_id: @guildattack.id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+				
+				@datestart = DateTime.iso8601(params[:date_start], Date::ENGLAND)
+				@dateend = DateTime.iso8601(params[:date_end], Date::ENGLAND)
+				@war.update({guild1_id: current_user.guild_id, guild2_id: @guildattack.id, start: @datestart.midday, end: @dateend.midday, points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
 				@war.save;
 			end
 		else
@@ -192,7 +202,9 @@ class WarsController < ApplicationController
 				render html: 'error_10';
 			end
 			@war = War.new;
-			@war.update({guild1_id: current_user.guild_id, guild2_id: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+			@datestart = DateTime.iso8601(params[:date_start], Date::ENGLAND)
+			@dateend = DateTime.iso8601(params[:date_end], Date::ENGLAND)
+			@war.update({guild1_id: current_user.guild_id, guild2_id: @id, start: @datestart.midday, end: @dateend.midday, points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
 			@war.save;
 		end
 	end

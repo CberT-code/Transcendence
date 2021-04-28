@@ -56,9 +56,14 @@
 						</label>
 					</div>
 				<% end %>
-				<div class="display-flex" id="container">
+				<div class="element-line" id="container">
 				<% if @current == 1 || @admin == 1 %>
-					<button class="back-red"id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+					<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+				<% end %>
+				<% if @admin == 1 && @user.banned == false %>
+					<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
+				<% elsif @admin == 1 && @user.banned == true %>
+					<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
 				<% end %>
 				<% if @current != 1 && !(@me.friends.include?@user.id) %>
 					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>

@@ -212,6 +212,10 @@ button:hover {
 	display: block;
 	background-color: #7BE12E;
 }
+.blue_button{
+	display: block;
+	background-color: #155cc5;
+}
 
 
 /* ************ */

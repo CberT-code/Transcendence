@@ -5,6 +5,8 @@ class UsersController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
+		@admin = current_user.role == 1 ? 1 : 0;
+		@me = current_user
 	end
 
 	def enable_otp
@@ -44,7 +46,12 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = current_user
+		if (params.has_key?(:id))
+			@user = User.find_by_id(params[:id])
+		else
+			@user = current_user
+		end
+		
 		if (!@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;
@@ -106,17 +113,32 @@ class UsersController < ApplicationController
 	end
 	def delfriend
 		@user = User.find(params[:id]);
-		puts @me.friends.include?@user.id;
-		puts @user.id != current_user.id;
-		puts "TEST";
 		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
-			puts "TESTOUOUOUUO";
 			@me.friends.delete(@user.id)
 			@me.save
 			render html: 1;
 		else
-			puts "TESTOUgfergregergergre";
 			render html: 2;
+		end
+	end
+	def ban
+		puts "popopopopopopopopopopopopopo"
+		@user = User.find(params[:id]);
+		if (@me.role == 1)
+			@user.update(banned: true)
+			render html: "success"
+		else
+			render html: "error_admin"
+		end
+	end
+	def unban
+		puts "pupupupupupupupupupupupupupu"
+		@user = User.find(params[:id]);
+		if (@me.role == 1)
+			@user.update(banned: false)
+			render html: "success"
+		else
+			render html: "error_admin"
 		end
 	end
 end
