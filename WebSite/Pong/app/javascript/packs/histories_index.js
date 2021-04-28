@@ -51,7 +51,6 @@ function Spectate_to_History() {
 function check_game_size() {
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-	$('.list_wrapper').height((height - 250).toString() + "px");
 	var tmp = ((width / 48) - 15).toFixed(1).toString() + "%";
 	place_buttons(width, tmp);
 	if (width < 1200) {

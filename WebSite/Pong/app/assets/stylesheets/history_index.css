@@ -27,11 +27,9 @@
 	background-color: grey;
 	border-radius: 30px;
 }
-
 #content-history .button:hover {
 	background-color: cadetblue;
 }
-
 #content-history .game_resume {
 	position: relative;
 	border-width: 6px;
@@ -39,48 +37,60 @@
 	width: 368px;
 	margin-left: 10px;
 	margin-right: 10px;
-    background-color: cadetblue;
 	text-align: center;
 	vertical-align: middle;
 	z-index: 3;
 	margin-top: 5px;
 	margin-bottom: 5px;
+	border-radius: 9px;
+	color: white;
+	font-family: "Roboto-Thin";
+	cursor: pointer;
+	transition-duration: 0.5s;
 }
-
+#content-history .game_resume:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+#content-history .game_resume h3 {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: 100%;
+	height: min-content;
+}
 #content-history .game_list {
-	top: 250px;
-	position: absolute;
-    background-color: rgb(83, 38, 0);
-	border: black 6px solid;
-	width: 400px;
-	z-index: 0;
+	width: 100%;
+	height: calc(100% - 80px);
+	overflow: hidden;
 }
-
 #content-history .list_wrapper {
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: auto;
+	height: 100%;
+	width: 100%;
 }
-
 #content-history .list_wrapper::-webkit-scrollbar {
     display: none;
 }
-
 #content-history .title {
-	border: 6px inset black;
-	background-color: cadetblue;
-	position: absolute;
 	text-align: center;
-	width: 400px;
-	top: 170px;
+	width: 100%;
+	height: 80px;
+	display: flex;
 }
-
-#content-history .history {
-	left: 25%;
-}
-
-#content-history .spectate {
-	right: 25%;
+#content-history .title h1 {
+	font-size: 135%;
+    margin: auto;
+    color: #231f20;
+    font-family: "Roboto-Medium";
+    border-bottom: solid 2px #231f20;
+    padding-bottom: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+	width: max-content;
+	height: min-content;
+    text-transform: uppercase;
 }
 
 #content-history .PP {
@@ -102,21 +112,17 @@
 }
 
 #content-history .ranked {
-    border-color: blue;
-	border-style: double
+    background-color: blue;
 }
 
 #content-history .tournament {
-    border-color: black;
-	border-style: double;
+    background-color: black;
 }
 
 #content-history .guildwar {
-    border-color: green;
-	border-style: double
+    background-color: green;
 }
 
 #content-history .practice {
-	border-color: grey;
-	border-style: inset
+	background-color: grey;
 }
