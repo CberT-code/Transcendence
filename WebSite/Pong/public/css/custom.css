@@ -2214,6 +2214,9 @@ background-color: #7BE12B;
 	scrollbar-width: none;
 	background-color: #cccccc69;
 }
+#content-tchat #center #element #messages::-webkit-scrollbar {
+    display: none;
+}
 #content-tchat #center #element #messages #message {
 	height: min-content;
 	padding: 15px;
