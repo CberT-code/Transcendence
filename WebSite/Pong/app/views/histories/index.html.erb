@@ -32,7 +32,7 @@
 				<% if game.war_id != -1 %>
 					<% g_class += "guildwar " %>
 				<% end %>
-				<% if game.statut == 2%>
+				<% if game.statut != 3 %>
 					<%= content_tag :div, 'CONTINUE', id: 'continue_trigger', data: {id: game.id }%>
 				<% else %>
 					<div class="game_resume <%= g_class %>" onClick="window.location='/#show_game/<%= game.id %>'">

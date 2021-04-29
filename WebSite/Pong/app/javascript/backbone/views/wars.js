@@ -195,13 +195,12 @@ ViewWars = Backbone.View.extend(
 			function (data) 
 			{
 				if (data.status == "error")
-					notification("Error", data.info + " - " + tournament_id);
+					notification("error", data.info + " - " + tournament_id);
 				else {
-					notification("Succes", "Starting game #" + data.id);
+					notification("succes", "Starting game #" + data.id);
 					window.location.href = "#show_game/" + data.id.toString();
-					//do something to notify enemy guild?
 				}
-			},
+			}
 		);
 	}
 });

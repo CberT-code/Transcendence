@@ -69,6 +69,7 @@ Rails.application.routes.draw do
 	post "/histories/run/:id", to: "game#run"
 	post "/histories/stop/:id", to: "game#stop"
 	post "/histories/find_or_create", to: "matchmaking#find_or_create"
+	post "/histories/joinWarMatch", to: "matchmaking#joinWarMatch"
 	post "/histories/duel", to: "matchmaking#duel"
 	post "/histories/timeout/:id", to: "matchmaking#timeout"
 end
