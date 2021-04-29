@@ -22,14 +22,14 @@
 		</div>
 		<div class="element">
 			<div class="center">
-				<%= f.select :start, options_for_select([['When start?',''],['now', Time.now ],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
-				<%= f.select :end, options_for_select([['How long?',''],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
+				<%= f.date_field :start, min: Date.today, value: Date.today %>
+				<%= f.date_field :end, min: Date.today + 2.days, value: Date.today + 7.days  %>
 			</div>
 		</div>
+	<% end %>
 		<div class="element">
 			<div class="center">
 				<button id="create_tournament">Create</button>
 			</div>
 		</div>
-	<% end %>
 </div>

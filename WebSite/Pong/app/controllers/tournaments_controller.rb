@@ -2,6 +2,9 @@ class TournamentsController < ApplicationController
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
+		elsif @me.banned == true
+			sign_out @me
+			render "/pages/ban"
 		elsif @me.locked
 			render "/pages/otp"
 		end
@@ -33,7 +36,12 @@ class TournamentsController < ApplicationController
 			render html: "error-6";
 		else
 			@tournament = Tournament.new;
-			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end], maxpoints: params[:maxpoints], speed: params[:speed]});
+			@status = 0;
+
+			if ((params[:start].to_date - DateTime.current.to_date).to_i == 0)
+				@status = 1;
+			end
+			@tournament.update({name: params[:tournamentname], description: params[:tournamentdescription], start: params[:start], end: params[:end], maxpoints: params[:maxpoints], speed: params[:speed], status: @status});
 			@tournament.save;
 			render html: @tournament.id;
 		end

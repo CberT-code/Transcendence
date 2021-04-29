@@ -2,10 +2,14 @@ class GuildsController < ApplicationController
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
+		elsif @me.banned == true
+			sign_out @me
+			render "/pages/ban"
 		elsif @me.locked
 			render "/pages/otp"
+		else
+			@admin = current_user.role == 1 ? 1 : 0;
 		end
-		@admin = current_user.role == 1 ? 1 : 0;
 	end
 
 	def index
@@ -41,7 +45,6 @@ class GuildsController < ApplicationController
 			@stat = Stat.new;
 			@stat.save;
 			@guild.update({name: params[:guildname], anagramme: params[:guildname].first(5), description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember], id_admin: current_user.id, deleted: false});
-			@guild.users.size = 1;
 			@guild.save;
 			current_user.update({"guild_id": @guild.id});
 			render html: @guild.id;
@@ -79,17 +82,17 @@ class GuildsController < ApplicationController
 		@guild = @usertodelete.guild
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0
 		@officer = (@guild.officers.include?current_user.id) ? 1 : 0
-		if @guild.id_admin == @usertodelete.id && @guild.users.size != 1
+		if @guild.id_admin == @usertodelete.id && @guild.users.count != 1
 			render json: {status: "error", info: "Trying to delete admin"}
-		elsif @usertodelete.id == current_user.id && @guild.users.size != 1
+		elsif @usertodelete.id == current_user.id && @guild.users.count != 1
 			@guild.officers.delete(@usertodelete.id)
 			@usertodelete.update({"guild_id": nil})
 			render json: {status: '1', info: "Self-kick from guild"}
 		elsif @usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete.id != @guild.id_admin))
-			if @guild.users.size == 1
-				@guild.update(id_admin: 0, deleted: true)
+			if @guild.users.count == 1
+				@guild.update(id_admin: nil, deleted: true)
 				@guild.officers.delete(@usertodelete.id)
-				render json: {status: '1', info: "removed only member of the guild"}
+				render json: {status: '1', info: "removed member of the guild and delete guild"}
 			else
 				@guild.officers.delete(@usertodelete.id)
 				render json: {status: '2', info: "removed a member of the guild"}
@@ -107,15 +110,15 @@ class GuildsController < ApplicationController
 		@guild = @usertoban.guild;
 		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id) ? 1 : 0;
 		if (@usertoban.guild_id && @admin == 1) then
-			if (@guild.id_admin == @usertoban.id && @guild.users.size != 1)
+			if (@guild.id_admin == @usertoban.id && @guild.users.count != 1)
 				render html: "error-admin";
 			else
-				if (@guild.users.size == 1)
+				if (@guild.users.count == 1)
 					render html: "error-one";
 				elsif (@usertoban.id == current_user.id)
 					render html: "error-yourself";
 				else
-					@guild.update(nbmember: @guild.users.size - 1);
+					@guild.update(nbmember: @guild.users.count - 1);
 					@usertoban.update({"guild_id": nil});
 					if (@guild.banned.count == 0)
 						@guild.update({banned: [@usertoban.id]});
@@ -146,8 +149,8 @@ class GuildsController < ApplicationController
 			@guild = Guild.find_by_id(params[:id]);
 			if (@guild.banned.include? @user.id)
 				render html: "error_banned";
-			elsif (@guild.users.size < @guild.maxmember)
-				@guild.update(nbmember: @guild.users.size + 1);
+			elsif (@guild.users.count < @guild.maxmember)
+				@guild.update(nbmember: @guild.users.count + 1);
 				@user.update({"guild_id": @guild.id});
 				render html: @guild.id;
 			else

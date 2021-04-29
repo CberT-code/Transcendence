@@ -1,21 +1,34 @@
 <div id="content-ladder">
-	<div id="wrapper">
-		<% index = 1%>
-		<% @players.each do |playa| %>
-			<div class="player" style="top: <%= -100 + index * 110 %>px">
-				<div class="pp" style='background-image: url("<%= playa.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
-				</div>
-				<div class="nickname">
-					<span class="name">#<%= index %> <%= playa.nickname %></span> -
-					<span class="elo"><%= playa.elo%></span>
-				</div>
-				<div class="stats">
-					<span class="wins"><%= playa.stat.victory %></span>/<span class="losses"><%= playa.stat.defeat %></span>
-				</div>
-			</div>
-			<% index += 1 %>
-		<% end %>
+	<div id="center">
+		<div id="title">
+			<h1>ladder</h1>
+		</div>
+		<div id="wrapper">
+			<% index = 1%>
+			<% @players.each do |player| %>
+				<a href="/#show_user/<%= player.id %>">
+					<div class="player">
+						<div id="left">
+							<div id="icon">
+								<img alt="<%= player.nickname %> image" src="<%= player.image %>" onerror="this.src='https://cdn.intra.42.fr/users/medium_default.png';">
+							</div>
+							<div id="rank">
+								<p>#<%= index %></p>
+							</div>
+						</div>
+						<div id="right">
+							<div class="nickname">
+								<p><%= player.nickname %> - Elo : <%= player.elo %>
+							</div>
+							<div class="stats">
+								<p><span class="victory"><%= player.stat.victory %></span> - <span class="defeat"><%= player.stat.defeat %></span></p>
+							</div>
+						</div>
+					</div>
+				</a>
+				<% index += 1 %>
+			<% end %>
+		</div>
 	</div>
-	<%= javascript_pack_tag 'ladder' %>
 	<%= stylesheet_link_tag "ladder.css" %>
 </div>

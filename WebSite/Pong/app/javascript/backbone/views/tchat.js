@@ -19,6 +19,7 @@ ViewChannel = Backbone.View.extend(
             "click .privateChannel": "viewPrivateChannel",
             "click .cancelMessage": "cancelChannel",
             "click .submitMessage": "submitMessage",
+            "click .removeChannelMessage": "removeChannelMessage",
             "click .removeMessage": "removeMessage",
             "click .blockUserChannel": "banUser",
             "click .cancelPrivateChannel": "cancelPrivChannel",
@@ -35,9 +36,17 @@ ViewChannel = Backbone.View.extend(
             "click .muteSwitch": "muteSwitch",
             "click .cancelSanction": "cancelSanction",
             "click .SanctionSubmit": "SanctionSubmit",
+            "click .glbmessage": "viewMessage",
             "keyup .ChannelAdminkey": "UpdateChannelKey",
+            "click .CancelConversation": "CancelConversation",
+            "click .InitNewConversation": "InitNewConversation",
+            "click .submitConversationMessage": "submitConversationMessage",
+            "click .blockUser": "blockUser",
+            "click #blockMessage": "unblockUser",
+            "click .UserInformation": "userInformations",
+            "click .proposeGame": "duel_game_user",
             "keyup .message": "KeyPressEnter",
-		},
+        },
 		KeyPressEnter : function(event){
 			if(event.keyCode == 13){
 				this.$(".submitMessage").click();
@@ -122,7 +131,7 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
-        removeMessage: function (e) {
+        removeChannelMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
             var channel_id = $(".Channelid").val();
@@ -336,8 +345,9 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "Message send !");
-                            Backbone.history.loadUrl();
+                            $("#messages").empty();
+                            $(".message").val("");
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         } else
                             notification("error", "You can't send a message, you are blocked from this channel...");
                     },
@@ -372,27 +382,27 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
-        cancelSanction: function() {
+        cancelSanction: function () {
             $(".sanctionChannel").css("display", "none");
             $(".default").css("display", "block");
         },
-        muteSwitch: function() {
+        muteSwitch: function () {
             console.log("MuteSwitch");
             $(".adminChannel").css("display", "none");
             $(".sanctionChannel").css("display", "block");
             $(".sanctionTitle").html("mute - sanction");
             $(".SanctionSubmit").val(2);
-            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/2" });
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/2" });
         },
-        banSwitch: function() {
+        banSwitch: function () {
             console.log("BanSwitch");
             $(".adminChannel").css("display", "none");
             $(".sanctionChannel").css("display", "block");
             $(".sanctionTitle").html("ban - sanction");
             $(".SanctionSubmit").val(1);
-            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/"+ $(".Channelid").val() +"/1" });
+            window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/1" });
         },
-        SanctionSubmit: function(e) {
+        SanctionSubmit: function (e) {
             console.log("SanctionSubmit");
             e.preventDefault();
             var type = $(e.currentTarget).val();
@@ -419,4 +429,125 @@ ViewChannel = Backbone.View.extend(
             else
                 notification("error", "Please complete the form...");
         },
+        viewMessage: function (e) {
+            e.preventDefault();
+            var id = $($(e.currentTarget).children()[2]).val();
+            var username = $($(e.currentTarget).children()[3]).val();
+            $(".privateMessages").css("display", "none");
+            $(".privateConversation").css("display", "block");
+            $(".ConversationWith").html(username);
+            $(".PrivateConvTargetId").val(id);
+            window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + id });
+        },
+        CancelConversation: function () {
+            $(".privateMessages").css("display", "block");
+            $(".privateConversation").css("display", "none");
+            $(".PrivateMessages").empty();
+        },
+        submitConversationMessage: function () {
+            var target_id = $(".PrivateConvTargetId").val();
+            var message = $(".PrivateConvMessage").val();
+            if (message != "")
+                $.post(
+                    "/tchat/message/send",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "target_id": target_id,
+                        "message": message,
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            $(".PrivateMessages").empty();
+                            $(".PrivateConvMessage").val("");
+                            window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + target_id });
+                        }
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+
+        },
+        removeMessage: function (e) {
+            e.preventDefault();
+            var message_id = $(e.currentTarget).val();
+            if (message_id != "")
+                $.post(
+                    "/tchat/message/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "id": message_id,
+                    },
+                    function (data) {
+                        notification("success", "Message send !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+            else
+                notification("error", "Please complete the form...");
+
+        },
+        InitNewConversation: function () {
+            var username = $(".UsernameNewConversation").val();
+            if (username != "")
+                window.app.models.initNewConversation.fetch({ "url": "/tchat/message/init/" + username });
+        },
+        blockUser: function (e) {
+            e.preventDefault();
+            var user_id = $(e.currentTarget).val();
+            if (user_id != "")
+                $.post(
+                    "/tchat/message/block",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "user_id": user_id,
+                    },
+                    function (data) {
+                        notification("success", "User blocked !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+        },
+        unblockUser: function (e) {
+            e.preventDefault();
+            var user_id = $($(e.currentTarget).children()[2]).val();
+            if (user_id != "")
+                $.post(
+                    "/tchat/message/unblock",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "user_id": user_id,
+                    },
+                    function (data) {
+                        notification("success", "User unblocked !");
+                        Backbone.history.loadUrl();
+                    },
+                    'text'
+                );
+        },
+        userInformations: function (e) {
+            e.preventDefault();
+            var user_id = $(e.currentTarget).val();
+            console.log("User informations " + user_id + " !");
+            window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
+            $(".proposeGame").attr("value", user_id);
+            $("#userProfil").css("display", "block");
+        },
+        duel_game_user: function (e) {
+            var id_opponent = $(e.currentTarget).val();
+            $.post(
+                '/histories/duel',
+                {
+                    'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                    "id": 1,
+                    "opponent": id_opponent
+                },
+                function (data) 
+                {
+                    notification("success", "Game have been propose !");
+                },
+            );
+        }
     });

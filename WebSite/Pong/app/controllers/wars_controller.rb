@@ -2,6 +2,9 @@ class WarsController < ApplicationController
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
+		elsif @me.banned == true
+			sign_out @me
+			render "/pages/ban"
 		elsif @me.locked
 			render "/pages/otp"
 		end
@@ -42,7 +45,11 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:id]);
 
 		@date = DateTime.current
-		@date = @date.change(hour: 17)
+		puts @date;
+		puts @date;
+		puts @war.start;
+		puts @war.start;
+		@date = @date.change(hour: 12)
 		# @war.update(start: DateTime.current + 1.minutes, end: @date + 2.days)
 		# @war.update(end: @date + 1.hours)
 		@startdays = ((@war.start.to_date) - DateTime.current.to_date).to_i;
@@ -147,55 +154,63 @@ class WarsController < ApplicationController
 	end
 
 	def create
-
-		if (params[:points] == "null")
-			render html: 'error_1';
+		if (@guild.war_id != nil || War.where("status = ? AND guild1_id = ? ",0, @guild.id).count > 0)
+			render html: 'error_inwar';
+		elsif (params[:points] == "null")
+			render html: 'error_points';
 		elsif (params[:players] == "null" || (params[:players] != '5' && params[:players] != '10' && params[:players] != '15'))
-			render html: 'error_2';
+			render html: 'error_nbplayers';
 		elsif (params[:players].to_i > @guild.nbmember)
-			render html: 'error_9';
+			render html: 'error_players';
 		elsif ((params[:date_start].to_date - DateTime.current.to_date).to_i < 2)
-			render html: 'error_3';
+			render html: 'error_startdate';
 		elsif ((params[:date_end].to_date - params[:date_start].to_date).to_i < 2)
-			render html: 'error_4';
+			render html: 'error_enddate';
 		elsif (!Tournament.find_by_id(params[:tournament_id]))
-			render html: 'error_5';
+			render html: 'error_tournament';
 		elsif ((Tournament.find_by_id(params[:tournament_id]).end.to_date - params[:date_end].to_date) < 0)
-			render html: 'error_5_2';
+			render html: 'error_tournament_end';
 		elsif (params[:points] != '1000' && params[:points] != '5000' && params[:points] != '10000')
-			render html: 'error_6';
+			render html: 'error_nbpoints';
 		elsif (params[:points] != '1000' && params[:points].to_i > @guild.points)
-			render html: 'error_7';
+			render html: 'error_enoughpoint';
+		elsif (params[:timeout] == "null")
+			render html: 'error_timeout';
 		elsif (params[:id] == "0")
 			if (params[:points].to_i > 1000)
 				@list_guild = Guild.where("nbmember >= ? and points >= ? and war_id = NULL", params[:players], params[:points]);
 			else
 				@list_guild = Guild.where("nbmember >= ? and war_id IS NULL", params[:players]);
 			end
-			puts "count";
-			puts @list_guild.count;
 			if (@list_guild.count <= 1)
-				render html: 'error_8';
+				render html: 'error_noguildfound';
 			else
 				@id = rand(@list_guild.count);
 				@guildattack = @list_guild[@id];
 				while (@guildattack == current_user.guild_id || @id == 0)
-					puts @id;
 					@id = rand(@list_guild.count);
 					@guildattack = @list_guild[@id];
 				end
 				@war = War.new;
-				@war.update({guild1_id: current_user.guild_id, guild2_id: @guildattack.id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+				
+				@datestart = DateTime.iso8601(params[:date_start], Date::ENGLAND)
+				@dateend = DateTime.iso8601(params[:date_end], Date::ENGLAND)
+				@war.update({guild1_id: current_user.guild_id, guild2_id: @guildattack.id, start: @datestart.midday, end: @dateend.midday, points: params[:points], players: params[:players], tournament_id: params[:tournament_id], forfeitedGames1: params[:timeout], forfeitedGames2: params[:timeout]});
 				@war.save;
 			end
 		else
 			@id = params[:id];
 			if ((params[:points].to_i > 1000 && params[:points].to_i > Guild.find_by_id(@id).points) || params[:players].to_i > Guild.find_by_id(@id).nbmember)
-				render html: 'error_10';
+				render html: 'error_cantbeattacked';
 			end
 			@war = War.new;
-			@war.update({guild1_id: current_user.guild_id, guild2_id: @id, start: params[:date_start], end: params[:date_end], points: params[:points], players: params[:players], tournament_id: params[:tournament_id]});
+			@datestart = DateTime.iso8601(params[:date_start], Date::ENGLAND)
+			@dateend = DateTime.iso8601(params[:date_end], Date::ENGLAND)
+			@war.update({guild1_id: current_user.guild_id, guild2_id: @id, start: @datestart.midday, end: @dateend.midday, points: params[:points], players: params[:players], tournament_id: params[:tournament_id], forfeitedGames1: params[:timeout], forfeitedGames2: params[:timeout]});
 			@war.save;
 		end
 	end
+
+
+
 end

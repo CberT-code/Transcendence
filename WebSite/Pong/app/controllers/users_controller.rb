@@ -4,11 +4,12 @@ class UsersController < ApplicationController
 	before_action do |sign_n_out|
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
-		end
-		if @me
-			@admin = @me.role
+		elsif @me.banned == true
+			sign_out @me
+			render "/pages/ban"
 		else
-			@admin = 0
+			@admin = current_user.role == 1 ? 1 : 0;
+			@me = current_user
 		end
 	end
 
@@ -69,22 +70,29 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		@user = User.find_by_id(params[:id])
-		if (@user != nil && !@user.deleted)
-			@user_stat = @user.stat;
-			@guild = @user.guild;
-			@current = @me.id == @user.id ? 1 : 0;
-			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
-			@date = DateTime.new(1905,1,1,1,1,1);
-			@tournament = Array.new
-			Tournament.all.each do |tr|
-				if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
-					@tournament.push(tr)
-				end
+		if (current_user)
+			if (params.has_key?(:id))
+				@user = User.find_by_id(params[:id])
+			else
+				@user = current_user
 			end
-			# @tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
-		else
-			render 'error/403', :status => :unauthorized
+			
+			if (!@user.deleted)
+				@user_stat = @user.stat;
+				@guild = @user.guild;
+				@current = @me.id == @user.id ? 1 : 0;
+				@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
+				@date = DateTime.new(1905,1,1,1,1,1);
+				@tournament = Array.new
+				Tournament.all.each do |tr|
+					if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
+						@tournament.push(tr)
+					end
+				end
+				# @tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
+			else
+				render 'error/403', :status => :unauthorized
+			end
 		end
 	end
 
@@ -146,6 +154,24 @@ class UsersController < ApplicationController
 			render html: 1;
 		else
 			render html: 2;
+		end
+	end
+	def ban
+		@user = User.find(params[:id]);
+		if (@me.role == 1)
+			@user.update(banned: true)
+			render html: "success"
+		else
+			render html: "error_admin"
+		end
+	end
+	def unban
+		@user = User.find(params[:id]);
+		if (@me.role == 1)
+			@user.update(banned: false)
+			render html: "success"
+		else
+			render html: "error_admin"
 		end
 	end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_26_101630) do
+ActiveRecord::Schema.define(version: 2021_04_28_184538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 2021_04_26_101630) do
     t.datetime "updated_at", precision: 6, null: false
     t.integer "maxpoints"
     t.float "speed"
+    t.integer "status", default: 0
   end
 
   create_table "users", force: :cascade do |t|
@@ -146,6 +147,7 @@ ActiveRecord::Schema.define(version: 2021_04_26_101630) do
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
     t.boolean "locked", default: false
+    t.boolean "banned", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -170,6 +172,7 @@ ActiveRecord::Schema.define(version: 2021_04_26_101630) do
     t.integer "forfeitedGames1", default: 0
     t.integer "forfeitedGames2", default: 0
     t.boolean "ongoingMatch", default: false
+    t.boolean "wartime", default: false
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
   end
 

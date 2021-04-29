@@ -7,61 +7,20 @@ class ApplicationController < ActionController::Base
 	end
 	protect_from_forgery with: :exception
 
-
-	warsstatus1 = War.where('status = ?', 1)
-	warsstatus1.each do |war|
-		timetostart = ((war.start.to_i) - DateTime.current.to_i).to_i
-		if (timetostart < 1)
-			if (war.team1.count < war.players)
-				while war.team1.count < war.players do
-					war.guild1.users.all.each do |user|
-						if (!war.team1.include?user.id)
-							war.team1.push(user.id)
-						end
-					end
-					if war.guild1.users.size < war.players
-						break
-					end
-				end
-			end
-			if (war.team2.count < war.players)
-				while war.team2.count < war.players do
-					war.guild2.users.all.each do |user|
-						if (!war.team2.include?user.id)
-							war.team2.push(user.id)
-						end
-					end
-					if war.guild2.users.size < war.players
-						break
-					end
-				end
-			end
-			war.update(status: 2)
-		end
-	end
-	warsstatus2 = War.where('status = ?', 2)
-	warsstatus2.each do |war|
-		timetostart2 = ((war.end.to_i) - DateTime.current.to_i).to_i
-		if (timetostart2 < 1)
-			if (war.points_guild1 > war.points_guild2)
-				guild = Guild.find_by_id(war.guild1_id)
-				guild.update(points: @guild.points + war.points)
-			elsif (war.points_guild1 < war.points_guild2)
-				guild = Guild.find_by_id(war.guild2_id)
-				guild.update(points: @guild.points + war.points)
-			end
-			war.update(status: 3)
-		end
-	end
-
-
-
 	def safestr(string)
 		if (string !~ /[!@#$%^&*()_+{}\[\]:;'"\/\\?><.,]/)
 			return true;
 		else
 			return false;
 		end
+	end
+	def findInArrayObj(array, value)
+		array.each do |element|
+			if element["nickname"] == value
+				return true
+			end
+		end
+		return false
 	end
 	def safesentence(string)
 		if (string !~ /[!@#$%^&*()_+{}\[\]:;'"\/\\?><]/)

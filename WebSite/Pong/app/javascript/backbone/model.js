@@ -35,7 +35,7 @@ ChannelModel = Backbone.Model.extend({
 });
 
 ChannelisAdmin = Backbone.Model.extend({
-    parse: function(response) {
+    parse: function (response) {
         if (response == "1")
             $(".submitAdminChannel").css("display", "block");
     }
@@ -43,20 +43,17 @@ ChannelisAdmin = Backbone.Model.extend({
 
 ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
-        console.log(response);
         if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
-                var ret = "<div id='message'><div id='content'><div id='username'><p>" + element.author + " - " + element.date + "</p></div><div id='text'><p>" + element.content + "</p></div></div>";
+                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"' >" + element.author + " - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
-                    ret += "<div id='action'><button value='" + element.id + "' class='removeMessage'>remove</button>";
-                    if (element.blocked == 1)
+                    ret += "<div id='action'><button value='" + element.id + "' class='removeChannelMessage'>remove</button>";
+                    if (element.blocked == 1 && element.own == 2)
                         ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unban</button>";
-                    else
-                        ret += "<button class='blockUserChannel' value='" + element.author_id + "'>ban</button>";
-                    if (element.muted == 1)
+                    if (element.muted == 1 && element.own == 2)
                         ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
-                    else
-                        ret += "<button class='muteUserChannel' value='" + element.author_id + "'>mute</button>";
+                    if (element.own == 2)
+                        ret += "<button class='blockUser' value='" + element.author_id + "'>block</button>";
                     ret += "</div>";
                 }
                 ret += "</div>";
@@ -98,7 +95,6 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
 
 ChannelSanctionsList = Backbone.Model.extend({
     parse: function (response) {
-        console.log(response);
         if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
                 console.log(element);
@@ -107,6 +103,60 @@ ChannelSanctionsList = Backbone.Model.extend({
     }
 });
 
+PrivateConversation = Backbone.Model.extend({
+    parse: function (response) {
+        if (response.length > 0 && Array.isArray(response)) {
+            response.forEach(function (element) {
+                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"'>" + element.author + " - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div><div id='action'>";
+                if (element.admin == 1) {
+                    ret += "<button value='" + element.id + "' class='removeMessage'>remove</button>";
+                }
+                if (element.block == 1) {
+                    ret += "<button value='" + element.author_id + "' class='blockUser'>block</button>";
+                }
+                ret += "</div></div>";
+                $(".PrivateMessages").append(ret);
+            });
+        }
+    }
+});
+
+initNewConversation = Backbone.Model.extend({
+    parse: function (response) {
+        if (response == "2") {
+            notification("error", "This username doesn't exist...");
+        } else if (response == "3") {
+            notification("error", "You cannot speak with yourself...");
+        } else {
+            var username = response.nickname;
+            var id = response.id;
+            $(".privateMessages").css("display", "none");
+            $(".privateConversation").css("display", "block");
+            $(".ConversationWith").html(username);
+            $(".PrivateConvTargetId").val(id);
+        }
+    }
+});
+
+getProfil = Backbone.Model.extend({
+    parse: function(response) {
+        console.log(response);
+        if (response != "") {
+            $(".UserIcon").attr("src", response.image);
+            $(".UserTitle").html(response.username);
+            $("#informations").empty();
+            if (response.guild != 0) {
+                $("#informations").append("<div id='information'><p>Guild : "+ response.guild.name +"</p></div>");
+            }
+            $("#informations").append("<div id='information'><p>Victory : "+ response.stats.victory +"</p></div>");
+            $("#informations").append("<div id='information'><p>Defeat : "+ response.stats.defeat +"</p></div>");
+        }
+    }
+})
+
+window.app.models.getProfil = new getProfil;
+window.app.models.initNewConversation = new initNewConversation;
+window.app.models.PrivateConversation = new PrivateConversation;
 window.app.models.ChannelPrivateMessageModel = new ChannelPrivateMessageModel;
 window.app.models.ChannelisAdmin = new ChannelisAdmin;
 window.app.models.ChannelMessageModel = new ChannelMessageModel;
