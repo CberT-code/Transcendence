@@ -79,7 +79,7 @@ class History < ApplicationRecord
 		end
 		self.statut = 4
 		self.save!
-		if self.war_match
+		if self.war_id != -1
 			self.warMatch(loser, winner)
 		elsif self.ranked
 			elo = self.rankedGame(loser, winner)

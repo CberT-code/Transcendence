@@ -9,17 +9,23 @@ class UsersController < ApplicationController
 		@me = current_user
 	end
 
+	before_action :otp_login, only: [:show, :index]
+
+	def otp_login
+		if @me.otp_required_for_login && @me.locked
+			render "/pages/otp"
+		end
+	end
+
 	def enable_otp
 		me = User.find_by_id(params[:id])
 		if me.nil?
 			render json: {status: "error", info: "user not found"}
+		elsif me.otp_required_for_login
+			render json: {status: "error", info: "OTP already setup, disable it first"}
 		else
 			issuer = 'Transcendence'
-			label = "#{issuer}:#{me.email}"
-			if me.otp_required_for_login
-				puts "\n\nOTP ALREADY IN USE\n\n\n"
-			end
-			me.otp_required_for_login = true
+			label = "Pong! - #{me.nickname}"
 			me.otp_secret = User.generate_otp_secret
 			me.save!
 			
@@ -27,17 +33,31 @@ class UsersController < ApplicationController
 		end
 	end
 
-	def status
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		status = redis.get("player_#{params[:id]}")
-		if (status == "static" || status == "up" || status == "down")
-			render html: "in_game"
-		elsif status != nil
-			render html: status
+	def confirm_otp
+		user = User.find_by_id(params[:id])
+		if !user
+			render json: {status: "error", info: "user not found"}
+		elsif user.otp_required_for_login
+			render json: {status: "error", info: "OTP already setup, disable it first"}
+		elsif params[:otp] == user.current_otp
+			user.update(otp_required_for_login: true)
+			render json: {status: "ok", info: "OTP setup!"}
 		else
-			render html: "offline"
+			render json: {status: "error", info: "OTP confirmation failed, please retry"}
+		end
+	end
+
+	def disable_otp
+		user = User.find_by_id(params[:id])
+		if !user
+			render json: {status: "error", info: "user not found"}
+		elsif !user.otp_required_for_login
+			render json: {status: "error", info: "No OTP enabled, are you f*cking around with hidden buttons?"}
+		elsif params[:otp] == user.current_otp
+			user.update(otp_required_for_login: false)
+			render json: {status: "ok", info: "OTP succesfully disabled"}
+		else
+			render json: {status: "error", info: "OTP confirmation failed, please retry"}
 		end
 	end
 
@@ -55,7 +75,7 @@ class UsersController < ApplicationController
 		if (!@user.deleted)
 			@user_stat = @user.stat;
 			@guild = @user.guild;
-			@current = current_user.id == @user.id ? 1 : 0;
+			@current = @me.id == @user.id ? 1 : 0;
 			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
 			@date = DateTime.new(1905,1,1,1,1,1);
 			@tournament = Array.new

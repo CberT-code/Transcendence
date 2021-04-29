@@ -1,3 +1,4 @@
+require("packs/qrcode.js")
 function notification(typef, textf) {
 	var notification = new Noty({ theme: 'mint', type: typef, text: textf });
 	notification.setTimeout(4500);
@@ -17,6 +18,9 @@ ViewAccount = Backbone.View.extend({
 		'click #duel_game_user': 'duel_game_user',
 		'click #ban_user': 'BanUser',
 		'click #unban_user': 'UnbanUser',
+		'click #otp_enable': 'otp_enable',
+		'click #otp_confirm_button': 'otp_confirm',
+		'click #otp_disable_button': 'otp_disable',
 	},
 	DeleteAccount: function () {
 		$.ajax(
@@ -185,4 +189,64 @@ ViewAccount = Backbone.View.extend({
 			'text'
 		);
 	},
+	},
+	otp_enable: function() {
+		var id = $('#content-user #player_data').data('id');
+		$.post("/users/enable_otp/" + id.toString(), function(data) {
+			if (data.status == "error") {
+				console.log(data.info);
+				notification("Error", data.info);
+			}
+			else if (data.status == "ok") {
+				console.log(data.info);
+				$('#content-user #otp_disable_form').hide();
+				$('#content-user #otp_disable_button').hide();
+				$('#content-user #otp_confirm_form').show();
+				$('#content-user #otp_confirm_button').show();
+				$('#content-user #otp_enable').hide();
+				$('#content-user #otp_qrcode').show();
+				$('#content-user #otp_qrcode').html("");
+				$('#content-user #otp_qrcode').qrcode(data.info);
+				notification("success", "QRcode generated");
+			}
+		});
+	},	
+	otp_disable: function() {
+		var id = $('#content-user #player_data').data('id');
+		$.post("/users/disable_otp/" + id.toString(), {"otp": $("#content-user #tfa_disable_otp").val()}, function(data) {
+			if (data.status == "error") {
+				console.log(data.info);
+				notification("Error", data.info);
+			}
+			else if (data.status == "ok") {
+				$('#content-user #otp_disable_form').hide();
+				$('#content-user #otp_disable_button').hide();
+				$('#content-user #otp_confirm_form').hide();
+				$('#content-user #otp_confirm_button').hide();
+				$('#content-user #otp_enable').show();
+				$('#content-user #otp_qrcode').hide();
+				$('#content-user #qrcode').html("");
+				notification("success", data.info);
+			}
+		});
+	},	
+	otp_confirm: function() {
+		var id = $('#content-user #player_data').data('id');
+		$.post("/users/confirm_otp/" + id.toString(), {"otp": $("#content-user #tfa_confirm_otp").val()}, function(data) {
+			if (data.status == "error") {
+				console.log(data.info);
+				notification("Error", data.info);
+			}
+			else if (data.status == "ok") {
+				$('#content-user #otp_disable_form').show();
+				$('#content-user #otp_disable_button').show();
+				$('#content-user #otp_confirm_form').hide();
+				$('#content-user #otp_confirm_button').hide();
+				$('#content-user #otp_enable').hide();
+				$('#content-user #otp_qrcode').hide();
+				$('#content-user #qrcode').html("");
+				notification("success", data.info);
+			}
+		});
+	}
 });

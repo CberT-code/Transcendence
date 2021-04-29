@@ -2,7 +2,7 @@
 	<div id="title">
 		<div id="center">
 			<div id="left">
-				<img src='<%= @user.image %>' alt="profil_icon">
+				<img src='<%= @user.image %>' onerror="if (this.src != 'https://cdn.intra.42.fr/users/medium_default.png') this.src = 'https://cdn.intra.42.fr/users/medium_default.png';">
 				<input id="id" type="hidden" maxlenght="10" value="<%= @user.id %>" >
 			</div>
 			<div id="right">
@@ -22,10 +22,35 @@
 			</div>
 		</div>
 	</div>
+
+
 	<div id="corp">
+		<% if @current != 0 %>
+			<div id="element">
+				<div id="container" style="overflow: scroll">
+					<%= content_tag :div, '', id: 'player_data', data: { id: @me.id, otp: @user.otp_required_for_login} %>
+					<div id="otp_qrcode"></div>
+					<div id="otp_confirm_form">
+
+						<%= form_for :tfa_confirm, remote: true do |f| %>
+							<%= f.text_field :otp, placeholder: "Enter OTP here"%>
+						<% end %>
+
+					</div>
+					<div id="otp_disable_form">
+						<%= form_for :tfa_disable, remote: true do |f| %>
+							<%= f.text_field :otp, placeholder: "Enter OTP here"%>
+						<% end %>
+					</div>
+					<button class="green_button" id="otp_confirm_button">Confirm OTP</button>
+					<button class="green_button" id="otp_enable">Enable 2FA</button>
+					<button class="green_button" id="otp_disable_button">Disable 2FA</button>
+				</div>
+			</div>
+		<% end %>
 		<div id="element">
 			<div id="name">
-				<h2>statistic</h2>
+				<h2>statistics</h2>
 			</div>
 			<div id="container">
 				<div id="line">
@@ -51,7 +76,7 @@
 					<div class="element-line">
 						<span>Available for war?</span>
 						<label class="switch">
-							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : "";%>>
+							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : ""%>>
 							<span class="slider"></span>
 						</label>
 					</div>
@@ -76,21 +101,21 @@
 				<h2>Friends</h2>
 			</div>
 			<div id="container">
-				<% @user.friends.each do |friends| %>
-					<% @user = User.find(friends); %>
-					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
-					<%= @status = redis.get("player_#{@user.id}") %>
-					<div id="line">
-						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-						<% else %>
-							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-						<% end %>
-						<%= form_for :tournaments do |f| %>
-							<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
-						<% end %>
-						<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Game</button>
-					</div>
+				<% @user.friends.each do |friend_id| %>
+					<% friend = User.find_by_id(friend_id); %>
+					<% if friend != nil %>
+						<div id="line">
+							<% if (friend.status() == "online" || friend.status() == "in_game") %>
+								<p><span class="text-bold text-green"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+								<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Duel!</button>
+								<%= form_for :tournaments do |f| %>
+									<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+								<% end %>
+							<% else %>
+								<p><span class="text-bold text-red"> <%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+							<% end %>
+						</div>
+					<% end %>
 				<% end %>
 			</div>
 		</div>
@@ -124,4 +149,5 @@
 			</div>
 		</div>
 	<% end %>
+	<%= javascript_pack_tag 'show_hide_otp' %>
 </div>

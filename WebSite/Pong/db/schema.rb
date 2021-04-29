@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_184538) do
     t.string "encrypted_otp_secret_salt"
     t.integer "consumed_timestep"
     t.boolean "otp_required_for_login"
+    t.boolean "locked", default: false
     t.boolean "banned", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"

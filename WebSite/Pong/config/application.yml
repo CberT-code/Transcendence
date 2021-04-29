@@ -16,3 +16,4 @@ development:
   REDIS_URL: redis://redis
   REDIS_PORT: "6379"
   FT_KEY: encryption_key_this_is_super_secure_trust_me_i_is_good_dev
+
