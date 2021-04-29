@@ -345,8 +345,9 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "Message send !");
-                            Backbone.history.loadUrl();
+                            $("#messages").empty();
+                            $(".message").val("");
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         } else
                             notification("error", "You can't send a message, you are blocked from this channel...");
                     },
@@ -436,7 +437,6 @@ ViewChannel = Backbone.View.extend(
             $(".privateConversation").css("display", "block");
             $(".ConversationWith").html(username);
             $(".PrivateConvTargetId").val(id);
-            console.log("View Message !");
             window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + id });
         },
         CancelConversation: function () {
@@ -456,8 +456,11 @@ ViewChannel = Backbone.View.extend(
                         "message": message,
                     },
                     function (data) {
-                        notification("success", "Message send !");
-                        Backbone.history.loadUrl();
+                        if (data == 1) {
+                            $(".PrivateMessages").empty();
+                            $(".PrivateConvMessage").val("");
+                            window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + target_id });
+                        }
                     },
                     'text'
                 );
