@@ -2866,3 +2866,12 @@ background-color: #7BE12B;
 	justify-content: center;
 	align-content: center;
 }
+#content-ladder {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
+}
