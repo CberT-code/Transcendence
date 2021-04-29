@@ -189,7 +189,6 @@ ViewAccount = Backbone.View.extend({
 			'text'
 		);
 	},
-	},
 	otp_enable: function() {
 		var id = $('#content-user #player_data').data('id');
 		$.post("/users/enable_otp/" + id.toString(), function(data) {
