@@ -21,6 +21,11 @@
 				<%= f.date_field :date_end, min: Date.today + 4.days, max: Date.today + 19.days, value: Date.today + 4.days  %>
 			</div>
 		</div>
+		<div class="element">
+			<div class="center">
+				<%= f.select :timeout, options_for_select([['Max unanswer match','null'],['5','5'],['10','10'],['25','25']], :selected => '') %>
+			</div>
+		</div>
 	<% end %>
 		<div class="element">
 			<div class="center">
