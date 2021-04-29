@@ -52,7 +52,7 @@ class HistoriesController < ApplicationController
 	def clean_list(id)
 		History.all.each do |game|
 			if (game.host == game.opponent && game.host == current_user && game.id != id) ||
-				game.update(statut: -1)
+					game.statut == -1
 				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
 				game.destroy
 			end

@@ -31,7 +31,7 @@ ViewGames = Backbone.View.extend(
 				if (data.status == "error")
 					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data.id.toString() ;
+					window.location.href = "/#show_game/" + data.id.toString() ;
 			},
 		);
 	},
@@ -50,7 +50,7 @@ ViewGames = Backbone.View.extend(
 				if (data.status == "error")
 					notification("Error", data.info);
 				else
-					window.location.href = "#show_game/" + data.id.toString() ;
+					window.location.href = "/#show_game/" + data.id.toString() ;
 			},
 		);
 	}
