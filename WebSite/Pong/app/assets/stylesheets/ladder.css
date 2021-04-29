@@ -1,60 +1,123 @@
+#content-ladder #center {
+	height: 80%;
+	width: 500px;
+	overflow: hidden;
+
+}
+#content-ladder #center #title {
+	height: 10%;
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-ladder #center #title h1 {
+	font-size: 135%;
+    margin: auto;
+    color: #231f20;
+    font-family: "Roboto-Medium";
+    border-bottom: solid 2px #231f20;
+    padding-bottom: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-transform: uppercase;
+}
 #content-ladder #wrapper {
-	position: absolute;
-	border: 6px solid black;
-	height: 600px;
-	width: 400px;
-	left: 400px;
+	height: 90%;
+	width: 100%;
 	overflow-x: hidden;
 	overflow-y: auto;
+	scrollbar-width: none;
+	background-color: white;
+	border: solid 1px #e1e1e1;
+	border-radius: 9px;
 }
-
+#content-ladder a {
+	height: min-content;
+	width: max-content;
+	overflow: hidden;
+	text-decoration: none;
+	color: #231f20;
+}
 #content-ladder .player {
-	position: absolute;
-	border: 3px solid blue;
-	width: 350px;
+	position: relative;
+	width: 90%;
 	height: 100px;
-	left: 25px;
 	font-weight: 900;
 	font-size: 24px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: #ccc;
+	overflow: hidden;
+	border-radius: 9px;
+	display: flex;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	cursor: pointer;
+	transition-duration: 0.5s;
 }
-
-#content-ladder .pp {
-	position: absolute;
-	width: 100px;
-	height: 100px;
-	background-size: 100%;
+#content-ladder .player:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
 }
-
+#content-ladder .player #left {
+	height: 100%;
+	width: 40%;
+	overflow: hidden;
+	display: flex;
+}
+#content-ladder .player #left #icon {
+	height: 100%;
+	width: 60%;
+	display: flex;
+	overflow: hidden;
+}
+#content-ladder .player #left #rank {
+	height: 100%;
+	width: 40%;
+	overflow: hidden;
+	display: flex;
+}
+#content-ladder .player #left #rank p {
+	margin: auto;
+	font-size: 95%;
+	font-family: "Roboto-Bold";
+}
+#content-ladder .player #left img {
+	overflow: hidden;
+    margin: auto;
+    border-radius: 100%;
+    height: 65%;
+    width: 50%;
+}
+#content-ladder .player #right {
+	height: 100%;
+	width: 60%;
+	overflow: hidden;
+	padding-left: 5px;
+}
+#content-ladder .player #right p {
+	margin: auto;
+	font-size: 80%;
+	font-family: "Roboto-Thin";
+}
 #content-ladder .nickname {
-	position: absolute;
-	width: 250px;
-	height: 60px;
+	width: 100%;
+	height: 50%;
 	left: 100px;
-	border: 1px solid goldenrod;
-	text-align: center;
-	line-height: 60px;
+	display: flex;
 	color: black;
 }
-
 #content-ladder .stats {
-	position: absolute;
-	line-height: 40px;
-	text-align: center;
-	left: 100px;
-	width: 250px;
-	height: 40px;
-	top: 60px;
-	border: 1px solid pink;
+	width: 100%;
+	height: 50%;
+	display: flex;
 }
-
-#content-ladder .wins {
+#content-ladder .victory {
 	color: green;
 }
-
-#content-ladder .losses {
+#content-ladder .defeat {
 	color: red;
 }
-
 #content-ladder #wrapper::-webkit-scrollbar {
     display: none;
 }
