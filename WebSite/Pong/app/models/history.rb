@@ -8,12 +8,18 @@ class History < ApplicationRecord
 		if loser.guild == self.war.guild1
 			self.war.points_guild2 += 1
 			if self.opponent_score == -1
-				self.war.forfeitedGames1 += 1
+				self.war.forfeitedGames1 -= 1
+				if self.war.forfeitedGames1 == 0
+					#end war
+				end
 			end
 		else
 			self.war.points_guild1 += 1
 			if self.opponent_score == -1
-				self.war.forfeitedGames2 += 1
+				self.war.forfeitedGames2 -= 1
+				if self.war.forfeitedGames2 == 0
+					#end war
+				end
 			end
 		end
 		self.war.save!

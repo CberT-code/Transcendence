@@ -9,6 +9,9 @@ services:
       - "80:80"
     volumes:
       - ./WebSite/Pong/:/Pong
+    restart: always
+	environment:
+      PORT: '80'
   postgresql:
     build: "./PostGresSql"
     volumes:
