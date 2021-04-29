@@ -4,8 +4,6 @@ class PagesController < ApplicationController
 		if !user_signed_in?
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
-		ActionCable.server.broadcast("presence_#{@me.id}", "hello from presence channel")
-		puts "action cable just sent a message"
 	end
 
 	before_action :otp_login, except: [:otp_check]

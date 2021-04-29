@@ -26,7 +26,6 @@ class HistoriesController < ApplicationController
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		@me = current_user
 		@game = History.find(params[:id])
 		if (@game.statut == 3) #ended, show recap
 			@status = "ended"
@@ -35,11 +34,14 @@ class HistoriesController < ApplicationController
 		elsif (@game.statut == -1) #error, should not be here
 			@status = "There was an error with this game"
 		else #live game!
-			@status = "Looking For Opponent"
-			if @me == @game.opponent && @me != @game.host
+			if @me == @game.opponent && @me != @game.host # I'm the opponent
 				@status = "ready"
 				ActionCable.server.broadcast("pong_#{@game.id}",
 						{status: "ready", right_pp: @game.opponent.image})
+			elsif @me != @game.host && @me != @game.opponent && game.host != game.opponent # witnessing a live game
+				@status = "running"
+			else # game hasn't started yet
+				@status = "Looking For Opponent"
 			end
 		end
 	end
@@ -47,7 +49,7 @@ class HistoriesController < ApplicationController
 	def clean_list(id)
 		History.all.each do |game|
 			if (game.host == game.opponent && game.host == current_user && game.id != id) ||
-				game.statut == -1
+				game.update(statut: -1)
 				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
 				game.destroy
 			end

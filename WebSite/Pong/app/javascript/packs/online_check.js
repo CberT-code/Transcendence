@@ -40,6 +40,44 @@ function check_id() {
 				$('#notif_banner').html();
 				$('#notif_banner').html(data.info);
 				$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center'});
+				if (data.type == "duel") {
+					$('#notif_banner').off('click');
+					$('#notif_banner').click(function(){
+						window.location='/#show_game/' + data.id;
+						$('#notif_banner').off('click');
+						$('#notif_banner').html();
+					  });
+				}
+				else if (data.type == "warTimeNotif") {
+					$('#notif_banner').off('click');
+					$('#notif_banner').click(function(){
+						window.location.href = '/#show_war/' + data.id;
+						$('#notif_banner').off('click');
+						$('#notif_banner').html();
+					  });
+				}
+				else if (data.type == "warMatchRequest") {
+					$('#notif_banner').off('click');
+					$('#notif_banner').click(function(){
+						$.post(
+							'/histories/joinWarMatch',
+							{
+								'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+								"war_id": data.war_id,
+								"game_id": data.id
+							},
+							function (game) 
+							{
+								if (game.status == "error")
+									notification("error", game.info);
+								else {
+									notification("succes", "Starting game #" + data.id);
+									window.location.href = "#show_game/" + data.id.toString();
+								}
+							}
+						);
+					})
+				}
 			}
 		});
 	}

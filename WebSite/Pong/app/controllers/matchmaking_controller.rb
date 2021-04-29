@@ -44,8 +44,25 @@ class MatchmakingController < ApplicationController
 		end
 	end
 
+	def joinWarMatch
+		if !@me.guild || !@me.guild.war || @me.guild.war_id != params[:war_id]
+			render json: {status: "error", info: "You can't join this match"}
+		else
+			game = History.find_by_id(params[:game_id])
+			if !game
+				render json: {status: "error", info: "game does not exist"}
+			elsif game.host != game.opponent
+				render json: {stays: "ok", info: "One of your guild mates was faster"}
+			else
+				redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
+				redis.set("game_#{game.id}", "ready")
+				game.update(opponent: @me)
+				render json: {status: "ok", info: "You accepted the challenge!"}
+			end
+		end
+	end
+
 	def find_or_create
-		@me = current_user
 		tourn = Tournament.find_by_id(params['id'].to_i)
 		if (!tourn)
 			render json: {status: "error", info: "Invalid tournament ID"}
@@ -88,6 +105,13 @@ class MatchmakingController < ApplicationController
 			ranked: params[:ranked] == "true" ? true : false,
 			war_id: war_id, war_match: war_match, timeout: timeout)
 		@game.save!
+		if war_match
+			if @me.guild.war.guild1 == @me.guild
+				@me.guild.war.guild2.notifyWarMatchRequest(@game.id)
+			else
+				@me.guild.war.guild1.notifyWarMatchRequest(@game.id)
+			end
+		end
 		redis.set("game_#{@game.id}", "Looking For Opponent")
 		render json: {status: "Game created!", id: @game.id}
 	end
