@@ -1,8 +1,10 @@
 <div id="content-tournaments">
 	<div id="center">
-		<div id="create">
-			<button onClick="window.location='/#new_tournament'">Create your tournament</button>
-		</div>
+		<% if @me.role == 1%>
+			<div id="create">
+				<button onClick="window.location='/#new_tournament'">Create your tournament</button>
+			</div>
+		<% end %>
 		<% if @tournaments.count > 0%>
 			<div id="list">
 				<% @i = 0%>
