@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 	get "/play", to: "pages#play"
 	get "/ladder", to: "pages#ladder"
 	get "/501", to: "error#403"
+	get "/pages/ban", to: "pages#ban" 
 
 	post "/users/enable_otp/:id", to: "users#enable_otp"
 	post "/users/disable_otp/:id", to: "users#disable_otp"

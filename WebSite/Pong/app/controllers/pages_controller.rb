@@ -1,12 +1,7 @@
 class PagesController < ApplicationController
 
-	before_action do |sign_n_out|
-		if !user_signed_in?
-			render 'pages/not_authentificate', :status => :unauthorized
-		end
-	end
-
-	before_action :otp_login, except: [:otp_check]
+	before_action :signin, except: [:ban]
+	before_action :otp_login, except: [:otp_check, :ban]
 
 	def otp_login
 		if @me.locked
@@ -16,6 +11,14 @@ class PagesController < ApplicationController
 
 	def salut
 		@name = params[:name]
+	end
+
+	def signin
+		if !user_signed_in?
+			render 'pages/not_authentificate', :status => :unauthorized
+		end
+	end
+	def ban
 	end
 
 	def connexion

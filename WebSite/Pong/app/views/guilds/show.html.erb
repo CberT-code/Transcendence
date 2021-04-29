@@ -48,7 +48,7 @@
 			<% end %>
 		</div>
 	</div>
-	<% if @ban_users.count > 0 && @admin == 1 %>
+	<% if @ban_users.count > 0 && @admin_guild == 1 %>
 		<div id="big-element">
 			<div id="title">
 				<h2>Banned</h2>
@@ -107,7 +107,7 @@
 		</div>
 		<div id="corp">
 			<% if @my_guild == 1%>
-				<button class="red_button" id="quit_guild" onClick="document.getElementById('id').value = <%= current_user.id %>">Leave guild</button>
+				<button class="red_button" id="quit_guild" onClick="document.getElementById('user_id').value = <%= current_user.id %>">Leave guild</button>
 			<% elsif !current_user.guild_id %>
 				<button class="green_button" id="join_guild">join this guild</button>
 			<% end %>

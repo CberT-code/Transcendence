@@ -67,7 +67,7 @@ ViewGuilds = Backbone.View.extend(
 	Guild_Destroy: function () {
 		$.ajax(
 			{
-				url: '/guilds/' + $("#id").val(),
+				url: '/guilds/' + $("#user_id").val(),
 				type: 'DELETE',
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				success: function (data)
@@ -99,7 +99,7 @@ ViewGuilds = Backbone.View.extend(
 			'/guilds/ban',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": $("#id").val(),
+				"id": $("#user_id").val(),
 			},
 			function (data) 
 			{
@@ -138,7 +138,7 @@ ViewGuilds = Backbone.View.extend(
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				"idguild": $("#guild_id").val(),
-				"id": $("#id").val(),
+				"id": $("#user_id").val(),
 			},
 			function (data) 
 			{
