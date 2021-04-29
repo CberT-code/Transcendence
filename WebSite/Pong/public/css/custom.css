@@ -192,6 +192,9 @@ header a {
 .back-red {
 	background-color: #c51515 ;
 }
+.back-black {
+	background-color: #231f20;
+}
 .text-gold {
 	color: #fab50c ;
 }
@@ -2238,6 +2241,23 @@ background-color: #7BE12B;
 	font-size: 95%;
 	font-family: "Roboto-Thin";
 }
+#content-tchat #center #element #messages #message #content #username button {
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+	border: none;
+	background-color: transparent;
+	font-size: 95%;
+	font-family: "Roboto-Thin";
+	outline: none;
+	text-align: left;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+#content-tchat #center #element #messages #message #content #username button:hover {
+	opacity: 0.5;
+	transition-duration: 0.5s;
+}
 #content-tchat #center #element #messages #message #content #text {
 	width: 100%;
 	height: 80%;
@@ -2613,4 +2633,237 @@ background-color: #7BE12B;
 	height: 90%;
 	width: 80%;
 	overflow: hidden;
+}
+.privateMessages #element #corp #list #message {
+	height: 55px;
+	width: 90%;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	background-color: #ccc;
+	border-radius: 9px;
+	margin-top: 15px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #message:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #message #icon {
+	height: 100%;
+	width: 15%;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+.privateMessages #element #corp #list #message #icon img {
+	margin: auto;
+	height: 70%;
+	border-radius: 100%;
+}
+.privateMessages #element #corp #list #message #username {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+	display: flex;
+}
+.privateMessages #element #corp #list #message #username p {
+    margin: auto;
+    font-family: "Roboto-Medium";
+    font-size: 115%;
+}
+.privateMessages #element #corp #list #blockMessage {
+	height: 55px;
+	width: 90%;
+	overflow: hidden;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	background-color:#e86464;
+	border-radius: 9px;
+	margin-top: 15px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #blockMessage:hover {
+	opacity: 0.7;
+	transition-duration: 0.5s;
+}
+.privateMessages #element #corp #list #blockMessage #icon {
+	height: 100%;
+	width: 15%;
+	overflow: hidden;
+	display: flex;
+	background-color: #231f20;
+}
+.privateMessages #element #corp #list #blockMessage #icon img {
+	margin: auto;
+	height: 70%;
+	border-radius: 100%;
+}
+.privateMessages #element #corp #list #blockMessage #username {
+	height: 100%;
+	width: 80%;
+	overflow: hidden;
+	display: flex;
+}
+.privateMessages #element #corp #list #blockMessage #username p {
+    margin: auto;
+    font-family: "Roboto-Medium";
+    font-size: 115%;
+}
+.privateConversation {
+	display: none;
+}
+#content-tchat #center #userProfil {
+	width: 200px;
+	height: min-content;
+	overflow: hidden;
+	background-color: white;
+	margin-left: 15px;
+    margin-right: 15px;
+    background-color: white;
+    border: solid 1px #e1e1e1;
+	border-radius: 9px;
+	display: none;
+}
+#content-tchat #center #userProfil #header {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+}
+#content-tchat #center #userProfil #header #icon {
+	width: 100%;
+	height: 165px;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #userProfil #header #icon img {
+	margin: auto;
+	height: 80%;
+	border-radius: 100%;
+	overflow: hidden;
+}
+#content-tchat #center #userProfil #header #title {
+	width: 100%;
+	height: min-content;
+	display: flex;
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+#content-tchat #center #userProfil #header #title h1 {
+	margin: auto;
+	font-size: 110%;
+	font-family: "Roboto-Medium";
+}
+#content-tchat #center #userProfil #informations {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: grid;
+}
+#content-tchat #center #userProfil #informations #information {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+#content-tchat #center #userProfil #informations #information p {
+	font-size: 105%;
+	font-family: "Roboto-Medium";
+	text-align: center;
+}
+#content-tchat #center #userProfil #action {
+	width: 100%;
+	height: min-content;
+	overflow: hidden;
+	display: flex;
+}
+#content-tchat #center #userProfil #action button {
+	width: 90%;
+	margin: auto;
+    border: none;
+    outline: none;
+    padding-left: 45px;
+    padding-right: 45px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    font-family: "Roboto-Medium";
+    font-size: 110%;
+    border-radius: 6px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+	background-color: #7BE12E;
+    transition-duration: 0.5s;
+}
+#content-history {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+#content-history #container {
+	width: 100%;
+	height: 85%;
+	overflow: hidden;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-history #container #element {
+	width: 400px;
+	height: 90%;
+	background-color: white;
+	border-radius: 9px;
+	border: solid 1px #e1e1e1;
+	overflow: hidden;
+    position: relative;
+	padding-bottom: 25px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+#content-history #actions {
+	width: 100%;
+	height: 15%;
+	overflow: hidden;
+	position: relative;
+}
+#content-history #actions .types {
+	width: 100%;
+	overflow: hidden;
+	height: 40%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+#content-history #actions .types form {
+	width: 50%;
+	height: min-content;
+	overflow: hidden;
+}
+#content-history #actions .types select {
+	background-color: #231f20;
+	height: 35px;
+	width: 100%;
+	border: none;
+	color: white;
+	text-align: center;
+	border-radius: 9px;
+}
+#content-history #actions #buttons {
+	height: min-content;
+	width: 100%;
+	overflow: hidden;
+	position: relative;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
 }

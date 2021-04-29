@@ -55,7 +55,7 @@ class GuildsController < ApplicationController
 		@user = current_user;
 		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
 		@wars_histories = War.where('guild1_id = ? or guild2_id = ?', @guild.id, @guild.id);
-		@list_users = @guild.users.all
+		@list_users = @guild.users.all.sort_by { |u| [u.id == @guild.id_admin ? 0 : 1, (@guild.officers.include? u.id) ? 0 : 1, u.name]}
 		@ban_users = @guild.banned;
 		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
 	end
@@ -174,7 +174,7 @@ class GuildsController < ApplicationController
 			role = params[:select] == "officer" ? 1 : 0;
 			if (role == 1 && !(guild.officers.include?usertochange.id))
 				guild.officers.push(usertochange.id)
-				render json: {status: "change ok", user: usertochange.nickame, role: "Officer"}
+				render json: {status: "change ok", user: usertochange.nickname, role: "Officer"}
 			elsif (role == 0 && (guild.officers.include?usertochange.id))
 				guild.officers.delete(usertochange.id)
 				render json: {status: "change ok", user: usertochange.nickname, role: "User"}

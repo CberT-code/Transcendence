@@ -92,12 +92,18 @@ games_list = [			# [ host, opponent, host score, opponent score, tournament id, 
 # 	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
 # end 
 
+if User.find_by_id(1) != nil
+	User.find(1).destroy
+end
+
+
 stat = Stat.new()
 stat.save
-
-
-moi = User.create(email: "cbertola@student.42.fr", password: "password", provider: "marvin", uid: 57610, name: "cbertola", stat_id: stat.id, image: "https://cdn.intra.42.fr/users/cbertola.jpg", nickname: "cbertola")
-moi.save
+superadmin = User.create(id: 1, email: "#{admin_name}@student.42.fr",
+	password: "password", provider: "marvin", uid: 00001,
+	name: admin_name, stat_id: stat.id,
+	image: "https://cdn.intra.42.fr/users/#{admin_name}.jpg",
+	nickname: admin_name)
 
 tournamentUser = TournamentUser.new();
 tournamentUser.update(user_id: 1, tournament_id: 1);

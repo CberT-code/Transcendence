@@ -51,7 +51,6 @@ function Spectate_to_History() {
 function check_game_size() {
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-	$('.list_wrapper').height((height - 250).toString() + "px");
 	var tmp = ((width / 48) - 15).toFixed(1).toString() + "%";
 	place_buttons(width, tmp);
 	if (width < 1200) {
@@ -85,13 +84,5 @@ function place_buttons(width, tmp){
 	else {
 		$('.new_game').show();
 		$('#continue').hide();
-		if (width > 1200) {
-			$('.ranked_g').css({'left' : tmp, 'top' : '80px'});
-			$('.practice_g').css({'right' : tmp, 'top' : '80px'});
-		}
-		else {
-			$('.ranked_g').css({'left' : ((width / 2) - 206).toString() + "px", 'top' : '70px'});
-			$('.practice_g').css({'right' : ((width / 2) - 206).toString() + "px", 'top' : '120px'});
-		}
 	}
 }

@@ -7,12 +7,12 @@ class History < ApplicationRecord
 	def warMatch(loser, winner)
 		if loser.guild == self.war.guild1
 			self.war.points_guild2 += 1
-			if forfeited
+			if self.opponent_score == -1
 				self.war.forfeitedGames1 += 1
 			end
 		else
 			self.war.points_guild1 += 1
-			if forfeited
+			if self.opponent_score == -1
 				self.war.forfeitedGames2 += 1
 			end
 		end
@@ -69,12 +69,16 @@ class History < ApplicationRecord
 		if self.opponent_score > self.host_score
 			loser = self.host
 			winner = self.opponent
-			forfeited = self.host_score == -1 ? true : false
 		else
 			loser = self.opponent
 			winner = self.host
-			forfeited = self.opponent_score == -1 ? true : false
 		end
+		if self.statut == 4
+			ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: self.opponent.image, elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
+			return
+		end
+		self.statut = 4
+		self.save!
 		if self.war_match
 			self.warMatch(loser, winner)
 		elsif self.ranked
@@ -84,6 +88,6 @@ class History < ApplicationRecord
 		winner.stat.save!
 		loser.stat.defeat += 1
 		loser.stat.save!
-		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
+		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: self.opponent.image, elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
 	end
 end

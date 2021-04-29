@@ -11,6 +11,14 @@ class ApplicationController < ActionController::Base
 			return false;
 		end
 	end
+	def findInArrayObj(array, value)
+		array.each do |element|
+			if element["nickname"] == value
+				return true
+			end
+		end
+		return false
+	end
 	def safesentence(string)
 		if (string !~ /[!@#$%^&*()_+{}\[\]:;'"\/\\?><]/)
 			return true;

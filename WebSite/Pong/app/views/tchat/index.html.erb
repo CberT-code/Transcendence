@@ -177,19 +177,73 @@
                 <div id="action">
                     <div id="input-text">
                         <div id="left">
-                            <input type="text" placeholder="Username of your new interlocutor...">
+                            <input type="text" class="UsernameNewConversation" placeholder="Username of your new interlocutor...">
                         </div>
                         <div id="right">
-                            <button><i class="fas fa-chevron-right"></i></button>
+                            <button class="InitNewConversation"><i class="fas fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
                 <div id="list">
-                    <% @messages.each do |element| %>
-                        <%= element.id %>
+                    <% @messages.each do |element|
+                        if (element["blocked"] == 1)
+                    %>
+                        <div id="message" class="glbmessage">
+                            <div id="icon">
+                                <img src="<%= element['image'] %>" alt="user icon">
+                            </div>                            
+                            <div id="username">
+                                <p><%= element['nickname'] %></p>
+                            </div>
+                            <input type="hidden" value="<%= element['target_id'] %>">
+                            <input type="hidden" value="<%= element['nickname'] %>">
+                        </div>
+                        <% else %>
+                        <div id="blockMessage">
+                            <div id="icon">
+                                <img src="<%= element['image'] %>" alt="user icon">
+                            </div>                            
+                            <div id="username">
+                                <p><%= element['nickname'] %></p>
+                            </div>
+                            <input type="hidden" value="<%= element['target_id'] %>">
+                        </div>
+                        <% end %>
                     <% end %>
                 </div>
            </div>
+        </div>
+    </div>
+    <div id="center" class="privateConversation">
+        <div id="element">
+            <div id="title">
+                <h2 class="ConversationWith"></h2>
+            </div>
+            <div id="messages" class="PrivateMessages">
+            </div>
+            <div id="action" class="actionChannel">
+                <input type="text" class="PrivateConvMessage" placeholder="Your message..." maxlength="90">
+                <input type="hidden" class="PrivateConvTargetId" value="">
+                <button type="button" class="CancelConversation">Cancel</button>
+                <button type="button" class="submitConversationMessage">send</button>
+            </div>
+        </div>
+    </div>
+    <div id="center">
+        <div id="userProfil">
+            <div id="header">
+                <div id="icon">
+                    <img class="UserIcon" alt="user icon" src="">
+                </div>
+                <div id="title">
+                    <h1 class="UserTitle"></h1>
+                </div>
+            </div>
+            <div id="informations">
+            </div>
+            <div id="action">
+                <button class="proposeGame">Propose a game !</button>
+            </div>
         </div>
     </div>
 </div>

@@ -11,8 +11,8 @@
 						<h1 class="username"><%= @user.nickname %> <i id="modif_username" class="fas fa-pen"></i></h1>
 						<div id="container">
 							<input class="username_input" type="text" maxlenght="30" placeholder="New username...">
-								<i id="confirm_modif_username" class="fas fa-check"></i>
-								<i id="cancel_modif_username" class="fas fa-times fa-times-switch"></i>
+							<i id="confirm_modif_username" class="fas fa-check"></i>
+							<i id="cancel_modif_username" class="fas fa-times fa-times-switch"></i>
 						</div>
 					<% else %>
 						<h1 class="username"><%= @user.nickname %></h1>
@@ -76,55 +76,52 @@
 				<h2>Friends</h2>
 			</div>
 			<div id="container">
-			<% @user.friends.each do |friends| %>
-				<% @user = User.find(friends); %>
-				<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
-				<%= @status = redis.get("player_#{@user.id}") %>
-				<div id="line">
-					<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
-						<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-					<% elsif @status != nil %>
-						<p><span class="text-bold"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-					<% else %>
-						<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
-					<% end %>
-					<%= form_for :tournaments do |f| %>
-						<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+				<% @user.friends.each do |friends| %>
+					<% @user = User.find(friends); %>
+					<% redis = Redis.new(	url:  ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db:   ENV['REDIS_DB']) %>
+					<%= @status = redis.get("player_#{@user.id}") %>
+					<div id="line">
+						<% if (@status == "static" || @status == "up" || @status == "down" || @status == "online") %>
+							<p><span class="text-bold text-green"><%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+						<% else %>
+							<p><span class="text-bold text-red"> <%= @user.nickname %></span><button id="del_friend" value="<%= @user.id %>"><i class="fas fa-times"></i></button></p>
+						<% end %>
+						<%= form_for :tournaments do |f| %>
+							<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
 						<% end %>
 						<button id="duel_game_user" class="back-green" value="<%= @user.id %>">Game</button>
 					</div>
-			<% end %>
-				</div>
+				<% end %>
 			</div>
 		</div>
-		<% if @histories.count > 0 %>
-			<div id="container-history">
-				<div id="head">
-					<h2>historique games</h2>
-				</div>
-				<div id="history">
-					<% @histories.each do |history| %>
-						<div id="game">
-							<div id="icon">
-								<% if (history.host_score > history.opponent_score) %>
-								<i id="" class="fas fa-check"></i>
-								<% else %>
-								<i class="fas fa-times"></i>
-								<% end %>
-							</div>
-							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
-							</div>
-							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
-							</div>
-							<div id="score">
-								<p><%= history.host_score %> / <%= history.opponent_score %></p>
-							</div>
-						</div>
-					<% end %>
-				</div>
-			</div>
-		<% end %>
 	</div>
+	<% if @histories.count > 0 %>
+		<div id="container-history">
+			<div id="head">
+				<h2>historique games</h2>
+			</div>
+			<div id="history">
+				<% @histories.each do |history| %>
+					<div id="game">
+						<div id="icon">
+							<% if (history.host_score > history.opponent_score) %>
+							<i id="" class="fas fa-check"></i>
+							<% else %>
+							<i class="fas fa-times"></i>
+							<% end %>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
+						</div>
+						<div id="target">
+							<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
+						</div>
+						<div id="score">
+							<p><%= history.host_score %> / <%= history.opponent_score %></p>
+						</div>
+					</div>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
 </div>

@@ -57,14 +57,21 @@ class UsersController < ApplicationController
 			@guild = @user.guild;
 			@current = current_user.id == @user.id ? 1 : 0;
 			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
-			@date = DateTime.new(1902,1,1,1,1,1);
-			@tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
+			@date = DateTime.new(1905,1,1,1,1,1);
+			@tournament = Array.new
+			Tournament.all.each do |tr|
+				if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
+					@tournament.push(tr)
+				end
+			end
+			# @tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
 		else
 			render 'error/403', :status => :unauthorized
 		end
 	end
 
 	def update
+		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1)
 			if (params.has_key?(:checked))
@@ -88,12 +95,13 @@ class UsersController < ApplicationController
 	end
 
 	def destroy
+		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1)
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@user.destroy()
+				@user.destroy
 				redirect_to destroy_user_session_path
 			end
 		else
@@ -111,6 +119,7 @@ class UsersController < ApplicationController
 			render html: 2;
 		end
 	end
+
 	def delfriend
 		@user = User.find(params[:id]);
 		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
