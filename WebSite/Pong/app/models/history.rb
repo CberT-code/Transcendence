@@ -8,38 +8,39 @@ class History < ApplicationRecord
 		if loser.guild == self.war.guild1
 			self.war.points_guild2 += 1
 			if self.opponent_score == -1
-				self.war.forfeitedGames1 += 1
+				self.war.forfeitedGames1 -= 1
+				if self.war.forfeitedGames1 == 0
+					#end war
+				end
 			end
 		else
 			self.war.points_guild1 += 1
 			if self.opponent_score == -1
-				self.war.forfeitedGames2 += 1
+				self.war.forfeitedGames2 -= 1
+				if self.war.forfeitedGames2 == 0
+					#end war
+				end
 			end
 		end
 		self.war.save!
 	end
 
-	def ladderGame(winner, loser)
+	def ladderGame(loser, winner)
 		elo = (winner.elo - loser.elo) * (-0.15) + 40.0
 		if elo > 70
 			elo = 70
 		elsif elo < 10
 			elo = 10
 		end
-		winner.elo += elo.to_i
-		loser.elo -= elo.to_i
-		winner.save!
-		loser.save!
-		return elo
-	end
-
-	def tournamentGame(loser, winner)
 		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
 		t_winner.wins += 1
+		t_winner.elo += elo.to_i
 		t_winner.save!
 		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
 		t_loser.defeats += 1
+		t_loser.elo -= elo.to_i
 		t_loser.save!
+		return elo
 	end
 
 	def rankedGame(winner, loser)
@@ -56,11 +57,7 @@ class History < ApplicationRecord
 			end
 			winner.guild.save!
 		end
-		if self.tournament_id == 1
-			elo = ladderGame(loser, winner)
-		else
-			tournamentGame(loser, winner)
-		end
+		elo = ladderGame(loser, winner)
 		return elo
 	end
 

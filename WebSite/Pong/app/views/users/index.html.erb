@@ -10,10 +10,9 @@
 					</tr>
 				</thead>
 				<tbody>
-				<% @i = 0%>
 					<% @Users.each do |user| %>
 						<tr>
-							<td><%= @i += 1 %></td>
+							<td><%= user.id %></td>
 							<td><%= user.nickname %></td>
 							<td><button onClick="window.location='/#show_user/<%= user.id %>'">Voir</button></td>
 						</tr>

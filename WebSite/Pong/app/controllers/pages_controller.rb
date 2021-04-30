@@ -30,10 +30,12 @@ class PagesController < ApplicationController
 		elsif !@me.locked
 			render json: {status: "ok", info: "User has already validated OTP"}
 		elsif !@me.otp_required_for_login
-			@me.update(locked: false)
+			@me.locked = false
+			@me.save!
 			render json: {status: "ok", info: "User hasn't enabled OTP"}
 		elsif @me.current_otp == params[:otp]
-			@me.update(locked: false)
+			@me.locked = false
+			@me.save!
 			render json: {status: "ok", info: "It's and older code, sir, but it checks out"}
 		else
 			render json: {status: "error", info: "Bad OTP"}
@@ -41,12 +43,10 @@ class PagesController < ApplicationController
 	end
 
 	def ladder
-		@players = User.all.limit(20).sort_by { |u| u.elo}.reverse
+		@t_users = TournamentUser.where(tournament_id: 1).sort_by { |u| u.elo}.reverse
 	end
 
 	def home
-		@me = current_user
-		
 		# @session = session["devise.marvin_data"]	
 	end
 

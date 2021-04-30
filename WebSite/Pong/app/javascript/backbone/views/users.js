@@ -218,7 +218,7 @@ ViewAccount = Backbone.View.extend({
 		$.post("/users/disable_otp/" + id.toString(), {"otp": $("#content-user #tfa_disable_otp").val()}, function(data) {
 			if (data.status == "error") {
 				console.log(data.info);
-				notification("Error", data.info);
+				notification("error", data.info);
 			}
 			else if (data.status == "ok") {
 				$('#content-user #otp_disable_form').hide();
@@ -237,7 +237,7 @@ ViewAccount = Backbone.View.extend({
 		$.post("/users/confirm_otp/" + id.toString(), {"otp": $("#content-user #tfa_confirm_otp").val()}, function(data) {
 			if (data.status == "error") {
 				console.log(data.info);
-				notification("Error", data.info);
+				notification("error", data.info);
 			}
 			else if (data.status == "ok") {
 				$('#content-user #otp_disable_form').show();

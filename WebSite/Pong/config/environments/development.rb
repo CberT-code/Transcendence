@@ -82,6 +82,7 @@ Rails.application.configure do
 
   # Silence ActionCable
   ActionCable.server.config.logger = Logger.new(nil)
+  
   # Enable console 
-	config.web_console.whitelisted_ips = '172.22.0.1'
+  config.web_console.whitelisted_ips = '172.24.0.1'
 end

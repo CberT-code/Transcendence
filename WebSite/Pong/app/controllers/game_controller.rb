@@ -54,6 +54,10 @@ class GameController < ApplicationController
 			redis.del("game_#{game.id}")
 			if game.statut == 3
 				game.end_game_function()
+			else
+				ActionCable.server.broadcast("pong_#{game.id}", {status: "ended",
+				right_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg",
+				elo: "0.42", winner: @me.id, loser: @me.id, w_name: "alone_dude"})
 			end
 			render html: "score: #{score[0]} - #{score[1]} - #{"ended"} - #{game.statut}"
 		end # UNCOMMENT THIS LINE OR FACE A SHITSTORM

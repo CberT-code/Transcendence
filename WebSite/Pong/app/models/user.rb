@@ -38,13 +38,22 @@ class User < ApplicationRecord
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		status = redis.get("player_#{params[:id]}")
+		status = redis.get("player_#{self.id}")
 		if (status == "static" || status == "up" || status == "down")
 			return "in_game"
 		elsif status != nil
 			return status
 		else
 			return "offline"
+		end
+	end
+
+	def notifyFriends(type)
+		self.friends.each do |id|
+			user = User.find_by_id(id)
+			if user && user.isOnline() != "offline"
+				ActionCable.server.broadcast("presence_#{id}", {type: type, info: "#{self.nickname} is #{type}"})
+			end
 		end
 	end
 

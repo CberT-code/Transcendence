@@ -4,11 +4,13 @@ services:
     build: "./ruby"
     environment:
       PONG_DATABASE_PASSWORD: password
+      PORT: '80'
       TZ: Europe/Paris
     ports:
       - "80:80"
     volumes:
       - ./WebSite/Pong/:/Pong
+    restart: always
   postgresql:
     build: "./PostGresSql"
     volumes:

@@ -1,9 +1,9 @@
-document.querySelector("#content-history #spectate_title").addEventListener("click", wrapper_History_to_spectate, false);
-document.querySelector("#content-history #history_title").addEventListener("click", wrapper_Spectate_to_History, false);
-$(window).resize(check_game_size);
+// document.querySelector("#content-history #spectate_title").addEventListener("click", wrapper_History_to_spectate, false);
+// document.querySelector("#content-history #history_title").addEventListener("click", wrapper_Spectate_to_History, false);
+// $(window).resize(check_game_size);
 
 var toggle = 0;
-check_game_size();
+// check_game_size();
 
 function wrapper_History_to_spectate() {
 	History_to_spectate()
