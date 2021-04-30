@@ -1,6 +1,6 @@
 FROM postgres:12.1
 RUN apt update && apt -y upgrade && apt install -y sudo
-COPY srcs/init.sql /docker-entrypoint-initdb.d/
+# COPY srcs/init.sql /docker-entrypoint-initdb.d/
 # COPY srcs/postgresql/pong_development_db /
 # COPY srcs/postgresql/pong_test_db /
 # COPY srcs/postgresql/pong_production_db /

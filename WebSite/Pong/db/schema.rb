@@ -168,8 +168,8 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
     t.bigint "tournament_id", null: false
     t.integer "timeout", default: 30
     t.boolean "allow_ext", default: true
-    t.integer "forfeitedGames1", default: 0
-    t.integer "forfeitedGames2", default: 0
+    t.integer "forfeitedGames1", default: 5
+    t.integer "forfeitedGames2", default: 5
     t.boolean "ongoingMatch", default: false
     t.boolean "wartime", default: false
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"
