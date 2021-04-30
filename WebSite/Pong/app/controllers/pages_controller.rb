@@ -14,7 +14,7 @@ class PagesController < ApplicationController
 	end
 
 	def ladder
-		@players = User.all.sort_by { |u| u.elo}.reverse
+		@players = User.all.limit(20).sort_by { |u| u.elo}.reverse
 	end
 
 	def home

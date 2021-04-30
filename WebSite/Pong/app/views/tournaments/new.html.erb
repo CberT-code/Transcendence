@@ -1,35 +1,40 @@
 <div id="content-new_tournament">
-	<%= form_for @tournament, remote: true do |f| %>
-		<div class="element">
-			<div class="center">
-				<%= f.text_field :name, maxlength: 20, size: 24, placeholder: "Enter tournament name"%>
-			</div>
+	<div id="center">
+		<div id="title">
+			<h1>Create tournament</h1>
 		</div>
-		<div class="element">
-			<div class="center">
-				<%= f.text_area :description, cols: 50, rows: 5, maxlength: 250, placeholder: "Description...(250characters max)" %>
+		<%= form_for @tournament, remote: true do |f| %>
+			<div class="element">
+				<div class="center">
+					<%= f.text_field :name, maxlength: 20, size: 24, placeholder: "Enter tournament name"%>
+				</div>
 			</div>
-		</div>
-		<div class="element">
-			<div class="center">
-				<%= select_tag "maxpoints", options_for_select((1..15).step(1)) %>
+			<div class="element">
+				<div class="center">
+					<%= f.text_area :description, cols: 50, rows: 5, maxlength: 250, placeholder: "Description...(250characters max)" %>
+				</div>
 			</div>
-		</div>
-		<div class="element">
-			<div class="center">
-				<%= select_tag "speed", options_for_select((1..10).step(0.5)) %>
+			<div class="element">
+				<div class="center">
+					<%= select_tag "maxpoints", options_for_select((1..15).step(1)) %>
+				</div>
 			</div>
-		</div>
-		<div class="element">
-			<div class="center">
-				<%= f.select :start, options_for_select([['When start?',''],['now', Time.now ],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
-				<%= f.select :end, options_for_select([['How long?',''],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
+			<div class="element">
+				<div class="center">
+					<%= select_tag "speed", options_for_select((1..10).step(0.5)) %>
+				</div>
 			</div>
-		</div>
-		<div class="element">
-			<div class="center">
-				<button id="create_tournament">Create</button>
+			<div class="element">
+				<div class="center">
+					<%= f.select :start, options_for_select([['When start?',''],['now', Time.now ],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
+					<%= f.select :end, options_for_select([['How long?',''],['5', Time.now + 5.day ],['10', Time.now + 10.day],['30', Time.now + 30.day]], :selected => '') %>
+				</div>
 			</div>
-		</div>
-	<% end %>
+			<div class="element">
+				<div class="center">
+					<button id="create_tournament">Create</button>
+				</div>
+			</div>
+		<% end %>
+	</div>
 </div>
