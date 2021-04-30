@@ -1145,6 +1145,19 @@ button:hover {
 	margin: auto;
 	font-size: 115%;
 }
+#content-tournaments #list #tournament #info button {
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+	border: none;
+	font-family: "Roboto-Medium";
+	font-size: 105%;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
+.transparent_button {
+	background-color: transparent;
+}
 
 #content-tournament {
 	display: flex;
