@@ -28,4 +28,4 @@ ENTRYPOINT	bundle install;\
 			service cron restart;\
 			echo "READY TO BOOT SERVER"; \
 			sleep infinity;
-			#rails s -b 0.0.0.0 -p 80;
+			#rails s -b 0.0.0.0;
