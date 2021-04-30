@@ -22,7 +22,7 @@ guild_list = [ 			# [ name, tag, max_members, admin ]
 ]
 user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "salty", "fourth", 0],
-	[23456, "cbertola", "first", 1],
+	[57610, "cbertola", "first", 1],
 	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
 	[12421, "neo", "first", 0],
