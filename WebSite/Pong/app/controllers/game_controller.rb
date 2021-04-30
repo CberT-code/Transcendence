@@ -2,9 +2,8 @@ class GameController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	
 	before_action do |sign_n_out|
-		if !user_signed_in?
-			render 'pages/not_authentificate', :status => :unauthorized
-		elsif @me.locked
+		start_conditions()
+		if @me.locked
 			render "/pages/otp"
 		end
 	end

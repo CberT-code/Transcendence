@@ -116,13 +116,13 @@ ActiveRecord::Schema.define(version: 2021_04_28_184538) do
 
   create_table "users", force: :cascade do |t|
     t.string "nickname", null: false
-    t.string "email", null: false
-    t.string "image", default: "", null: false
+    t.string "email"
+    t.string "image"
     t.boolean "available", default: false, null: false
     t.integer "role", default: 0, null: false
     t.boolean "deleted", default: false, null: false
-    t.string "uid", default: "", null: false
-    t.string "provider", default: "", null: false
+    t.string "uid", default: ""
+    t.string "provider", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -148,7 +148,6 @@ ActiveRecord::Schema.define(version: 2021_04_28_184538) do
     t.boolean "otp_required_for_login"
     t.boolean "locked", default: false
     t.boolean "banned", default: false
-    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["stat_id"], name: "index_users_on_stat_id"

@@ -2,15 +2,7 @@ class UsersController < ApplicationController
 	skip_before_action :verify_authenticity_token
 
 	before_action do |sign_n_out|
-		if !user_signed_in?
-			render 'pages/not_authentificate', :status => :unauthorized
-		elsif @me.banned == true
-			sign_out @me
-			render "/pages/ban"
-		else
-			@admin = current_user.role == 1 ? 1 : 0;
-			@me = current_user
-		end
+		start_conditions()
 	end
 
 	before_action :otp_login, only: [:show, :index]
@@ -70,29 +62,25 @@ class UsersController < ApplicationController
 	end
 
 	def show
-		if (current_user)
+		if (params[:id] != "sign_out")
 			if (params.has_key?(:id))
 				@user = User.find_by_id(params[:id])
 			else
 				@user = current_user
 			end
-			
-			if (!@user.deleted)
-				@user_stat = @user.stat;
-				@guild = @user.guild;
-				@current = @me.id == @user.id ? 1 : 0;
-				@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
-				@date = DateTime.new(1905,1,1,1,1,1);
-				@tournament = Array.new
-				Tournament.all.each do |tr|
-					if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
-						@tournament.push(tr)
-					end
+			@user_stat = @user.stat;
+			@guild = @user.guild;
+			@current = @me.id == @user.id ? 1 : 0;
+			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
+			@date = DateTime.new(1905,1,1,1,1,1);
+			@tournament = Array.new
+			Tournament.all.each do |tr|
+				if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
+					@tournament.push(tr)
 				end
-				# @tournament = Tournament.where("(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current);
-			else
-				render 'error/403', :status => :unauthorized
 			end
+		else
+			render 'pages/not_authentificate', :status => :unauthorized
 		end
 	end
 
@@ -127,8 +115,12 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@user.destroy
-				redirect_to destroy_user_session_path
+				@nb = User.where("email LIKE '%@unknown.fr'").count
+				@user.update(nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true)
+				@user.save
+				if (@current == 1)
+					sign_out current_user
+				end
 			end
 		else
 			render html: "error-forbidden";
@@ -158,11 +150,15 @@ class UsersController < ApplicationController
 	end
 	def ban
 		@user = User.find(params[:id]);
-		if (@me.role == 1)
-			@user.update(banned: true)
-			render html: "success"
+		if (@user.guild_id)
+			render html: "error-inguild";
 		else
-			render html: "error_admin"
+			if (@me.role == 1)
+				@user.update(banned: true)
+				render html: "success"
+			else
+				render html: "error_admin"
+			end
 		end
 	end
 	def unban

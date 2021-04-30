@@ -6,8 +6,7 @@
 		<div id="wrapper">
 			<% index = 1%>
 			<% @players.each do |player| %>
-				<a href="/#show_user/<%= player.id %>">
-					<div class="player">
+					<div class="player" OnClick="window.location='/#show_user/<%= player.id %>'">
 						<div id="left">
 							<div id="icon">
 								<img alt="<%= player.nickname %> image" src="<%= player.image %>" onerror="this.src='https://cdn.intra.42.fr/users/medium_default.png';">
@@ -25,7 +24,6 @@
 							</div>
 						</div>
 					</div>
-				</a>
 				<% index += 1 %>
 			<% end %>
 		</div>

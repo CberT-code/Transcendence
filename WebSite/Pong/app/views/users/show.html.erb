@@ -22,8 +22,6 @@
 			</div>
 		</div>
 	</div>
-
-
 	<div id="corp">
 		<% if @current != 0 %>
 			<div id="element">
@@ -31,11 +29,9 @@
 					<%= content_tag :div, '', id: 'player_data', data: { id: @me.id, otp: @user.otp_required_for_login} %>
 					<div id="otp_qrcode"></div>
 					<div id="otp_confirm_form">
-
 						<%= form_for :tfa_confirm, remote: true do |f| %>
 							<%= f.text_field :otp, placeholder: "Enter OTP here"%>
 						<% end %>
-
 					</div>
 					<div id="otp_disable_form">
 						<%= form_for :tfa_disable, remote: true do |f| %>
@@ -82,15 +78,15 @@
 					</div>
 				<% end %>
 				<div class="element-line" id="container">
-				<% if @current == 1 || @admin == 1 %>
+				<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
 					<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
 				<% end %>
-				<% if @admin == 1 && @user.banned == false %>
+				<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
 					<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
 				<% elsif @admin == 1 && @user.banned == true %>
 					<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
 				<% end %>
-				<% if @current != 1 && !(@me.friends.include?@user.id) %>
+				<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
 					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
 				<% end %>
 				</div>
