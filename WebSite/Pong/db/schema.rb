@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_28_184538) do
+ActiveRecord::Schema.define(version: 2021_04_30_061612) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(version: 2021_04_28_184538) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "difference", default: 0
+    t.integer "elo", default: 1000
   end
 
   create_table "tournaments", force: :cascade do |t|
@@ -139,7 +140,6 @@ ActiveRecord::Schema.define(version: 2021_04_28_184538) do
     t.bigint "guild_id"
     t.bigint "stat_id"
     t.string "status"
-    t.integer "elo", default: 1000
     t.integer "friends", default: [], array: true
     t.string "encrypted_otp_secret"
     t.string "encrypted_otp_secret_iv"

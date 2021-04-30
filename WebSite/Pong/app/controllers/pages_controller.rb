@@ -43,12 +43,10 @@ class PagesController < ApplicationController
 	end
 
 	def ladder
-		@players = User.all.sort_by { |u| u.elo}.reverse
+		@t_users = TournamentUser.where(tournament_id: 1).sort_by { |u| u.elo}.reverse
 	end
 
 	def home
-		@me = current_user
-		
 		# @session = session["devise.marvin_data"]	
 	end
 

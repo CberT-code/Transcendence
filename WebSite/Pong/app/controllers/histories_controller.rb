@@ -40,7 +40,7 @@ class HistoriesController < ApplicationController
 			if @me == @game.opponent && @me != @game.host # I'm the opponent
 				@status = "ready"
 				ActionCable.server.broadcast("pong_#{@game.id}",
-						{status: "ready", right_pp: @game.opponent.image})
+						{status: "ready", right_pp: @me.image})
 			elsif @me != @game.host && @me != @game.opponent && game.host != game.opponent # witnessing a live game
 				@status = "running"
 			else # game hasn't started yet

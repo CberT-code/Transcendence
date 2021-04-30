@@ -30,8 +30,6 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[60326, "hbaudet", "second", 1],
 	[12421, "sophie", "second", 0],
 	[12421, "bibiche", "second", 0],
-	[12421, "user9", "second", 0],
-	[12421, "user10", "third", 0],
 	[12421, "user11", "third", 0],
 	[12421, "user12", "third", 0],
 	[12421, "user13", "third", 0],
@@ -83,11 +81,12 @@ games_list = [			# [ host, opponent, host score, opponent score, tournament id, 
 	["melberg", "user34", 11, 0, 3, 6, true, 2],
 	["neo", "charly", 3, 2, 1, -1, true, 2]
 ]
-	@date = DateTime.new(1902,1,1,1,1,1);
-	trnmt_list = [
-		["Normal", "11 points to win", 11, 7.0, @date, nil],
-		["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
-	]
+
+@date = DateTime.new(1902,1,1,1,1,1);
+trnmt_list = [
+	["Normal", "11 points to win", 11, 7.0, @date, nil],
+	["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
+]
   
 # trnmt_list.each do |name, desc, pts, speed, start, endd|
 # 	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
@@ -134,15 +133,15 @@ user_list.each do |uid, name, guild|
 		usr.update(email: "#{name}@student.42.fr",
 		uid: uid, name: name,
 		image: "https://cdn.intra.42.fr/users/#{name}.jpg",
-		nickname: name, guild: Guild.find_by_name(guild), elo: rand(800..1200))
+		nickname: name, guild: Guild.find_by_name(guild))
 	else
 		stat = Stat.new;
-		stat.save;
+		stat.save!
 		usr = User.new(id: id, email: "#{name}@student.42.fr",
 		password: "password", provider: "marvin", uid: uid,
 		name: name, stat_id: stat.id,
 		image: "https://cdn.intra.42.fr/users/#{name}.jpg",
-		nickname: name, guild: Guild.find_by_name(guild), elo: rand(800..1200))
+		nickname: name, guild: Guild.find_by_name(guild))
 		usr.save!
 		tournamentUser = TournamentUser.new();
 		tournamentUser.update(user_id: usr.id, tournament_id: 1);

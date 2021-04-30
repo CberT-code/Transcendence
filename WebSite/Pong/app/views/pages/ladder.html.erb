@@ -5,27 +5,25 @@
 		</div>
 		<div id="wrapper">
 			<% index = 1%>
-			<% @players.each do |player| %>
-				<a href="/#show_user/<%= player.id %>">
-					<div class="player">
-						<div id="left">
-							<div id="icon">
-								<img alt="<%= player.nickname %> image" src="<%= player.image %>" onerror="this.src='https://cdn.intra.42.fr/users/medium_default.png';">
-							</div>
-							<div id="rank">
-								<p>#<%= index %></p>
-							</div>
+			<% @t_users.each do |t_user| %>
+				<div class="player" onClick="window.location='/#show_user/<%= t_user.user_id %>'">
+					<div id="left">
+						<div id="icon">
+							<img alt="<%= t_user.user.nickname %> image" src="<%= t_user.user.image %>" onerror="this.src='https://cdn.intra.42.fr/users/medium_default.png';">
 						</div>
-						<div id="right">
-							<div class="nickname">
-								<p><%= player.nickname %> - Elo : <%= player.elo %>
-							</div>
-							<div class="stats">
-								<p><span class="victory"><%= player.stat.victory %></span> - <span class="defeat"><%= player.stat.defeat %></span></p>
-							</div>
+						<div id="rank">
+							<p>#<%= index %></p>
 						</div>
 					</div>
-				</a>
+					<div id="right">
+						<div class="nickname">
+							<p><%= t_user.user.nickname %> - Elo : <%= t_user.elo %>
+						</div>
+						<div class="stats">
+							<p><span class="victory"><%= t_user.user.stat.victory %></span> - <span class="defeat"><%= t_user.user.stat.defeat %></span></p>
+						</div>
+					</div>
+				</div>
 				<% index += 1 %>
 			<% end %>
 		</div>

@@ -4,10 +4,6 @@ class War < ApplicationRecord
 	belongs_to :guild2, class_name: 'Guild', foreign_key: 'guild2_id'
 	has_many :games, class_name: 'History', foreign_key: 'war_id'
 
-	def isWarTime
-		# TO DO
-		return true
-	end
 	def self.startwar
 		warsstatus1 = War.where('status = ?', 1)
 		warsstatus1.each do |war|
@@ -42,6 +38,7 @@ class War < ApplicationRecord
 			end
 		end
 	end
+
 	def self.endwar
 		warsstatus2 = War.where('status = ?', 2)
 		warsstatus2.each do |war|
@@ -58,16 +55,30 @@ class War < ApplicationRecord
 			end
 		end
 	end
+
 	def self.startwartime
 		warsstatus2 = War.where('status = ?', 2)
 		warsstatus2.each do |war|
 			war.update(wartime: true)
 		end
 	end
+
 	def self.stopwartime
 		warsstatus2 = War.where('status = ?', 2)
 		warsstatus2.each do |war|
 			war.update(wartime: false)
 		end
+	end
+
+	def self.canDuel(host, opponent)
+		if host.guild && host.guild.war && opponent.guild &&
+				host.guild.war == opponent.guild.war &&
+				host.guild != opponent.guild &&
+				(host.guild.war.start > Time.now || host.guild.war.end < Time.now) && 
+				(host.guild.war.team1.include?(host.id) || host.guild.war.team2.include?(host.id)) && 
+				(opponent.guild.war.team1.include?(opponent.id) || opponent.guild.war.team2.include?(opponent.id))
+			return true
+		end
+		return false
 	end
 end

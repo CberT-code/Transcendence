@@ -46,10 +46,11 @@ class TournamentsController < ApplicationController
 			render html: @tournament.id;
 		end
 	end
+	
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@tournament_histories = TournamentUser.where('tournament_id = ?', @tournament.id).order(:difference).reverse_order;
-		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order;
+		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse_order
+		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order
 	end
 
 	def destroy

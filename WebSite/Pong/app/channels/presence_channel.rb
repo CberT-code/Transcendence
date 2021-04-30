@@ -5,6 +5,7 @@ class PresenceChannel < ApplicationCable::Channel
 		port: ENV['REDIS_PORT'],
 		db:   ENV['REDIS_DB'])
     @redis.set("player_#{self.current_user.id}", "online")
+	self.current_user.notifyFriends("online")
   end
 
   def receive(data)
@@ -13,5 +14,6 @@ class PresenceChannel < ApplicationCable::Channel
 
   def unsubscribed
     @redis.set("player_#{self.current_user.id}", "offline") 
-  end
+	self.current_user.notifyFriends("offline")
+end
 end
