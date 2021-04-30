@@ -25,7 +25,10 @@
 	<div id="corp">
 		<% if @current != 0 %>
 			<div id="element">
-				<div id="container" style="overflow: scroll">
+				<div id="name">
+					<h2>2fa</h2>
+				</div>
+				<div id="container">
 					<%= content_tag :div, '', id: 'player_data', data: { id: @me.id, otp: @user.otp_required_for_login} %>
 					<div id="otp_qrcode"></div>
 					<div id="otp_confirm_form">
