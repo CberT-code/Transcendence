@@ -22,6 +22,10 @@ class Tournament < ApplicationRecord
 			time = Time.now - tournament.end
 			puts "end"
 			if (time > 0)
+				user = TournamentUser.where("MAX(elo) AND tournament_id = ? ", tournament.id)
+				stat = Stat.find(user.stat_id)
+				stat.update(tournament: stat.tournament + 1)
+				stat.save
 				tournament.update(status: 2)
 				tournament.delete
 			end

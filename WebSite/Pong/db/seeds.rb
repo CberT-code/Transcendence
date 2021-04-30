@@ -26,7 +26,7 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
 	[12421, "neo", "first", 0],
-	[12421, "llepage", "third", 1],
+	[63184, "llepage", "third", 1],
 	[60326, "hbaudet", "second", 1],
 	[12421, "sophie", "second", 0],
 	[12421, "bibiche", "second", 0],
