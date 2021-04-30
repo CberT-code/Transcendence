@@ -27,6 +27,10 @@ class User < ApplicationRecord
 		@stat.save
 		user.stat_id = @stat.id
 		user.save!
+
+		tournament = TournamentUser.new
+		tournament.update(user_id: user.id, tournament_id: 1)
+		tournament.save
 		end
 	end
 

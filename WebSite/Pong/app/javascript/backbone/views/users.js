@@ -165,6 +165,9 @@ ViewAccount = Backbone.View.extend({
 			function (data) {
 				if (data == "error_admin") {
 					notification("error", "You cannot ban this player...");
+				}
+				else if (data == "error-inguild") {
+					notification("error", "Please remove this player from his guild first...");
 				} else {
 					Backbone.history.loadUrl();
 				}
