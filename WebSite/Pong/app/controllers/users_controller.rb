@@ -70,7 +70,7 @@ class UsersController < ApplicationController
 		@user_stat = @user.stat;
 		@guild = @user.guild;
 		@current = @me.id == @user.id ? 1 : 0;
-		@histories = History.where({'host_id = ? or opponent_id = ?', @user.id, @user.id});
+		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]);
 		@date = DateTime.new(1905,1,1,1,1,1);
 		@tournament = Array.new
 		Tournament.all.each do |tr|
@@ -97,7 +97,7 @@ class UsersController < ApplicationController
 					@user.update({nickname: params[:username]});
 					render html: "success";
 				else
-					render html: "errorusername_exist";
+					render html: "error-username_exist";
 				end
 			end
 		else
@@ -112,7 +112,7 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@nb = User.where({"email LIKE '%@unknown.fr'"}).count
+				@nb = User.where(["email LIKE '%@unknown.fr'"]).count
 				@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
 				@user.save
 				if (@current == 1)

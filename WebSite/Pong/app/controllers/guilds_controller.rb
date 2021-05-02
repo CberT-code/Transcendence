@@ -84,7 +84,7 @@ class GuildsController < ApplicationController
 			render json: {status: '1', info: "Self-kick from guild"}
 		elsif @usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete.id != @guild.id_admin))
 			if @guild.users.count == 1
-				@guild.update({id_admin: nil, deleted: true})
+				@guild.update(deleted: true)
 				@guild.officers.delete(@usertodelete.id)
 				render json: {status: '1', info: "removed member of the guild and delete guild"}
 			else

@@ -22,7 +22,7 @@ class TournamentsController < ApplicationController
 	def create
 		if (params[:tournamentname] == "" || !safestr(params[:tournamentname]))
 			render html: "error-1";
-		elsif (params[:tournamentdescription] == "" || !safestr(params[:tournamentdescription]))
+		elsif (params[:tournamentdescription] == "" || !safesentence(params[:tournamentdescription]))
 			render html: "error-2";
 		elsif (params[:start] == "")
 			render html: "error-3";
@@ -47,7 +47,7 @@ class TournamentsController < ApplicationController
 	
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse_order
+		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse
 		@wars_histories = History.where(['tournament_id = ?', @tournament.id]).order(:id).reverse_order
 	end
 
