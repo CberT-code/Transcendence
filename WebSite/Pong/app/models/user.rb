@@ -14,7 +14,7 @@ class User < ApplicationRecord
 		   :omniauthable, omniauth_providers: [:marvin]
 	
 	def self.from_omniauth(auth)
-	  where(provider: auth.provider, uid: auth.uid, email: auth.info.email).first_or_create do |user|
+	  where({provider: auth.provider, uid: auth.uid, email: auth.info.email}).first_or_create do |user|
 		user.email = auth.info.email
 		user.uid = auth.uid
 		user.password = Devise.friendly_token[0,20]
@@ -29,7 +29,7 @@ class User < ApplicationRecord
 		user.save!
 
 		tournament = TournamentUser.new
-		tournament.update(user_id: user.id, tournament_id: 1)
+		tournament.update({user_id: user.id, tournament_id: 1})
 		tournament.save
 		end
 	end

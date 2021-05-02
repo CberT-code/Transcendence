@@ -5,7 +5,7 @@ class War < ApplicationRecord
 	has_many :games, class_name: 'History', foreign_key: 'war_id'
 
 	def self.startwar
-		warsstatus1 = War.where('status = ?', 1)
+		warsstatus1 = War.where(['status = ?', 1])
 		warsstatus1.each do |war|
 
 			timetostart = ((war.start.to_date) - DateTime.current.to_date).to_i
@@ -34,39 +34,39 @@ class War < ApplicationRecord
 						break
 					end
 				end
-				war.update(status: 2)
+				war.update({status: 2})
 			end
 		end
 	end
 
 	def self.endwar
-		warsstatus2 = War.where('status = ?', 2)
+		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
 			timetostart2 = ((war.end.to_i) - DateTime.current.to_i).to_i
 			if (timetostart2 < 1)
 				if (war.points_guild1 > war.points_guild2)
 					guild = Guild.find_by_id(war.guild1_id)
-					guild.update(points: @guild.points + war.points)
+					guild.update({points: @guild.points + war.points})
 				elsif (war.points_guild1 < war.points_guild2)
 					guild = Guild.find_by_id(war.guild2_id)
-					guild.update(points: @guild.points + war.points)
+					guild.update({points: @guild.points + war.points})
 				end
-				war.update(status: 3, wartime: false)
+				war.update({status: 3, wartime: false})
 			end
 		end
 	end
 
 	def self.startwartime
-		warsstatus2 = War.where('status = ?', 2)
+		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
-			war.update(wartime: true)
+			war.update({wartime: true})
 		end
 	end
 
 	def self.stopwartime
-		warsstatus2 = War.where('status = ?', 2)
+		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
-			war.update(wartime: false)
+			war.update({wartime: false})
 		end
 	end
 

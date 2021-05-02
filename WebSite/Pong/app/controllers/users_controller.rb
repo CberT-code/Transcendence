@@ -58,38 +58,35 @@ class UsersController < ApplicationController
 	end
 
 	def index
-		@Users = User.where("deleted = ?", FALSE);
+		@Users = User.where(["deleted = ?", FALSE]);
 	end
 
 	def show
-		if (params[:id] != "sign_out")
-			if (params.has_key?(:id))
-				@user = User.find_by_id(params[:id])
-			else
-				@user = current_user
-			end
-			@user_stat = @user.stat;
-			@guild = @user.guild;
-			@current = @me.id == @user.id ? 1 : 0;
-			@histories = History.where('host_id = ? or opponent_id = ?', @user.id, @user.id);
-			@date = DateTime.new(1905,1,1,1,1,1);
-			@tournament = Array.new
-			Tournament.all.each do |tr|
-				if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
-					@tournament.push(tr)
-				end
-			end
+		if (params.has_key?(:id))
+			@user = User.find_by_id(params[:id])
 		else
-			render 'pages/not_authentificate', :status => :unauthorized
+			@user = current_user
 		end
+		@user_stat = @user.stat;
+		@guild = @user.guild;
+		@current = @me.id == @user.id ? 1 : 0;
+		@histories = History.where({'host_id = ? or opponent_id = ?', @user.id, @user.id});
+		@date = DateTime.new(1905,1,1,1,1,1);
+		@tournament = Array.new
+		Tournament.all.each do |tr|
+			if tr.available && tr.playerIsRegistered(@user.id) && tr.playerIsRegistered(@me.id)
+				@tournament.push(tr)
+			end
+		end
+
 	end
 
 	def update
 		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @admin == 1)
-			if (params.has_key?(:checked))
-				User.find_by_id(@user.id).update({"available": params[:checked]});
+		if (@current == 1 || @admin == 1 )
+			if (params.has_key?(:checked) && (params[:checked] == true || params[:checked] == false))
+				User.find_by_id(@user.id).update({available: params[:checked]});
 				render html: "success";
 			elsif (params.has_key?(:username))
 				if (!safestr(params[:username]))
@@ -97,7 +94,7 @@ class UsersController < ApplicationController
 				elsif (params[:username] == "")
 					render html: "error-incomplete";
 				elsif (!User.find_by_nickname(params[:username]))
-					@user.update({"nickname": params[:username]});
+					@user.update({nickname: params[:username]});
 					render html: "success";
 				else
 					render html: "errorusername_exist";
@@ -115,8 +112,8 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@nb = User.where("email LIKE '%@unknown.fr'").count
-				@user.update(nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true)
+				@nb = User.where({"email LIKE '%@unknown.fr'"}).count
+				@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
 				@user.save
 				if (@current == 1)
 					sign_out current_user
@@ -128,7 +125,7 @@ class UsersController < ApplicationController
 	end
 
 	def addfriend
-		@user = User.find(params[:id]);
+		@user = User.find_by_id(params[:id]);
 		if (!(@me.friends.include?@user.id) && @user.id != current_user.id)
 			@me.friends.push(@user.id)
 			@me.save
@@ -139,7 +136,7 @@ class UsersController < ApplicationController
 	end
 
 	def delfriend
-		@user = User.find(params[:id]);
+		@user = User.find_by_id(params[:id]);
 		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
 			@me.friends.delete(@user.id)
 			@me.save
@@ -149,12 +146,12 @@ class UsersController < ApplicationController
 		end
 	end
 	def ban
-		@user = User.find(params[:id]);
+		@user = User.find_by_id(params[:id]);
 		if (@user.guild_id)
 			render html: "error-inguild";
 		else
 			if (@me.role == 1)
-				@user.update(banned: true)
+				@user.update({banned: true})
 				render html: "success"
 			else
 				render html: "error_admin"
@@ -162,9 +159,9 @@ class UsersController < ApplicationController
 		end
 	end
 	def unban
-		@user = User.find(params[:id]);
+		@user = User.find_by_id(params[:id]);
 		if (@me.role == 1)
-			@user.update(banned: false)
+			@user.update({banned: false})
 			render html: "success"
 		else
 			render html: "error_admin"
