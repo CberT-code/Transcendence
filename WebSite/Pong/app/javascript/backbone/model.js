@@ -154,6 +154,32 @@ getProfil = Backbone.Model.extend({
     }
 })
 
+UpdatePrivateConversations = Backbone.Model.extend({
+    "url": "tchat/messages/private",
+    parse: function(response) {
+        if (response.length > 0) {
+            $(".listConversations").html("");
+            response.forEach(function (element) {
+                var ret = "";
+                if (element.blocked == 1) {
+                    ret += "<div id='message' class='glbmessage'><div id='icon'>"
+                    ret += "<img src='"+ element.image +"' alt='user icon'></div><div id='username'>"
+                    ret += "<p>"+ element.nickname +"</p></div>" 
+                    ret += "<input type='hidden' value='" + element.target_id+ "'>"
+                    ret += "<input type='hidden' value='" + element.nickname+ "'>"
+                } else {
+                    ret += "<div id='blockMessage' class='glbmessage'><div id='icon'>"
+                    ret += "<img src='"+ element.image +"' alt='user icon'></div><div id='username'>"
+                    ret += "<p>"+ element.nickname +"</p></div>" 
+                    ret += "<input type='hidden' value='" + element.target_id+ "'>"
+                }
+                $(".listConversations").append(ret);
+            });
+        }
+    }
+})
+
+window.app.models.UpdatePrivateConversations = new UpdatePrivateConversations;
 window.app.models.getProfil = new getProfil;
 window.app.models.initNewConversation = new initNewConversation;
 window.app.models.PrivateConversation = new PrivateConversation;

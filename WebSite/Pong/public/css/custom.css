@@ -3067,6 +3067,7 @@ background-color: #7BE12B;
     height: min-content;
     margin-left: auto;
     margin-right: auto;
+	margin-bottom: 15px;
 }
 #content-user #element #container input {
 	width: 50%;

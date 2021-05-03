@@ -443,6 +443,7 @@ ViewChannel = Backbone.View.extend(
             $(".privateMessages").css("display", "block");
             $(".privateConversation").css("display", "none");
             $(".PrivateMessages").empty();
+            window.app.models.UpdatePrivateConversations.fetch();
         },
         submitConversationMessage: function () {
             var target_id = $(".PrivateConvTargetId").val();
@@ -471,6 +472,7 @@ ViewChannel = Backbone.View.extend(
         removeMessage: function (e) {
             e.preventDefault();
             var message_id = $(e.currentTarget).val();
+            var target_id = $(".PrivateConvTargetId").val();
             if (message_id != "")
                 $.post(
                     "/tchat/message/remove",
@@ -479,8 +481,9 @@ ViewChannel = Backbone.View.extend(
                         "id": message_id,
                     },
                     function (data) {
-                        notification("success", "Message send !");
-                        Backbone.history.loadUrl();
+                        $(".PrivateMessages").empty();
+                        $(".PrivateConvMessage").val("");
+                        window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + target_id });
                     },
                     'text'
                 );

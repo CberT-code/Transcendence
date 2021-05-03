@@ -85,11 +85,15 @@
 					<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
 						<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
 					<% end %>
+					</div>
+					<div class="element-line">
 					<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
 						<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
 					<% elsif @admin == 1 && @user.banned == true %>
 						<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
 					<% end %>
+					</div>
+					<div class="element-line">
 					<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
 						<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
 					<% end %>
