@@ -353,7 +353,7 @@ class TchatController < ApplicationController
 		end
 		@type = params[:type]
 		@channel_id = params[:id]
-		@datas = Sanctions.find_by_user_id_and_sanction_type(@channel_id, @type)
+		@datas = Sanctions.where(:user_id @channel_id, :sanction_type @type).all()
 		if (@datas)
 			@ret = Array.new
 			@datas.each do |element|
