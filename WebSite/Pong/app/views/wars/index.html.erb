@@ -1,5 +1,5 @@
 <div id="content-wars">
-	<% if (User.find(current_user.id).guild_id || @admin == 1) %>
+	<% if (User.find_by_id(current_user.id).guild_id || @admin == 1) %>
 		<div id="element">
 
 				<% if @admin == 1 && @request_sent.count == 0 %>

@@ -12,8 +12,8 @@ class MatchmakingController < ApplicationController
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		tourn = Tournament.find(params['id'].to_i)
-		opponent = User.find(params['opponent'].to_i)
+		tourn = Tournament.find_by_id(params['id'].to_i)
+		opponent = User.find_by_id(params['opponent'].to_i)
 		@me = current_user
 		if War.canDuel(@me, opponent)
 			war_id = @me.guild.war_id
@@ -53,7 +53,7 @@ class MatchmakingController < ApplicationController
 			else
 				redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 				redis.set("game_#{game.id}", "ready")
-				game.update(opponent: @me)
+				game.update({opponent: @me})
 				render json: {status: "ok", info: "You accepted the challenge!"}
 			end
 		end
@@ -115,7 +115,7 @@ class MatchmakingController < ApplicationController
 	end
 
 	def timeout
-		game = History.find(params[:id])
+		game = History.find_by_id(params[:id])
 		if game.timeout == -1
 			render json: {status: "ok", time_left: -1}
 		elsif Time.now - game.created_at < game.timeout

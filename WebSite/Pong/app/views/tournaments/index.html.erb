@@ -24,8 +24,8 @@
 							<% end%>
 						</div>
 						<div id="info" >
-							<button class="transparent_button"  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >See</button>
-							<% if (TournamentUser.where("user_id = ? and tournament_id = ?", current_user.id, tournament.id).count == 0) %>
+							<button  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >Voir</button>
+							<% if (TournamentUser.where(["user_id = ? and tournament_id = ?", current_user.id, tournament.id]).count == 0) %>
 						        <button class="green_button" id="playerJoin" value="<%= tournament.id %>">Join</button>
 					        <% end %>
                         </div>

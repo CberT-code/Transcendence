@@ -26,7 +26,7 @@ user_list = [ 			# [ UID, name, guild, role ]
 	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
 	[12421, "neo", "first", 0],
-	[12421, "llepage", "third", 1],
+	[63184, "llepage", "third", 1],
 	[60326, "hbaudet", "second", 1],
 	[12421, "sophie", "second", 0],
 	[12421, "bibiche", "second", 0],
@@ -93,7 +93,7 @@ trnmt_list = [
 # end 
 
 if User.find_by_id(1) != nil
-	User.find(1).destroy
+	User.find_by_id(1).destroy
 end
 
 
@@ -107,7 +107,7 @@ superadmin = User.create(id: 1, email: "#{admin_name}@student.42.fr",
 superadmin.save
 
 tournamentUser = TournamentUser.new();
-tournamentUser.update(user_id: 1, tournament_id: 1);
+tournamentUser.update({user_id: 1, tournament_id: 1});
 tournamentUser.save
 
 guild_list.each do |name, anagramme, nb, admin|
@@ -115,9 +115,9 @@ guild_list.each do |name, anagramme, nb, admin|
 	stat = Stat.new;
 	stat.save;
 	if (guild != nil)
-		guild.update(name: name, anagramme: anagramme,
+		guild.update({name: name, anagramme: anagramme,
 			admin: superadmin, description: name,
-			id_stats: stat.id, maxmember: nb, nbmember: nb)
+			id_stats: stat.id, maxmember: nb, nbmember: nb})
 	else
 		guild = Guild.new(name: name, anagramme: anagramme,
 			id_admin: 1, description: name,

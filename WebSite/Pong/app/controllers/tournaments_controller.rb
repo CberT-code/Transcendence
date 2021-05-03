@@ -13,14 +13,16 @@ class TournamentsController < ApplicationController
 		@tournament = Tournament.new
 	end
 	def playerJoin
-		if (TournamentUser.where("user_id = ? and tournament_id = ?", current_user.id, params[:id_tournament]).count == 0) 
-			TournamentUser.create({tournament_id: params[:id_tournament], user_id: current_user.id })
+		if (TournamentUser.where(["user_id = ? and tournament_id = ?", current_user.id, params[:id_tournament]]).count == 0)
+			if ( is_number?(params[:id_tournament]))
+				TournamentUser.create({tournament_id: params[:id_tournament], user_id: current_user.id })
+			end
 		end
 	end
 	def create
-		if (params[:tournamentname] == "")
+		if (params[:tournamentname] == "" || !safestr(params[:tournamentname]))
 			render html: "error-1";
-		elsif (params[:tournamentdescription] == "")
+		elsif (params[:tournamentdescription] == "" || !safesentence(params[:tournamentdescription]))
 			render html: "error-2";
 		elsif (params[:start] == "")
 			render html: "error-3";
@@ -45,8 +47,8 @@ class TournamentsController < ApplicationController
 	
 	def show
 		@tournament = Tournament.find_by_id(params[:id]);
-		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse_order
-		@wars_histories = History.where('tournament_id = ?', @tournament.id).order(:id).reverse_order
+		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse
+		@wars_histories = History.where(['tournament_id = ?', @tournament.id]).order(:id).reverse_order
 	end
 
 	def destroy

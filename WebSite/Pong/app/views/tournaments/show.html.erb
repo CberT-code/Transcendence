@@ -44,8 +44,8 @@
 			<div id="corp">
 				<% @i=0%>
 				<% @wars_histories.each do |wars_history| %>
-					<% @user = User.find(wars_history.host_id) %>
-					<% @user2 = User.find(wars_history.opponent_id) %>
+					<% @user = User.find_by_id(wars_history.host_id) %>
+					<% @user2 = User.find_by_id(wars_history.opponent_id) %>
 					<div class="war">
 						<div id="position">
 							<p><%= @i += 1 %></p>

@@ -9,7 +9,7 @@ class GameController < ApplicationController
 	end
 	
 	def run
-		game = History.find(params[:id])
+		game = History.find_by_id(params[:id])
 		if current_user == game.host # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],

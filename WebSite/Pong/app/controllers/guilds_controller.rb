@@ -7,7 +7,7 @@ class GuildsController < ApplicationController
 	end
 
 	def index
-		@guilds = Guild.where("deleted = ?", false);
+		@guilds = Guild.where(["deleted = ?", false]);
 	end
 
 	def new
@@ -38,9 +38,9 @@ class GuildsController < ApplicationController
 			@guild = Guild.new;
 			@stat = Stat.new;
 			@stat.save;
-			@guild.update({name: params[:guildname], anagramme: params[:guildname].first(5), description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember], id_admin: current_user.id, deleted: false});
+			@guild.update({name: params[:guildname], anagramme: params[:anagramme], description: params[:guildstory], id_stats: @stat.id, maxmember: params[:maxmember], id_admin: current_user.id, deleted: false});
 			@guild.save;
-			current_user.update({"guild_id": @guild.id});
+			current_user.update({guild_id: @guild.id});
 			render html: @guild.id;
 		end
 	end
@@ -53,7 +53,7 @@ class GuildsController < ApplicationController
 		end
 		@user = current_user;
 		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
-		@wars_histories = War.where('guild1_id = ? or guild2_id = ?', @guild.id, @guild.id);
+		@wars_histories = War.where(['guild1_id = ? or guild2_id = ?', @guild.id, @guild.id]);
 		@list_users = @guild.users.all.sort_by { |u| [u.id == @guild.id_admin ? 0 : 1, (@guild.officers.include? u.id) ? 0 : 1, u.name]}
 		@ban_users = @guild.banned;
 		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
@@ -64,7 +64,7 @@ class GuildsController < ApplicationController
 		@new_admin = User.find_by_id(params[:id_admin]);
 		@guild = Guild.find_by_id(@new_admin.guild_id);
 		if ((current_user.guild_id == @guild.id && @guild.id_admin == current_user.id  ) || @admin == 1)
-			@guild.update({'id_admin': @new_admin.id});
+			@guild.update({id_admin: @new_admin.id});
 			render html: @guild.id;
 		else
 			render html: "error-badguild";
@@ -80,18 +80,18 @@ class GuildsController < ApplicationController
 			render json: {status: "error", info: "Trying to delete admin"}
 		elsif @usertodelete.id == current_user.id && @guild.users.count != 1
 			@guild.officers.delete(@usertodelete.id)
-			@usertodelete.update({"guild_id": nil})
+			@usertodelete.update({guild_id: nil})
 			render json: {status: '1', info: "Self-kick from guild"}
 		elsif @usertodelete.guild_id && (@admin == 1 || (@officer == 1 && @usertodelete.id != @guild.id_admin))
 			if @guild.users.count == 1
-				@guild.update(id_admin: nil, deleted: true)
+				@guild.update(deleted: true)
 				@guild.officers.delete(@usertodelete.id)
 				render json: {status: '1', info: "removed member of the guild and delete guild"}
 			else
 				@guild.officers.delete(@usertodelete.id)
 				render json: {status: '2', info: "removed a member of the guild"}
 			end
-			@usertodelete.update({"guild_id": nil})
+			@usertodelete.update({guild_id: nil})
 		else
 			render json: {status: '1', info: "did nothing"}
 		end
@@ -112,8 +112,8 @@ class GuildsController < ApplicationController
 				elsif (@usertoban.id == current_user.id)
 					render html: "error-yourself";
 				else
-					@guild.update(nbmember: @guild.users.count - 1);
-					@usertoban.update({"guild_id": nil});
+					@guild.update({nbmember: @guild.users.count - 1});
+					@usertoban.update({guild_id: nil});
 					if (@guild.banned.count == 0)
 						@guild.update({banned: [@usertoban.id]});
 					else
@@ -144,8 +144,8 @@ class GuildsController < ApplicationController
 			if (@guild.banned.include? @user.id)
 				render html: "error_banned";
 			elsif (@guild.users.count < @guild.maxmember)
-				@guild.update(nbmember: @guild.users.count + 1);
-				@user.update({"guild_id": @guild.id});
+				@guild.update({nbmember: @guild.users.count + 1});
+				@user.update({guild_id: @guild.id});
 				render html: @guild.id;
 			else
 				render html: "error_max";
@@ -156,7 +156,7 @@ class GuildsController < ApplicationController
 	end
 
 	def search
-		@list_guild = Guild.where("LOWER(name) LIKE LOWER(?) AND DELETED IS FALSE","%" + params[:search] + "%");
+		@list_guild = Guild.where(["LOWER(name) LIKE LOWER(?) AND DELETED IS FALSE","%" + params[:search] + "%"]);
 		@ret = Array.new
 		@list_guild.each do |guild|
 			@ret.push(["id" => guild.id, "name" => CGI.escapeHTML(guild.name), "nbmember" => guild.nbmember])
@@ -190,7 +190,7 @@ class GuildsController < ApplicationController
 		@anagramme = params[:anagramme]
 		if (@anagramme.length > 5)
 			render html: "toolong"
-		elsif Guild.where(anagramme: @anagramme, deleted: false).first
+		elsif Guild.where({anagramme: @anagramme, deleted: false}).first
 			render html: "used"
 		end
 	end
