@@ -84,7 +84,7 @@ games_list = [			# [ host, opponent, host score, opponent score, tournament id, 
 
 @date = DateTime.new(1902,1,1,1,1,1);
 trnmt_list = [
-	["Normal", "11 points to win", 11, 7.0, @date, nil],
+	["Ping Pong", "11 points to win", 11, 7.0, @date, nil],
 	["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
 ]
   
