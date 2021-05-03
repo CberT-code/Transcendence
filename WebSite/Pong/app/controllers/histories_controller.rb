@@ -25,7 +25,10 @@ class HistoriesController < ApplicationController
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		@game = History.find_by_id(params[:id])
+		@game = History.find(params[:id])
+		if @game.duel == "pending" && current_user == @game.opponent #duel stuff to prevent cheat with "forever alone" button
+			@game.update(duel: "accepted")
+		end
 		if (@game.statut == 3) #ended, show recap
 			@status = "ended"
 			@left = @game.host_score
@@ -37,7 +40,7 @@ class HistoriesController < ApplicationController
 				@status = "ready"
 				ActionCable.server.broadcast("pong_#{@game.id}",
 						{status: "ready", right_pp: @me.image})
-			elsif @me != @game.host && @me != @game.opponent && game.host != game.opponent # witnessing a live game
+			elsif @me != @game.host && @me != @game.opponent && @game.host != @game.opponent # witnessing a live game
 				@status = "running"
 			else # game hasn't started yet
 				@status = "Looking For Opponent"

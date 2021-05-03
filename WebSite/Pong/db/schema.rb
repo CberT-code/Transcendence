@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_30_061612) do
+ActiveRecord::Schema.define(version: 2021_04_30_133140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
     t.bigint "war_id"
     t.boolean "war_match", default: false
     t.integer "timeout", default: -1
+    t.string "duel", default: ""
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
     t.index ["war_id"], name: "index_histories_on_war_id"

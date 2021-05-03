@@ -89,9 +89,9 @@ class GameController < ApplicationController
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = ball[0] * -1 + 2
-				if move[0] == "up"
+				if move[0] == "up" && player[0] > 0
 					ball[2] += 0.2
-				elsif move[0] == "down"
+				elsif move[0] == "down" && player[0] < 75
 					ball[2] -= 0.2
 				end
 			else
@@ -104,9 +104,9 @@ class GameController < ApplicationController
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = 193.2 - ball[0]
-				if move[1] == "up"
+				if move[1] == "up" && player[1] > 0
 					ball[2] -= 0.2
-				elsif move[0] == "down"
+				elsif move[1] == "down" && player[1] < 75
 					ball[2] += 0.2
 				end
 			else

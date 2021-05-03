@@ -14,21 +14,25 @@ var timeout_check = -1;
 import consumer from "../channels/consumer"
 
 clearInterval(waiting);
-document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
-document.querySelector("#content-game_show #stop").addEventListener("click", stopGame, false);
 $(window).resize(resize_game);
 console.log("loaded page, status :" + status);
 
 resize_game();
 if (status == "Looking For Opponent") {
-	waiting = setInterval(wait, 120); }
+	document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
+	waiting = setInterval(wait, 120);
+}
 else if (status == "ready" || status == "running") {
 	$('#content-game_show #game').css('visibility', 'visible');
+	$('#content-game_show #alone').hide();
 }
 else if (status == "ended") {
 	var left = $('#content-game_show #game_data').data('left');
 	var right = $('#content-game_show #game_data').data('right');
+	$('#content-game_show #game').css('visibility', 'hidden');
 	$('#score').html(left + " - " + right);
+	$('#content-game_show #end_game').css('visibility', 'visible');
+	$('#content-game_show #alone').hide();
 	ready = 0;
 }
 
@@ -76,6 +80,7 @@ if (ready) {
 			right_pp = "url(\"" + data['right_pp'] + "\")";
 			$("#content-game_show #right_PP").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 			$('#content-game_show #game').css('visibility', 'visible');
+			$('#content-game_show #alone').hide();
 			$.post('/histories/run/' + id);
 			console.log("received data from socket: game ready, post sent");
 		}
@@ -84,6 +89,7 @@ if (ready) {
 			right_pp = "url(\"" + data['right_pp'] + "\")";
 			$("#content-game_show #right_PP").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 			$('#content-game_show #game').css('visibility', 'hidden');
+			$('#content-game_show #alone').hide();
 			endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 			ready = 0;
 			actionCable.unsubscribe();
@@ -97,12 +103,6 @@ if (ready) {
 		}
 	}
 	});
-}
-
-function stopGame() {
-	clearInterval(waiting);
-	$('#content-game_show #game').css('visibility', 'hidden');
-	$.post('/histories/stop/' + id);
 }
 
 function foreverAlone() {
@@ -177,7 +177,7 @@ function timeout() {
 function wait() {
 	timeout();
 	if (timeout_check != "-1") {
-		$('#content-game_show #score').html(timeout_check + "s before enemy guild forfeits");
+		$('#content-game_show #score').html(timeout_check + "s before enemy forfeits");
 	}
 	else {
 		if (status == "deleted") {

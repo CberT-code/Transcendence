@@ -17,23 +17,33 @@ class Tournament < ApplicationRecord
 	end
 
 	def self.statustournament
-		tournamentsend = Tournament.where(["status = ? AND CAST(\"end\" AS DATE) = ? ", 1, DateTime.now.to_date]);
+		puts "tournament status check"
+		# tournamentsend = Tournament.where(["status = ? AND CAST(\"end\" AS DATE) = ? ", 1, DateTime.now.to_date])
+		tournamentsend = Tournament.where(["status = ?", 1])
 		tournamentsend.each do |tournament|
 			time = Time.now - tournament.end
 			puts "end"
 			if (time > 0)
-				user = TournamentUser.where(["MAX(elo) AND tournament_id = ? ", tournament.id])
-				stat = Stat.find_by_id(user.stat_id)
+				# t_user = TournamentUser.where(["MAX(elo) AND tournament_id = ? ", tournament.id]).first
+				t_user = TournamentUser.where(["tournament_id = ?", tournament.id]).sort_by { |u| [u.elo]}.reverse.first
+				stat = Stat.find_by_id(t_user.user.stat_id)
 				stat.update({tournament: stat.tournament + 1})
 				stat.save
 				tournament.update({status: 2})
-				tournament.delete
+				# tournament.delete
 			end
 		end
-		@tournamentsstart = Tournament.where(["status = ? AND CAST(\"start\" AS DATE) = ? ", 0, DateTime.now.to_date]);
+		@tournamentsstart = Tournament.where(["status = ? AND CAST(\"start\" AS DATE) = ? ", 0, DateTime.now.to_date])
 		@tournamentsstart.each do |tournament|
 			puts "start"
 			tournament.update({status: 1})
+		end
+		tournamentdel = Tournament.where(["status = ?", 2])
+		tournamentdel.each do |tournament|
+			if tournament.end + 7 * 60 * 60 * 24 < Time.now
+				puts "deleting tournament ##{tournament.id}"
+				tournament.delete
+			end
 		end
 	end
 end

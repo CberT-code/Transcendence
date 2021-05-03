@@ -22,10 +22,9 @@
 				</div>
 				<div id="right">
 					<% if current_user.role == 1 %>
-						<button onClick="window.location='/#accounts'" >Accounts</button>
-					<% else %>
-						<button onClick="window.location='/#show_user/<%= current_user.id %>'" >Account</button>
+						<button onClick="window.location='/#accounts'" >Admin</button>
 					<% end %>
+					<button onClick="window.location='/#show_user/<%= current_user.id %>'" >Account</button>
 					<button onClick="window.location='/#tchat'">Chat</button>
 					<button onClick="window.location='/#play'" >Play</button>
 					<button onClick="window.location='/#ladder'" >Ladder</button>

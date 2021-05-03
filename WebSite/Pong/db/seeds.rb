@@ -88,9 +88,9 @@ trnmt_list = [
 	["Mort Subite", "1 points to win", 1, 7.0, DateTime.current, DateTime.current + 6.days]
 ]
   
-# trnmt_list.each do |name, desc, pts, speed, start, endd|
-# 	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
-# end 
+trnmt_list.each do |name, desc, pts, speed, start, endd|
+	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
+end 
 
 if User.find_by_id(1) != nil
 	User.find_by_id(1).destroy
