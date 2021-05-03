@@ -1,24 +1,20 @@
 <div id="content-users">
-	<div id="element">
-		<div id="center">
-			<table>
-				<thead>
-					<tr>
-						<td>ID</td>
-						<td>Name</td>
-						<td></td>
-					</tr>
-				</thead>
-				<tbody>
-					<% @Users.each do |user| %>
-						<tr>
-							<td><%= user.id %></td>
-							<td><%= user.nickname %></td>
-							<td><button onClick="window.location='/#show_user/<%= user.id %>'">Voir</button></td>
-						</tr>
-					<% end %>
-				</tbody>
-			</table>
+	<div id="center">
+		<div id="title">
+			<h1>Users list</h1>
 		</div>
+		<div id="list">
+			<% @Users.each do |user| %>
+				<div id="user">
+					<div id="id">
+						<p># <%= user.id %></p>
+					</div>
+					<div id="username">
+						<p><%= user.nickname %></p>
+					</div>
+					<button onClick="window.location='/#show_user/<%= user.id %>'">See</button>
+				</div>
+			<% end %>
+		</div>	
 	</div>
 </div>

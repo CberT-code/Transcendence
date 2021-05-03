@@ -71,27 +71,29 @@
 				<div id="name">
 					<h2>actions</h2>
 				</div>
-				<% if @current == 1 || @admin == 1 %>
+				<div id="container">
+					<% if @current == 1 || @admin == 1 %>
+						<div class="element-line">
+							<span>Available for war?</span>
+							<label class="switch">
+								<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : ""%>>
+								<span class="slider"></span>
+							</label>
+						</div>
+					<% end %>
 					<div class="element-line">
-						<span>Available for war?</span>
-						<label class="switch">
-							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : ""%>>
-							<span class="slider"></span>
-						</label>
+					<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
+						<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+					<% end %>
+					<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
+						<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
+					<% elsif @admin == 1 && @user.banned == true %>
+						<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
+					<% end %>
+					<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
+						<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
+					<% end %>
 					</div>
-				<% end %>
-				<div class="element-line" id="container">
-				<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
-					<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
-				<% end %>
-				<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
-					<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
-				<% elsif @admin == 1 && @user.banned == true %>
-					<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
-				<% end %>
-				<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
-					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
-				<% end %>
 				</div>
 			</div>
 		<% end %>
