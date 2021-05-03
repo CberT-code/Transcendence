@@ -131,14 +131,14 @@
                 <br/>
                 <select class="SanctionTime">
                     <option value="">--Please choose an amount of time--</option>
-                    <option value="dog">1 minute</option>
-                    <option value="cat">5 minutes</option>
-                    <option value="hamster">30 minutes</option>
-                    <option value="parrot">1 heure</option>
-                    <option value="spider">4 heures</option>
-                    <option value="goldfish">6 heures</option>
-                    <option value="goldfish">12 heures</option>
-                    <option value="goldfish">24 heures</option>
+                    <option value="60">1 minute</option>
+                    <option value="300">5 minutes</option>
+                    <option value="1800">30 minutes</option>
+                    <option value="3600">1 heure</option>
+                    <option value="14400">4 heures</option>
+                    <option value="21600">6 heures</option>
+                    <option value="43200">12 heures</option>
+                    <option value="86400">24 heures</option>
                 </select>
                 <button class="SanctionSubmit">make sanction</button>
             </div>
@@ -184,7 +184,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="list">
+                <div id="list" class="listConversations">
                     <% @messages.each do |element|
                         if (element["blocked"] == 1)
                     %>

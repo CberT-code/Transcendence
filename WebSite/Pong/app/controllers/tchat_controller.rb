@@ -206,13 +206,14 @@ class TchatController < ApplicationController
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@type = CGI.escapeHTML(params[:type]).to_i
 		@datas = Channel.find_by_id(@channel_id)
+		@time = params[:time] ? params[:time].to_i : 99999
 		if (@datas && @datas.user_id == current_user.id)
 			if (@target_id.to_i == current_user.id)
 				render html: "2"
 				return
 			end
 			if (@type == 1)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 2)
@@ -223,7 +224,7 @@ class TchatController < ApplicationController
 				render html: "1"
 				return 
 			elsif (@type == 3)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 4)
@@ -352,12 +353,14 @@ class TchatController < ApplicationController
 		end
 		@type = params[:type]
 		@channel_id = params[:id]
-		@datas = Sanctions.find_by_user_id_and_sanction_type(@channel_id, @type)
+		@datas = Sanctions.where(user_id: @channel_id, sanction_type: @type).all()
 		if (@datas)
 			@ret = Array.new
 			@datas.each do |element|
-				@tmp = User.find_by_id(element.target_id)
-				@ret.push({"id" => element.id, "target_name" => element.nickname, "sanction_type" => @element.sanction_type})
+				if (element.end_time > Time.now.to_i)
+					@tmp = User.find_by_id(element.target_id)
+					@ret.push({"id" => element.id, "nickname" => @tmp.nickname, "sanction_type" => element.sanction_type})
+				end
 			end
 			render json: @ret
 			return
@@ -477,6 +480,27 @@ class TchatController < ApplicationController
 		end
 		render html: "error-forbidden", :status => :unauthorized
 		return
+	end
+	def getPrivateMessages
+		@tmp = Messages.where(user_id: current_user.id, message_type: 2).all.or(Messages.where(target_id: current_user.id, message_type: 2).all)
+		@sanctions =  Sanctions.where(user_id: current_user.id, sanction_type: 3)
+		@messages = Array.new
+		@tmp.each do |element|
+			@datas = element.user_id == current_user.id ? User.find_by_id(element.target_id) : User.find_by_id(element.user_id)
+			@blocked = Sanctions.where(user_id: current_user.id, target_id: @datas.id, sanction_type: 3).count == 0 ? 1 : 2
+			if (!findInArrayObj(@messages, @datas.nickname))
+				if (@blocked == 1)
+					@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id, "blocked" => 1})
+				end
+			end
+		end
+		@sanctions.each do |element|
+			@datas = User.find_by_id(element.target_id)
+			if (!findInArrayObj(@messages, @datas.nickname))
+				@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id, "blocked" => 2})
+			end
+		end
+		render json: @messages
 	end
 	def tmp
 		@user_id = params[:user_id]
