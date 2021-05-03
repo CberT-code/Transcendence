@@ -25,7 +25,7 @@ class HistoriesController < ApplicationController
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		@game = History.find(params[:id])
+		@game = History.find_by_id(params[:id])
 		if @game.duel == "pending" && current_user == @game.opponent #duel stuff to prevent cheat with "forever alone" button
 			@game.update(duel: "accepted")
 		end
