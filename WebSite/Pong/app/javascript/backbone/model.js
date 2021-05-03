@@ -95,9 +95,14 @@ ChannelPrivateMessageModel = Backbone.Model.extend({
 
 ChannelSanctionsList = Backbone.Model.extend({
     parse: function (response) {
+        $("#sanctionList").html("")
         if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
-                console.log(element);
+                var ret = "";
+                ret += "<div id='sanction'><div id='username'><p>";
+                ret += element.nickname + "</p></div>";
+                ret += "<button value='"+ element.id +"' class='removeSanction'>Remove</button>";
+                $("#sanctionList").append(ret);
             });
         }
     }
