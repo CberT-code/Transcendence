@@ -16,6 +16,7 @@ ViewAccount = Backbone.View.extend({
 		'click #add_friend': 'AddFriend',
 		'click #del_friend': 'DelFriend',
 		'click #duel_game_user': 'duel_game_user',
+		'click #watch_game_user': 'watch_game_user',
 		'click #ban_user': 'BanUser',
 		'click #unban_user': 'UnbanUser',
 		'click #otp_enable': 'otp_enable',
@@ -154,6 +155,11 @@ ViewAccount = Backbone.View.extend({
 				window.location.href = "#show_game/" + data.id.toString() ;
 			},
 		);
+	},
+	watch_game_user: function (e) {
+		var game_id = $(e.currentTarget).val();
+		console.log("live game #" + game_id);
+		window.location.href = "#show_game/" + game_id ;
 	},
 	BanUser: function (e) {
 		$.post(

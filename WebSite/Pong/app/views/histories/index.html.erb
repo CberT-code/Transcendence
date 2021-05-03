@@ -8,13 +8,18 @@
 			<% end %>
 		</div>
 		<div id="buttons">
-			<div class="new_game ranked_g">
-				<button id="ranked_game" class="button">Ranked Game</button>
-			</div>
-			<div class="new_game practice_g">
-				<button id="practice_game" class="button">Practice Game</button>
-			</div>
-			<button id="continue" class="button">Continue !</button>
+			<% if @me.findLiveGame != -1%>
+				<div>
+					<button id="continue" class="button" value="<%= @me.findLiveGame %>">Continue !</button>
+				</div>
+			<% else %>
+				<div class="new_game ranked_g">
+					<button id="ranked_game" class="button">Ranked Game</button>
+				</div>
+				<div class="new_game practice_g">
+					<button id="practice_game" class="button">Practice Game</button>
+				</div>
+			<% end %>
 		</div>
 	</div>
 	<div id="container">
@@ -37,9 +42,7 @@
 						<% if game.war_id != -1 %>
 							<% g_class += "guildwar " %>
 						<% end %>
-						<% if game.statut == 2%>
-							<%= content_tag :div, 'CONTINUE', id: 'continue_trigger', data: {id: game.id }%>
-						<% else %>
+						<% if game.statut != 2%>
 							<div class="game_resume <%= g_class %>" onClick="window.location='/#show_game/<%= game.id %>'">
 								<div class="PP l_PP" style='background-image: url("<%= game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'>
 								</div>
