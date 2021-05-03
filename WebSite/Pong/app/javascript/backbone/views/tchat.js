@@ -145,8 +145,9 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "Message remove !");
-                            Backbone.history.loadUrl();
+                            $("#messages").empty();
+                            $(".message").val("");
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         }
                     },
                     'text'

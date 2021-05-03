@@ -206,13 +206,14 @@ class TchatController < ApplicationController
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@type = CGI.escapeHTML(params[:type]).to_i
 		@datas = Channel.find_by_id(@channel_id)
+		@time = params[:time] ? params[:time].to_i : 99999
 		if (@datas && @datas.user_id == current_user.id)
 			if (@target_id.to_i == current_user.id)
 				render html: "2"
 				return
 			end
 			if (@type == 1)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 2)
@@ -223,7 +224,7 @@ class TchatController < ApplicationController
 				render html: "1"
 				return 
 			elsif (@type == 3)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 4)
