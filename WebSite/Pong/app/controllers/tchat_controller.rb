@@ -358,7 +358,7 @@ class TchatController < ApplicationController
 			@ret = Array.new
 			@datas.each do |element|
 				@tmp = User.find_by_id(element.target_id)
-				@ret.push({"id" => element.id, "target_name" => element.nickname, "sanction_type" => @element.sanction_type})
+				@ret.push({"id" => element.id, "target_name" => @tmp.nickname, "sanction_type" => element.sanction_type})
 			end
 			render json: @ret
 			return
