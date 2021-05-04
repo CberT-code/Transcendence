@@ -44,6 +44,15 @@ class TchatController < ApplicationController
 		render "tchat/index"
 		return
 	end
+	def hasSanction(user_id, target_id, type)
+		@sanctions = Sanctions.where({user_id: user_id, target_id: target_id, sanction_type: type}).all
+		@sanctions.each do |sanction|
+			if (sanction.end_time >= Time.now.to_i)
+				return true
+			end
+		end
+		return false
+	end
 	def channelCreate
 		if (!params[:title] || !params[:type])
 			render html: "error-forbidden", :status => :unauthorized
@@ -112,7 +121,7 @@ class TchatController < ApplicationController
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				if (@sanctions && @sanction.end_time <= Time.new.to_i && @sanction.sanction_type == 1)
+				if (hasSanction(@datas.id, @user_id, 1) == false && hasSanction(@datas.id, @user_id, 2) == false)
 					render html: 2
 					return
 				end
@@ -151,7 +160,7 @@ class TchatController < ApplicationController
 			@channel_id = CGI.escapeHTML(params[:channel_id])
 			@user_id = current_user.id
 			@channel = Channel.find_by_id(@channel_id)
-			if (@datas && (@datas.user_id || current_user.id))
+			if (@channel && (@channel.user_id == current_user.id || current_user.role == 1))
 				Messages.find_by_id(@id).destroy
 				render html: "1"
 				return 
