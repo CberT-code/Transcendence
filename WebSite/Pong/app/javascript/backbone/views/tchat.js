@@ -21,14 +21,11 @@ ViewChannel = Backbone.View.extend(
             "click .submitMessage": "submitMessage",
             "click .removeChannelMessage": "removeChannelMessage",
             "click .removeMessage": "removeMessage",
-            "click .blockUserChannel": "banUser",
+            "click .blockUserChannel": "blockUser",
             "click .cancelPrivateChannel": "cancelPrivChannel",
             "click .submitPrivateChannel": "submitPrivateChannel",
             "click .submitAdminChannel": "submitAdminChannel",
-            "click .removeBlocked": "unbanUser",
             "click .cancelAdminChannel": "cancelAdminChannel",
-            "click .muteUserChannel": "muteUser",
-            "click .unmuteUserChannel": "unmuteUser",
             "click .ChannelAdminMode": "UpateChannelType",
             "click .newAdminSubmit": "newAdminSubmit",
             "click .removeChannel": "removeChannel",
@@ -45,6 +42,7 @@ ViewChannel = Backbone.View.extend(
             "click #blockMessage": "unblockUser",
             "click .UserInformation": "userInformations",
             "click .proposeGame": "duel_game_user",
+            "click .removeSanction": "removeSanction",
             "keyup .message": "KeyPressEnter",
         },
 		KeyPressEnter : function(event){
@@ -145,104 +143,9 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "Message removed !");
-                            Backbone.history.loadUrl();
-                        }
-                    },
-                    'text'
-                );
-        },
-        banUser: function (e) {
-            e.preventDefault();
-            var target_id = $(e.currentTarget).val()
-            var channel_id = $(".Channelid").val();
-            var key = $(".Channelkey").val();
-            if (channel_id != "" && key != "")
-                $.post(
-                    "/tchat/channel/sanction/",
-                    {
-                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channel_id": channel_id,
-                        "target_id": target_id,
-                        "type": 1
-                    },
-                    function (data) {
-                        if (data == 1) {
-                            notification("success", "User banned !");
-                            Backbone.history.loadUrl();
-                        } else {
-                            notification("error", "You cannot ban yourself...");
-                        }
-                    },
-                    'text'
-                );
-        },
-        unbanUser: function (e) {
-            e.preventDefault();
-            var target_id = $(e.currentTarget).val()
-            var channel_id = $(".Channelid").val();
-            var key = $(".Channelkey").val();
-            if (channel_id != "" && key != "")
-                $.post(
-                    "/tchat/channel/sanction/",
-                    {
-                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channel_id": channel_id,
-                        "target_id": target_id,
-                        "type": 2
-                    },
-                    function (data) {
-                        if (data == 1) {
-                            notification("success", "User is unbanned !");
-                            Backbone.history.loadUrl();
-                        }
-                    },
-                    'text'
-                );
-        },
-        muteUser: function (e) {
-            e.preventDefault();
-            var target_id = $(e.currentTarget).val()
-            var channel_id = $(".Channelid").val();
-            var key = $(".Channelkey").val();
-            if (channel_id != "" && key != "")
-                $.post(
-                    "/tchat/channel/sanction/",
-                    {
-                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channel_id": channel_id,
-                        "target_id": target_id,
-                        "type": 3
-                    },
-                    function (data) {
-                        if (data == 1) {
-                            notification("success", "User muted !");
-                            Backbone.history.loadUrl();
-                        } else {
-                            notification("error", "You cannot mute yourself...");
-                        }
-                    },
-                    'text'
-                );
-        },
-        unmuteUser: function (e) {
-            e.preventDefault();
-            var target_id = $(e.currentTarget).val()
-            var channel_id = $(".Channelid").val();
-            var key = $(".Channelkey").val();
-            if (channel_id != "" && key != "")
-                $.post(
-                    "/tchat/channel/sanction/",
-                    {
-                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                        "channel_id": channel_id,
-                        "target_id": target_id,
-                        "type": 4
-                    },
-                    function (data) {
-                        if (data == 1) {
-                            notification("success", "User is unmuted !");
-                            Backbone.history.loadUrl();
+                            $("#messages").empty();
+                            $(".message").val("");
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         }
                     },
                     'text'
@@ -443,6 +346,7 @@ ViewChannel = Backbone.View.extend(
             $(".privateMessages").css("display", "block");
             $(".privateConversation").css("display", "none");
             $(".PrivateMessages").empty();
+            window.app.models.UpdatePrivateConversations.fetch();
         },
         submitConversationMessage: function () {
             var target_id = $(".PrivateConvTargetId").val();
@@ -471,6 +375,7 @@ ViewChannel = Backbone.View.extend(
         removeMessage: function (e) {
             e.preventDefault();
             var message_id = $(e.currentTarget).val();
+            var target_id = $(".PrivateConvTargetId").val();
             if (message_id != "")
                 $.post(
                     "/tchat/message/remove",
@@ -479,8 +384,9 @@ ViewChannel = Backbone.View.extend(
                         "id": message_id,
                     },
                     function (data) {
-                        notification("success", "Message removed");
-                        Backbone.history.loadUrl();
+                        $(".PrivateMessages").empty();
+                        $(".PrivateConvMessage").val("");
+                        window.app.models.PrivateConversation.fetch({ "url": "/tchat/message/get/" + target_id });
                     },
                     'text'
                 );
@@ -534,6 +440,25 @@ ViewChannel = Backbone.View.extend(
             window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
             $(".proposeGame").attr("value", user_id);
             $("#userProfil").css("display", "block");
+        },
+        removeSanction: function (e) {
+            e.preventDefault();
+            var id = $(e.currentTarget).val();
+            if (id != "")
+                $.post(
+                    "/tchat/channel/sanction/remove",
+                    {
+                        'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+                        "id": id
+                    },
+                    function (data) {
+                        if (data == 1) {
+                            notification("success", "The sanction has been remove !");
+                            Backbone.history.loadUrl();
+                        }
+                    },
+                    'text'
+                );
         },
         duel_game_user: function (e) {
             var id_opponent = $(e.currentTarget).val();

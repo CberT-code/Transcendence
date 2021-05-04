@@ -58,12 +58,20 @@ class UsersController < ApplicationController
 	end
 
 	def index
-		@Users = User.where(["deleted = ?", FALSE]);
+		if (@me.role == 1)
+			@Users = User.where(["deleted = ?", FALSE]);
+		else
+			render html: "error-forbidden", :status => :unauthorized
+		end
 	end
 
 	def show
 		if (params.has_key?(:id))
 			@user = User.find_by_id(params[:id])
+			if (@user == nil)
+				render "/pages/error-404"
+				return
+			end
 		else
 			@user = current_user
 		end
@@ -71,6 +79,7 @@ class UsersController < ApplicationController
 		@guild = @user.guild;
 		@current = @me.id == @user.id ? 1 : 0;
 		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]);
+		puts @histories.count
 		@date = DateTime.new(1905,1,1,1,1,1);
 		@tournament = Array.new
 		Tournament.all.each do |tr|
@@ -101,7 +110,7 @@ class UsersController < ApplicationController
 				end
 			end
 		else
-			render 'error/403', :status => :unauthorized;
+			render html: "error-forbidden";
 		end
 	end
 
@@ -112,7 +121,7 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@nb = User.where(["email LIKE '%@unknown.fr'"]).count
+				@nb = User.where(["email LIKE '%%@unknown.fr' "]).count
 				@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
 				@user.save
 				if (@current == 1)
@@ -151,8 +160,12 @@ class UsersController < ApplicationController
 			render html: "error-inguild";
 		else
 			if (@me.role == 1)
-				@user.update({banned: true})
-				render html: "success"
+				if (@user.banned == true)
+					render html: "error-banned"
+				else
+					@user.update({banned: true})
+					render html: "success"
+				end
 			else
 				render html: "error_admin"
 			end
@@ -161,8 +174,12 @@ class UsersController < ApplicationController
 	def unban
 		@user = User.find_by_id(params[:id]);
 		if (@me.role == 1)
-			@user.update({banned: false})
-			render html: "success"
+			if (@user.banned == false)
+				render html: "error-unbanned"
+			else
+				@user.update({banned: false})
+				render html: "success"
+			end
 		else
 			render html: "error_admin"
 		end

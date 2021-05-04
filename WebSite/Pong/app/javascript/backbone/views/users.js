@@ -38,13 +38,13 @@ ViewAccount = Backbone.View.extend({
 						notification("error", "You need to leave your guild before delete your account");
 					else if (data == "error-forbidden")
 						notification("error", "Forbidden");
-					else
+					else{
 						notification("success", "Account Deleted");
-					window.location.href = "/";
+						window.location.href = "/";
+					}
 				},
 			},
 		);
-		window.location.href = "/";
 	},
 	ModifUsername: function () {
 		$(".fa-pen").css("display", "none");
@@ -98,6 +98,8 @@ ViewAccount = Backbone.View.extend({
 					{
 						if (data == "success")
 							Backbone.history.loadUrl();
+						else if (data == "error-forbidden")
+							notification("error", "Forbidden");
 					},
 				},
 			);
@@ -174,6 +176,9 @@ ViewAccount = Backbone.View.extend({
 				}
 				else if (data == "error-inguild") {
 					notification("error", "Please remove this player from his guild first...");
+				}
+				else if (data == "error-banned") {
+					notification("error", "User already banned..");
 				} else {
 					Backbone.history.loadUrl();
 				}
@@ -191,7 +196,9 @@ ViewAccount = Backbone.View.extend({
 			function (data) {
 				if (data == "error_admin") {
 					notification("error", "You cannot unban this player...");
-				} else {
+				} else if (data == "error-unbanned") {
+					notification("error", "User already unbanned..");
+				}else {
 					Backbone.history.loadUrl();
 				}
 			},

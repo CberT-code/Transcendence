@@ -28,13 +28,12 @@ Rails.application.routes.draw do
 	post "/tchat/channel/create", to: "tchat#channelCreate"
 	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
 	post "/tchat/channel/message/remove", to: "tchat#removeMessageChannel"
-	post "/tchat/channel/user", to: "tchat#userBlockChannel"
-	post "/tchat/channel/blocked/:key", to: "tchat#removeBlockedUser"
 	post "/tchat/channel/key", to: "tchat#UpdateChannelKey"
 	post "/tchat/channel/type", to: "tchat#UpdateChannelType"
 	post "/tchat/channel/admin/swap", to: "tchat#exchangeChannelAdmin"
 	post "/tchat/channel/remove", to: "tchat#removeChannel"
 	post "/tchat/channel/sanction/create", to: "tchat#addSanction"
+	post "/tchat/channel/sanction/remove", to: "tchat#removeSanction"
 	post "/tchat/message/send", to: "tchat#privateConversationSend"
 	post "/tchat/message/remove", to: "tchat#removeMessage"
 	post "/tchat/message/block", to: "tchat#blockUser"
@@ -48,10 +47,8 @@ Rails.application.routes.draw do
 	get "/tchat/message/get/:target_id", to: "tchat#privateConversationGet"
 	get "/tchat/message/init/:username", to: "tchat#privateConversationInit"
 	get "/tchat/profil/get/:user_id", to: "tchat#profilGet"
-
+	get "/tchat/messages/private", to: "tchat#getPrivateMessages"
 	get "/tmp/:user_id/:target_id", to: "tchat#tmp"
-
-	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 
 	resources :guilds
 

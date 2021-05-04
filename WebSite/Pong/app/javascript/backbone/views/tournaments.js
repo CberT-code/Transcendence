@@ -42,8 +42,9 @@ ViewTournaments = Backbone.View.extend({
 						notification("error", "Wrong number of max points.");
 					else if (data == 'error-6')
 						notification("error", "Wrong speed for the game.");
+					else if (data == "error-forbidden")
+						notification("error", "Forbidden");
 					else{
-						// $('#header-tournament').attr('onClick',"window.location='/#show_tournament/" + data + "'");
 						window.location.href = "#tournaments" ;
 					}
 				},
@@ -60,6 +61,8 @@ ViewTournaments = Backbone.View.extend({
 				"id_tournament": $(e.currentTarget).val(),
 			},
 			function (data) {
+				if (data == 'error-joined')
+					notification("error", "You already joined the tournament...");
 				Backbone.history.loadUrl();
 			},
 			'text'

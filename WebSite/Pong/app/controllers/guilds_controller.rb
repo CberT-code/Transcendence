@@ -1,8 +1,9 @@
 class GuildsController < ApplicationController
 	before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 
@@ -46,17 +47,23 @@ class GuildsController < ApplicationController
 	end
 
 	def show
-		@guild = Guild.find_by_id(params[:id]);
-		@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
-		if (@guild.deleted == true)
-			render 'error/403', :status => :unauthorized;
+		if (params.has_key?(:id) && is_number?(params[:id]))
+			@guild = Guild.find_by_id(params[:id]);
+			if (@guild == nil)
+				render "/pages/error-404"
+				return
+			end
+			@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
+			if (@guild.deleted == true)
+				render 'error/403', :status => :unauthorized;
+			end
+			@user = current_user;
+			@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
+			@wars_histories = War.where(['guild1_id = ? or guild2_id = ?', @guild.id, @guild.id]);
+			@list_users = @guild.users.all.sort_by { |u| [u.id == @guild.id_admin ? 0 : 1, (@guild.officers.include? u.id) ? 0 : 1, u.name]}
+			@ban_users = @guild.banned;
+			@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
 		end
-		@user = current_user;
-		@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
-		@wars_histories = War.where(['guild1_id = ? or guild2_id = ?', @guild.id, @guild.id]);
-		@list_users = @guild.users.all.sort_by { |u| [u.id == @guild.id_admin ? 0 : 1, (@guild.officers.include? u.id) ? 0 : 1, u.name]}
-		@ban_users = @guild.banned;
-		@admin_guild = current_user.id == @guild.id_admin ? 1 : 0;
 	end
 
 	def update

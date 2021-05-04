@@ -2,9 +2,10 @@ require 'securerandom'
 
 class TchatController < ApplicationController
     before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 	def index
@@ -110,41 +111,6 @@ class TchatController < ApplicationController
 			return
 		end
 	end
-	def userBlockChannel
-		@user_id = current_user.id
-		if (!params[:id] || !params[:channelId] || !params[:type])
-			render html: "error-fobidden", :status => :unauthorized
-		elsif (params[:type] == "1" || params[:type] == "2")
-			@block_user = CGI.escapeHTML(params[:id]).to_i
-			if (@user_id == @block_user)
-				render html: "3"
-				return
-			end
-			@channelId = CGI.escapeHTML(params[:channelId])
-			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-			if (@datas)
-				Sanctions.create(:sanction_type=> @type.to_i, :user_id=> @datas.id, target_id: @block_user, :create_time=>@date)
-				render html: "1"
-				return 
-			end
-		elsif (params[:type] == "3")
-			@mute_user = CGI.escapeHTML(params[:id])
-			@channelId = CGI.escapeHTML(params[:channelId])
-			if (@user_id == @mute_user)
-				render html: "3"
-				return
-			end
-			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-			if (@datas)
-				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
-				@tmp.delete(@mute_user)
-				@datas.update({muted_users: @tmp.join(",")})
-				render html: "1"
-				return
-			end
-		end
-		render html: "error-fobidden", :status => :unauthorized
-	end
 	def removeChannel
 		if (!params[:channel_id] || !safestr(params[:channel_id]))
 			render html: "error-forbidden", :status => :unauthorized
@@ -153,7 +119,7 @@ class TchatController < ApplicationController
 		@channel_id = params[:channel_id]
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@channel_id)
-		if (@datas && @datas.user_id == @user_id)
+		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
 			@tmp = Messages.where(["target_id = ?", @channel_id])
  			@tmp.each do |element|
 				element.destroy
@@ -171,7 +137,8 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id])
 			@channel_id = CGI.escapeHTML(params[:channel_id])
 			@user_id = current_user.id
-			if (Channel.find_by_user_id_and_id(@user_id, @channel_id))
+			@channel = Channel.find_by_id(@channel_id)
+			if (@datas && (@datas.user_id || current_user.id))
 				Messages.find_by_id(@id).destroy
 				render html: "1"
 				return 
@@ -188,7 +155,7 @@ class TchatController < ApplicationController
 		@id = CGI.escapeHTML(params[:id])
 		@message = Messages.find_by_id(@id)
 		if (@message)
-			if (@message.user_id == current_user.id)
+			if (@message.user_id == current_user.id || current_user.role == 1)
 				@message.destroy
 				render html: "1"
 				return
@@ -206,13 +173,14 @@ class TchatController < ApplicationController
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@type = CGI.escapeHTML(params[:type]).to_i
 		@datas = Channel.find_by_id(@channel_id)
-		if (@datas && @datas.user_id == current_user.id)
+		@time = params[:time] ? params[:time].to_i : 99999
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			if (@target_id.to_i == current_user.id)
 				render html: "2"
 				return
 			end
 			if (@type == 1)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 2)
@@ -223,7 +191,7 @@ class TchatController < ApplicationController
 				render html: "1"
 				return 
 			elsif (@type == 3)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + 99999))
+				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
 				render html: "1"
 				return 
 			elsif (@type == 4)
@@ -244,8 +212,8 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id])
 			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
-			@datas = Channel.find_by_id_and_user_id(@id, @user_id)
-			if (@datas)
+			@datas = Channel.find_by_id(@id)
+			if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 				if (safestr(@key))
 					@datas.update({:key => @key})
 					@datas.save
@@ -266,8 +234,8 @@ class TchatController < ApplicationController
 		end
 		@channelId = CGI.escapeHTML(params[:channelId])
 		@user_id = current_user.id
-		@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-		if (@datas)
+		@datas = Channel.find_by_id(@channelId)
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			@datas.update({type_channel: (@datas.type_channel == 1 ? 2 : 1)})
 			@datas.save
 			render html: "1"
@@ -285,7 +253,7 @@ class TchatController < ApplicationController
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@id)
 		if (@datas)
-			if (@datas.user_id == @user_id)
+			if (@datas.user_id == @user_id || current_user.role == 1)
 				render html: "1"
 				return
 			end
@@ -303,9 +271,9 @@ class TchatController < ApplicationController
 		@newAdmin = params[:newAdmin]
 		@user_id = current_user.id
 		@channel_id = params[:channel_id]
-		@datas = Channel.find_by_id_and_user_id(@channel_id, @user_id)
+		@datas = Channel.find_by_id(@channel_id)
 		@user_info = User.find_by_name(@newAdmin)
-		if (@datas)
+		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
 			if (@user_info)
 				@datas.update({user_id: @user_info.id})
 				@datas.save
@@ -329,7 +297,7 @@ class TchatController < ApplicationController
 			if (@channel)
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
-				@is_admin = @channel.user_id == @user_id ? 1 : 0
+				@is_admin = (@channel.user_id == @user_id || current_user.role == 1) ? 1 : 0
  				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
 					@sanction = Sanctions.find_by_user_id_and_target_id(@channel.id, element.user_id)
@@ -352,12 +320,15 @@ class TchatController < ApplicationController
 		end
 		@type = params[:type]
 		@channel_id = params[:id]
-		@datas = Sanctions.find_by_user_id_and_sanction_type(@channel_id, @type)
-		if (@datas)
+		@datas = Sanctions.where(user_id: @channel_id, sanction_type: @type).all()
+		@channel = Channel.find_by_id(@channel_id)
+		if (@datas && @channel && (@channel.user_id == current_user.id || current_user.role == 1))
 			@ret = Array.new
 			@datas.each do |element|
-				@tmp = User.find_by_id(element.target_id)
-				@ret.push({"id" => element.id, "target_name" => element.nickname, "sanction_type" => @element.sanction_type})
+				if (element.end_time > Time.now.to_i)
+					@tmp = User.find_by_id(element.target_id)
+					@ret.push({"id" => element.id, "nickname" => @tmp.nickname, "sanction_type" => element.sanction_type})
+				end
 			end
 			render json: @ret
 			return
@@ -370,11 +341,11 @@ class TchatController < ApplicationController
 		end
 		@channel_id = CGI.escapeHTML(params[:id])
 		@nickname = CGI.escapeHTML(params[:nickname])
-		@type = CGI.escapeHTML(params[:type])
+		@type = CGI.escapeHTML(params[:type]).to_i
 		@time = CGI.escapeHTML(params[:time]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		@user_datas = User.find_by_nickname(@nickname)
-		if (@datas && @datas.user_id == current_user.id)
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			if (!@user_datas)
 				render html: "2"
 				return
@@ -384,6 +355,20 @@ class TchatController < ApplicationController
 			return
 		end
 		render html: "errror-forbidden", :status => :unauthorized
+		return
+	end
+	def removeSanction
+		if (params[:id])
+			@id = params[:id]
+			@sanction = Sanctions.find_by_id(@id)
+			@channel = @sanction ? Channel.find_by_id(@sanction.user_id) : -1
+			if (@channel != -1 && (current_user.id == @channel.user_id || current_user.role == 1))
+				@sanction.destroy
+				render html: "1"
+				return
+			end
+		end
+		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
 	def privateConversationGet
@@ -477,6 +462,27 @@ class TchatController < ApplicationController
 		end
 		render html: "error-forbidden", :status => :unauthorized
 		return
+	end
+	def getPrivateMessages
+		@tmp = Messages.where(user_id: current_user.id, message_type: 2).all.or(Messages.where(target_id: current_user.id, message_type: 2).all)
+		@sanctions =  Sanctions.where(user_id: current_user.id, sanction_type: 3)
+		@messages = Array.new
+		@tmp.each do |element|
+			@datas = element.user_id == current_user.id ? User.find_by_id(element.target_id) : User.find_by_id(element.user_id)
+			@blocked = Sanctions.where(user_id: current_user.id, target_id: @datas.id, sanction_type: 3).count == 0 ? 1 : 2
+			if (!findInArrayObj(@messages, @datas.nickname))
+				if (@blocked == 1)
+					@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id, "blocked" => 1})
+				end
+			end
+		end
+		@sanctions.each do |element|
+			@datas = User.find_by_id(element.target_id)
+			if (!findInArrayObj(@messages, @datas.nickname))
+				@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id, "blocked" => 2})
+			end
+		end
+		render json: @messages
 	end
 	def tmp
 		@user_id = params[:user_id]

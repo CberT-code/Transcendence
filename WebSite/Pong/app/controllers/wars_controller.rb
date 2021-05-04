@@ -1,11 +1,12 @@
 class WarsController < ApplicationController
 	before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
+			@guild = Guild.find_by_id(current_user.guild_id);
+			@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
 		end
-		@guild = Guild.find_by_id(current_user.guild_id);
-		@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
 	end
 
 	def index
@@ -19,7 +20,7 @@ class WarsController < ApplicationController
 
 	def new
 		if (@admin == 0) then
-			render 'pages/not_authentificate', :status => :unauthorized
+			render html: "error-forbidden", :status => :unauthorized
 		end
 		@wars = History.new
 		@list_guild = Guild.where(['nbmember >= ?', 5]);
@@ -28,6 +29,10 @@ class WarsController < ApplicationController
 
 	def edit
 		@war = War.find_by_id(params[:id]);
+		if (@war == nil)
+			render "/pages/error-404"
+			return
+		end
 		@team = @war.guild1_id == @guild.id ? @war.team1 : @war.team2 ;
 		if (@admin && @war.status == 1)
 			@available = User.where(['guild_id = ? and available = ?', current_user.guild_id, true])
@@ -39,21 +44,16 @@ class WarsController < ApplicationController
 
 	def show
 		@war = War.find_by_id(params[:id]);
-
+		if (@war == nil)
+			render "/pages/error-404"
+			return
+		end
 		@date = DateTime.current
-		puts @date;
-		puts @date;
-		puts @war.start;
-		puts @war.start;
 		@date = @date.change(hour: 12)
-		# @war.update(start: DateTime.current + 1.minutes, end: @date + 2.days)
-		# @war.update(end: @date + 1.hours)
 		@startdays = ((@war.start.to_date) - DateTime.current.to_date).to_i;
 		@starthours = ((@war.start.to_i) - DateTime.current.to_i).to_i;
 		@enddays = ((@war.end.to_date) - DateTime.current.to_date).to_i;
 		@endhours = ((@war.end.to_i) - DateTime.current.to_i).to_i;
-
-
 		@guild1 = Guild.find_by_id(@war.guild1_id);
 		@guild2 = Guild.find_by_id(@war.guild2_id);
 		@inwars = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2])

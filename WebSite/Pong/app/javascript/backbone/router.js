@@ -41,7 +41,10 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	// ACCOUNTS
 	show_user: function(id) {
 		$.get("/users/" +  id, { id: id}).then(function(data){
-			$("main").html("<div id='content-user'>" + ($(data).find("#content-user").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-user'>" + ($(data).find("#content-user").html()) + "</div>");
 		});
 	},
 	accounts: function() {
@@ -84,8 +87,12 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	show_guild: function(id) {
 		$.get("/guilds/" +  id, { id: id}).then(function(data){
-			$("main").html("<div id='content-guild'>" + ($(data).find("#content-guild").html()) + "</div>");
-			$("#line-war").hide();
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else{
+				$("main").html("<div id='content-guild'>" + ($(data).find("#content-guild").html()) + "</div>");
+				$("#line-war").hide();
+			}
 		});
 	},
 	// Tournaments
@@ -101,7 +108,10 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	show_tournament: function(id) {
 		$.get("/tournaments/" +  id, { id: id}).then(function(data){
-			$("main").html("<div id='content-tournament'>" + ($(data).find("#content-tournament").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-tournament'>" + ($(data).find("#content-tournament").html()) + "</div>");
 		});
 	},
 	// WARS
@@ -117,12 +127,18 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	show_war: function(id) {
 		$.get("/wars/" +  id, { id: id}).then(function(data){
-			$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
 		});
 	},
 	edit_war: function(id) {
 		$.get("/wars/" +  id + "/edit", { id: id}).then(function(data){
-			$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-war'>" + ($(data).find("#content-war").html()) + "</div>");
 		});
 	},
 	error403: function(id) {
@@ -142,7 +158,10 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	show_game: function(id) {
 		$.get("/histories/" +  id, { id: id}).then(function(data){
-			$("main").html("<div id='content-game_show'>" + ($(data).find("#content-game_show").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-game_show'>" + ($(data).find("#content-game_show").html()) + "</div>");
 		});
 	},
 });
