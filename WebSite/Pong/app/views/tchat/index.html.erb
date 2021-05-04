@@ -10,7 +10,7 @@
                 </div>
                 <div id="list">
                     <% @channel.each do |element|
-                    if (element['type_channel']==1 && element['user_id'] != current_user.id) 
+                    if (element['type_channel']==1 && (element['user_id'] != current_user.id && current_user.role != 1)) 
                     %>
                     <div id="channel" class="privateChannel">
                         <input type="hidden" value="<%= element['id'] %>">
