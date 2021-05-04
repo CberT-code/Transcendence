@@ -21,11 +21,15 @@ class HistoriesController < ApplicationController
 	end
 	
 	def show
+		id = params.fetch(:id, -1)
 		clean_list(params[:id].to_i)
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		@game = History.find(params[:id])
+		@game = History.find_by_id(params[:id])
+		if @game == nil
+			return
+		end
 		if @game.duel == "pending" && current_user == @game.opponent #duel stuff to prevent cheat with "forever alone" button
 			@game.update(duel: "accepted")
 		end
@@ -38,6 +42,7 @@ class HistoriesController < ApplicationController
 		else #live game!
 			if @me == @game.opponent && @me != @game.host # I'm the opponent
 				@status = "ready"
+				@game.update(statut: 2)
 				ActionCable.server.broadcast("pong_#{@game.id}",
 						{status: "ready", right_pp: @me.image})
 			elsif @me != @game.host && @me != @game.opponent && @game.host != @game.opponent # witnessing a live game

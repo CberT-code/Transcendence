@@ -9,23 +9,38 @@ class MatchmakingController < ApplicationController
 	end
 
 	def duel
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		tourn = Tournament.find_by_id(params['id'].to_i)
-		opponent = User.find_by_id(params['opponent'].to_i)
-		@me = current_user
-		if War.canDuel(@me, opponent)
-			war_id = @me.guild.war_id
+		game = @me.findLiveGame()
+		if game != -1
+			render json: {status: "multiple_games", info: "You already have a running game"}
 		else
-			war_id = -1
+			opponent = User.find_by_id(params['opponent'].to_i)
+			redis = Redis.new(	url:  ENV['REDIS_URL'],
+								port: ENV['REDIS_PORT'],
+								db:   ENV['REDIS_DB'])
+			if redis.get("player_#{opponent_id}") == "offline"
+				render json: {status: "error", info: "Opponent is offline"}
+				return
+			end
+			o_game = opponent.findLiveGame
+			if o_game != -1
+				render json: {status: "multiple_games", info: "Opponent already has a running game"}
+				return
+			end
+			tourn = Tournament.find_by_id(params['id'].to_i)
+			@me = current_user
+			if War.canDuel(@me, opponent)
+				war_id = @me.guild.war_id
+			else
+				war_id = -1
+			end
+			@game = tourn.games.new(statut: 0, host: @me, opponent: opponent,
+				host_score: 0, opponent_score: 0, ranked: false,
+				war_id: war_id, war_match: false, timeout: 30, duel: "pending")
+			@game.save!
+			redis.set("game_#{@game.id}", "Looking For Opponent")
+			ActionCable.server.broadcast("presence_#{opponent.id}", {info: "#{opponent.nickname} wants to duel you!", id: @game.id, type: "duel", color: "gold" })
+			render json: {status: "Duel created!", id: @game.id}
 		end
-		@game = tourn.games.new(statut: 0, host: @me, opponent: opponent,
-			host_score: 0, opponent_score: 0, ranked: false,
-			war_id: war_id, war_match: false, timeout: 30, duel: "pending")
-		@game.save!
-		redis.set("game_#{@game.id}", "Looking For Opponent")
-		render json: {status: "Duel created!", id: @game.id}
 	end
 
 	def checkValidity(war_id)
@@ -42,7 +57,12 @@ class MatchmakingController < ApplicationController
 	end
 
 	def joinWarMatch
-		if !@me.guild || !@me.guild.war || @me.guild.war_id != params[:war_id]
+		puts "\n\nJoining war march #{params[:game_id]}"
+		game = @me.findLiveGame()
+		puts game
+		if game != -1
+			render json: {status: "multiple_games", info: "You already have a running game"}
+		elsif !@me.guild || !@me.guild.war || @me.guild.war_id != params[:war_id]
 			render json: {status: "error", info: "You can't join this match"}
 		else
 			game = History.find_by_id(params[:game_id])
@@ -60,6 +80,11 @@ class MatchmakingController < ApplicationController
 	end
 
 	def find_or_create
+		game = @me.findLiveGame()
+		if game != -1
+			render json: {status: "multiple_games", info: "You already have a running game"}
+			return
+		end
 		tourn = Tournament.find_by_id(params['id'].to_i)
 		if (!tourn)
 			render json: {status: "error", info: "Invalid tournament ID"}

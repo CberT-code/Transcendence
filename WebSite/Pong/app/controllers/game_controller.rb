@@ -10,7 +10,7 @@ class GameController < ApplicationController
 	
 	def run
 		game = History.find_by_id(params[:id])
-		if current_user == game.host # UNCOMMENT THIS LINE OR FACE A SHITSTORM
+		if current_user == game.host && game.duel != "pending" # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
 								db:   ENV['REDIS_DB'])
@@ -23,8 +23,16 @@ class GameController < ApplicationController
 			ball = Array[49, 49, 0.0, game.tournament.speed] # [x, y, angle, speed]
 			
 			while score[0] < game.tournament.maxpoints && score[1] < game.tournament.maxpoints && status == "running"
+				if ball[3] > 80
+					ball[3] = 80
+				end
 				move[1] = redis.get("player_#{game.opponent.id}")
 				move[0] = redis.get("player_#{game.host.id}")
+				if move[0] == "offline" && move[1] == "offline"
+					status = "disconnect"
+					puts "\n\nBoth players left!\n\n"
+					break
+				end
 				time = Time.now
 				if score[2] != 0
 					score[2] -= 1
@@ -129,12 +137,5 @@ class GameController < ApplicationController
 		player[0] = 37
 		player[1] = 37
 		score[2] = 30
-	end
-	
-	def stop
-		redis = Redis.new(	url:  ENV['REDIS_URL'],
-							port: ENV['REDIS_PORT'],
-							db:   ENV['REDIS_DB'])
-		redis.set("game_#{params[:id]}", "ended")
 	end
 end
