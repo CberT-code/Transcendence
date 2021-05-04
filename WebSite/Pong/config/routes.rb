@@ -28,8 +28,6 @@ Rails.application.routes.draw do
 	post "/tchat/channel/create", to: "tchat#channelCreate"
 	post "/tchat/channel/message/create", to: "tchat#sendMessageChannel"
 	post "/tchat/channel/message/remove", to: "tchat#removeMessageChannel"
-	post "/tchat/channel/user", to: "tchat#userBlockChannel"
-	post "/tchat/channel/blocked/:key", to: "tchat#removeBlockedUser"
 	post "/tchat/channel/key", to: "tchat#UpdateChannelKey"
 	post "/tchat/channel/type", to: "tchat#UpdateChannelType"
 	post "/tchat/channel/admin/swap", to: "tchat#exchangeChannelAdmin"

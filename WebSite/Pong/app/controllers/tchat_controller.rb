@@ -110,41 +110,6 @@ class TchatController < ApplicationController
 			return
 		end
 	end
-	def userBlockChannel
-		@user_id = current_user.id
-		if (!params[:id] || !params[:channelId] || !params[:type])
-			render html: "error-fobidden", :status => :unauthorized
-		elsif (params[:type] == "1" || params[:type] == "2")
-			@block_user = CGI.escapeHTML(params[:id]).to_i
-			if (@user_id == @block_user)
-				render html: "3"
-				return
-			end
-			@channelId = CGI.escapeHTML(params[:channelId])
-			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-			if (@datas)
-				Sanctions.create(:sanction_type=> @type.to_i, :user_id=> @datas.id, target_id: @block_user, :create_time=>@date)
-				render html: "1"
-				return 
-			end
-		elsif (params[:type] == "3")
-			@mute_user = CGI.escapeHTML(params[:id])
-			@channelId = CGI.escapeHTML(params[:channelId])
-			if (@user_id == @mute_user)
-				render html: "3"
-				return
-			end
-			@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-			if (@datas)
-				@tmp = @datas.muted_users ? @datas.blocked_users.split(",") : Array.new
-				@tmp.delete(@mute_user)
-				@datas.update({muted_users: @tmp.join(",")})
-				render html: "1"
-				return
-			end
-		end
-		render html: "error-fobidden", :status => :unauthorized
-	end
 	def removeChannel
 		if (!params[:channel_id] || !safestr(params[:channel_id]))
 			render html: "error-forbidden", :status => :unauthorized

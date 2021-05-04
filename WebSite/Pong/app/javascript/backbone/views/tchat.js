@@ -29,6 +29,8 @@ ViewChannel = Backbone.View.extend(
             "click .ChannelAdminMode": "UpateChannelType",
             "click .newAdminSubmit": "newAdminSubmit",
             "click .removeChannel": "removeChannel",
+            "click .banSwitch": "banSwitch",
+            "click .muteSwitch": "muteSwitch",
             "click .cancelSanction": "cancelSanction",
             "click .SanctionSubmit": "SanctionSubmit",
             "click .glbmessage": "viewMessage",
