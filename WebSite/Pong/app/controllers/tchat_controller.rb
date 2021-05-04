@@ -44,15 +44,6 @@ class TchatController < ApplicationController
 		render "tchat/index"
 		return
 	end
-	def hasSanction(user_id, target_id, type)
-		@sanctions = Sanctions.where({user_id: user_id, target_id: target_id, sanction_type: type}).all
-		@sanctions.each do |sanction|
-			if (sanction.end_time >= Time.now.to_i)
-				return true
-			end
-		end
-		return false
-	end
 	def channelCreate
 		if (!params[:title] || !params[:type])
 			render html: "error-forbidden", :status => :unauthorized
@@ -121,7 +112,7 @@ class TchatController < ApplicationController
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				if (hasSanction(@datas.id, @user_id, 1) == false && hasSanction(@datas.id, @user_id, 2) == false)
+				if (hasSanction(@datas.id, current_user.id, 1) == true && hasSanction(@datas.id, current_user.id, 2) == true)
 					render html: 2
 					return
 				end
@@ -156,12 +147,13 @@ class TchatController < ApplicationController
 			render html: "error-fobidden", :status => :unauthorized
 			return
 		else
-			@id = CGI.escapeHTML(params[:id])
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@channel_id = CGI.escapeHTML(params[:channel_id])
 			@user_id = current_user.id
 			@channel = Channel.find_by_id(@channel_id)
-			if (@channel && (@channel.user_id == current_user.id || current_user.role == 1))
-				Messages.find_by_id(@id).destroy
+			@message = Messages.find_by_id(@id)
+			if (@channel && (@channel.user_id == current_user.id || current_user.role == 1 || @message.user_id == current_user.id))
+				@message.destroy
 				render html: "1"
 				return 
 			else
@@ -422,7 +414,7 @@ class TchatController < ApplicationController
 		end
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@message = CGI.escapeHTML(params[:message])
-		@date = Date.today.
+		@date = Date.today
 		Messages.create(:user_id=> current_user.id, :create_time=> @date, :message=> @message, :target_id=> @target_id, :message_type=> 2)
 		render html: "1"
 		return

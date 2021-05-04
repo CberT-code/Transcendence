@@ -29,6 +29,15 @@ class ApplicationController < ActionController::Base
 			return false;
 		end
 	end
+	def hasSanction(user_id, target_id, type)
+		@sanctions = Sanctions.where({user_id: user_id, target_id: target_id, sanction_type: type}).all
+		@sanctions.each do |sanction|
+			if (sanction.end_time >= Time.now.to_i)
+				return true
+			end
+		end
+		return false
+	end
 	def start_conditions()
 		if !user_signed_in? 
 			render 'pages/not_authentificate', :status => :unauthorized

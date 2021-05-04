@@ -138,6 +138,7 @@ ViewChannel = Backbone.View.extend(
         removeChannelMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
             var channel_id = $(".Channelid").val();
             if (channel_id != "")
                 $.post(
@@ -151,7 +152,7 @@ ViewChannel = Backbone.View.extend(
                         if (data == 1) {
                             $("#messages").empty();
                             $(".message").val("");
-                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + channel_id + "/" + key });
                         }
                     },
                     'text'
