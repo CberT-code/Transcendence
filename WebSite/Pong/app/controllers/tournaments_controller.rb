@@ -63,7 +63,7 @@ class TournamentsController < ApplicationController
 			return
 		end
 		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse
-		@wars_histories = History.where(['tournament_id = ?', @tournament.id]).order(:id).reverse_order
+		@wars_histories = History.where(['tournament_id = ? AND ranked = ?', @tournament.id, true]).order(:id).reverse_order
 	end
 
 end
