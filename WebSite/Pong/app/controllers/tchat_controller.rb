@@ -286,7 +286,7 @@ class TchatController < ApplicationController
 		@user_id = current_user.id
 		@channel_id = params[:channel_id]
 		@datas = Channel.find_by_id(@channel_id)
-		@user_info = User.find_by_name(@newAdmin)
+		@user_info = User.find_by_nickname(@newAdmin)
 		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
 			if (@user_info)
 				@datas.update({user_id: @user_info.id})

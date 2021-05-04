@@ -141,7 +141,6 @@ initNewConversation = Backbone.Model.extend({
 
 getProfil = Backbone.Model.extend({
     parse: function(response) {
-        console.log(response);
         if (response != "") {
             $(".UserIcon").attr("src", response.image);
             $(".UserTitle").html(response.username);
