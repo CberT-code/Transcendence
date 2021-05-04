@@ -120,7 +120,6 @@ header #left h1 {
 	text-transform: uppercase;
 	font-family: "Roboto-BoldItalic";
 	font-size: 125%;
-	cursor: pointer;
 	transition-duration: 0.5s;
 }
 header #left h1:hover {

@@ -79,6 +79,7 @@ class UsersController < ApplicationController
 		@guild = @user.guild;
 		@current = @me.id == @user.id ? 1 : 0;
 		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]);
+		puts @histories.count
 		@date = DateTime.new(1905,1,1,1,1,1);
 		@tournament = Array.new
 		Tournament.all.each do |tr|
