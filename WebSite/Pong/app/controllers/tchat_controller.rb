@@ -112,7 +112,7 @@ class TchatController < ApplicationController
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
 			@date = Date.today
 			if (@datas && (@datas.user_id == @user_id || @datas.key == @key))
-				if (hasSanction(@datas.id, current_user.id, 1) == true && hasSanction(@datas.id, current_user.id, 2) == true)
+				if (hasSanction(@datas.id, current_user.id, 1) == true || hasSanction(@datas.id, current_user.id, 2) == true)
 					render html: 2
 					return
 				end
@@ -360,7 +360,7 @@ class TchatController < ApplicationController
 		@datas = Channel.find_by_id(@channel_id)
 		@user_datas = User.find_by_nickname(@nickname)
 		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
-			if (!@user_datas)
+			if (!@user_datas || @datas.user_id == current_user.id)
 				render html: "2"
 				return
 			end

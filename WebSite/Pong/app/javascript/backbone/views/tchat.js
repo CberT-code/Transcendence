@@ -259,7 +259,7 @@ ViewChannel = Backbone.View.extend(
                             $(".message").val("");
                             window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         } else
-                            notification("error", "You can't send a message, you are blocked from this channel...");
+                            notification("error", "You can't send a message, you are mute from this channel...");
                     },
                     'text'
                 );
@@ -332,7 +332,7 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "The sanction has been applicate !");
                             Backbone.history.loadUrl();
                         } else
-                            notification("error", "This user doesn't exist...");
+                            notification("error", "This user doesn't exist or you cannot make sanction on yoursel...");
                     },
                     'text'
                 );
