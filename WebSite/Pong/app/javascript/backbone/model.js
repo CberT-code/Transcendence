@@ -143,9 +143,14 @@ getProfil = Backbone.Model.extend({
     parse: function(response) {
         if (response != "") {
             $(".UserIcon").attr("src", response.image);
+            $(".UserIcon").attr("onclick", "window.location='/#show_user/" + response.id + "'");
             $(".UserTitle").html(response.username);
             $("#informations").empty();
-            if (response.guild != 0) {
+            if (response.own == 1)
+                $(".proposeGame").css("display", "none");
+            else
+                $(".proposeGame").css("display", "block");
+            if (!response.guild) {
                 $("#informations").append("<div id='information'><p>Guild : "+ response.guild.name +"</p></div>");
             }
             $("#informations").append("<div id='information'><p>Victory : "+ response.stats.victory +"</p></div>");
