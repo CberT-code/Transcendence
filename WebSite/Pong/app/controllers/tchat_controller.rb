@@ -118,7 +118,7 @@ class TchatController < ApplicationController
 		@channel_id = params[:channel_id]
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@channel_id)
-		if (@datas && @datas.user_id == @user_id)
+		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
 			@tmp = Messages.where(["target_id = ?", @channel_id])
  			@tmp.each do |element|
 				element.destroy
@@ -136,7 +136,8 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id])
 			@channel_id = CGI.escapeHTML(params[:channel_id])
 			@user_id = current_user.id
-			if (Channel.find_by_user_id_and_id(@user_id, @channel_id))
+			@channel = Channel.find_by_id(@channel_id)
+			if (@datas && (@datas.user_id || current_user.id))
 				Messages.find_by_id(@id).destroy
 				render html: "1"
 				return 
@@ -153,7 +154,7 @@ class TchatController < ApplicationController
 		@id = CGI.escapeHTML(params[:id])
 		@message = Messages.find_by_id(@id)
 		if (@message)
-			if (@message.user_id == current_user.id)
+			if (@message.user_id == current_user.id || current_user.role == 1)
 				@message.destroy
 				render html: "1"
 				return
@@ -172,7 +173,7 @@ class TchatController < ApplicationController
 		@type = CGI.escapeHTML(params[:type]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		@time = params[:time] ? params[:time].to_i : 99999
-		if (@datas && @datas.user_id == current_user.id)
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			if (@target_id.to_i == current_user.id)
 				render html: "2"
 				return
@@ -210,8 +211,8 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id])
 			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
-			@datas = Channel.find_by_id_and_user_id(@id, @user_id)
-			if (@datas)
+			@datas = Channel.find_by_id(@id)
+			if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 				if (safestr(@key))
 					@datas.update({:key => @key})
 					@datas.save
@@ -232,8 +233,8 @@ class TchatController < ApplicationController
 		end
 		@channelId = CGI.escapeHTML(params[:channelId])
 		@user_id = current_user.id
-		@datas = Channel.find_by_id_and_user_id(@channelId, @user_id)
-		if (@datas)
+		@datas = Channel.find_by_id(@channelId)
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			@datas.update({type_channel: (@datas.type_channel == 1 ? 2 : 1)})
 			@datas.save
 			render html: "1"
@@ -251,7 +252,7 @@ class TchatController < ApplicationController
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@id)
 		if (@datas)
-			if (@datas.user_id == @user_id)
+			if (@datas.user_id == @user_id || current_user.role == 1)
 				render html: "1"
 				return
 			end
@@ -269,9 +270,9 @@ class TchatController < ApplicationController
 		@newAdmin = params[:newAdmin]
 		@user_id = current_user.id
 		@channel_id = params[:channel_id]
-		@datas = Channel.find_by_id_and_user_id(@channel_id, @user_id)
+		@datas = Channel.find_by_id(@channel_id)
 		@user_info = User.find_by_name(@newAdmin)
-		if (@datas)
+		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
 			if (@user_info)
 				@datas.update({user_id: @user_info.id})
 				@datas.save
@@ -295,7 +296,7 @@ class TchatController < ApplicationController
 			if (@channel)
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
-				@is_admin = @channel.user_id == @user_id ? 1 : 0
+				@is_admin = (@channel.user_id == @user_id || current_user.role == 1) ? 1 : 0
  				@datas.each do |element|
 					@tmp = User.find_by_id(element.user_id)
 					@sanction = Sanctions.find_by_user_id_and_target_id(@channel.id, element.user_id)
@@ -319,7 +320,8 @@ class TchatController < ApplicationController
 		@type = params[:type]
 		@channel_id = params[:id]
 		@datas = Sanctions.where(user_id: @channel_id, sanction_type: @type).all()
-		if (@datas)
+		@channel = Channel.find_by_id(@channel_id)
+		if (@datas && @channel && (@channel.user_id == current_user.id || current_user.role == 1))
 			@ret = Array.new
 			@datas.each do |element|
 				if (element.end_time > Time.now.to_i)
@@ -342,7 +344,7 @@ class TchatController < ApplicationController
 		@time = CGI.escapeHTML(params[:time]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		@user_datas = User.find_by_nickname(@nickname)
-		if (@datas && @datas.user_id == current_user.id)
+		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
 			if (!@user_datas)
 				render html: "2"
 				return
@@ -357,9 +359,10 @@ class TchatController < ApplicationController
 	def removeSanction
 		if (params[:id])
 			@id = params[:id]
-			@channel = Channel.find_by_id(@id)
-			if ((@channel && current_user.id == @channel.user_id) || current_user.role == 1)
-				Sanctions.find_by_id(@id).destroy
+			@sanction = Sanctions.find_by_id(@id)
+			@channel = @sanction ? Channel.find_by_id(@sanction.user_id) : -1
+			if (@channel != -1 && (current_user.id == @channel.user_id || current_user.role == 1))
+				@sanction.destroy
 				render html: "1"
 				return
 			end
