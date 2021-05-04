@@ -81,7 +81,7 @@ Rails.application.configure do
   # end
 
   # Silence ActionCable, uncomment to prevent actioncable from logging
-#   ActionCable.server.config.logger = Logger.new(nil)
+  ActionCable.server.config.logger = Logger.new(nil)
   
   # Enable console 
   config.web_console.whitelisted_ips = '172.24.0.1'

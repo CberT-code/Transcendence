@@ -165,7 +165,7 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 2) {
-                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                            notification("error", "You cannot use special characters, you can only use numbers and letters...");
                         }
                     },
                     'text'
@@ -183,7 +183,7 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "Channel remove !");
+                            notification("success", "Channel removed !");
                             Backbone.history.loadUrl();
                         }
                     },
@@ -207,7 +207,7 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "User unmuted !");
                             Backbone.history.loadUrl();
                         } else if (data == 2)
-                            notification("error", "This user is already unmute...");
+                            notification("error", "This user is already unmuted...");
                         else
                             notification("error", "You cannot unmute yourself...");
                     },
@@ -275,9 +275,9 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "Channel created !");
                             Backbone.history.loadUrl();
                         } else if (data == 2) {
-                            notification("error", "A channel have already this title...");
+                            notification("error", "A channel already has this title...");
                         } else {
-                            notification("error", "You cannot use specials characters, you can only use numbers and letters...");
+                            notification("error", "You cannot use special characters, you can only use numbers and letters...");
                         }
                     },
                     'text'
@@ -322,7 +322,7 @@ ViewChannel = Backbone.View.extend(
                     },
                     function (data) {
                         if (data == 1) {
-                            notification("success", "The sanction has been applicate !");
+                            notification("success", "The sanction has been applicated !");
                             Backbone.history.loadUrl();
                         } else
                             notification("error", "This user doesn't exist...");
@@ -471,7 +471,7 @@ ViewChannel = Backbone.View.extend(
                 },
                 function (data) 
                 {
-                    notification("success", "Game have been propose !");
+                    notification("success", "Game has been proposed !");
                 },
             );
         }

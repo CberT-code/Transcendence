@@ -10,7 +10,7 @@ Rails.application.routes.draw do
 
 	post "/otp_check/", to: "pages#otp_check"
 	# get "/account", to: "pages#account"
-	get "/play", to: "pages#play"
+	get "/play", to: "pages#play", as: "play_index"
 	get "/ladder", to: "pages#ladder"
 	get "/501", to: "error#403"
 	get "/pages/ban", to: "pages#ban" 
