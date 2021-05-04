@@ -29,7 +29,7 @@
 					<h2>2fa</h2>
 				</div>
 				<div id="container">
-					<%= content_tag :div, '', id: 'player_data', data: { id: @me.id, otp: @user.otp_required_for_login} %>
+					<%= content_tag :div, '', id: 'player_data', data: { id: @me.id, otp: @me.otp_required_for_login} %>
 					<div id="otp_qrcode"></div>
 					<div id="otp_confirm_form">
 						<%= form_for :tfa_confirm, remote: true do |f| %>
@@ -66,67 +66,69 @@
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 || !(@me.friends.include?@user.id) || @admin == 1 %>
+		<div id="element">
+			<div id="name">
+				<h2>actions</h2>
+			</div>
+			<div id="container">
+				<% if @current == 1 || @admin == 1 %>
+					<div class="element-line">
+						<span>Available for war?</span>
+						<label class="switch">
+							<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : ""%>>
+							<span class="slider"></span>
+						</label>
+					</div>
+				<% end %>
+				<div class="element-line">
+				<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
+					<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+				<% end %>
+				</div>
+				<div class="element-line">
+				<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
+					<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
+				<% elsif @admin == 1 && @user.banned == true %>
+					<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
+				<% end %>
+				</div>
+				<div class="element-line">
+				<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
+					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
+				<% elsif @current != 1 && (@me.friends.include?@user.id) && @user.deleted == false %>
+					<button class="back-red" id="del_friend" value="<%= @user.id %>"><i class="fas fa-user-friends"></i> Remove Friend</button>
+				<% end %>
+				</div>
+			</div>
+		</div>
+		<% if @current == 1 && @user.friends.count > 0%>
 			<div id="element">
 				<div id="name">
-					<h2>actions</h2>
+					<h2>Friends</h2>
 				</div>
 				<div id="container">
-					<% if @current == 1 || @admin == 1 %>
-						<div class="element-line">
-							<span>Available for war?</span>
-							<label class="switch">
-								<input id="user_available" type="checkbox" <%= @user.available == true ? "checked" : ""%>>
-								<span class="slider"></span>
-							</label>
-						</div>
+					<% @user.friends.each do |friend_id| %>
+						<% friend = User.find_by_id(friend_id); %>
+						<% if friend != nil %>
+							<div id="line">
+								<% if friend.isOnline() == "online" %>
+									<p><span class="text-bold text-green"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+									<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
+									<%= form_for :tournaments do |f| %>
+										<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+									<% end %>
+								<% elsif friend.isOnline() == "in_game" %>
+									<p><span class="text-bold text-orange"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+									<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
+								<% else %>
+									<p><span class="text-bold text-red"> <%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
+								<% end %>
+							</div>
+						<% end %>
 					<% end %>
-					<div class="element-line">
-					<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
-						<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
-					<% end %>
-					</div>
-					<div class="element-line">
-					<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
-						<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
-					<% elsif @admin == 1 && @user.banned == true %>
-						<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
-					<% end %>
-					</div>
-					<div class="element-line">
-					<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
-						<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
-					<% end %>
-					</div>
 				</div>
 			</div>
 		<% end %>
-		<div id="element">
-			<div id="name">
-				<h2>Friends</h2>
-			</div>
-			<div id="container">
-				<% @user.friends.each do |friend_id| %>
-					<% friend = User.find_by_id(friend_id); %>
-					<% if friend != nil %>
-						<div id="line">
-							<% if friend.isOnline() == "online" %>
-								<p><span class="text-bold text-green"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-								<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
-								<%= form_for :tournaments do |f| %>
-									<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
-								<% end %>
-							<% elsif friend.isOnline() == "in_game" %>
-								<p><span class="text-bold text-orange"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-								<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
-							<% else %>
-								<p><span class="text-bold text-red"> <%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-							<% end %>
-						</div>
-					<% end %>
-				<% end %>
-			</div>
-		</div>
 	</div>
 	<% if @histories.count > 0 %>
 		<div id="container-history">

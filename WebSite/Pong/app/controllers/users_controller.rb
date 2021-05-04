@@ -58,7 +58,11 @@ class UsersController < ApplicationController
 	end
 
 	def index
-		@Users = User.where(["deleted = ?", FALSE]);
+		if (@me.role == 1)
+			@Users = User.where(["deleted = ?", FALSE]);
+		else
+			render 'pages/not_authentificate', :status => :unauthorized
+		end
 	end
 
 	def show
@@ -101,7 +105,7 @@ class UsersController < ApplicationController
 				end
 			end
 		else
-			render 'error/403', :status => :unauthorized;
+			render html: "error-forbidden";
 		end
 	end
 
@@ -112,7 +116,7 @@ class UsersController < ApplicationController
 			if (@user.guild_id)
 				render html: "error-inguild";
 			else
-				@nb = User.where(["email LIKE '%@unknown.fr'"]).count
+				@nb = User.where(["email LIKE '%%@unknown.fr' "]).count
 				@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
 				@user.save
 				if (@current == 1)
@@ -151,8 +155,12 @@ class UsersController < ApplicationController
 			render html: "error-inguild";
 		else
 			if (@me.role == 1)
-				@user.update({banned: true})
-				render html: "success"
+				if (@user.banned == true)
+					render html: "error-banned"
+				else
+					@user.update({banned: true})
+					render html: "success"
+				end
 			else
 				render html: "error_admin"
 			end
@@ -161,8 +169,12 @@ class UsersController < ApplicationController
 	def unban
 		@user = User.find_by_id(params[:id]);
 		if (@me.role == 1)
-			@user.update({banned: false})
-			render html: "success"
+			if (@user.banned == false)
+				render html: "error-unbanned"
+			else
+				@user.update({banned: false})
+				render html: "success"
+			end
 		else
 			render html: "error_admin"
 		end

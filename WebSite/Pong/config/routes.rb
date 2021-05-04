@@ -49,9 +49,7 @@ Rails.application.routes.draw do
 	get "/tchat/message/init/:username", to: "tchat#privateConversationInit"
 	get "/tchat/profil/get/:user_id", to: "tchat#profilGet"
 	get "/tchat/messages/private", to: "tchat#getPrivateMessages"
-
 	get "/tmp/:user_id/:target_id", to: "tchat#tmp"
-
 	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 
 	resources :guilds
