@@ -373,7 +373,7 @@ class TchatController < ApplicationController
 		end
 		@channel_id = CGI.escapeHTML(params[:id])
 		@nickname = CGI.escapeHTML(params[:nickname])
-		@type = CGI.escapeHTML(params[:type])
+		@type = CGI.escapeHTML(params[:type]).to_i
 		@time = CGI.escapeHTML(params[:time]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		@user_datas = User.find_by_nickname(@nickname)
@@ -387,6 +387,19 @@ class TchatController < ApplicationController
 			return
 		end
 		render html: "errror-forbidden", :status => :unauthorized
+		return
+	end
+	def removeSanction
+		if (params[:id])
+			@id = params[:id]
+			@channel = Channel.find_by_id(@id)
+			if ((@channel && current_user.id == @channel.user_id) || current_user.role == 1)
+				Sanctions.find_by_id(@id).destroy
+				render html: "1"
+				return
+			end
+		end
+		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
 	def privateConversationGet

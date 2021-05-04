@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 	post "/tchat/channel/admin/swap", to: "tchat#exchangeChannelAdmin"
 	post "/tchat/channel/remove", to: "tchat#removeChannel"
 	post "/tchat/channel/sanction/create", to: "tchat#addSanction"
+	post "/tchat/channel/sanction/remove", to: "tchat#removeSanction"
 	post "/tchat/message/send", to: "tchat#privateConversationSend"
 	post "/tchat/message/remove", to: "tchat#removeMessage"
 	post "/tchat/message/block", to: "tchat#blockUser"
@@ -51,8 +52,6 @@ Rails.application.routes.draw do
 	get "/tchat/messages/private", to: "tchat#getPrivateMessages"
 
 	get "/tmp/:user_id/:target_id", to: "tchat#tmp"
-
-	post "/tchat/channel/sanction/", to: "tchat#ApplySanction"
 
 	resources :guilds
 
