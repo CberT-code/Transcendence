@@ -45,7 +45,7 @@ ChannelMessageModel = Backbone.Model.extend({
     parse: function (response) {
         if (response && response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
-                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"' >" + element.author + " - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div>";
+                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"' >" + element.author + "("+ element.guild +") - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
                     ret += "<div id='action'><button value='" + element.id + "' class='removeChannelMessage'>remove</button>";
                     if (element.own == 2)
@@ -108,7 +108,7 @@ PrivateConversation = Backbone.Model.extend({
     parse: function (response) {
         if (response.length > 0 && Array.isArray(response)) {
             response.forEach(function (element) {
-                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"'>" + element.author + " - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div><div id='action'>";
+                var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"'>" + element.author + "("+ element.guild +") - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div><div id='action'>";
                 if (element.admin == 1) {
                     ret += "<button value='" + element.id + "' class='removeMessage'>remove</button>";
                 }
@@ -141,7 +141,6 @@ initNewConversation = Backbone.Model.extend({
 
 getProfil = Backbone.Model.extend({
     parse: function(response) {
-        console.log(response);
         if (response != "") {
             $(".UserIcon").attr("src", response.image);
             $(".UserTitle").html(response.username);

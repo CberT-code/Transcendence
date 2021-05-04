@@ -9,40 +9,34 @@
                     <button class="CreateaChannel">create a channel</button>
                 </div>
                 <div id="list">
-
-                    <% @channel.each do |element| %>
-                    <%
-                    @datas = Sanctions.find_by_user_id_and_target_id(element.id, @current_user.id)
-                    if (!(@datas && @datas.end_time <= Time.now.to_i && @datas.sanction_type == 1))
-                    if (element.type_channel==1 && element.user_id != current_user.id) 
+                    <% @channel.each do |element|
+                    if (element['type_channel']==1 && element['user_id'] != current_user.id) 
                     %>
                     <div id="channel" class="privateChannel">
-                        <input type="hidden" value="<%= element.id %>">
+                        <input type="hidden" value="<%= element['id'] %>">
                         <div id="icon">
                             <i class="fas fa-lock"></i>
                         </div>
                         <div id="info">
-                            <p><%= element.title %></p>
+                            <p><%= element['title'] %></p>
                         </div>
                     </div>
                     <% else %>
                     <div id="channel" class="publicChannel">
-                        <input type="hidden" value="<%= element.id %>">
+                        <input type="hidden" value="<%=  element['id'] %>">
                         <div id="icon">
-                            <% if (element.type_channel==1) %>
+                            <% if (element['type_channel']==1) %>
                             <i class="fas fa-lock"></i>
                             <% else %>
                             <i class="fas fa-unlock"></i>
                             <% end %>
                         </div>
                         <div id="info">
-                            <p><%= element.title %></p>
+                            <p><%= element['title'] %></p>
                         </div>
                     </div>
-                    <% end %>
 	            	<% end %>
                     <% end %>
-
                 </div>
             </div>
         </div>
