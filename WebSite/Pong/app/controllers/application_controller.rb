@@ -32,14 +32,18 @@ class ApplicationController < ActionController::Base
 	def start_conditions()
 		if !user_signed_in? 
 			render 'pages/not_authentificate', :status => :unauthorized
+			return (0)
 		elsif @me.deleted == true
 			sign_out current_user
+			return (0)
 		elsif @me.banned == true 
 			sign_out current_user
 			render "/pages/ban"
+			return (0)
 		else
 			@admin = current_user.role == 1 ? 1 : 0;
 			@me = current_user
+			return (1)
 		end
 	end
 	def is_number? string

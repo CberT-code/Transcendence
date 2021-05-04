@@ -2,9 +2,10 @@ class GameController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	
 	before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 	

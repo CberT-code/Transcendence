@@ -2,9 +2,10 @@ class HistoriesController < ApplicationController
 	skip_before_action :verify_authenticity_token
 	
 	before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 	
@@ -28,6 +29,7 @@ class HistoriesController < ApplicationController
 							db:   ENV['REDIS_DB'])
 		@game = History.find_by_id(params[:id])
 		if @game == nil
+			render "/pages/error-404"
 			return
 		end
 		if @game.duel == "pending" && current_user == @game.opponent #duel stuff to prevent cheat with "forever alone" button

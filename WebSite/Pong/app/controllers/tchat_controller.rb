@@ -2,9 +2,10 @@ require 'securerandom'
 
 class TchatController < ApplicationController
     before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 	def index

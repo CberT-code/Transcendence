@@ -1,8 +1,9 @@
 class TournamentsController < ApplicationController
 	before_action do |sign_n_out|
-		start_conditions()
-		if @me.locked
-			render "/pages/otp"
+		if (start_conditions() == 1)
+			if @me.locked
+				render "/pages/otp"
+			end
 		end
 	end
 
@@ -56,7 +57,11 @@ class TournamentsController < ApplicationController
 	end
 	
 	def show
-		@tournament = Tournament.find_by_id(params[:id]);
+		@tournament = Tournament.find_by_id(params[:id])
+		if (@tournament == nil)
+			render "/pages/error-404"
+			return
+		end
 		@t_users = @tournament.t_users.all.sort_by { |u| [u.elo]}.reverse
 		@wars_histories = History.where(['tournament_id = ?', @tournament.id]).order(:id).reverse_order
 	end

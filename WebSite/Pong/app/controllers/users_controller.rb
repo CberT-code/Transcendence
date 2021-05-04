@@ -61,13 +61,17 @@ class UsersController < ApplicationController
 		if (@me.role == 1)
 			@Users = User.where(["deleted = ?", FALSE]);
 		else
-			render 'pages/not_authentificate', :status => :unauthorized
+			render html: "error-forbidden", :status => :unauthorized
 		end
 	end
 
 	def show
 		if (params.has_key?(:id))
 			@user = User.find_by_id(params[:id])
+			if (@user == nil)
+				render "/pages/error-404"
+				return
+			end
 		else
 			@user = current_user
 		end
