@@ -2656,18 +2656,24 @@ background-color: #7BE12B;
 	font-size: 105%;
 }
 .privateMessages #element #corp #action #input-text {
+    width: 80%;
+    height: 45px;
+    overflow: hidden;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+}
+.privateMessages #element #corp #action #input-text #left {
+    width: 80%;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
 	width: 80%;
 	height: 45px;
 	overflow: hidden;
 	display: flex;
 	margin-left: auto;
 	margin-right: auto;
-}
-.privateMessages #element #corp #action #input-text #left {
-	width: 80%;
-	overflow: hidden;
-	height: 100%;
-	display: flex;
 }
 .privateMessages #element #corp #action #input-text #left input {
 	height: 90%;
@@ -3203,6 +3209,5 @@ background-color: #7BE12B;
 	font-size: 105%;
 	font-family: "Roboto-Medium";
 	cursor: pointer;
-	background-color: ;
 	transition-duration: 0.5s;
 }

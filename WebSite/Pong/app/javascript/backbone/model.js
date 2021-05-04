@@ -48,10 +48,6 @@ ChannelMessageModel = Backbone.Model.extend({
                 var ret = "<div id='message'><div id='content'><div id='username'><button class='UserInformation' value='"+ element.author_id +"' >" + element.author + " - " + element.date + "</button></div><div id='text'><p>" + element.content + "</p></div></div>";
                 if (element.admin == 1) {
                     ret += "<div id='action'><button value='" + element.id + "' class='removeChannelMessage'>remove</button>";
-                    if (element.blocked == 1 && element.own == 2)
-                        ret += "<button class='unblockUserChannel' value='" + element.author_id + "'>unban</button>";
-                    if (element.muted == 1 && element.own == 2)
-                        ret += "<button class='unmuteUserChannel' value='" + element.author_id + "'>unmute</button>";
                     if (element.own == 2)
                         ret += "<button class='blockUser' value='" + element.author_id + "'>block</button>";
                     ret += "</div>";
