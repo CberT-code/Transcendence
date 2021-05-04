@@ -71,7 +71,6 @@ if (ready) {
 
 	received(data) {
 		status = data['status'];
-		console.log(status);
 		if (status == "running" ) {
 			display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 		}
@@ -111,6 +110,7 @@ function foreverAlone() {
 		$("#content-game_show #right_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
 		$("#content-game_show #left_PP").css("background-image", "url(\"https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg\")");
 		$('#content-game_show #game').css('visibility', 'visible');
+		$('#content-game_show #alone').hide();
 		clearInterval(waiting);
 		$.post('/histories/run/' + id);
 	}

@@ -11,19 +11,24 @@ class MatchmakingController < ApplicationController
 	def duel
 		game = @me.findLiveGame()
 		if game != -1
-			render json: {status: "multiple_games", info: "You already have a running game"}
+			render json: {status: "multiple_games",
+				info: "You already have a running game"}
+		elsif params.fetch(:opponent, -1) == -1
+				render json: {status: "error", info: "Invalid opponent_id"}
 		else
 			opponent = User.find_by_id(params['opponent'].to_i)
-			redis = Redis.new(	url:  ENV['REDIS_URL'],
-								port: ENV['REDIS_PORT'],
-								db:   ENV['REDIS_DB'])
-			if redis.get("player_#{opponent_id}") == "offline"
+
+			if opponent.isOnline() == "offline"
 				render json: {status: "error", info: "Opponent is offline"}
 				return
 			end
+			redis = Redis.new(	url:  ENV['REDIS_URL'],
+								port: ENV['REDIS_PORT'],
+								db:   ENV['REDIS_DB'])
 			o_game = opponent.findLiveGame
 			if o_game != -1
-				render json: {status: "multiple_games", info: "Opponent already has a running game"}
+				render json: {status: "multiple_games", info:
+					"Opponent already has a running game"}
 				return
 			end
 			tourn = Tournament.find_by_id(params['id'].to_i)
@@ -38,7 +43,9 @@ class MatchmakingController < ApplicationController
 				war_id: war_id, war_match: false, timeout: 30, duel: "pending")
 			@game.save!
 			redis.set("game_#{@game.id}", "Looking For Opponent")
-			ActionCable.server.broadcast("presence_#{opponent.id}", {info: "#{opponent.nickname} wants to duel you!", id: @game.id, type: "duel", color: "gold" })
+			ActionCable.server.broadcast("presence_#{opponent.id}",
+				{info: "#{opponent.nickname} wants to duel you!",
+					id: @game.id, type: "duel", color: "gold" })
 			render json: {status: "Duel created!", id: @game.id}
 		end
 	end

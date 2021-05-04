@@ -9,7 +9,15 @@ class GameController < ApplicationController
 	end
 	
 	def run
+		if params.fetch(:id, -1) == -1
+			render html: "Invalid game_id"
+			return
+		end
 		game = History.find_by_id(params[:id])
+		if game == nil
+			render html: "Invalid game_id"
+			return
+		end
 		if current_user == game.host && game.duel != "pending" # UNCOMMENT THIS LINE OR FACE A SHITSTORM
 			redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
@@ -28,9 +36,8 @@ class GameController < ApplicationController
 				end
 				move[1] = redis.get("player_#{game.opponent.id}")
 				move[0] = redis.get("player_#{game.host.id}")
-				if move[0] == "offline" && move[1] == "offline"
+				if game.opponent.isOnline() == "offline" && game.host.isOnline() =="offline"
 					status = "disconnect"
-					puts "\n\nBoth players left!\n\n"
 					break
 				end
 				time = Time.now
