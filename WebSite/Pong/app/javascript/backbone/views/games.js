@@ -14,7 +14,8 @@ ViewGames = Backbone.View.extend(
 	},
     events: {
 		'click #ranked_game': 'Game_new_ranked',
-		'click #practice_game': 'Game_new_practice'
+		'click #practice_game': 'Game_new_practice',
+		'click #continue': 'Continue_game'
     },
 	Game_new_ranked: function (e) {
 
@@ -53,5 +54,10 @@ ViewGames = Backbone.View.extend(
 					window.location.href = "/#show_game/" + data.id.toString() ;
 			},
 		);
+	},
+	Continue_game: function (e) {
+
+		console.log("Continue game");
+		window.location.href = "/#show_game/" + $(e.currentTarget).val();
 	}
 });

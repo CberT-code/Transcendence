@@ -42,6 +42,9 @@ class ApplicationController < ActionController::Base
 			@me = current_user
 		end
 	end
+	def is_number? string
+		true if Float(string) rescue false
+	end
 
 	protected
 

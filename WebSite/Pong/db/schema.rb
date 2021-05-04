@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_30_061612) do
+ActiveRecord::Schema.define(version: 2021_04_30_133140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
     t.bigint "war_id"
     t.boolean "war_match", default: false
     t.integer "timeout", default: -1
+    t.string "duel", default: ""
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
     t.index ["war_id"], name: "index_histories_on_war_id"
@@ -117,13 +118,13 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
 
   create_table "users", force: :cascade do |t|
     t.string "nickname", null: false
-    t.string "email", null: false
-    t.string "image", default: "", null: false
+    t.string "email"
+    t.string "image"
     t.boolean "available", default: false, null: false
     t.integer "role", default: 0, null: false
     t.boolean "deleted", default: false, null: false
-    t.string "uid", default: "", null: false
-    t.string "provider", default: "", null: false
+    t.string "uid", default: ""
+    t.string "provider", default: ""
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -148,7 +149,6 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
     t.boolean "otp_required_for_login"
     t.boolean "locked", default: false
     t.boolean "banned", default: false
-    t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["guild_id"], name: "index_users_on_guild_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["stat_id"], name: "index_users_on_stat_id"
@@ -169,8 +169,8 @@ ActiveRecord::Schema.define(version: 2021_04_30_061612) do
     t.bigint "tournament_id", null: false
     t.integer "timeout", default: 30
     t.boolean "allow_ext", default: true
-    t.integer "forfeitedGames1", default: 0
-    t.integer "forfeitedGames2", default: 0
+    t.integer "forfeitedGames1", default: 5
+    t.integer "forfeitedGames2", default: 5
     t.boolean "ongoingMatch", default: false
     t.boolean "wartime", default: false
     t.index ["tournament_id"], name: "index_wars_on_tournament_id"

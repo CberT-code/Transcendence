@@ -26,7 +26,15 @@
 				<div class="goal" style='left: 98%'></div>
 				<div id="right_player" class="player"></div>
 			</div>
-			<div id="end_game"></div>
+			<div id="end_game">
+				<% if @status == "ended" %>
+					<% if @left > @right %>
+						<p class="p_end_game" style="color: red"><%= @game.host.nickname %> won</p>
+					<% else %>
+						<p class="p_end_game" style="color: red"><%= @game.opponent.nickname %> won</p>
+					<% end%>
+				<% end %>
+			</div>
 			<div id="image" class="margin-left">
 				<% if @game.opponent == @game.host %>
 					<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
@@ -42,10 +50,9 @@
 			<% end %>
 			</h2></center>
 		</div>
-		<button id="alone" class="back-black">J'ai pas d'amis</button>
-		<button id="stop" class="back-red"><i class="fas fa-ban"></i> stop</button>
-		<div id="dev">
-		</div>
+		<% if @status == "Looking For Opponent" %>
+			<button id="alone" class="back-black">J'ai pas d'amis</button>
+		<% end %>
 		<%= javascript_pack_tag 'pong_v1' %>
 	</div>
 </div>

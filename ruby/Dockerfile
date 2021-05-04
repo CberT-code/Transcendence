@@ -26,6 +26,6 @@ ENTRYPOINT	bundle install;\
 			rails db:seed;\
 			whenever --update-crontab;\
 			service cron restart;\
-			rails s -b 0.0.0.0 -p 80;
-			# //echo "READY TO BOOT SERVER"; \
+			echo "READY TO BOOT SERVER"; \
 			# sleep infinity;
+			rails s -b 0.0.0.0;

@@ -73,6 +73,10 @@ class History < ApplicationRecord
 		if self.statut == 4
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: self.opponent.image, elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
 			return
+		elsif self.duel == "pending"
+			ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: self.opponent.image, elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
+			self.update(statut: -1)
+			return
 		end
 		self.statut = 4
 		self.save!
@@ -85,6 +89,6 @@ class History < ApplicationRecord
 		winner.stat.save!
 		loser.stat.defeat += 1
 		loser.stat.save!
-		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: self.opponent.image, elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
+		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended", right_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg", elo: elo.to_i, winner: winner.id, loser: loser.id, w_name: winner.name})
 	end
 end

@@ -12,7 +12,7 @@ class PongChannel < ApplicationCable::Channel
 	if (@redis.get("game_#{data['room']}") == "Looking For Opponent" &&
 		data['status'] == "gone")
 		@redis.set("game_#{data['room']}", "quit")
-		game = Histories.find(data['room'])
+		game = Histories.find_by_id(data['room'])
 		game.statut = -1
 		game.save
 	else

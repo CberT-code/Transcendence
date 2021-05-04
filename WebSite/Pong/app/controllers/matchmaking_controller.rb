@@ -12,8 +12,8 @@ class MatchmakingController < ApplicationController
 		redis = Redis.new(	url:  ENV['REDIS_URL'],
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
-		tourn = Tournament.find(params['id'].to_i)
-		opponent = User.find(params['opponent'].to_i)
+		tourn = Tournament.find_by_id(params['id'].to_i)
+		opponent = User.find_by_id(params['opponent'].to_i)
 		@me = current_user
 		if War.canDuel(@me, opponent)
 			war_id = @me.guild.war_id
@@ -22,7 +22,7 @@ class MatchmakingController < ApplicationController
 		end
 		@game = tourn.games.new(statut: 0, host: @me, opponent: opponent,
 			host_score: 0, opponent_score: 0, ranked: false,
-			war_id: war_id, war_match: false, timeout: 30)
+			war_id: war_id, war_match: false, timeout: 30, duel: "pending")
 		@game.save!
 		redis.set("game_#{@game.id}", "Looking For Opponent")
 		render json: {status: "Duel created!", id: @game.id}
@@ -53,7 +53,7 @@ class MatchmakingController < ApplicationController
 			else
 				redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 				redis.set("game_#{game.id}", "ready")
-				game.update(opponent: @me)
+				game.update({opponent: @me})
 				render json: {status: "ok", info: "You accepted the challenge!"}
 			end
 		end
@@ -115,12 +115,15 @@ class MatchmakingController < ApplicationController
 	end
 
 	def timeout
-		game = History.find(params[:id])
+		game = History.find_by_id(params[:id])
 		if game.timeout == -1
 			render json: {status: "ok", time_left: -1}
 		elsif Time.now - game.created_at < game.timeout
 			render json: {status: "ok", time_left: (game.timeout - (Time.now - game.created_at)).to_i}
 		elsif game.war_id == -1
+			game.statut = -1
+			game.save!
+			game.end_game_function
 			render json: {status: "forfeit", winner: game.host.nickname}
 		else
 			if game.war.guild1 == game.host.guild

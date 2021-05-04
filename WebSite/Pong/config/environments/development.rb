@@ -80,8 +80,8 @@ Rails.application.configure do
   #   config.cache_store = :redis_cache_store, { url: "redis://redis:6379/0" }
   # end
 
-  # Silence ActionCable
-  ActionCable.server.config.logger = Logger.new(nil)
+  # Silence ActionCable, uncomment to prevent actioncable from logging
+#   ActionCable.server.config.logger = Logger.new(nil)
   
   # Enable console 
   config.web_console.whitelisted_ips = '172.24.0.1'

@@ -9,12 +9,12 @@ class TchatController < ApplicationController
 	end
 	def index
 		@channel = Channel.all.order("id")
-		@tmp = Messages.where(user_id: current_user.id, message_type: 2).all.or(Messages.where(target_id: current_user.id, message_type: 2).all)
-		@sanctions =  Sanctions.where(user_id: current_user.id, sanction_type: 3)
+		@tmp = Messages.where({user_id: current_user.id, message_type: 2}).all.or(Messages.where({target_id: current_user.id, message_type: 2}).all)
+		@sanctions =  Sanctions.where({user_id: current_user.id, sanction_type: 3})
 		@messages = Array.new
 		@tmp.each do |element|
 			@datas = element.user_id == current_user.id ? User.find_by_id(element.target_id) : User.find_by_id(element.user_id)
-			@blocked = Sanctions.where(user_id: current_user.id, target_id: @datas.id, sanction_type: 3).count == 0 ? 1 : 2
+			@blocked = Sanctions.where({user_id: current_user.id, target_id: @datas.id, sanction_type: 3}).count == 0 ? 1 : 2
 			if (!findInArrayObj(@messages, @datas.nickname))
 				if (@blocked == 1)
 					@messages.push({"image" => @datas.image, "nickname" => @datas.nickname, "target_id" => @datas.id, "blocked" => 1})
@@ -409,12 +409,12 @@ class TchatController < ApplicationController
 		end
 		@user_id = current_user.id
 		@target_id = params[:target_id]
-		@messages = Messages.where(user_id: current_user.id, target_id: @target_id, message_type: 2).all.or(Messages.where(user_id: @target_id, target_id: current_user.id, message_type: 2).all)
+		@messages = Messages.where({user_id: current_user.id, target_id: @target_id, message_type: 2}).all.or(Messages.where({user_id: @target_id, target_id: current_user.id, message_type: 2}).all)
 		if (@messages)
 			@ret = Array.new
 			@messages.each do |element|
 				@tmp = User.find_by_id(element.user_id)
-				if (Sanctions.where(user_id: @user_id,target_id: @target_id,sanction_type: 3).count == 0)
+				if (Sanctions.where({user_id: @user_id,target_id: @target_id,sanction_type: 3}).count == 0)
 					@ret.push({"id" => element.id, "author" => @tmp.nickname, "author_id" => element.user_id, "block" => (element.user_id != current_user.id ? 1 : 2), "content" => element.message, "date" => element.create_time, "admin" => (element.user_id == current_user.id ? 1 : 2)})
 				end
 			end
@@ -470,7 +470,7 @@ class TchatController < ApplicationController
 			return
 		end
 		@user_id = CGI.escapeHTML(params[:user_id]).to_i
-		@datas = Sanctions.where(sanction_type: 3, user_id: current_user.id, target_id: @user_id)
+		@datas = Sanctions.where({sanction_type: 3, user_id: current_user.id, target_id: @user_id})
 		@datas.each do |element|
 			element.destroy
 		end

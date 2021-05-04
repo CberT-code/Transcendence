@@ -9,12 +9,12 @@ class WarsController < ApplicationController
 	end
 
 	def index
-		if (@guild.id == -1 || (War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 1).count != 0))
+		if (@guild.id == -1 || (War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 1]).count != 0))
 			render html: "error-forbidden";
 		end
-		@wars_history = War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 3);
-		@wars_request = War.where('(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1);
-		@request_sent = War.where('(guild1_id = ?) and (status = ?)', @guild.id, 0);
+		@wars_history = War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 3]);
+		@wars_request = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1]);
+		@request_sent = War.where(['(guild1_id = ?) and (status = ?)', @guild.id, 0]);
 	end
 
 	def new
@@ -22,7 +22,7 @@ class WarsController < ApplicationController
 			render 'pages/not_authentificate', :status => :unauthorized
 		end
 		@wars = History.new
-		@list_guild = Guild.where('nbmember >= ?', 5);
+		@list_guild = Guild.where(['nbmember >= ?', 5]);
 		@list_tournament = Tournament.all();
 	end
 
@@ -30,8 +30,8 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:id]);
 		@team = @war.guild1_id == @guild.id ? @war.team1 : @war.team2 ;
 		if (@admin && @war.status == 1)
-			@available = User.where('guild_id = ? and available = ?', current_user.guild_id, true)
-			@notavailable = User.where('guild_id = ? and available = ?', current_user.guild_id, false)
+			@available = User.where(['guild_id = ? and available = ?', current_user.guild_id, true])
+			@notavailable = User.where(['guild_id = ? and available = ?', current_user.guild_id, false])
 		else
 			render html: "error-forbidden";
 		end
@@ -56,10 +56,10 @@ class WarsController < ApplicationController
 
 		@guild1 = Guild.find_by_id(@war.guild1_id);
 		@guild2 = Guild.find_by_id(@war.guild2_id);
-		@inwars = War.where('(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2)
-		@wars_history = History.where('war_id = ?', @war.id);
-		@list_users1 = User.where(id: @war.team1);
-		@list_users2 = User.where(id: @war.team2);
+		@inwars = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2])
+		@wars_history = History.where(['war_id = ?', @war.id]);
+		@list_users1 = User.where({id: @war.team1});
+		@list_users2 = User.where({id: @war.team2});
 	end
 
 	def update
@@ -89,7 +89,7 @@ class WarsController < ApplicationController
 
 	def add
 		@user = User.find_by_id(params[:id]);
-		@war = War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
+		@war = War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1]);
 		@team = @war[0].guild1_id == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
 		if (@team != nil)
 			if (@team.include? @user.id)
@@ -109,7 +109,7 @@ class WarsController < ApplicationController
 
 	def remove
 		@user = User.find_by_id(params[:id]);
-		@war = War.where('(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1);
+		@war = War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @user.guild_id, @user.guild_id, 1]);
 		@team = @war[0].guild1_id == @user.guild_id ? @war[0].team1 : @war[0].team2 ;
 		if (!(@war[0].team1.include? @user.id) && !(@war[0].team2.include? @user.id))
 			render html: '1';
@@ -123,21 +123,21 @@ class WarsController < ApplicationController
 	def search
 		if (params[:points] == "null")
 			if (params[:players] == "null")
-				@list_guild = Guild.where("LOWER(name) LIKE LOWER(?)", params[:search] + "%");
+				@list_guild = Guild.where(["LOWER(name) LIKE LOWER(?)", params[:search] + "%"]);
 			elsif (params[:search] == "")
-				@list_guild = Guild.where("nbmember >= ?", params[:players]);
+				@list_guild = Guild.where(["nbmember >= ?", params[:players]]);
 			else
-				@list_guild = Guild.where("nbmember >= ? and LOWER(name) LIKE LOWER(?)", params[:players], params[:search] + "%");
+				@list_guild = Guild.where(["nbmember >= ? and LOWER(name) LIKE LOWER(?)", params[:players], params[:search] + "%"]);
 			end
 		else
 			if (params[:players] == "null" && params[:search] == "") 
-				@list_guild = Guild.where("points >= ?", params[:points]);
+				@list_guild = Guild.where(["points >= ?", params[:points]]);
 			elsif (params[:players] == "null")
-				@list_guild = Guild.where("LOWER(name) LIKE LOWER(?) and points >= ?", params[:search] + "%", params[:points]);
+				@list_guild = Guild.where(["LOWER(name) LIKE LOWER(?) and points >= ?", params[:search] + "%", params[:points]]);
 			elsif (params[:search] == "")
-				@list_guild = Guild.where("nbmember >= ? and points >= ?", params[:players], params[:points]);
+				@list_guild = Guild.where(["nbmember >= ? and points >= ?", params[:players], params[:points]]);
 			else
-				@list_guild = Guild.where("nbmember >= ? and LOWER(name) LIKE LOWER(?) and points >= ?", params[:players], params[:search] + "%", params[:points]);
+				@list_guild = Guild.where(["nbmember >= ? and LOWER(name) LIKE LOWER(?) and points >= ?", params[:players], params[:search] + "%", params[:points]]);
 			end
 		end
 		@ret = Array.new
@@ -150,7 +150,7 @@ class WarsController < ApplicationController
 	end
 
 	def create
-		if (@guild.war_id != nil || War.where("status = ? AND guild1_id = ? ",0, @guild.id).count > 0)
+		if (@guild.war_id != nil || War.where(["status = ? AND guild1_id = ? ",0, @guild.id]).count > 0)
 			render html: 'error_inwar';
 		elsif (params[:points] == "null")
 			render html: 'error_points';
@@ -170,13 +170,13 @@ class WarsController < ApplicationController
 			render html: 'error_nbpoints';
 		elsif (params[:points] != '1000' && params[:points].to_i > @guild.points)
 			render html: 'error_enoughpoint';
-		elsif (params[:timeout] == "null")
+		elsif (params[:timeout] == "null" || !is_number?(params[:timeout]))
 			render html: 'error_timeout';
 		elsif (params[:id] == "0")
 			if (params[:points].to_i > 1000)
-				@list_guild = Guild.where("nbmember >= ? and points >= ? and war_id = NULL", params[:players], params[:points]);
+				@list_guild = Guild.where(["nbmember >= ? and points >= ? and war_id = NULL", params[:players], params[:points]]);
 			else
-				@list_guild = Guild.where("nbmember >= ? and war_id IS NULL", params[:players]);
+				@list_guild = Guild.where(["nbmember >= ? and war_id IS NULL", params[:players]]);
 			end
 			if (@list_guild.count <= 1)
 				render html: 'error_noguildfound';
