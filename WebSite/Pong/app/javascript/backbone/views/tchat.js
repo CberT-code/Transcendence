@@ -41,6 +41,7 @@ ViewChannel = Backbone.View.extend(
             "click .blockUser": "blockUser",
             "click #blockMessage": "unblockUser",
             "click .UserInformation": "userInformations",
+            "click #userProfil": "cancelUserInformations",
             "click .proposeGame": "duel_game_user",
             "click .removeSanction": "removeSanction",
             "keyup .message": "EntreChannel",
@@ -443,10 +444,12 @@ ViewChannel = Backbone.View.extend(
         userInformations: function (e) {
             e.preventDefault();
             var user_id = $(e.currentTarget).val();
-            console.log("User informations " + user_id + " !");
             window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
             $(".proposeGame").attr("value", user_id);
             $("#userProfil").css("display", "block");
+        },
+        cancelUserInformations: function() {
+            $("#userProfil").css("display", "none");
         },
         removeSanction: function (e) {
             e.preventDefault();

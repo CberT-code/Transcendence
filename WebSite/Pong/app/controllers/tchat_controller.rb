@@ -470,9 +470,10 @@ class TchatController < ApplicationController
 		@user_id = CGI.escapeHTML(params[:user_id]).to_i
 		@datas = User.find_by_id(@user_id)
 		if (@datas)
-			@guild = @datas.guild_id != 1 ? Guild.find_by_id(@datas.guild_id) : 0
+			@guild = @datas.guild_id != -1 ? Guild.find_by_id(@datas.guild_id) : -1
+			@own = @user_id == current_user.id ? 1 : 0
 			@stats = @datas.stat
-			@ret = {"id" => @user_id, "username" => @datas.nickname, "image" => @datas.image, "guild" => @guild, "stats" => @stats}
+			@ret = {"id" => @user_id, "username" => @datas.nickname, "image" => @datas.image, "guild" => @guild, "stats" => @stats, "own" => @own}
 			render json: @ret
 			return
 		end
