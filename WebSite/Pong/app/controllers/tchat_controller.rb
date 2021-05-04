@@ -8,7 +8,21 @@ class TchatController < ApplicationController
 		end
 	end
 	def index
-		@channel = Channel.all.order("id")
+		@channels = Channel.all.order("id")
+		@channel = Array.new
+		@channels.each do |element|
+			@tmp = Sanctions.where(id: element.id, target_id: current_user.id).all
+			@block = 0
+			@tmp.each do |sanction|
+				if (sanction.end_time >= Time.now.to_i && current_user.role != 1)
+					@block = 1
+					break
+				end
+			end
+			if (@block == 0)
+				@channel.push({"id" => element.id, "title" => element.title, "type_channel" => element.type_channel, "user_id" => element.user_id})
+			end
+		end
 		@tmp = Messages.where({user_id: current_user.id, message_type: 2}).all.or(Messages.where({target_id: current_user.id, message_type: 2}).all)
 		@sanctions =  Sanctions.where({user_id: current_user.id, sanction_type: 3})
 		@messages = Array.new
@@ -58,7 +72,7 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
-			if (@datas && (@datas.user_id == @user_id || @datas.type_channel == 2))
+			if (@datas && (@datas.user_id == @user_id || current_user.role == 1 || @datas.type_channel == 2))
 				render json: @datas
 				return
 			end
@@ -74,7 +88,7 @@ class TchatController < ApplicationController
 			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
-			if (@datas && (@datas.key == @key || @datas.user_id == @user_id))
+			if (@datas && (@datas.key == @key || @datas.user_id == @user_id || current_user.role == 1))
 				render json: @datas
 				return
 			end
@@ -303,7 +317,7 @@ class TchatController < ApplicationController
 					@is_ban = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 1) ? 1 : 0
 					@is_mute = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 2) ? 1 : 0
 					@own = element.user_id == current_user.id ? 1 : 2
-					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time, "author" => @tmp.nickname, "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban, "own" => 1})
+					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "author" => @tmp.nickname, "guild" => (@tmp.guild_id ? @tmp.guild.name : ""), "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban, "own" => 1})
 				end
 				render json: @ret
 				return
@@ -383,7 +397,7 @@ class TchatController < ApplicationController
 			@messages.each do |element|
 				@tmp = User.find_by_id(element.user_id)
 				if (Sanctions.where({user_id: @user_id,target_id: @target_id,sanction_type: 3}).count == 0)
-					@ret.push({"id" => element.id, "author" => @tmp.nickname, "author_id" => element.user_id, "block" => (element.user_id != current_user.id ? 1 : 2), "content" => element.message, "date" => element.create_time, "admin" => (element.user_id == current_user.id ? 1 : 2)})
+					@ret.push({"id" => element.id, "author" => @tmp.nickname, "author_id" => element.user_id, "guild" => (@tmp.guild_id ? @tmp.guild.name : ""), "block" => (element.user_id != current_user.id ? 1 : 2), "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "admin" => (element.user_id == current_user.id ? 1 : 2)})
 				end
 			end
 			render json: @ret
@@ -399,7 +413,8 @@ class TchatController < ApplicationController
 		end
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@message = CGI.escapeHTML(params[:message])
-		Messages.create(:user_id=> current_user.id, :create_time=> Date.today, :message=> @message, :target_id=> @target_id, :message_type=> 2)
+		@date = Date.today.
+		Messages.create(:user_id=> current_user.id, :create_time=> @date, :message=> @message, :target_id=> @target_id, :message_type=> 2)
 		render html: "1"
 		return
 	end
