@@ -21,7 +21,7 @@ class GuildsController < ApplicationController
 		if (current_user.guild_id) then
 			render 'error/403', :status => :unauthorized
 		end
-		if (params[:guildname] == "" || !safestr(params[:guildname]))
+		if (params[:guildname] == "" || !safestr(params[:guildname]) || params[:guildname].length > 20)
 			render html: "error-1";
 		elsif (params[:anagramme].length > 5 || Guild.find_by_anagramme(params[:anagramme]))
 			render html: "error-6";

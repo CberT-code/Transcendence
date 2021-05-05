@@ -40,7 +40,7 @@ ViewGuilds = Backbone.View.extend(
 				function (data) 
 				{
 					if (data == 'error-1')
-						notification("error", "The guild name can't be empty or contain specials characters");
+						notification("error", "The guild name can't be empty or contain specials characters or bigger than 20 characters");
 					else if (data == 'error-2')
 						notification("error", "The guild story can't be empty or contain specials characters");
 					else if (data == 'error-3')
