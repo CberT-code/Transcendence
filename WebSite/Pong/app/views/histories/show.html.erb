@@ -39,14 +39,14 @@
 			</div>
 			<div id="image" class="margin-left">
 				<% if @game.opponent %>
-					<div class='profile_pic' id='right_PP_show_game' value="<%= @game.opponent.id %>" style='background-image: url("<%= @game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+					<div class='profile_pic' id='right_PP_show_game' style='background-image: url("<%= @game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
 				<% else %>
-					<div class='profile_pic' id='right_PP_show_game' value="-1" style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+					<div class='profile_pic' id='right_PP_show_game' style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
 				<% end %>
 			</div>
 		</div>
 		<div>
-			<center><h2 id="score">
+			<center><h2 id="game_show_score">
 			<% if @game.statut == 0 %>
 				Waiting For Opponent
 			<% elsif @game.statut == 3 %>

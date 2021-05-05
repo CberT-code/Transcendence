@@ -60,7 +60,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 		});
 	},
 
-	// GAME /: deprevated ?
+	// GAME /: deprecated ?
 	// play: function() {
 	// 	$.get("/play").then(function(data){
 	// 		$("main").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");

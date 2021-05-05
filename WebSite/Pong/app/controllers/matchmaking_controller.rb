@@ -58,16 +58,12 @@ class MatchmakingController < ApplicationController
 
 	def join(war, tr, war_match, duel, ranked, oppo)
 		if oppo != nil || duel != false
-			puts "#{oppo != nil} and #{duel != nil}"
 			return false
 		end
 		list = History.where("statut = ? AND war_id = ? AND tournament_id = ? AND ranked = ? AND war_match = ?", 0, war ? war.id : -1, tr.id, ranked, war_match)
 		if !list
-			puts "no game matched"
 			return false
 		end
-		puts "0, #{war ? war.id : -1}, #{tr.id}, #{ranked}, #{war_match}"
-		puts "found #{list.count} games"
 		list.each do |game|
 			puts game.id
 			if !game.opponent

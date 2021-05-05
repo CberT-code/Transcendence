@@ -7,23 +7,22 @@ class History < ApplicationRecord
 	
 	def wait
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
-		waiting = Array["    *", ".   *", "..  *", "... *"]
+		waiting = Array["&emsp;", " .&ensp;", " ..&nbsp;", " ..."]
 		frame = 0
-		while self.timeout != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
-			puts "game #{self.id} waiting"
+		time_left = self.timeout
+		while time_left != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
 			time = Time.now
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
-				score: "* Waiting for opponent #{waiting[frame % 4]}"})
+				score: "Waiting for opponent#{waiting[frame % 4]}", frame: frame})
 			while Time.now.to_f <= time.to_f + 1
 				sleep 1.0/200.0
 			end
-			if self.timeout != -1
-				self.timeout -= 1
+			if time_left != -1
+				time_left -= 1
 			end
 			frame += 1
 		end
-		if timeout == 0
-			puts "game timed out!"
+		if time_left == 0
 			if self.duel
 				self.update(statut: -1)
 			else
@@ -31,7 +30,9 @@ class History < ApplicationRecord
 					opponnent_score: -1, statut: 3)
 			end
 			self.endGame()
+			return "timeout"
 		end
+		return "ok"
 	end
 
 	def run
@@ -39,7 +40,7 @@ class History < ApplicationRecord
 		move = Array["static", "static"]
 		player = Array[37, 37]
 		score = Array[0, 0, 30] # score[2] serves as a countdown
-		ball = Array[49, 49, 0.0, self.tournament.speed] # [x, y, angle, speed]
+		ball = Array[49.3, 49.1, rand(-50..50).to_f / 100, self.tournament.speed] # [x, y, angle, speed]
 		if self.opponent != nil
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "ready",
 			right_pp: self.opponent.image,
@@ -89,6 +90,7 @@ class History < ApplicationRecord
 		self.opponent_score = score[1]
 		self.save!
 		self.endGame()
+		return status
 	end
 
 	def calc(move, player, ball, score, speed)
@@ -98,9 +100,9 @@ class History < ApplicationRecord
 			elsif move[i] == "down"
 				player[i] -= 4
 			end
-			if player[i] <= 0
+			if player[i] < 0
 				player[i] = 0
-			elsif player[i] >= 75
+			elsif player[i] > 75
 				player[i] = 75
 			end
 		end
@@ -113,10 +115,12 @@ class History < ApplicationRecord
 		pi = Math::PI
 		tpi = 2 * pi
 		if ball[0] <= 2
-			if ball[1].to_i - player[0] <= 25 && ball[1].to_i - player[0] >= 0
+			dheight = ball[1] - player[0]
+			if dheight <= 24.1 && dheight >= -0.9
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = ball[0] * -1 + 2
+				ball[2] += (dheight - 11.6) / (300)
 				if move[0] == "up" && player[0] > 0
 					ball[2] += 0.2
 				elsif move[0] == "down" && player[0] < 75
@@ -128,10 +132,12 @@ class History < ApplicationRecord
 				return
 			end
 		elsif ball[0] >= 96.6
-			if ball[1].to_i - player[1] <= 25 && ball[1].to_i - player[1] >= 0
+			dheight = ball[1] - player[1]
+			if dheight <= 24.1 && dheight >= -0.9
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = 193.2 - ball[0]
+				ball[2] += (dheight - 11.6) / (300)
 				if move[1] == "up" && player[1] > 0
 					ball[2] -= 0.2
 				elsif move[1] == "down" && player[1] < 75
@@ -154,8 +160,10 @@ class History < ApplicationRecord
 	end
 	
 	def reset(player, ball, score, speed)
-		ball[0] = 49.25
-		ball[1] = 49.4
+		ball[0] = 49.1
+		ball[1] = 49.3
+		ball[2] += rand(-30..30).to_f / 100
+		ball[2] = ball[2] + Math::PI * rand(0..1)
 		ball[3] = speed
 		player[0] = 37
 		player[1] = 37

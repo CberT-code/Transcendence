@@ -42,34 +42,40 @@ class HistoriesController < ApplicationController
 
 	def readyCheck
 		game = History.find_by_id(params[:id])
+		ret = ""
 		if (!game)
 			render json: {status: "error", info: "Invalid game_id"}
 		elsif @me == game.host
-			render json: {status: "ok", info: "You are identified as left player"}
 			if !game.host_ready
 				game.update(host_ready: true)
 				if game.opponent_ready
 					@redis.set("game_#{game.id}", "running")
 					game.update(statut: 2)
-					game.run()
+					ret =game.run()
 				else
-					game.wait()
+					ret = game.wait()
 				end
 			end
 		elsif @me == game.opponent
-			render json: {status: "ok", info: "You are identified as right player"}
 			if !game.opponent_ready
 				game.update(opponent_ready: true)
 				if game.host_ready
 					@redis.set("game_#{game.id}", "running")
 					game.update(statut: 2)
-					game.run()
+					ret = game.run()
 				else
-					game.wait()
+					ret = game.wait()
 				end
 			end
 		else
 			render json: {status: "ok", info: "You are identified as spectator"}
+		end
+		if ret == "timeout"
+			render json: {status: ret, info: "Game timed out!"}
+		elsif ret == "disconnect"
+			render json: {status: ret, info: "Both players left, game cancelled"}
+		else
+			render json: {status: "ok", info: ret}
 		end
 	end
 
