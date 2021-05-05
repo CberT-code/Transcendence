@@ -9,26 +9,112 @@ class MatchmakingController < ApplicationController
 		end
 	end
 
+	def start
+		tournament_id = params.fetch(:tournament_id, 1)
+		ranked = params.fetch(:ranked, false)
+		duel = params.fetch(:duel, false)
+		opponent_id = params.fetch(:opponent_id, -1)
+		war_match = params.fetch(:war_match, false)
+		war_id = params.fetch(:war_id, -1)
+		timeout = params.fetch(:timeout, -1)
+
+		if User.hasALiveGame(@me) == true
+			render json: {status: "error", info: "You already have an ongoing game"}
+		elsif duel && opponent_id == -1
+			render json: {status: "error", info: "invalid opponent_id"}
+		elsif duel && User.isOnline(opponent_id) == "offline"
+			render json: {status: "error", info: "Opponent is unavaible"}
+		elsif duel && User.hasALiveGame(opponent_id) == true
+			render json: {status: "error", info: "Opponent already has an ongoing game"}
+		elsif !duel && opponent_id != -1
+			render json: {status: "error", info: "You cannot choose an opponent if the game is not a duel"}
+		elsif Tournament.isAvailable(tournament_id) == false
+			render json: {status: "error", info: "Unavailable tournament"}
+		elsif Tournament.tUserExists(tournament_id, @me.id) == false
+			render json: {status: "error", info: "You have not joined this tournament"}
+		elsif Tournament.tUserExists(tournament_id, opponent_id) == false
+			render json: {status: "error", info: "Opponent has not joined this tournament"}
+		elsif duel && ranked
+			render json: {status: "error", info: "Duels cannot be ranked"}
+		elsif duel && war_match
+			render json: {status: "error", info: "Invalid duel parameters"}
+		elsif war_match && war_id == -1
+			render json: {status: "error", info: "Invalid war_id"}
+		elsif war_match && War.isAvailable(war_id) == false
+			render json: {status: "error", info: "You cannot start a war match at the moment"}
+		else
+			tr = Tournament.find_by_id(tournament_id)
+			oppo = User.find_by_id(opponent_id)
+			if War.canDuel(@me, opponent)
+				war_match = true
+				war = @me.guild.war
+			else
+				war = War.find_by_id(war_id)
+			end
+			if join(war, tr, war_match, duel, ranked, oppo) == false
+				create(war, tr, war_match, duel, ranked, oppo, timeout)
+			end
+		end
+	end
+
+	def join(war, tr, war_match, duel, ranked, oppo)
+		if oppo != nil || duel != nil
+			return false
+		end
+		list = History.where("statut = ? AND war = ? AND tournament = ? AND ranked = ? AND war_match = ? AND opponent = ?", 0, war, tr, ranked, war_match, nil)
+		if !list
+			return false
+		end
+		game = list.first
+		game.update(opponent: @me, statut: 2)
+		redis.set("game_#{game.id}", "Waiting for opponent")
+		render json: {status: ok, info: "Found a game", id: game.id}
+		return true
+	end
+
+	def create(war, tr, war_match, duel, ranked, oppo, timeout)
+		game = tr.histories.new(host: @me, war: war, war_match: war_match,
+			duel: duel, oppo: oppo, ranked: ranked, timeout: timeout)
+		game.save!
+		if war_match && !duel
+			war.update(ongoingMatch: true)
+			guilds = Guild.where(war_id: war.id)
+			if guilds.first == @me.guild
+				enemy_guild = guilds.last
+			else
+				enemy_guild = guilds.first
+			end
+			enemy_guild.notifyWarMatchRequest()
+		elsif duel
+			ActionCable.server.broadcast("presence_#{opponent.id}",
+				{info: "#{@me.nickname} wants to duel you!",
+				 id: game.id, type: "duel", color: "gold" })
+		end
+		redis.set("game_#{game.id}", "Waiting for opponent")
+		render json: {status: "ok", info: "Created a new game", id: game.id}
+	end
+
+
+	## DEPRECATED DO NOT USE ##
+
 	def duel
 		game = @me.findLiveGame()
 		if game != -1
-			render json: {status: "multiple_games",
+			render json: {status: "error",
 				info: "You already have a running game"}
 		elsif params.fetch(:opponent, -1) == -1
 				render json: {status: "error", info: "Invalid opponent_id"}
 		else
-			opponent = User.find_by_id(params['opponent'].to_i)
 
-			if opponent.isOnline() == "offline"
+			opponent = User.find_by_id(params['opponent'].to_i)
+			if opponent == @me
+				render json: {status: "error", info: "Got get a friend to duel"}
+				return
+			elsif opponent.isOnline() == "offline"
 				render json: {status: "error", info: "Opponent is offline"}
 				return
-			end
-			redis = Redis.new(	url:  ENV['REDIS_URL'],
-								port: ENV['REDIS_PORT'],
-								db:   ENV['REDIS_DB'])
-			o_game = opponent.findLiveGame
-			if o_game != -1
-				render json: {status: "multiple_games", info:
+			elsif opponent.findLiveGame() != -1
+				render json: {status: "error", info:
 					"Opponent already has a running game"}
 				return
 			end
@@ -45,7 +131,7 @@ class MatchmakingController < ApplicationController
 			@game.save!
 			redis.set("game_#{@game.id}", "Looking For Opponent")
 			ActionCable.server.broadcast("presence_#{opponent.id}",
-				{info: "#{opponent.nickname} wants to duel you!",
+				{info: "#{@me.nickname} wants to duel you!",
 					id: @game.id, type: "duel", color: "gold" })
 			render json: {status: "Duel created!", id: @game.id}
 		end
@@ -69,7 +155,7 @@ class MatchmakingController < ApplicationController
 		game = @me.findLiveGame()
 		puts game
 		if game != -1
-			render json: {status: "multiple_games", info: "You already have a running game"}
+			render json: {status: "error", info: "You already have a running game"}
 		elsif !@me.guild || !@me.guild.war || @me.guild.war_id != params[:war_id]
 			render json: {status: "error", info: "You can't join this match"}
 		else
@@ -90,7 +176,7 @@ class MatchmakingController < ApplicationController
 	def find_or_create
 		game = @me.findLiveGame()
 		if game != -1
-			render json: {status: "multiple_games", info: "You already have a running game"}
+			render json: {status: "error", info: "You already have a running game"}
 			return
 		end
 		tourn = Tournament.find_by_id(params['id'].to_i)
@@ -171,4 +257,6 @@ class MatchmakingController < ApplicationController
 			render json: {status: "forfeit", winner: game.host.guild.name}
 		end
 	end
+
+	## ##
 end

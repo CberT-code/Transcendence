@@ -39,19 +39,18 @@ function handleData(data) {
 			$('#notif_banner').click(function(){
 				$('#notif_banner').html('');
 				$.post(
-					'/histories/joinWarMatch',
+					'/histories/start_game',
 					{
 						'authenticity_token': $('meta[name=csrf-token]').attr('content'),
+						"tournament_id": data.tournament_id,
+						"ranked": true, "war_match": true,
 						"war_id": data.war_id,
-						"game_id": data.id
+						"war_match": true,
 					},
 					function (game) 
 					{
 						if (game.status == "error")
 							notification("error", game.info);
-						else if(game.status == "multiple_games") {
-							notification("error", data.info);
-						}
 						else {
 							notification("success", "Starting game #" + data.id);
 							window.location.href = "#show_game/" + data.id.toString();

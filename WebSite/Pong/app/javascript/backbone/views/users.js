@@ -145,18 +145,19 @@ ViewAccount = Backbone.View.extend({
 		var id_opponent = $(e.currentTarget).val();
 		console.log("opppnent : " + id_opponent);
 		$.post(
-			'/histories/duel',
+			'/histories/start_game',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": $("#tournaments_end").val(),
-				"opponent": id_opponent
+				"duel": true,
+				"tournament_id": $("#tournaments_end").val(),
+				"opponent_id": id_opponent
 			},
 			function (data) 
 			{
 				if (data.status == "error")
-				notification("Error", data.info);
-			else
-				window.location.href = "#show_game/" + data.id.toString() ;
+					notification("Error", data.info);
+				else
+					window.location.href = "#show_game/" + data.id;
 			},
 		);
 	},

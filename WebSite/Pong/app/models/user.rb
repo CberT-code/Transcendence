@@ -52,23 +52,36 @@ class User < ApplicationRecord
 	end
 
 	def notifyFriends(type)
-		self.friends.each do |id|
-			user = User.find_by_id(id)
-			if user && user.isOnline() != "offline"
-				ActionCable.server.broadcast("presence_#{id}", {type: type, info: "#{self.nickname} is #{type}"})
+		User.all.each do |user|
+			if user.friends.include?(self.id) && user.isOnline() != "offline"
+				ActionCable.server.broadcast("presence_#{user.id}", {type: type, info: "#{self.nickname} is #{type}"})
 			end
 		end
 	end
 
 	def findLiveGame
 		game = History.where("host_id = ? OR opponent_id = ?", self.id, self.id).where(statut: 2).first
-		puts "Hello from findLiveMatch"
 		if game
-			return game.id
+			return true
 		else
-			return -1
+			return false
 		end
 	end
 
+	def self.hasALiveGame(id)
+		user = User.find_by_id(id)
+		if !user
+			return false
+		end
+		return user.findLiveGame()
+	end
+
+	def self.isOnline(id)
+		user = User.find_by_id(id)
+		if !user
+			return false
+		end
+		return user.isOnline()
+	end
   end
   

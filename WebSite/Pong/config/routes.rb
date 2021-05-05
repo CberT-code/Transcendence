@@ -75,9 +75,10 @@ Rails.application.routes.draw do
 	resources :tchat
 
 	resources :histories
-	post "/histories/run/:id", to: "game#run"
-	post "/histories/find_or_create", to: "matchmaking#find_or_create"
-	post "/histories/joinWarMatch", to: "matchmaking#joinWarMatch"
-	post "/histories/duel", to: "matchmaking#duel"
-	post "/histories/timeout/:id", to: "matchmaking#timeout"
+	# post "/histories/run/:id", to: "game#run"
+	# post "/histories/find_or_create", to: "matchmaking#find_or_create"
+	# post "/histories/joinWarMatch", to: "matchmaking#joinWarMatch"
+	# post "/histories/duel", to: "matchmaking#duel"
+	# post "/histories/timeout/:id", to: "matchmaking#timeout"
+	post "/histories/start_game", to: "matchmaking#start"
 end

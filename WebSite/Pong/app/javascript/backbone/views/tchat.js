@@ -473,16 +473,19 @@ ViewChannel = Backbone.View.extend(
         duel_game_user: function (e) {
             var id_opponent = $(e.currentTarget).val();
             $.post(
-                '/histories/duel',
+                '/histories/start_game',
                 {
                     'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                    "id": 1,
-                    "opponent": id_opponent
+					"duel": true,
+                    "opponent_id": id_opponent
                 },
                 function (data) 
-                {
-                    notification("success", "Game has been proposed !");
-                },
+				{
+					if (data.status == "error")
+						notification("Error", data.info);
+					else
+						window.location.href = "#show_game/" + data.id;
+				}
             );
         }
     });

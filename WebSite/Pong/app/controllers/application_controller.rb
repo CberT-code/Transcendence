@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 	before_action :configure_permitted_parameters, if: :devise_controller?
 	before_action do
 		@me = current_user
+		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 	end
 	protect_from_forgery with: :exception
 

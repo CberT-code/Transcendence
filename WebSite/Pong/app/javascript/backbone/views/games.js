@@ -15,17 +15,19 @@ ViewGames = Backbone.View.extend(
     events: {
 		'click #ranked_game': 'Game_new_ranked',
 		'click #practice_game': 'Game_new_practice',
-		'click #continue': 'Continue_game'
+		'click #continue': 'Continue_game',
+		'click #left_PP_show_game': 'Show_user',
+		'click #right_PP_show_game': 'Show_user'
     },
 	Game_new_ranked: function (e) {
 
 		console.log("new ranked game");
 		$.post(
-			'/histories/find_or_create',
+			'/histories/start_game',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": $("#tournaments_end").val(),
-				"ranked": "true", "war_match": "no"
+				"tournament_id": $("#tournaments_end").val(),
+				"ranked": true,
 			},
 			function (data) 
 			{
@@ -40,11 +42,10 @@ ViewGames = Backbone.View.extend(
 
 		console.log("new practice game");
 		$.post(
-			'/histories/find_or_create',
+			'/histories/start_game',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"id": $("#tournaments_end").val(),
-				"ranked": "false", "war_match": "no"
+				"tournament_id": $("#tournaments_end").val(),
 			},
 			function (data) 
 			{
@@ -56,8 +57,9 @@ ViewGames = Backbone.View.extend(
 		);
 	},
 	Continue_game: function (e) {
-
-		console.log("Continue game");
 		window.location.href = "/#show_game/" + $(e.currentTarget).val();
+	},
+	Show_user: function(e) {
+		window.location.href = "/#show_user/" + $(e.currentTarget).val();
 	}
 });

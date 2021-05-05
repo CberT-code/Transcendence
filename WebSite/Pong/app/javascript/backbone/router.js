@@ -2,7 +2,7 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	initialize: function () {
 		this.ViewAccount = new ViewAccount();
 		this.ViewGuilds = new ViewGuilds();
-		this.ViewGuilds = new ViewGames();
+		this.ViewGames = new ViewGames();
 		this.ViewWars = new ViewWars();
 		this.ViewTournaments = new ViewTournaments();
 		this.ViewChannel = new ViewChannel();
@@ -60,12 +60,12 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 		});
 	},
 
-	// GAME
-	play: function() {
-		$.get("/play").then(function(data){
-			$("main").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");
-		});
-	},
+	// GAME /: deprevated ?
+	// play: function() {
+	// 	$.get("/play").then(function(data){
+	// 		$("main").html("<div id='content-play'>" + ($(data).find("#content-play").html()) + "</div>");
+	// 	});
+	// },
 
 	// LADDER
 	ladder: function() {
@@ -151,13 +151,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 			$("main").html("<div id='content-history'>" + ($(data).find("#content-history").html()) + "</div>");
 		});
 	},
-	new_game: function(id) {
-		$.get("/histories/new").then(function(data){
-			$("main").html("<div id='content-game'>" + ($(data).find("#content-game").html()) + "</div>");
-		});
-	},
 	show_game: function(id) {
-		$.get("/histories/" +  id, { id: id}).then(function(data){
+		$.get("/histories/" +  id).then(function(data){
 			if ($(data).find("#content-error").length != 0)
 				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
 			else

@@ -9,9 +9,23 @@ class Guild < ApplicationRecord
 		end
 	end
 
-	def notifyWarMatchRequest(id)
+	def notifyWarMatchRequest
 		self.users.each do |user|
-			ActionCable.server.broadcast("presence_#{user.id}", {info: "We have been challenged! Click to accept", war_id: self.war_id, id: id, type: "warMatchRequest", color: "red" })
+			ActionCable.server.broadcast("presence_#{user.id}", {info: "We have been challenged! Click to accept",
+				war_id: self.war_id,
+				tournament_id: self.tournament_id,
+				type: "warMatchRequest", color: "red" })
 		end
+	end
+
+	def enemy_guild
+		if self.war
+			if self.war.guild1 != self
+				return self.war.guild1
+			else
+				return self.war.guild2
+			end
+		end
+		return nil
 	end
 end

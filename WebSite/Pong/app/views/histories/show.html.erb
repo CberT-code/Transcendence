@@ -1,62 +1,59 @@
 <div id="content-game_show">
-	<% if @game == nil %>
-		<h1>404</h1>
-	<% else %>
-		<div id="center">
-			<%= stylesheet_link_tag "pong_v1.css" %>
-			<%= content_tag :div, '', id: 'game_data', data: { statut: @status, id: @game.id, player: @me.id, left: @left, right: @right } %>
-			<%= content_tag :div, '', id: 'players', data: { host: @game.host_id, opponent: @game.opponent_id } %>
-			<% g_class = "" %>
-			<% if @game.ranked %>
-				<% g_class += "ranked " %>
-			<% else %>
-				<% g_class += "practice "%>
-			<% end %>
-			<% if @game.tournament_id != 1 %>
-				<% g_class += "tournament " %>
-			<% end %>
-			<% if @game.war_id != -1 %>
-				<% g_class += "guildwar " %>
-			<% end %>
-			<div id="wrapper_box" class="wrapper <%= g_class %>">
-				<div id="image" class="margin-right">
-					<div class='profile_pic' id='left_PP' style='background-image: url("<%= @game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
-				</div>
-				<div id="game">
-					<div class="goal"></div>
-					<div id="left_player" class="player"></div>
-					<div id="ball"></div>
-					<div class="goal" style='left: 98%'></div>
-					<div id="right_player" class="player"></div>
-				</div>
-				<div id="end_game">
-					<% if @status == "ended" %>
-						<% if @left > @right %>
-							<p class="p_end_game" style="color: red"><%= @game.host.nickname %> won</p>
-						<% else %>
-							<p class="p_end_game" style="color: red"><%= @game.opponent.nickname %> won</p>
-						<% end%>
-					<% end %>
-				</div>
-				<div id="image" class="margin-left">
-					<% if @game.opponent == @game.host %>
-						<div class='profile_pic' id='right_PP' style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+	<div id="center">
+		<%= stylesheet_link_tag "pong_v1.css" %>
+		<%= content_tag :div, '', id: 'game_data', data: { status: "Waiting for opponent", id: @game.id, player: @me.id, host: @game.host_id, opponent: @game.opponent ? @game.opponent_id : -1} %>
+		<% g_class = "" %>
+		<% if @game.ranked %>
+			<% g_class += "ranked " %>
+		<% else %>
+			<% g_class += "practice "%>
+		<% end %>
+		<% if @game.tournament_id != 1 %>
+			<% g_class += "tournament " %>
+		<% end %>
+		<% if @game.war_id != -1 %>
+			<% g_class += "guildwar " %>
+		<% end %>
+		<div id="wrapper_box" class="wrapper <%= g_class %>">
+			<div id="image" class="margin-right">
+				<div class='profile_pic' id='left_PP_show_game' value="<%= @game.host.id %>" style='background-image: url("<%= @game.host.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+			</div>
+			<div id="game">
+				<div class="goal"></div>
+				<div id="left_player" class="player"></div>
+				<div id="ball"></div>
+				<div class="goal" style='left: 98%'></div>
+				<div id="right_player" class="player"></div>
+			</div>
+			<div id="end_game">
+				<% if @status == "ended" %>
+					<% if @left > @right %>
+						<p class="p_end_game" style="color: red"><%= @game.host.nickname %> won</p>
 					<% else %>
-						<div class='profile_pic' id='right_PP' style='background-image: url("<%= @game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
-					<% end %>
-				</div>
-			</div>
-			<div>
-				<center><h2 id="score">
-				<% if @game.statut == 0 %>
-					Waiting For Opponent
+						<p class="p_end_game" style="color: red"><%= @game.opponent.nickname %> won</p>
+					<% end%>
 				<% end %>
-				</h2></center>
 			</div>
-			<% if @status == "Looking For Opponent" %>
-				<button id="alone" class="back-black">J'ai pas d'amis</button>
-			<% end %>
-			<%= javascript_pack_tag 'pong_v1' %>
+			<div id="image" class="margin-left">
+				<% if @game.opponent %>
+					<div class='profile_pic' id='right_PP_show_game' value="<%= @game.opponent.id %>" style='background-image: url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+				<% else %>
+					<div class='profile_pic' id='right_PP_show_game' value="-1" style='background-image: url("<%= @game.opponent.image %>"), url("https://cdn.intra.42.fr/users/medium_default.png")'></div>
+				<% end %>
+			</div>
 		</div>
-	<% end %>
+		<div>
+			<center><h2 id="score">
+			<% if @game.statut == 0 %>
+				Waiting For Opponent
+			<% elsif @game.statut == 3 %>
+				<%= @game.host_score %> - <%= @game.opponent_score %>
+			<% end %>
+			</h2></center>
+		</div>
+		<% if @game.opponent == nil && !@game.war_match && !@game.duel %>
+			<button id="alone" class="back-black">J'ai pas d'amis</button>
+		<% end %>
+		<%= javascript_pack_tag 'pong_v1' %>
+	</div>
 </div>
