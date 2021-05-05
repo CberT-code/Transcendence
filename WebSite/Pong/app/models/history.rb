@@ -24,11 +24,11 @@ class History < ApplicationRecord
 		end
 		if timeout == 0
 			puts "game timed out!"
-			if self.war_match
+			if self.duel
+				self.update(statut: -1)
+			else
 				self.update(opponent: self.host.guild.enemy_guild().admin,
 					opponnent_score: -1, statut: 3)
-			else
-				self.update(statut: -1)
 			end
 			self.endGame()
 		end
@@ -216,7 +216,6 @@ class History < ApplicationRecord
 	end
 
 	def rankedGame(winner, loser)
-		elo = 0
 		if winner.guild
 			winner.guild.points += 10
 			if winner.guild.war && winner.guild.war.allow_ext
@@ -229,22 +228,22 @@ class History < ApplicationRecord
 			end
 			winner.guild.save!
 		end
-		elo = ladderGame(winner, loser)
-		return elo
+		
+		return calcElo(winner, loser)
 	end
 
-	def ladderGame(winner, loser)
-		elo = (winner.elo - loser.elo) * (-0.15) + 40.0
+	def calElo(winner, loser)
+		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
+		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
+		elo = (t_winner.elo - t_loser.elo) * (-0.15) + 40.0
 		if elo > 70
 			elo = 70
 		elsif elo < 10
 			elo = 10
 		end
-		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
 		t_winner.wins += 1
 		t_winner.elo += elo.to_i
 		t_winner.save!
-		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
 		t_loser.defeats += 1
 		t_loser.elo -= elo.to_i
 		t_loser.save!

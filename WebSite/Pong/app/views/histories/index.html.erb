@@ -31,10 +31,10 @@
 				<div class="list_wrapper">
 					<% @games.each do |game| %>
 						<% g_class = "" %>
-						<% if @game.ranked %>
-							<% if @game.war_match %>
+						<% if game.ranked %>
+							<% if game.war_match %>
 								<% g_class += "guildwar " %>
-							<% elsif @game.tournament_id != 1 %>
+							<% elsif game.tournament_id != 1 %>
 								<% g_class += "tournament " %>
 							<% else %>
 								<% g_class += "ranked" %>

@@ -36,7 +36,7 @@ class HistoriesController < ApplicationController
 				w_name: @game.host_score > @game.opponent_score ? @game.host.nickname : @game.opponent.nickname})
 		else
 			# Spectating live game
-			puts "Salut, tu vas bien?"
+			puts "Salut, c'est #{@me.nickname}"
 		end
 	end
 
@@ -49,7 +49,7 @@ class HistoriesController < ApplicationController
 			if !game.host_ready
 				game.update(host_ready: true)
 				if game.opponent_ready
-					@redis.set("game_#{@game.id}", "running")
+					@redis.set("game_#{game.id}", "running")
 					game.update(statut: 2)
 					game.run()
 				else
@@ -60,8 +60,8 @@ class HistoriesController < ApplicationController
 			render json: {status: "ok", info: "You are identified as right player"}
 			if !game.opponent_ready
 				game.update(opponent_ready: true)
-				if @game.host_ready
-					redis.set("game_#{@game.id}", "running")
+				if game.host_ready
+					@redis.set("game_#{game.id}", "running")
 					game.update(statut: 2)
 					game.run()
 				else

@@ -21,6 +21,5 @@ class PongChannel < ApplicationCable::Channel
   end
 
   def unsubscribed
-    @redis.del("player_#{self.current_user.id}") 
   end
 end

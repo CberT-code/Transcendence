@@ -1,7 +1,10 @@
 <div id="content-game_show">
 	<div id="center">
 		<%= stylesheet_link_tag "pong_v1.css" %>
-		<%= content_tag :div, '', id: 'game_data', data: { status: "Waiting for opponent", id: @game.id, player: @me.id, host: @game.host_id, opponent: @game.opponent ? @game.opponent_id : -1} %>
+		<%= content_tag :div, '', id: 'game_data', data: {status: @game.statut == 2 ? 
+							"running" : @game.statut == 3 ? "ended" : "Waiting for opponent", id: @game.id,
+							player: @me.id, host: @game.host_id,
+							opponent: @game.opponent ? @game.opponent_id : -1} %>
 		<% g_class = "" %>
 		<% if @game.ranked %>
 			<% if @game.war_match%>

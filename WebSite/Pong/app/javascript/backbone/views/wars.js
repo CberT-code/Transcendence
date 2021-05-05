@@ -194,8 +194,7 @@ ViewWars = Backbone.View.extend(
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				"tournament_id": tournament_id,
-				"ranked": true, "war_match": true, "war_id": war_id,
-				"timeout": timeout
+				"ranked": true, "war_match": true, "war_id": war_id
 			},
 			function (data) 
 			{
