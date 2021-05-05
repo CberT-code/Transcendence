@@ -29,7 +29,7 @@
 								<% end%>
 							</div>
 							<div id="info" >
-								<button  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >Voir</button>
+								<button  onClick="window.location='/#show_tournament/<%= tournament.id %>'" >See</button>
 								<% if (TournamentUser.where(["user_id = ? and tournament_id = ?", current_user.id, tournament.id]).count == 0) %>
 									<button class="green_button playerJoin" value="<%= tournament.id %>">Join</button>
 								<% end %>

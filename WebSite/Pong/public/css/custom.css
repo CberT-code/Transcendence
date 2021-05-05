@@ -155,6 +155,10 @@ header #right button:hover {
 }
 header #right #sign_out{
 	margin-left: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	top: 0px;
+	bottom: 0px;
 	right: 0px;
 	position: absolute;
 }
@@ -840,13 +844,15 @@ button:hover {
 }
 #content-guild #big-element {
 	height: 420px;
-    width: min-content;
+    width: max-content;
     border-radius: 9px;
     background-color: white;
     border: solid 1px #e1e1e1;
     margin-left: 15px;
     margin-right: 15px;
     margin-bottom: 15px;
+	padding-right: 15px;
+	padding-left: 15px;
 }
 #content-guild #big-element #title {
 	width: 100%;
@@ -873,16 +879,30 @@ button:hover {
 	scrollbar-width: none;
 }
 #content-guild #big-element #corp #user {
-	width: max-content;
 	height: 55px;
+	width: max-content;
 	overflow: hidden;
 	display: flex;
 	border-radius: 3px;
 	margin-right: auto;
+	margin-left: auto;
 	margin-top: 15px;
 	background-color: #ccc;
 	font-family: "Roboto-Medium";
 	color: #231f20;
+}
+#content-guild #big-element #corp #user button {
+	border: none;
+	overflow: hidden;
+	padding-left: 15px;
+	padding-right: 15px;
+	margin: 0px;
+	cursor: pointer;
+	font-family: "Roboto-Medium";
+	background-color: #231f20;
+	color: white;
+	font-size: 100%;
+	transition-duration: 0.5s;
 }
 #content-guild #big-element #corp #user #position {
 	height: 100%;
@@ -943,7 +963,7 @@ button:hover {
 }
 #content-guild #big-element #corp #user #action {
 	height: 100%;
-	width: 80px;
+	width: max-content;
 	overflow: hidden;
 	display: flex;
 }

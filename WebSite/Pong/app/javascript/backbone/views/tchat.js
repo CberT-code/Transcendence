@@ -313,7 +313,6 @@ ViewChannel = Backbone.View.extend(
             window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/1" });
         },
         SanctionSubmit: function (e) {
-            console.log("SanctionSubmit");
             e.preventDefault();
             var type = $(e.currentTarget).val();
             var id = $(".Channelid").val();
