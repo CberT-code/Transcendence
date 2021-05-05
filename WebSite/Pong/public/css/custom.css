@@ -74,13 +74,14 @@
   
 main {
 	width: 100%;
-	height: calc(100% - 55px);
-	overflow: hidden;
+	min-height: calc(100% - 55px);
+	display: flex;
+	/* overflow: hidden; */
 }
 body {
 	height: 100%;
 	width: 100%;
-	overflow: hidden;
+	/* overflow: hidden; */
 	position: relative;
 	margin: 0px;
 	font-family: 'Roboto-Thin';
@@ -88,7 +89,7 @@ body {
 html {
 	height: 100%;
 	width: 100%;
-	overflow: hidden;
+	/* overflow: hidden; */
 	position: relative;
 	margin: 0px;
 	background-color: #f4f2f2;
@@ -428,8 +429,8 @@ button:hover {
 	opacity: 0.7;
 }
 #content-user #corp #container-history {
-	height: 250px;
-	width: 80%;
+	height: 500px;
+	width: 50%;
 	overflow: hidden;
 	scrollbar-width: none;
 	background-color: white;
@@ -520,7 +521,8 @@ button:hover {
 /* Content-Guilds */
 /* ************* */
 #content-guilds {
-	height: 100%;
+	margin: auto;
+	min-height: 100%;
 	width: 100%;
 	overflow: hidden;
 }
@@ -682,13 +684,14 @@ button:hover {
 /* Content-guild */
 /* ************* */
 #content-guild {
+	margin: auto;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: baseline;
 	overflow: hidden;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	padding-top: 25px;
 }
 #content-guild #line{
@@ -980,6 +983,11 @@ button:hover {
 /* ***************** */
 /* Content-new_guild */
 /* ***************** */
+#content-new_guild {
+	width: 100%;
+	min-height: 100%;
+	margin: auto;
+}
 #content-new_guild .element {
 	width: 100%;
 	padding-top: 40px;
@@ -1074,8 +1082,9 @@ button:hover {
 /* Content-tournaments */
 /* ******************* */
 #content-tournaments {
+	margin: auto;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	overflow: hidden;
 	display: flex;
 }
@@ -1162,13 +1171,14 @@ button:hover {
 }
 
 #content-tournament {
+	margin: auto;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
 	align-content: baseline;
 	overflow: hidden;
 	width: 100%;
-	height: 100%;
+	min-height: 100%;
 	padding-top: 25px;
 }
 #content-tournament .break {
@@ -2041,7 +2051,8 @@ background-color: #7BE12B;
 	resize: none;
 }
 #content-tchat {
-	height: 100%;
+	margin: auto;
+	min-height: 100%;
 	width: 100%;
 	overflow: hidden;
 	display: flex;
@@ -2869,7 +2880,10 @@ background-color: #7BE12B;
     transition-duration: 0.5s;
 }
 #content-history {
-	height: 100%;
+	margin: auto;
+	padding-top: 25px;
+	padding-bottom: 25px;
+	min-height: 100%;
 	width: 100%;
 	overflow: hidden;
 }
@@ -2899,9 +2913,11 @@ background-color: #7BE12B;
 	height: 15%;
 	overflow: hidden;
 	position: relative;
+	margin-bottom: 25px;
 }
 #content-history #actions .types {
 	width: 100%;
+	margin-bottom: 15px;
 	overflow: hidden;
 	height: 40%;
 	display: flex;
@@ -2941,7 +2957,10 @@ background-color: #7BE12B;
 	align-content: center;
 }
 #content-ladder {
-	height: 100%;
+	margin: auto;
+	min-height: 100%;
+	padding-top: 25px;
+	padding-bottom: 25px;
 	width: 100%;
 	overflow: hidden;
 	display: flex;
@@ -2950,7 +2969,8 @@ background-color: #7BE12B;
 	align-items: center;
 }
 #content-new_tournament {
-	height: 100%;
+	margin: auto;
+	min-height: 100%;
 	width: 100%;
 	overflow: hidden;
 	display: flex;

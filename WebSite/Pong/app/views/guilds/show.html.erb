@@ -26,7 +26,7 @@
 						<p>Admin</p>
 					<% elsif (@admin == 1 || @officer == 1 || @admin_guild == 1) %>
 						<p>
-							<select id="officer_select" onClick="document.getElementById('user_id').value = <%= user.id %>">
+							<select id="officer_select" onfocus="document.getElementById('user_id').value = <%= user.id %>">
 								<option value="officer" <%= (@guild.officers.include? user.id) ? "selected" : "" %> > Officer</option> 
 								<option value="user" <%= (@guild.officers.include? user.id)  ? "" : "selected" %> > User</option>
 							</select>
@@ -113,7 +113,7 @@
 			<% end %>
 			<button class="grey_button" onClick="window.location='/#guilds'">Other guilds</button>
 			<input id="id" type="hidden" maxlength="10" value="<%= @guild.id %>">
-			<input id="user_id" type="hidden" maxlength="10">
+			<input id="user_id" type="hidden" maxlength="10" value="0">
 		<% if (@admin_guild == 1 || @admin == 1) %>
 			<button class="red_button" id="change_admin">Change Admin</button>
 			<div class="element-line">
