@@ -70,13 +70,26 @@ class War < ApplicationRecord
 		end
 	end
 
+	def self.isAvailable(id)
+		war = War.find_by_id(id)
+		if !war || !war.wartime || war.ongoingMatch
+			return false
+		end
+		return true
+	end
+
 	def self.canDuel(host, opponent)
-		if host.guild && host.guild.war && opponent.guild &&
-				host.guild.war == opponent.guild.war &&
+		if !opponent || !host
+			return false
+		elsif host.guild && host.guild.war && opponent.guild &&
 				host.guild != opponent.guild &&
-				(host.guild.war.start > Time.now || host.guild.war.end < Time.now) && 
-				(host.guild.war.team1.include?(host.id) || host.guild.war.team2.include?(host.id)) && 
-				(opponent.guild.war.team1.include?(opponent.id) || opponent.guild.war.team2.include?(opponent.id))
+				host.guild.war == opponent.guild.war &&
+				host.guild.war.start < Time.now &&
+				Time.now < host.guild.war.end && 
+				(host.guild.war.team1.include?(host.id) ||
+					host.guild.war.team2.include?(host.id)) &&
+				(opponent.guild.war.team1.include?(opponent.id) ||
+					opponent.guild.war.team2.include?(opponent.id))
 			return true
 		end
 		return false

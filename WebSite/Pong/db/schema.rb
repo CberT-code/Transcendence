@@ -53,13 +53,15 @@ ActiveRecord::Schema.define(version: 2021_04_30_133140) do
     t.integer "statut", default: 0
     t.bigint "host_id"
     t.bigint "opponent_id"
+    t.boolean "host_ready", default: false
+    t.boolean "opponent_ready", default: false
     t.integer "host_score", default: 0
     t.integer "opponent_score", default: 0
     t.boolean "ranked"
     t.bigint "war_id"
     t.boolean "war_match", default: false
     t.integer "timeout", default: -1
-    t.string "duel", default: ""
+    t.boolean "duel", default: false
     t.index ["host_id"], name: "index_histories_on_host_id"
     t.index ["opponent_id"], name: "index_histories_on_opponent_id"
     t.index ["war_id"], name: "index_histories_on_war_id"

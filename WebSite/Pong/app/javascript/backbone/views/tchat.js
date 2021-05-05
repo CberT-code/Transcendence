@@ -2,7 +2,6 @@ function notification(typef, textf) {
     var notification = new Noty({ theme: 'mint', type: typef, text: textf });
     notification.setTimeout(4500);
     notification.show();
-    console.log("notif");
 }
 
 ViewChannel = Backbone.View.extend(
@@ -473,16 +472,19 @@ ViewChannel = Backbone.View.extend(
         duel_game_user: function (e) {
             var id_opponent = $(e.currentTarget).val();
             $.post(
-                '/histories/duel',
+                '/histories/start_game',
                 {
                     'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-                    "id": 1,
-                    "opponent": id_opponent
+					"duel": true,
+                    "opponent_id": id_opponent
                 },
                 function (data) 
-                {
-                    notification("success", "Game has been proposed !");
-                },
+				{
+					if (data.status == "error")
+						notification("error", data.info);
+					else
+						window.location.href = "#show_game/" + data.id;
+				}
             );
         }
     });

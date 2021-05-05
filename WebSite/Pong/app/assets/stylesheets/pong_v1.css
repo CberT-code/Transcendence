@@ -107,7 +107,7 @@
     background-size: 100% 100%;
 }
 
-#content-game_show #right_PP {
+#content-game_show #right_PP_show_game {
     left: 77.5%;
 }
 
@@ -118,7 +118,7 @@
     background-color: black;
 }
 #content-game_show .guildwar {
-    background-color: green;
+    background-color: yellow;
 }
 #content-game_show .practice {
 	background-color: white;

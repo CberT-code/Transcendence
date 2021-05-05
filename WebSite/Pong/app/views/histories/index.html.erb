@@ -10,7 +10,7 @@
 		<div id="buttons">
 			<% if @me.findLiveGame != -1%>
 				<div>
-					<button id="continue" class="button" value="<%= @me.findLiveGame %>">Continue !</button>
+					<button id="continue" class="button" value="<%= @me.findLiveGame() %>">Continue !</button>
 				</div>
 			<% else %>
 				<div class="new_game ranked_g">
