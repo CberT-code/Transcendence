@@ -8,6 +8,9 @@ var keys = [0, 0];
 import consumer from "../channels/consumer"
 
 $(window).resize(resize_game);
+if (opponent_id != -1)
+	$("#content-game_show #right_PP_show_game").attr("onclick", "window.location='/#show_user/" + opponent_id + "'");
+$("#content-game_show #left_PP_show_game").attr("onclick", "window.location='/#show_user/" + host_id + "'");
 
 resize_game();
 $.post(
@@ -15,8 +18,12 @@ $.post(
 	{'authenticity_token': $('meta[name=csrf-token]').attr('content') },
 	function (data) 
 	{
-		if (data.status == "error")
+		if (data.status == "error") 
 			notification("error", data.info);
+		else if (data.status == "timeout" || data.status == "disconnect") {
+			notification("error", data.info);
+			window.location.href = "#play";
+		}
 	},
 );
 if ($('#content-game_show').find("#alone").length != 0) {
@@ -70,7 +77,7 @@ if (status != "ended") {
 				display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 			}
 			else if (status == "waiting") {
-				$("#content-game_show #score").html(data.score);
+				$("#content-game_show #game_show_score").html(data.score);
 			}
 			else if (status == "ready" ) {
 				console.log("game is ready!");
@@ -158,7 +165,7 @@ function display(left_y, right_y, ball_x, ball_y, score) {
 	$("#content-game_show #left_player").css({"top": left_y});
     $("#content-game_show #right_player").css({"top": right_y});
     $("#content-game_show #ball").css({"left": ball_x, "top": ball_y});
-    $("#content-game_show #score").html(score);
+    $("#content-game_show #game_show_score").html(score);
 }
 
 function resize_game() {

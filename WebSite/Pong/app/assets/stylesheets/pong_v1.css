@@ -10,7 +10,7 @@
     width: max-content;
     height: min-content;
 }
-#content-game_show .score {
+#content-game_show #game_show_score{
     font-family: "joystick_monospace";
 }
 #content-game_show .wrapper {
@@ -79,12 +79,12 @@
 
 #content-game_show #ball{
     width: 1.4%;
-    height: 1.75%;
+    height: 1.8%;
     background-color: red;
 	border: 1px solid black;
     position: absolute;
-    top: 49.25%;
-    left: 49.4%;
+    top: 49.1%;
+    left: 49.3%;
     border-radius: 500px;
     z-index: 2;
 }

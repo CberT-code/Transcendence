@@ -32,15 +32,15 @@
 					<% @games.each do |game| %>
 						<% g_class = "" %>
 						<% if game.ranked %>
-							<% g_class += "ranked " %>
+							<% if game.war_match %>
+								<% g_class += "guildwar " %>
+							<% elsif game.tournament_id != 1 %>
+								<% g_class += "tournament " %>
+							<% else %>
+								<% g_class += "ranked" %>
+							<% end %>
 						<% else %>
 							<% g_class += "practice "%>
-						<% end %>
-						<% if game.tournament_id != 1 %>
-							<% g_class += "tournament " %>
-						<% end %>
-						<% if game.war_id != -1 %>
-							<% g_class += "guildwar " %>
 						<% end %>
 						<% if game.statut != 2%>
 							<div class="game_resume <%= g_class %>" onClick="window.location='/#show_game/<%= game.id %>'">

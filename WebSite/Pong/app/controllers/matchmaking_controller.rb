@@ -16,7 +16,6 @@ class MatchmakingController < ApplicationController
 		opponent_id = params.fetch(:opponent_id, -1)
 		war_match = params.fetch(:war_match, false)
 		war_id = params.fetch(:war_id, -1)
-		timeout = params.fetch(:timeout, -1)
 
 		if User.hasALiveGame(@me) == true
 			render json: {status: "error", info: "You already have an ongoing game"}
@@ -52,29 +51,41 @@ class MatchmakingController < ApplicationController
 				war = War.find_by_id(war_id)
 			end
 			if join(war, tr, war_match, duel, ranked, oppo) == false
-				create(war, tr, war_match, duel, ranked, oppo, timeout)
+				create(war, tr, war_match, duel, ranked, oppo)
 			end
 		end
 	end
 
 	def join(war, tr, war_match, duel, ranked, oppo)
-		if oppo != nil || duel != nil
+		if oppo != nil || duel != false
 			return false
 		end
-		list = History.where("statut = ? AND war = ? AND tournament = ? AND ranked = ? AND war_match = ? AND opponent = ?", 0, war, tr, ranked, war_match, nil)
+		list = History.where("statut = ? AND war_id = ? AND tournament_id = ? AND ranked = ? AND war_match = ?", 0, war ? war.id : -1, tr.id, ranked, war_match)
 		if !list
 			return false
 		end
-		game = list.first
-		game.update(opponent: @me, statut: 2)
-		redis.set("game_#{game.id}", "Waiting for opponent")
-		render json: {status: ok, info: "Found a game", id: game.id}
-		return true
+		list.each do |game|
+			puts game.id
+			if !game.opponent
+				game.update(opponent: @me, statut: 2)
+				@redis.set("game_#{game.id}", "Waiting for opponent")
+				render json: {status: "ok", info: "Found a game", id: game.id}
+				return true
+			end
+		end
+		return false
 	end
 
-	def create(war, tr, war_match, duel, ranked, oppo, timeout)
-		game = tr.games.new(host: @me, war: war, war_match: war_match,
-			duel: duel, opponent: oppo, ranked: ranked, timeout: timeout)
+	def create(war, tr, war_match, duel, ranked, oppo)
+		if duel
+			timeout = 15
+		elsif war
+			timeout = war.timeout
+		else
+			timeout = -1
+		end
+		game = tr.games.new(host: @me, war_id: war ? war.id : -1, war_match: war_match,
+			duel: duel, opponent: oppo, ranked: ranked, timeout: timeout, statut: duel ? 2 : 0)
 		game.save!
 		if war_match && !duel
 			war.update(ongoingMatch: true)
@@ -86,7 +97,7 @@ class MatchmakingController < ApplicationController
 			end
 			enemy_guild.notifyWarMatchRequest()
 		elsif duel
-			ActionCable.server.broadcast("presence_#{opponent.id}",
+			ActionCable.server.broadcast("presence_#{oppo.id}",
 				{info: "#{@me.nickname} wants to duel you!",
 				 id: game.id, type: "duel", color: "gold" })
 		end
