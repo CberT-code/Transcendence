@@ -94,7 +94,7 @@ class UsersController < ApplicationController
 		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
 		if (@current == 1 || @admin == 1 )
-			if (params.has_key?(:checked) && (params[:checked] == true || params[:checked] == false))
+			if (params.has_key?(:checked) && (params[:checked] == "true" || params[:checked] == "false"))
 				User.find_by_id(@user.id).update({available: params[:checked]});
 				render html: "success";
 			elsif (params.has_key?(:username))
@@ -102,6 +102,8 @@ class UsersController < ApplicationController
 					render html: "special-characters"
 				elsif (params[:username] == "")
 					render html: "error-incomplete";
+				elsif (params[:username].length > 20)
+					render html: "error-size";
 				elsif (!User.find_by_nickname(params[:username]))
 					@user.update({nickname: params[:username]});
 					render html: "success";

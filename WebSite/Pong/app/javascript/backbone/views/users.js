@@ -80,6 +80,8 @@ ViewAccount = Backbone.View.extend({
 						notification("error", "This username already exist");
 					else if (data == "special-characters")
 						notification("error", "The username can't contain specials characters.");
+					else if (data == "error-size")
+						notification("error", "The username is too long: 20 characteres max");
 				},
 			},
 		);	

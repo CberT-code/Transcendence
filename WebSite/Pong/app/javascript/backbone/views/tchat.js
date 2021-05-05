@@ -41,15 +41,22 @@ ViewChannel = Backbone.View.extend(
             "click .blockUser": "blockUser",
             "click #blockMessage": "unblockUser",
             "click .UserInformation": "userInformations",
+            "click #userProfil": "cancelUserInformations",
             "click .proposeGame": "duel_game_user",
             "click .removeSanction": "removeSanction",
-            "keyup .message": "KeyPressEnter",
+            "keyup .message": "EntreChannel",
+            "keyup .PrivateConvMessage": "EnterPrivate"
         },
-		KeyPressEnter : function(event){
+		EntreChannel : function(event){
 			if(event.keyCode == 13){
 				this.$(".submitMessage").click();
 			}
 		},
+        EnterPrivate : function(event){
+            if (event.keyCode == 13){
+                this.$(".submitConversationMessage").click();
+            }
+        },
         viewPublicChannel: function (e) {
             e.preventDefault();
             var id = $($(e.currentTarget).children()[0]).val();
@@ -132,6 +139,7 @@ ViewChannel = Backbone.View.extend(
         removeChannelMessage: function (e) {
             e.preventDefault();
             var id = $(e.currentTarget).val();
+            var key = $(".Channelkey").val();
             var channel_id = $(".Channelid").val();
             if (channel_id != "")
                 $.post(
@@ -145,7 +153,7 @@ ViewChannel = Backbone.View.extend(
                         if (data == 1) {
                             $("#messages").empty();
                             $(".message").val("");
-                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
+                            window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + channel_id + "/" + key });
                         }
                     },
                     'text'
@@ -252,7 +260,7 @@ ViewChannel = Backbone.View.extend(
                             $(".message").val("");
                             window.app.models.ChannelMessageModel.fetch({ "url": "/tchat/channel/message/get/" + id + "/" + key });
                         } else
-                            notification("error", "You can't send a message, you are blocked from this channel...");
+                            notification("error", "You can't send a message, you are mute from this channel...");
                     },
                     'text'
                 );
@@ -325,7 +333,7 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "The sanction has been applicated !");
                             Backbone.history.loadUrl();
                         } else
-                            notification("error", "This user doesn't exist...");
+                            notification("error", "This user doesn't exist or you cannot make sanction on yoursel...");
                     },
                     'text'
                 );
@@ -436,10 +444,12 @@ ViewChannel = Backbone.View.extend(
         userInformations: function (e) {
             e.preventDefault();
             var user_id = $(e.currentTarget).val();
-            console.log("User informations " + user_id + " !");
             window.app.models.getProfil.fetch({ "url": "/tchat/profil/get/" + user_id });
             $(".proposeGame").attr("value", user_id);
             $("#userProfil").css("display", "block");
+        },
+        cancelUserInformations: function() {
+            $("#userProfil").css("display", "none");
         },
         removeSanction: function (e) {
             e.preventDefault();
