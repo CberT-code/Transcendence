@@ -4,15 +4,15 @@
 		<%= content_tag :div, '', id: 'game_data', data: { status: "Waiting for opponent", id: @game.id, player: @me.id, host: @game.host_id, opponent: @game.opponent ? @game.opponent_id : -1} %>
 		<% g_class = "" %>
 		<% if @game.ranked %>
-			<% g_class += "ranked " %>
+			<% if @game.war_match%>
+				<% g_class += "guildwar " %>
+			<% elsif @game.tournament_id != 1 %>
+				<% g_class += "tournament " %>
+			<% else %>
+				<% g_class += "ranked" %>
+			<% end %>
 		<% else %>
 			<% g_class += "practice "%>
-		<% end %>
-		<% if @game.tournament_id != 1 %>
-			<% g_class += "tournament " %>
-		<% end %>
-		<% if @game.war_id != -1 %>
-			<% g_class += "guildwar " %>
 		<% end %>
 		<div id="wrapper_box" class="wrapper <%= g_class %>">
 			<div id="image" class="margin-right">
