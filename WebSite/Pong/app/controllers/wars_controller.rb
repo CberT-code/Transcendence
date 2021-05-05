@@ -10,8 +10,9 @@ class WarsController < ApplicationController
 	end
 
 	def index
-		if (@guild.id == -1 || (War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 1]).count != 0))
-			render html: "error-forbidden";
+		if (@guild.id == -1)
+			render "/pages/error-404"
+			return
 		end
 		@wars_history = War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 3]);
 		@wars_request = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', @guild.id, @guild.id, 0, 1]);
@@ -64,6 +65,7 @@ class WarsController < ApplicationController
 
 	def update
 		@war = War.find_by_id(params[:war_id]);
+		@guild = Guild.find_by_id(@war.guild2_id);
 		@guild1 = Guild.find_by_id(@war.guild1_id);
 		if (!@guild1.war_id && !@guild.war_id)
 			if (@admin && @war && @war.guild2_id == @guild.id && @war.status == 0)

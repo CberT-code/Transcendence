@@ -54,11 +54,7 @@ ViewGuilds = Backbone.View.extend(
 					else if (data == 'error-7')
 						notification("error", "The guild anagramme can't be empty or contain specials characters");
 					else
-					{
-						$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
-						$("#header-wars").toggle();
 						window.location.href = "#show_guild/" + data ;
-					}
 				},
 				'text'
 			);
@@ -72,20 +68,19 @@ ViewGuilds = Backbone.View.extend(
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				success: function (data)
 				{
-					console.log("info : " + data.info);
-					if (data.status == "error")
-					{
+					if (data.status == "error"){
 						notification("error", "Your team needs a leader. Give them a new leader before leaving...");
 						$("#guild_id_admin").css("display", "inline");
 						$("#exec_change_admin").css("display", "inline");
 					}
-					else if (data.status == '2')
-					{
+					else if (data.status == '2'){
 						$("#header-wars").toggle();
 						Backbone.history.loadUrl();
 					}
-					else
-					{
+					else if (data.status == "error-wars"){
+						notification("error", "Guild in wars, please wait the end of the war");
+					}
+					else{
 						$('#header-guild').attr('onClick',"window.location='/#guilds'")
 						$("#header-wars").toggle();
 						window.location.href = "#guilds";

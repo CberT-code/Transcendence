@@ -47,6 +47,10 @@ class GuildsController < ApplicationController
 	end
 
 	def show
+		if (@me.guild_id == nil)
+			render html: "deleted"
+			return
+		end
 		if (params.has_key?(:id) && is_number?(params[:id]))
 			@guild = Guild.find_by_id(params[:id]);
 			if (@guild == nil)
@@ -85,6 +89,8 @@ class GuildsController < ApplicationController
 		@officer = (@guild.officers.include?current_user.id) ? 1 : 0
 		if @guild.id_admin == @usertodelete.id && @guild.users.count != 1
 			render json: {status: "error", info: "Trying to delete admin"}
+		elsif @guild.war_id != nil
+			render json: {status: "error", info: "Guild in wars, please wait the end of the war"}
 		elsif @usertodelete.id == current_user.id && @guild.users.count != 1
 			@guild.officers.delete(@usertodelete.id)
 			@usertodelete.update({guild_id: nil})

@@ -87,7 +87,11 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	},
 	show_guild: function(id) {
 		$.get("/guilds/" +  id, { id: id}).then(function(data){
-			if ($(data).find("#content-error").length != 0)
+			if (data == "deleted"){
+				$('#header-guild').attr('onClick',"window.location='/#guilds'");
+				window.location.href = "#guilds";
+			}
+			else if ($(data).find("#content-error").length != 0)
 				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
 			else{
 				$("main").html("<div id='content-guild'>" + ($(data).find("#content-guild").html()) + "</div>");
@@ -117,7 +121,11 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	// WARS
 	wars: function() {
 		$.get("/wars").then(function(data){
-			$("main").html("<div id='content-wars'>" + ($(data).find("#content-wars").html()) + "</div>");
+			if ($(data).find("#content-error").length != 0)
+				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
+			else
+				$("main").html("<div id='content-wars'>" + ($(data).find("#content-wars").html()) + "</div>");
+			
 		});
 	},
 	new_war: function() {

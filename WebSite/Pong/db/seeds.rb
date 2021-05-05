@@ -21,7 +21,7 @@ guild_list = [ 			# [ name, tag, max_members, admin ]
 	["fourth", "fourth", 15, "salty"]
 ]
 user_list = [ 			# [ UID, name, guild, role ]
-	[12421, "salty", "fourth", 0],
+	[12421, "salty", "first", 0],
 	[57610, "cbertola", "first", 1],
 	[12421, "melberg", "first", 0],
 	[12421, "edm", "first", 0],
