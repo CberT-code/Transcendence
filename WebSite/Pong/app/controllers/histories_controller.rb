@@ -34,32 +34,42 @@ class HistoriesController < ApplicationController
 				winner: @game.host_score > @game.opponent_score ? @game.host_id : @game.opponent_id,
 				loser: @game.host_score < @game.opponent_score ? @game.host_id : @game.opponent_id,
 				w_name: @game.host_score > @game.opponent_score ? @game.host.nickname : @game.opponent.nickname})
-			return
-		elsif @me == @game.host
-			if !@game.host_ready
-				@game.update(host_ready: true)
-				if @game.opponent_ready
-					redis.set("game_#{@game.id}", "running")
-					@game.update(statut: 2)
-					@game.run()
-				else
-					@game.wait()
-				end
-			end
-		elsif @me == @game.opponent
-			if !@game.opponent_ready
-				@game.update(opponent_ready: true)
-				if @game.host_ready
-					redis.set("game_#{@game.id}", "running")
-					@game.update(statut: 2)
-					@game.run()
-				else
-					@game.wait()
-				end
-			end
 		else
 			# Spectating live game
 			puts "Salut, tu vas bien?"
+		end
+	end
+
+	def readyCheck
+		game = History.find_by_id(params[:id])
+		if (!game)
+			render json: {status: "error", info: "Invalid game_id"}
+		elsif @me == game.host
+			render json: {status: "ok", info: "You are identified as left player"}
+			if !game.host_ready
+				game.update(host_ready: true)
+				if game.opponent_ready
+					@redis.set("game_#{@game.id}", "running")
+					game.update(statut: 2)
+					game.run()
+				else
+					game.wait()
+				end
+			end
+		elsif @me == game.opponent
+			render json: {status: "ok", info: "You are identified as right player"}
+			if !game.opponent_ready
+				game.update(opponent_ready: true)
+				if @game.host_ready
+					redis.set("game_#{@game.id}", "running")
+					game.update(statut: 2)
+					game.run()
+				else
+					game.wait()
+				end
+			end
+		else
+			render json: {status: "ok", info: "You are identified as spectator"}
 		end
 	end
 	
@@ -96,9 +106,12 @@ class HistoriesController < ApplicationController
 
 	def clean_list(id)
 		History.all.each do |game|
-			if (game.host == game.opponent && game.host == current_user && game.id != id) ||
-					game.statut == -1
+			if (!game.opponent && game.host == current_user && game.id != id.to_i) ||
+					game.statut == -1 
 				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
+				puts "Deleting game #{game.id} status : #{game.statut} (#{id} excluded)"
+				@redis.set("game_#{game.id}", "deleted")
+				@redis.del("game_#{game.id}")
 				game.destroy
 			end
 		end

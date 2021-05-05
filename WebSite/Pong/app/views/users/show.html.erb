@@ -136,24 +136,26 @@
 			</div>
 			<div id="history">
 				<% @histories.each do |history| %>
-					<div id="game">
-						<div id="icon">
-							<% if (history.host_score > history.opponent_score) %>
-							<i id="" class="fas fa-check"></i>
-							<% else %>
-							<i class="fas fa-times"></i>
-							<% end %>
+					<% if history.statut != -1 && history.opponent != nil %>
+						<div id="game">
+							<div id="icon">
+								<% if (history.host_score > history.opponent_score) %>
+								<i id="" class="fas fa-check"></i>
+								<% else %>
+								<i class="fas fa-times"></i>
+								<% end %>
+							</div>
+							<div id="target">
+								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
+							</div>
+							<div id="target">
+								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
+							</div>
+							<div id="score">
+								<p><%= history.host_score %> / <%= history.opponent_score %></p>
+							</div>
 						</div>
-						<div id="target">
-							<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
-						</div>
-						<div id="target">
-							<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
-						</div>
-						<div id="score">
-							<p><%= history.host_score %> / <%= history.opponent_score %></p>
-						</div>
-					</div>
+					<% end %>
 				<% end %>
 			</div>
 		</div>

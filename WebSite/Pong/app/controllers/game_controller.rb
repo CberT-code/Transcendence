@@ -20,11 +20,11 @@ class GameController < ApplicationController
 			return
 		end
 		if current_user == game.host && game.duel != "pending" # UNCOMMENT THIS LINE OR FACE A SHITSTORM
-			redis = Redis.new(	url:  ENV['REDIS_URL'],
+			@redis = Redis.new(	url:  ENV['REDIS_URL'],
 								port: ENV['REDIS_PORT'],
 								db:   ENV['REDIS_DB'])
 			status = "running"
-			redis.set("game_#{game.id}", status)
+			@redis.set("game_#{game.id}", status)
 			frame = 0
 			move = Array["static", "static"]
 			player = Array[37, 37]
@@ -35,7 +35,7 @@ class GameController < ApplicationController
 				if ball[3] > 80
 					ball[3] = 80
 				end
-				move[1] = redis.get("player_#{game.opponent.id}")
+				move[1] = @redis.get("player_#{game.opponent.id}")
 				move[0] = redis.get("player_#{game.host.id}")
 				if game.opponent.isOnline() == "offline" && game.host.isOnline() =="offline"
 					status = "disconnect"
@@ -66,84 +66,84 @@ class GameController < ApplicationController
 			game.opponent_score = score[1]
 			game.save!
 			redis.set("player_#{game.host_id}", "online")
-			redis.set("player_#{game.opponent_id}", "online")
-			redis.del("game_#{game.id}")
-			if game.statut == 3
-				game.end_game_function()
-			else
-				ActionCable.server.broadcast("pong_#{game.id}", {status: "ended",
-				right_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg",
-				elo: "0.42", winner: @me.id, loser: @me.id, w_name: "alone_dude"})
-			end
-			render html: "score: #{score[0]} - #{score[1]} - #{"ended"} - #{game.statut}"
-		end # UNCOMMENT THIS LINE OR FACE A SHITSTORM
-	end
+	# 		redis.set("player_#{game.opponent_id}", "online")
+	# 		redis.del("game_#{game.id}")
+	# 		if game.statut == 3
+	# 			game.end_game_function()
+	# 		else
+	# 			ActionCable.server.broadcast("pong_#{game.id}", {status: "ended",
+	# 			right_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg",
+	# 			elo: "0.42", winner: @me.id, loser: @me.id, w_name: "alone_dude"})
+	# 		end
+	# 		render html: "score: #{score[0]} - #{score[1]} - #{"ended"} - #{game.statut}"
+	# 	end # UNCOMMENT THIS LINE OR FACE A SHITSTORM
+	# end
 	
-	def calc(move, player, ball, score, speed)
-		for i in 0..1
-			if move[i] == "up"
-				player[i] += 3
-			elsif move[i] == "down"
-				player[i] -= 3
-			end
-			if player[i] <= 0
-				player[i] = 0
-			elsif player[i] >= 75
-				player[i] = 75
-			end
-		end
-		move_ball(move, ball, score, player, speed)
-	end
+	# def calc(move, player, ball, score, speed)
+	# 	for i in 0..1
+	# 		if move[i] == "up"
+	# 			player[i] += 3
+	# 		elsif move[i] == "down"
+	# 			player[i] -= 3
+	# 		end
+	# 		if player[i] <= 0
+	# 			player[i] = 0
+	# 		elsif player[i] >= 75
+	# 			player[i] = 75
+	# 		end
+	# 	end
+	# 	move_ball(move, ball, score, player, speed)
+	# end
 	
-	def move_ball(move, ball, score, player, speed)
-		ball[0] += Math.cos(ball[2]) * ball[3]
-		ball[1] += Math.sin(ball[2]) * ball[3]
-		pi = Math::PI
-		tpi = 2 * pi
-		if ball[0] <= 2
-			if ball[1].to_i - player[0] <= 25 && ball[1].to_i - player[0] >= 0
-				ball[2] = (pi - ball[2] + tpi) % tpi
-				ball[3] *= 1.02
-				ball[0] = ball[0] * -1 + 2
-				if move[0] == "up" && player[0] > 0
-					ball[2] += 0.2
-				elsif move[0] == "down" && player[0] < 75
-					ball[2] -= 0.2
-				end
-			else
-				score[1] += 1
-				reset(player, ball, score, speed)
-				return
-			end
-		elsif ball[0] >= 96.6
-			if ball[1].to_i - player[1] <= 25 && ball[1].to_i - player[1] >= 0
-				ball[2] = (pi - ball[2] + tpi) % tpi
-				ball[3] *= 1.02
-				ball[0] = 193.2 - ball[0]
-				if move[1] == "up" && player[1] > 0
-					ball[2] -= 0.2
-				elsif move[1] == "down" && player[1] < 75
-					ball[2] += 0.2
-				end
-			else
-				score[0] += 1
-				reset(player, ball, score, speed)
-				return
-			end
-		end
-		if ball[1] <= 0.0
-			ball[2] = (ball[2] * -1 + tpi) % tpi
-		elsif ball[1] >= 98.25
-			ball[2] = (tpi - ball[2]) % tpi
-		end
-	end
+	# def move_ball(move, ball, score, player, speed)
+	# 	ball[0] += Math.cos(ball[2]) * ball[3]
+	# 	ball[1] += Math.sin(ball[2]) * ball[3]
+	# 	pi = Math::PI
+	# 	tpi = 2 * pi
+	# 	if ball[0] <= 2
+	# 		if ball[1].to_i - player[0] <= 25 && ball[1].to_i - player[0] >= 0
+	# 			ball[2] = (pi - ball[2] + tpi) % tpi
+	# 			ball[3] *= 1.02
+	# 			ball[0] = ball[0] * -1 + 2
+	# 			if move[0] == "up" && player[0] > 0
+	# 				ball[2] += 0.2
+	# 			elsif move[0] == "down" && player[0] < 75
+	# 				ball[2] -= 0.2
+	# 			end
+	# 		else
+	# 			score[1] += 1
+	# 			reset(player, ball, score, speed)
+	# 			return
+	# 		end
+	# 	elsif ball[0] >= 96.6
+	# 		if ball[1].to_i - player[1] <= 25 && ball[1].to_i - player[1] >= 0
+	# 			ball[2] = (pi - ball[2] + tpi) % tpi
+	# 			ball[3] *= 1.02
+	# 			ball[0] = 193.2 - ball[0]
+	# 			if move[1] == "up" && player[1] > 0
+	# 				ball[2] -= 0.2
+	# 			elsif move[1] == "down" && player[1] < 75
+	# 				ball[2] += 0.2
+	# 			end
+	# 		else
+	# 			score[0] += 1
+	# 			reset(player, ball, score, speed)
+	# 			return
+	# 		end
+	# 	end
+	# 	if ball[1] <= 0.0
+	# 		ball[2] = (ball[2] * -1 + tpi) % tpi
+	# 	elsif ball[1] >= 98.25
+	# 		ball[2] = (tpi - ball[2]) % tpi
+	# 	end
+	# end
 	
-	def reset(player, ball, score, speed)
-		ball[0] = 49.25
-		ball[1] = 49.4
-		ball[3] = speed
-		player[0] = 37
-		player[1] = 37
-		score[2] = 30
-	end
+	# def reset(player, ball, score, speed)
+	# 	ball[0] = 49.25
+	# 	ball[1] = 49.4
+	# 	ball[3] = speed
+	# 	player[0] = 37
+	# 	player[1] = 37
+	# 	score[2] = 30
+	# end
 end

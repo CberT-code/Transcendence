@@ -11,7 +11,16 @@ import consumer from "../channels/consumer"
 $(window).resize(resize_game);
 
 resize_game();
-if ($(data).find("#content-game_show #alone").length != 0) {
+$.post(
+	'/histories/readyCheck/' + game_id,
+	{'authenticity_token': $('meta[name=csrf-token]').attr('content') },
+	function (data) 
+	{
+		if (data.status == "error")
+			notification("error", data.info);
+	},
+);
+if ($('#content-game_show').find("#alone").length != 0) {
 	document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
 }
 else if (status == "ready" || status == "running") {
@@ -61,6 +70,9 @@ if (status != "ended") {
 			if (status == "running" ) {
 				display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 			}
+			else if (status = "waiting") {
+				$("#content-game_show #score").html(data.score);
+			}
 			else if (status == "ready" ) {
 				right_pp = "url(\"" + data['right_pp'] + "\")";
 				left_pp = "url(\"" + data['left_pp'] + "\")";
@@ -86,10 +98,11 @@ if (status != "ended") {
 }
 
 function foreverAlone() {
-	if (status != "running" && ready) {
+	if (status == "Waiting for opponent") {
 		$('#content-game_show #end_game').css('visibility', 'hidden');
 		$('#content-game_show #game').css('visibility', 'visible');
 		$('#content-game_show #alone').hide();
+		// send request
 	}
 }
 
@@ -101,7 +114,7 @@ function sendMove(socket) {
 		move = "down";
 	else
 		move = "up";
-	socket.send({player: user_id, move: move, room: id, status: status});
+	socket.send({player: user_id, move: move, room: game_id, status: status});
 }
 
 function endgame(winner, loser, elo, w_name) {
@@ -161,4 +174,10 @@ function resize_game() {
 		document.querySelector("#content-game_show #wrapper_box").style.width = (height * 1.75) + "px";
 		document.querySelector("#content-game_show #wrapper_box").style.height = (height * 0.7) + "px";
 	}
+}
+
+function notification(typef, textf) {
+    var notification = new Noty({ theme: 'mint', type: typef, text: textf });
+    notification.setTimeout(4500);
+    notification.show();
 }

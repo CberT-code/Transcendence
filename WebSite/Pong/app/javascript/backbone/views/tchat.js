@@ -2,7 +2,6 @@ function notification(typef, textf) {
     var notification = new Noty({ theme: 'mint', type: typef, text: textf });
     notification.setTimeout(4500);
     notification.show();
-    console.log("notif");
 }
 
 ViewChannel = Backbone.View.extend(
@@ -482,7 +481,7 @@ ViewChannel = Backbone.View.extend(
                 function (data) 
 				{
 					if (data.status == "error")
-						notification("Error", data.info);
+						notification("error", data.info);
 					else
 						window.location.href = "#show_game/" + data.id;
 				}

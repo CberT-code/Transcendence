@@ -1,16 +1,19 @@
 class History < ApplicationRecord
 	belongs_to	:host, class_name: 'User', foreign_key: 'host_id'
-	belongs_to	:opponent, class_name: 'User', foreign_key: 'opponent_id'
+	belongs_to	:opponent, class_name: 'User', foreign_key: 'opponent_id', optional: true
 	belongs_to	:tournament, class_name: 'Tournament', foreign_key: 'tournament_id'
 	belongs_to	:war, foreign_key: 'war_id', optional: true
 
+	
 	def wait
-		waiting = ["    *", ".   *", "..  *", "... *"]
-		frame = 0;
-		while self.timeout != 0 && redis.get("game_#{self.id}") != "running"
+		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
+		waiting = Array["    *", ".   *", "..  *", "... *"]
+		frame = 0
+		while self.timeout != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
+			puts "game #{self.id} waiting"
 			time = Time.now
-			ActionCable.server.broadcast("pong_#{self.id}", {statut: "waiting",
-				score: "* Waiting for opponent #{waiting[frame % 4]}"}
+			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
+				score: "* Waiting for opponent #{waiting[frame % 4]}"})
 			while Time.now.to_f <= time.to_f + 1
 				sleep 1.0/200.0
 			end
@@ -39,14 +42,15 @@ class History < ApplicationRecord
 		ball = Array[49, 49, 0.0, self.tournament.speed] # [x, y, angle, speed]
 		if self.host != self.opponent
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "ready",
-			right_pp: self.opponent.image}
-			left_pp: self.host.image}
+			right_pp: self.opponent.image,
+			left_pp: self.host.image})
 		else
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "ready",
 			right_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg",
-			left_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg"}
+			left_pp: "https://pbs.twimg.com/profile_images/2836953017/11dca622408bf418ba5f88ccff49fce1.jpeg"})
 		end
 		status = "running"
+		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 		while score[0] < self.tournament.maxpoints && score[1] < self.tournament.maxpoints && status == "running"
 			move[1] = redis.get("player_#{self.opponent.id}")
 			move[0] = redis.get("player_#{self.host.id}")
@@ -150,6 +154,7 @@ class History < ApplicationRecord
 	end
 
 	def endGame
+		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 		self.host_score = score[0]
 		self.opponent_score = score[1]
 		self.save!

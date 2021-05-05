@@ -62,9 +62,9 @@ class User < ApplicationRecord
 	def findLiveGame
 		game = History.where("host_id = ? OR opponent_id = ?", self.id, self.id).where(statut: 2).first
 		if game
-			return true
+			return game.id
 		else
-			return false
+			return -1
 		end
 	end
 

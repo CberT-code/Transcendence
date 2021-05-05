@@ -155,7 +155,7 @@ ViewAccount = Backbone.View.extend({
 			function (data) 
 			{
 				if (data.status == "error")
-					notification("Error", data.info);
+					notification("error", data.info);
 				else
 					window.location.href = "#show_game/" + data.id;
 			},
