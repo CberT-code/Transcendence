@@ -332,7 +332,7 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "The sanction has been applicated !");
                             Backbone.history.loadUrl();
                         } else
-                            notification("error", "This user doesn't exist or you cannot make sanction on yoursel...");
+                            notification("error", "This user doesn't exist or you cannot make sanction on yourself...");
                     },
                     'text'
                 );

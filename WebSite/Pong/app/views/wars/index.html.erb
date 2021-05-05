@@ -19,7 +19,7 @@
 				<div id="war">
 					<div id="position">
 						<p><%= @i += 1 %></p>
-						<%= @enemy = war.guild1_id == @guild.id ? war.guild1_id : war.guild2_id; %>
+						<% @enemy = war.guild1_id == @guild.id ? war.guild2_id : war.guild1_id; %>
 					</div>
 					<div id="target">
 						<p><%= Guild.find_by_id(@enemy).name %></p>

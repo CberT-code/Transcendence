@@ -1449,7 +1449,6 @@ background-color: #c51515;
 	transition-duration: 0.5s;
 }
 #content-war .big-element #score{
-	padding-top: 50%;
 	text-align: center;
 }
 #content-war .big-element #score button{
@@ -3237,4 +3236,22 @@ background-color: #7BE12B;
 	font-family: "Roboto-Medium";
 	cursor: pointer;
 	transition-duration: 0.5s;
+}
+#content-error{
+	height: min-content;
+	width: max-content;
+	margin: auto;
+	overflow: hidden;
+}
+#content-error h1{
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: 'Roboto-Thin';
+	font-size: 215%;
+}
+#content-war .big-element #corp::-webkit-scrollbar {
+    display: none;
+}
+#content-war .big-element #corp::-webkit-scrollbar {
+    display: none;
 }

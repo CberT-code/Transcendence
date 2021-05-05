@@ -190,7 +190,7 @@ class TchatController < ApplicationController
 		@datas = Channel.find_by_id(@channel_id)
 		@time = params[:time] ? params[:time].to_i : 99999
 		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
-			if (@target_id.to_i == current_user.id)
+			if (@target_id == current_user.id)
 				render html: "2"
 				return
 			end

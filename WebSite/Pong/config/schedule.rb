@@ -20,7 +20,7 @@
 # Learn more: http://github.com/javan/whenever
 set :output, "log/cron.log"
 set :environment, 'development'
-every 1.day, at: '10:00 am' do
+every 1.day, at: '03:13 pm' do
     rake 'war:checktime'
 end
 every 1.day, at: '03:00 pm' do
