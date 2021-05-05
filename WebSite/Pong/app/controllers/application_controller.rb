@@ -66,6 +66,6 @@ class ApplicationController < ActionController::Base
 	end
 	def after_sign_in_path_for(resource)
 		"/#show_user/" + current_user.id.to_s
-	  end
+	end
 end
 
