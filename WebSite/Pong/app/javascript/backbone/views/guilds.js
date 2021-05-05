@@ -214,7 +214,7 @@ ViewGuilds = Backbone.View.extend(
 					data.forEach(
 						function(guild) {
 							i += 1;
-							$("#guild-list").append("<div id='guild'><div id='position'><p>" + i + "</p></div><div id='information'><p>" + guild[0].name + "</p></div><div id='information'><p>" + guild[0].nbmember + "</p></div><div id='action' onClick=\"window.location='/#show_guild/" + guild[0].id +"'\"><p>voir</p></div></div>");
+							$("#guild-list").append("<div id='guild'><div id='position'><p>" + i + "</p></div><div id='information'><p>" + guild[0].name + "</p></div><div id='information'><p>" + guild[0].nbmember + "</p></div><div id='action' onClick=\"window.location='/#show_guild/" + guild[0].id +"'\"><p>see</p></div></div>");
 						}
 					);
 				}
