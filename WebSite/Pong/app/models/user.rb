@@ -22,6 +22,9 @@ class User < ApplicationRecord
 		user.name = user.nickname
 		user.image = auth.info.image
 		user.otp_required_for_login = false
+		if user.name == "cbertola" || user.name == "hbaudet" || user.name == "llepage"
+			user.role = 1
+		end
 		
 		@stat = Stat.new
 		@stat.save

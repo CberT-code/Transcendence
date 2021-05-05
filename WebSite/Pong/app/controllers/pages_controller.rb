@@ -36,7 +36,7 @@ class PagesController < ApplicationController
 		elsif @me.current_otp == params[:otp]
 			@me.locked = false
 			@me.save!
-			render json: {status: "ok", info: "It's and older code, sir, but it checks out"}
+			render json: {status: "ok", info: "It's an older code, sir, but it checks out"}
 		else
 			render json: {status: "error", info: "Bad OTP"}
 		end
