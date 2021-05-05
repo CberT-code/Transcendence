@@ -172,6 +172,7 @@ class GuildsController < ApplicationController
 	end
 
 	def officer
+		puts params[:id]
 		usertochange = User.find_by_id(params[:id]);
 		guild = Guild.find_by_id(params[:idguild]);
 		admin = (current_user.role == 1 || guild.id_admin == current_user.id) ? 1 : 0;
