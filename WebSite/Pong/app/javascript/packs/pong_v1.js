@@ -3,7 +3,6 @@ var user_id = $('#game_data').data('player');
 var host_id = $('#game_data').data('host');
 var opponent_id = $('#game_data').data('opponent');
 var status = $('#game_data').data('status');
-var right_pp = "";
 var keys = [0, 0];
 
 import consumer from "../channels/consumer"
@@ -62,7 +61,7 @@ if (status != "ended") {
 		},
 
 		disconnected() {
-				console.log("Disconnected from PongChannel, room " + id + " status " + status);
+				console.log("Disconnected from PongChannel, room " + game_id + " status " + status);
 			},
 
 		received(data) {
@@ -70,12 +69,13 @@ if (status != "ended") {
 			if (status == "running" ) {
 				display(data['left_y'], data['right_y'], data['ball_x'], data['ball_y'], data['score']);
 			}
-			else if (status = "waiting") {
+			else if (status == "waiting") {
 				$("#content-game_show #score").html(data.score);
 			}
 			else if (status == "ready" ) {
-				right_pp = "url(\"" + data['right_pp'] + "\")";
-				left_pp = "url(\"" + data['left_pp'] + "\")";
+				console.log("game is ready!");
+				var right_pp = "url(\"" + data['right_pp'] + "\")";
+				var left_pp = "url(\"" + data['left_pp'] + "\")";
 				$("#content-game_show #right_PP_show_game").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 				$("#content-game_show #left_PP_show_game").css("background-image", left_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 				$('#content-game_show #game').css('visibility', 'visible');
@@ -98,11 +98,21 @@ if (status != "ended") {
 }
 
 function foreverAlone() {
-	if (status == "Waiting for opponent") {
+	console.log(status);
+	if (status == "waiting") {
 		$('#content-game_show #end_game').css('visibility', 'hidden');
 		$('#content-game_show #game').css('visibility', 'visible');
 		$('#content-game_show #alone').hide();
-		// send request
+		console.log("sending alone request");
+		$.post(
+			'/histories/forever_alone/' + game_id,
+			{'authenticity_token': $('meta[name=csrf-token]').attr('content') },
+			function (data) 
+			{
+				if (data.status == "error")
+					notification("error", data.info);
+			},
+		);
 	}
 }
 

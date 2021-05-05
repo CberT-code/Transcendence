@@ -72,6 +72,18 @@ class HistoriesController < ApplicationController
 			render json: {status: "ok", info: "You are identified as spectator"}
 		end
 	end
+
+	def forever_alone
+		game = History.find_by_id(params[:id])
+		if !game || game.opponent != nil || game.statut != 0
+			render json: {status: "error", info: "You cannot do that now"}
+		else
+			game.update(statut: -1)
+			@redis.set("game_#{game.id}", "ready")
+			game.run()
+			render json: {status: "ok", info: "Had fun alone?"}
+		end
+	end
 	
 	# def show_old_and_deprecated
 	# 	id = params.fetch(:id, -1)

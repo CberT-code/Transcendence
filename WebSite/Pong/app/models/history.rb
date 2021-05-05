@@ -40,7 +40,7 @@ class History < ApplicationRecord
 		player = Array[37, 37]
 		score = Array[0, 0, 30] # score[2] serves as a countdown
 		ball = Array[49, 49, 0.0, self.tournament.speed] # [x, y, angle, speed]
-		if self.host != self.opponent
+		if self.opponent != nil
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "ready",
 			right_pp: self.opponent.image,
 			left_pp: self.host.image})
@@ -51,9 +51,14 @@ class History < ApplicationRecord
 		end
 		status = "running"
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
+		redis.set("game_#{self.id}", status)
 		while score[0] < self.tournament.maxpoints && score[1] < self.tournament.maxpoints && status == "running"
-			move[1] = redis.get("player_#{self.opponent.id}")
 			move[0] = redis.get("player_#{self.host.id}")
+			if (self.opponent)
+				move[1] = redis.get("player_#{self.opponent.id}")
+			else
+				move[1] = move[0]
+			end
 			time = Time.now
 			if score[2] != 0
 				score[2] -= 1
@@ -68,17 +73,21 @@ class History < ApplicationRecord
 				sleep 1.0/500.0
 			end
 			frame += 1
-			if self.opponent.isOnline() == "offline" && self.host.isOnline() == "offline"
+			if (!self.opponent && self.host.isOnline() == "offline") ||
+				(self.opponent && self.opponent.isOnline() == "offline" && self.host.isOnline() == "offline")
 				status = "disconnect"
 			else
 				status = redis.get("game_#{self.id}")
 			end
 		end
-		if status == "running" && self.opponent && self.opponent != self.host
+		if status == "running" && self.opponent
 			self.update(statut: 3)
 		else
 			self.update(statut: -1)
 		end
+		self.host_score = score[0]
+		self.opponent_score = score[1]
+		self.save!
 		self.endGame()
 	end
 
@@ -155,9 +164,6 @@ class History < ApplicationRecord
 
 	def endGame
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
-		self.host_score = score[0]
-		self.opponent_score = score[1]
-		self.save!
 		redis.set("player_#{self.host_id}", "online")
 		redis.set("player_#{self.opponent_id}", "online")
 		redis.del("game_#{self.id}")
