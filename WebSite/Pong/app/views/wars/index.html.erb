@@ -2,7 +2,7 @@
 	<% if (User.find_by_id(current_user.id).guild_id || @admin == 1) %>
 		<div id="element">
 			<% if @guild.war_id != nil %>
-				<button class="green_button" id="create_war" onClick="window.location='/#show_war/<%= @guild.war_id %>'">Go at the war</button>
+				<button class="green_button" id="create_war" onClick="window.location='/#show_war/<%= @guild.war_id %>'">show war</button>
 			<% elsif @admin == 1 && @request_sent.count == 0 %>
 				<button class="green_button" id="create_war" onClick="window.location='/#new_war'">Declare War</button>
 			<% end %>

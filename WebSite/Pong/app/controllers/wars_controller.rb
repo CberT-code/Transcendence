@@ -166,7 +166,7 @@ class WarsController < ApplicationController
 			render html: 'error_enddate';
 		elsif (!Tournament.find_by_id(params[:tournament_id]))
 			render html: 'error_tournament';
-		elsif ((Tournament.find_by_id(params[:tournament_id]).end.to_date - params[:date_end].to_date) < 0)
+		elsif (Tournament.find_by_id(params[:tournament_id]).end != nil && (Tournament.find_by_id(params[:tournament_id]).end.to_date - params[:date_end].to_date) < 0)
 			render html: 'error_tournament_end';
 		elsif (params[:points] != '1000' && params[:points] != '5000' && params[:points] != '10000')
 			render html: 'error_nbpoints';

@@ -174,18 +174,12 @@ class History < ApplicationRecord
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 		host = redis.get("player_#{self.host_id}")
 		oppo = redis.get("player_#{self.opponent_id}")
-		puts "host end game status #{host}"
-		puts "opponent end game status #{oppo}"
-		if (host && host != "offline")
+		if (host != nil && host != "offline")
 			redis.set("player_#{self.host_id}", "online")
 		end
-		if (oppo && oppo != "offline")
+		if (oppo != nil && oppo != "offline")
 			redis.set("player_#{self.opponent_id}", "online")
 		end
-		host = redis.get("player_#{self.host_id}")
-		oppo = redis.get("player_#{self.opponent_id}")
-		puts "host end game status #{host}"
-		puts "opponent end game status #{oppo}"
 		redis.del("game_#{self.id}")
 		elo = 0
 		if self.statut == 3

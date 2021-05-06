@@ -78,8 +78,7 @@ class UsersController < ApplicationController
 		@user_stat = @user.stat;
 		@guild = @user.guild;
 		@current = @me.id == @user.id ? 1 : 0;
-		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]);
-		puts @histories.count
+		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]).order(:created_at).reverse;
 		@date = DateTime.new(1905,1,1,1,1,1);
 		@tournament = Array.new
 		Tournament.all.each do |tr|
