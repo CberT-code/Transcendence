@@ -203,6 +203,10 @@ class History < ApplicationRecord
 			winner = self.host
 			loser = self.host
 		end
+		if self.war
+			self.war.update(ongoingMatch1: false)
+			self.war.update(ongoingMatch2: false)
+		end
 		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended",
 			elo: elo.to_i, winner: winner.id,
 			loser: loser.id, w_name: self.opponent_score !=  -1 ? winner.name : "timeout"})
@@ -247,8 +251,8 @@ class History < ApplicationRecord
 	end
 
 	def calcElo(winner, loser)
-		t_winner = winner.t_users.find_by_tournament_id(self.tournament_id)
-		t_loser = loser.t_users.find_by_tournament_id(self.tournament_id)
+		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
+		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
 		elo = (t_winner.elo - t_loser.elo) * (-0.15) + 40.0
 		if elo > 70
 			elo = 70

@@ -77,7 +77,7 @@ class War < ApplicationRecord
 
 	def self.isAvailable(id)
 		war = War.find_by_id(id)
-		if !war || !war.wartime || war.ongoingMatch
+		if !war || !war.wartime || (war.ongoingMatch1 && war.ongoingMatch2)
 			return false
 		end
 		return true
