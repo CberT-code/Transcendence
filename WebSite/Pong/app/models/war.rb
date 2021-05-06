@@ -45,7 +45,6 @@ class War < ApplicationRecord
 		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
 			timetostart2 = ((war.end.to_i) - DateTime.current.to_i).to_i
-			puts timetostart2
 			if (timetostart2 < 1)
 				guild = Guild.find_by_id(war.guild1_id)
 				guild2 = Guild.find_by_id(war.guild2_id)

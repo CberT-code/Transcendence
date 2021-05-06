@@ -6,13 +6,13 @@ Rails.application.configure do
   # In the development environment your application's code is reloaded any time
   # it changes. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
-  config.cache_classes = false
+#   config.cache_classes = false
 
   # Do not eager load code on boot.
   config.eager_load = false
 
   # Show full error reports. DISABLE FRO PROD
-  config.consider_all_requests_local = true
+#   config.consider_all_requests_local = true
 
   # Enable/disable caching. By default caching is disabled.
   # Run rails dev:cache to toggle caching.
@@ -85,4 +85,8 @@ Rails.application.configure do
   
   # Enable console 
   config.web_console.whitelisted_ips = '172.24.0.1'
+
+  #Disable logging
+  config.logger = Logger.new('/dev/null')
+  config.log_level = :unknown
 end

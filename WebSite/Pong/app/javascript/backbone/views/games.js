@@ -16,8 +16,6 @@ ViewGames = Backbone.View.extend(
 		'click #ranked_game': 'Game_new_ranked',
 		'click #practice_game': 'Game_new_practice',
 		'click #continue': 'Continue_game'
-		// 'click #left_PP_show_game': 'Show_user_from_pp',
-		// 'click #right_PP_show_game': 'Show_user_from_pp'
     },
 	Game_new_ranked: function (e) {
 		$.post(
@@ -55,9 +53,4 @@ ViewGames = Backbone.View.extend(
 	Continue_game: function (e) {
 		window.location.href = "/#show_game/" + $(e.currentTarget).val();
 	}
-	// Show_user_from_pp: function(e) {
-	// 	console.log("show_user : " + $(e.currentTarget).val());
-	// 	if ($(e.currentTarget).val() != -1)
-	// 		window.location.href = "/#show_user/" + $(e.currentTarget).val();
-	// }
 });

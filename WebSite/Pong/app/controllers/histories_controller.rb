@@ -87,44 +87,12 @@ class HistoriesController < ApplicationController
 			render json: {status: "ok", info: "Had fun alone?"}
 		end
 	end
-	
-	# def show_old_and_deprecated
-	# 	id = params.fetch(:id, -1)
-	# 	clean_list(params[:id].to_i)
-	# 	@game = History.find_by_id(params[:id])
-	# 	if @game == nil
-	# 		render "/pages/error-404"
-	# 		return
-	# 	end
-	# 	if @game.duel == "pending" && current_user == @game.opponent #duel stuff to prevent cheat with "forever alone" button
-	# 		@game.update(duel: "accepted")
-	# 	end
-	# 	if (@game.statut == 3) #ended, show recap
-	# 		@status = "ended"
-	# 		@left = @game.host_score
-	# 		@right = @game.opponent_score
-	# 	elsif (@game.statut == -1) #error, should not be here
-	# 		@status = "There was an error with this game"
-	# 	else #live game!
-	# 		if @me == @game.opponent && @me != @game.host # I'm the opponent
-	# 			@status = "ready"
-	# 			@game.update(statut: 2)
-	# 			ActionCable.server.broadcast("pong_#{@game.id}",
-	# 					{status: "ready", right_pp: @me.image})
-	# 		elsif @me != @game.host && @me != @game.opponent && @game.host != @game.opponent # witnessing a live game
-	# 			@status = "running"
-	# 		else # game hasn't started yet
-	# 			@status = "Looking For Opponent"
-	# 		end
-	# 	end
-	# end
 
 	def clean_list(id)
 		History.all.each do |game|
 			if (!game.opponent && game.host == current_user && game.id != id.to_i) ||
 					game.statut == -1 || (game.host == game.opponent && game.host == current_user)
 				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
-				puts "Deleting game #{game.id} status : #{game.statut} (#{id} excluded)"
 				@redis.set("game_#{game.id}", "deleted")
 				@redis.del("game_#{game.id}")
 				game.destroy
