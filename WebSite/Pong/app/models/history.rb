@@ -246,9 +246,9 @@ class History < ApplicationRecord
 		return calcElo(winner, loser)
 	end
 
-	def calElo(winner, loser)
-		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
-		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
+	def calcElo(winner, loser)
+		t_winner = winner.t_users.find_by_tournament_id(self.tournament_id)
+		t_loser = loser.t_users.find_by_tournament_id(self.tournament_id)
 		elo = (t_winner.elo - t_loser.elo) * (-0.15) + 40.0
 		if elo > 70
 			elo = 70
@@ -258,7 +258,7 @@ class History < ApplicationRecord
 		t_winner.wins += 1
 		t_winner.elo += elo.to_i
 		t_winner.save!
-		t_loser.defeats += 1
+		t_loser.losses += 1
 		t_loser.elo -= elo.to_i
 		t_loser.save!
 		return elo

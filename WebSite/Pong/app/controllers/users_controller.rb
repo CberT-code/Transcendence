@@ -59,7 +59,7 @@ class UsersController < ApplicationController
 
 	def index
 		if (@me.role == 1)
-			@Users = User.where({deleted: FALSE});
+			@Users = User.where({deleted: false});
 		else
 			render html: "error-forbidden", :status => :unauthorized
 		end
