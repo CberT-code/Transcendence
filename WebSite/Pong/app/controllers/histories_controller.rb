@@ -42,6 +42,7 @@ class HistoriesController < ApplicationController
 		ret = ""
 		if (!game)
 			render json: {status: "error", info: "Invalid game_id"}
+			return
 		elsif @me == game.host
 			if !game.host_ready
 				game.update(host_ready: true)
@@ -66,6 +67,7 @@ class HistoriesController < ApplicationController
 			end
 		else
 			render json: {status: "ok", info: "You are identified as spectator"}
+			return
 		end
 		if ret == "timeout"
 			render json: {status: ret, info: "Game timed out!"}

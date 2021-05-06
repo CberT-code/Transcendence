@@ -218,7 +218,13 @@ class History < ApplicationRecord
 			if self.opponent_score == -1
 				self.war.forfeitedGames1 -= 1
 				if self.war.forfeitedGames1 == 0
-					#end war
+					self.war.status = 3
+					winner.guild.points += self.war.points
+					loser.guild.points -= self.war.points
+					winner.guild.war_id = nil
+					loser.guild.war_id = nil
+					winner.guild.save
+					loser.guild.save
 				end
 			end
 		else
@@ -226,7 +232,13 @@ class History < ApplicationRecord
 			if self.opponent_score == -1
 				self.war.forfeitedGames2 -= 1
 				if self.war.forfeitedGames2 == 0
-					#end war
+					self.war.status = 3
+					winner.guild.points += self.war.points
+					loser.guild.points -= self.war.points
+					winner.guild.war_id = nil
+					loser.guild.war_id = nil
+					winner.guild.save
+					loser.guild.save
 				end
 			end
 		end
@@ -251,8 +263,8 @@ class History < ApplicationRecord
 	end
 
 	def calcElo(winner, loser)
-		t_winner = winner.t_user.find_by_tournament_id(self.tournament_id)
-		t_loser = loser.t_user.find_by_tournament_id(self.tournament_id)
+		t_winner = winner.t_users.find_by_tournament_id(self.tournament_id)
+		t_loser = loser.t_users.find_by_tournament_id(self.tournament_id)
 		elo = (t_winner.elo - t_loser.elo) * (-0.15) + 40.0
 		if elo > 70
 			elo = 70

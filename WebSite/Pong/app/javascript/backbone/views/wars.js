@@ -19,7 +19,7 @@ ViewWars = Backbone.View.extend(
 		'keyup #wars_search': 'Wars_Search',
 		'click #attack': 'Wars_Create',
 		'click #warMatch_button' : 'warMatch_Start',
-		'click #regular_WarMatch_button' : 'regular_warMatch_Start'
+		'click #regular_warMatch_button' : 'regular_warMatch_Start'
 	},
 	Wars_Update: function (e) {
 		e.preventDefault();
