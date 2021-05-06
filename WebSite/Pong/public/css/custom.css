@@ -465,6 +465,9 @@ button:hover {
 	overflow-x: hidden;
 	scrollbar-width: none;
 }
+#content-user #corp #container-history #history::-webkit-scrollbar {
+    display: none;
+}
 #content-user #corp #container-history #history #game {
 	width: 75%;
 	overflow: hidden;

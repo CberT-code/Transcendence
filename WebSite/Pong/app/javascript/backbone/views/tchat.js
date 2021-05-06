@@ -416,8 +416,12 @@ ViewChannel = Backbone.View.extend(
                         "user_id": user_id,
                     },
                     function (data) {
+                        if (data == 1) {
                         notification("success", "User blocked !");
                         Backbone.history.loadUrl();
+                        } else {
+                            notification("error", "You cannot block yourself...");
+                        }
                     },
                     'text'
                 );
