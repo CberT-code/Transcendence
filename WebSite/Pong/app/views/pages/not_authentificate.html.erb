@@ -1,3 +1,8 @@
-<div id="#not_signed">
-	<button id="sign_in"><%= link_to "Sign in with 42", user_marvin_omniauth_authorize_path %></button>
+<div id="content-login">
+	<div id="title">
+		<h1>Your are not authentified</h1>
+	</div>
+	<%= link_to user_marvin_omniauth_authorize_path do %>
+		<button>Sign in with 42</button>
+	<% end %>
 </div>
