@@ -68,7 +68,7 @@ class UsersController < ApplicationController
 	def show
 		if (params.has_key?(:id))
 			@user = User.find_by_id(params[:id])
-			if (@user == nil)
+			if (@user == nil && params[:id] != "0")
 				render "/pages/error-404"
 				return
 			end
