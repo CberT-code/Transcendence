@@ -53,7 +53,6 @@ if (status != "ended") {
 			if (user_id == host_id || user_id == opponent_id) {
 				document.addEventListener('keydown', keyDown);
 				document.addEventListener('keyup', keyUp);
-				console.log("added key listeners - " + game_id);
 			}
 		},
 
@@ -110,7 +109,6 @@ function keyDown(event) {
 }
 
 function killListeners() {
-	console.log("killed key listeners - " + game_id);
 	document.removeEventListener('keyup', keyUp);
 	document.removeEventListener('keydown', keyDown);
 }

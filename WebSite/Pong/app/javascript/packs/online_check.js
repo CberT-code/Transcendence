@@ -1,5 +1,19 @@
 import consumer from "../channels/consumer"
 
+var id = $('#player_data_general').data('id');
+var interval_kill_notif;
+var interval_id_check = setInterval(check_id, 1000);
+var online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
+	connected() {
+	},
+
+	  disconnected() {
+	},
+
+	received(data) {
+		handleData(data);
+	}
+});
 
 function notification(typef, textf) {
 	var notification = new Noty({ theme: 'mint', type: typef, text: textf });
@@ -19,6 +33,7 @@ function handleData(data) {
 		$('#notif_banner').html(data.info);
 		$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center', 'font-weight' : '1000', 'font-size' : '25px'});
 		if (data.type == "duel") {
+			interval_kill_notif = setInterval(kill_notif, 15000);
 			$('#notif_banner').off('click');
 			$('#notif_banner').click(function(){
 				$('#notif_banner').html('');
@@ -27,6 +42,7 @@ function handleData(data) {
 				});
 		}
 		else if (data.type == "warTimeNotif") {
+			interval_kill_notif = setInterval(kill_notif, 15000);
 			$('#notif_banner').off('click');
 			$('#notif_banner').click(function(){
 				$('#notif_banner').off('click');
@@ -62,20 +78,6 @@ function handleData(data) {
 	}
 }
 
-var id = $('#player_data_general').data('id');
-
-var online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
-    connected() {
-    },
-
-  	disconnected() {
-    },
-
-	received(data) {
-		handleData(data);
-	}
-});
-
 function check_id() {
 	if (!id) {
 		online_check.unsubscribe();
@@ -97,4 +99,7 @@ function check_id() {
 	}
 }
 
-var interval_id_check = setInterval(check_id, 1000);
+function kill_notif() {
+	$('#notif_banner').off('click');
+	$('#notif_banner').html('');
+}
