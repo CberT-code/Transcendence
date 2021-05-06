@@ -71,7 +71,7 @@ class User < ApplicationRecord
 	def self.hasALiveGame(id)
 		user = User.find_by_id(id)
 		if !user
-			return false
+			return -1
 		end
 		return user.findLiveGame()
 	end

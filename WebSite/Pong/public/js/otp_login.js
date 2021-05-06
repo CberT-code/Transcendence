@@ -14,10 +14,10 @@ function send_otp() {
 		}
 		else {
 			notification("success", data.info);
-			// window.location.href = "/#";
-			$.get("/").then(function(data){
-				$("main").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
-				});
+			window.location.href = "/#Show_user";
+			// $.get("/").then(function(data){
+			// 	$("main").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
+			// 	});
 		}
 	})
 }

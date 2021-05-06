@@ -64,7 +64,7 @@ function handleData(data) {
 
 var id = $('#player_data_general').data('id');
 
-var actionCable = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
+var online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
     connected() {
     },
 
@@ -78,9 +78,9 @@ var actionCable = consumer.subscriptions.create({ channel: "PresenceChannel", ro
 
 function check_id() {
 	if (!id) {
-		actionCable.unsubscribe();
+		online_check.unsubscribe();
 		id = $('#player_data_general').data('id');
-		actionCable = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
+		online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
 			connected() {
 			},
 		
