@@ -16,7 +16,7 @@ class HistoriesController < ApplicationController
 		hosted = @me.hosted_games.all
 		foreign = @me.foreign_games.all
 		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
-		@spectate = History.where({statut: 2})
+		@spectate = History.where({statut: 2}).select("ranked", "tournament_id", "war_id", "host_id", "opponent_id", "id")
 		@date = DateTime.new(1902,1,1,1,1,1);
 		@tournament = Tournament.where(["(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current]);
 	end
@@ -28,15 +28,6 @@ class HistoriesController < ApplicationController
 		if !@game || @game.statut == -1
 			render "/pages/error-404"
 			return
-		elsif @game.statut == 3
-			ActionCable.server.broadcast("pong_#{@game.id}",
-				{status: "ended",
-				winner: @game.host_score > @game.opponent_score ? @game.host_id : @game.opponent_id,
-				loser: @game.host_score < @game.opponent_score ? @game.host_id : @game.opponent_id,
-				w_name: @game.host_score > @game.opponent_score ? @game.host.nickname : @game.opponent.nickname})
-		else
-			# Spectating live game
-			puts "Salut, tu vas bien?"
 		end
 	end
 

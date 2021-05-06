@@ -43,7 +43,7 @@ class PagesController < ApplicationController
 	end
 
 	def ladder
-		@t_users = TournamentUser.where({tournament_id: 1}).limit(20).sort_by { |u| u.elo}.reverse
+		@t_users = TournamentUser.where({tournament_id: 1}).select("user_id", "elo", "losses", "wins").limit(20).sort_by { |u| u.elo}.reverse
 	end
 
 	def home
