@@ -182,6 +182,8 @@ class History < ApplicationRecord
 		if (oppo && oppo != "offline")
 			redis.set("player_#{self.opponent_id}", "online")
 		end
+		host = redis.get("player_#{self.host_id}")
+		oppo = redis.get("player_#{self.opponent_id}")
 		puts "host end game status #{host}"
 		puts "opponent end game status #{oppo}"
 		redis.del("game_#{self.id}")
