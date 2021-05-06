@@ -59,7 +59,7 @@ class UsersController < ApplicationController
 
 	def index
 		if (@me.role == 1)
-			@Users = User.where(["deleted = ?", FALSE]);
+			@Users = User.where({deleted: FALSE});
 		else
 			render html: "error-forbidden", :status => :unauthorized
 		end
@@ -67,7 +67,7 @@ class UsersController < ApplicationController
 
 	def show
 		if (params.has_key?(:id))
-			@user = User.find_by_id(params[:id])
+			@user = User.where({id: params[:id]}).limit(1).select("id", "nickname", "banned", "deleted", "available", "image", "guild_id", "stat_id", "friends").first
 			if (@user == nil)
 				render "/pages/error-404"
 				return
@@ -78,8 +78,7 @@ class UsersController < ApplicationController
 		@user_stat = @user.stat;
 		@guild = @user.guild;
 		@current = @me.id == @user.id ? 1 : 0;
-		@histories = History.where(['host_id = ? or opponent_id = ?', @user.id, @user.id]);
-		puts @histories.count
+		@histories = History.where({host_id: @user.id}).select("host_id", "opponent_id", "statut", "host_score", "opponent_score").or(History.where({opponent_id: @user.id}).select("host_id", "opponent_id", "statut", "host_score", "opponent_score"))
 		@date = DateTime.new(1905,1,1,1,1,1);
 		@tournament = Array.new
 		Tournament.all.each do |tr|

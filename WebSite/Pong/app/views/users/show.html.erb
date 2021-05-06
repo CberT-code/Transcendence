@@ -101,7 +101,7 @@
 				</div>
 			</div>
 		</div>
-		<% if @current == 1 && @user.friends.count > 0%>
+		<% if (@current == 1 && @user.friends.empty? == false)%>
 			<div id="element">
 				<div id="name">
 					<h2>Friends</h2>
@@ -129,7 +129,7 @@
 				</div>
 			</div>
 		<% end %>
-	<% if @histories.count > 0 %>
+	<% if (@histories.empty? == false) %>
 		<div id="container-history">
 			<div id="head">
 				<h2>historique games</h2>
@@ -146,10 +146,10 @@
 								<% end %>
 							</div>
 							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= User.find_by_id(history.host_id).nickname %></p>
+								<p onClick="window.location='/#show_user/<%= history.host_id %>'"><%= @user.id != history.host_id ? User.where({id: history.host_id}).select("nickname").first.nickname : @user.nickname %></p>
 							</div>
 							<div id="target">
-								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= User.find_by_id(history.opponent_id).nickname %></p>
+								<p onClick="window.location='/#show_user/<%= history.opponent_id %>'"><%= @user.id != history.opponent_id ? User.where({id: history.host_id}).select("nickname").first.nickname : @user.nickname %></p>
 							</div>
 							<div id="score">
 								<p><%= history.host_score %> / <%= history.opponent_score %></p>
