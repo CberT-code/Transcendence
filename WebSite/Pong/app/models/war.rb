@@ -15,6 +15,7 @@ class War < ApplicationRecord
 						war.guild1.users.all.each do |user|
 							if (!war.team1.include?user.id)
 								war.team1.push(user.id)
+								break
 							end
 						end
 						if war.guild1.users.size < war.players
@@ -27,6 +28,7 @@ class War < ApplicationRecord
 						war.guild2.users.all.each do |user|
 							if (!war.team2.include?user.id)
 								war.team2.push(user.id)
+								break
 							end
 						end
 					end
@@ -43,14 +45,18 @@ class War < ApplicationRecord
 		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
 			timetostart2 = ((war.end.to_i) - DateTime.current.to_i).to_i
+			puts timetostart2
 			if (timetostart2 < 1)
+				guild = Guild.find_by_id(war.guild1_id)
+				guild2 = Guild.find_by_id(war.guild2_id)
 				if (war.points_guild1 > war.points_guild2)
-					guild = Guild.find_by_id(war.guild1_id)
-					guild.update({points: @guild.points + war.points})
+					guild.update({points: guild.points + war.points})
 				elsif (war.points_guild1 < war.points_guild2)
-					guild = Guild.find_by_id(war.guild2_id)
-					guild.update({points: @guild.points + war.points})
+					guild2.update({points: guild2.points + war.points})
 				end
+				guild.update({war_id: nil})
+				guild2.update({war_id: nil})
+
 				war.update({status: 3, wartime: false})
 			end
 		end

@@ -28,9 +28,9 @@ class TournamentsController < ApplicationController
 	end
 	def create
 		if (@me.role == 1)
-			if (params[:tournamentname] == "" || !safestr(params[:tournamentname]))
+			if (params[:tournamentname] == "" || !safestr(params[:tournamentname]) || params[:tournamentname].length > 20)
 				render html: "error-1";
-			elsif (params[:tournamentdescription] == "" || !safesentence(params[:tournamentdescription]))
+			elsif (params[:tournamentdescription] == "" || !safesentence(params[:tournamentdescription]) || params[:tournamentdescription].length > 250)
 				render html: "error-2";
 			elsif (params[:start] == "")
 				render html: "error-3";
@@ -38,7 +38,7 @@ class TournamentsController < ApplicationController
 				render html: "error-4";
 			elsif (params[:maxpoints].to_i < 1 || params[:maxpoints].to_i > 15)
 				render html: "error-5";
-			elsif (params[:speed].to_i < 1 || params[:speed].to_i > 11)
+			elsif (params[:speed].to_i < 1 || params[:speed].to_i > 6)
 				render html: "error-6";
 			else
 				@tournament = Tournament.new;

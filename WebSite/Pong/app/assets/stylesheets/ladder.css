@@ -22,6 +22,7 @@
     text-transform: uppercase;
 }
 #content-ladder #wrapper {
+	margin-top: 25px;
 	height: 90%;
 	width: 100%;
 	overflow-x: hidden;

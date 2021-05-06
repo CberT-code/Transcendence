@@ -31,9 +31,9 @@ ViewTournaments = Backbone.View.extend({
 				},
 				function (data) {
 					if (data == 'error-1')
-						notification("error", "Please complete the tournament name...");
+						notification("error", "Please check the tournament name...");
 					else if (data == 'error-2')
-						notification("error", "Please complete the description...");
+						notification("error", "Please check the description...");
 					else if (data == 'error-3')
 						notification("error", "Wrong, start day...");
 					else if (data == 'error-4')

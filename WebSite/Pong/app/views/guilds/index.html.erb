@@ -10,6 +10,7 @@
 			</div>
 			<% else %>
 			<div id="full">
+				<button class="green_button" onClick="window.location='/#show_guild/<%= @me.guild_id %>'">My guild</button>
 				<input id="guild_search" type="text" maxlenght="30" placeholder="Search a guild...">
 			</div>
 			<% end %>
@@ -29,8 +30,11 @@
 				<div id="information">
 					<p><%= guild.users.size %> / <%= guild.maxmember %></p>
 				</div>
+				<div id="information">
+					<p><%= guild.points %> points</p>
+				</div>
 				<div id="action" onClick="window.location='/#show_guild/<%= guild.id %>'">
-					<p>voir</p>
+					<p>see</p>
 				</div>
 			</div>
 			<% end %>

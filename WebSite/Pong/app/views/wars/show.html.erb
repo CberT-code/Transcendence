@@ -32,7 +32,7 @@
 			<% if @war.status == 1 && @startdays > 1 %>
 				<h1 class="text-orange">Start in : <%= @startdays %> days</h1>
 				<button id="change_team" class="green_button" onClick="window.location='/#edit_war/<%= @war.id %>'" >Change My Team</button>
-			<% elsif @war.status == 1 && @startdays == 1 %>
+			<% elsif @war.status == 1 && @startdays <= 1 %>
 				<h1 class="text-orange">Start in : <%= (@starthours / (60 * 60)) + 1 %> hours</h1>
 			<% elsif @war.status == 2 && @enddays > 1 %>
 				<h1 class="text-green">In war</h1>

@@ -313,7 +313,6 @@ ViewChannel = Backbone.View.extend(
             window.app.models.ChannelSanctionsList.fetch({ "url": "/tchat/channel/sanctions/get/" + $(".Channelid").val() + "/1" });
         },
         SanctionSubmit: function (e) {
-            console.log("SanctionSubmit");
             e.preventDefault();
             var type = $(e.currentTarget).val();
             var id = $(".Channelid").val();
@@ -332,7 +331,7 @@ ViewChannel = Backbone.View.extend(
                             notification("success", "The sanction has been applicated !");
                             Backbone.history.loadUrl();
                         } else
-                            notification("error", "This user doesn't exist or you cannot make sanction on yoursel...");
+                            notification("error", "This user doesn't exist or you cannot make sanction on yourself...");
                     },
                     'text'
                 );

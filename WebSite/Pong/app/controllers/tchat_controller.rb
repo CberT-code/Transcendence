@@ -12,15 +12,7 @@ class TchatController < ApplicationController
 		@channels = Channel.all.order("id")
 		@channel = Array.new
 		@channels.each do |element|
-			@tmp = Sanctions.where(id: element.id, target_id: current_user.id).all
-			@block = 0
-			@tmp.each do |sanction|
-				if (sanction.end_time >= Time.now.to_i && current_user.role != 1)
-					@block = 1
-					break
-				end
-			end
-			if (@block == 0)
+			if (hasSanction(element.id, current_user.id, 1) == false)
 				@channel.push({"id" => element.id, "title" => element.title, "type_channel" => element.type_channel, "user_id" => element.user_id})
 			end
 		end
@@ -74,8 +66,10 @@ class TchatController < ApplicationController
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.user_id == @user_id || current_user.role == 1 || @datas.type_channel == 2))
-				render json: @datas
-				return
+				if (hasSanction(@datas.id, current_user.id, 1) == false)
+					render json: @datas
+					return
+				end
 			end
 			render html: 2
 			return 
@@ -90,8 +84,10 @@ class TchatController < ApplicationController
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.key == @key || @datas.user_id == @user_id || current_user.role == 1))
-				render json: @datas
-				return
+				if (hasSanction(@datas.id, current_user.id, 1) == false)
+					render json: @datas
+					return
+				end
 			end
 			render html: 2
 			return 
@@ -178,46 +174,6 @@ class TchatController < ApplicationController
 		end
 		render html: "error-fobidden", :status => :unauthorized
 		return
-	end
-	def ApplySanction
-		if (!params[:channel_id] || !params[:target_id] || !params[:type])
-			render html: "error-fobidden", :status => :unauthorized
-			return
-		end
-		@channel_id = CGI.escapeHTML(params[:channel_id])
-		@target_id = CGI.escapeHTML(params[:target_id])
-		@type = CGI.escapeHTML(params[:type]).to_i
-		@datas = Channel.find_by_id(@channel_id)
-		@time = params[:time] ? params[:time].to_i : 99999
-		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
-			if (@target_id.to_i == current_user.id)
-				render html: "2"
-				return
-			end
-			if (@type == 1)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
-				render html: "1"
-				return 
-			elsif (@type == 2)
-				@tmp = Sanctions.find_by_target_id_and_user_id(@target_id, @channel_id)
-				if (@tmp.sanction_type == 1)
-					@tmp.destroy
-				end
-				render html: "1"
-				return 
-			elsif (@type == 3)
-				Sanctions.create(:sanction_type=> 1, :user_id=> @channel_id, :target_id=> @target_id, :create_time=>@date, :end_time => (Time.now.to_i + @time))
-				render html: "1"
-				return 
-			elsif (@type == 4)
-				@tmp = Sanctions.find_by_target_id_and_user_id(@target_id, @channel_id)
-				if (@tmp.sanction_type == 2)
-					@tmp.destroy
-				end
-				render html: "1"
-				return 
-			end
-		end
 	end
 	def UpdateChannelKey
 		if (!params[:id] || !params[:key])
@@ -313,13 +269,12 @@ class TchatController < ApplicationController
 				@datas = Messages.where(["target_id = ? AND message_type = ?", @id, '1'])
 				@ret = Array.new
 				@is_admin = (@channel.user_id == @user_id || current_user.role == 1) ? 1 : 0
- 				@datas.each do |element|
-					@tmp = User.find_by_id(element.user_id)
-					@sanction = Sanctions.find_by_user_id_and_target_id(@channel.id, element.user_id)
-					@is_ban = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 1) ? 1 : 0
-					@is_mute = (@sanction && @sanction.end_time > Time.new.to_i && @sanction.sanction_type == 2) ? 1 : 0
-					@own = element.user_id == current_user.id ? 1 : 2
-					@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "author" => @tmp.nickname, "guild" => (@tmp.guild_id ? @tmp.guild.name : ""), "author_id" => element.user_id, "admin" => @is_admin, "muted" => @is_mute, "ban" => @is_ban, "own" => 1})
+				 @datas.each do |element|
+					if (hasSanction(current_user.id, element.user_id, 3) == false)
+						@tmp = User.find_by_id(element.user_id)
+						@own = element.user_id == current_user.id ? 1 : 2
+						@ret.push({"id" => element.id, "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "author" => @tmp.nickname, "guild" => (@tmp.guild_id ? @tmp.guild.name : ""), "author_id" => element.user_id, "admin" => @is_admin, "own" => 1})
+					end
 				end
 				render json: @ret
 				return
@@ -361,7 +316,7 @@ class TchatController < ApplicationController
 		@datas = Channel.find_by_id(@channel_id)
 		@user_datas = User.find_by_nickname(@nickname)
 		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
-			if (!@user_datas || @datas.user_id == current_user.id)
+			if (!@user_datas || @user_datas.id == current_user.id)
 				render html: "2"
 				return
 			end

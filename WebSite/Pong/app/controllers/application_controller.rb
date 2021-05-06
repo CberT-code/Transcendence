@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
 	def hasSanction(user_id, target_id, type)
 		@sanctions = Sanctions.where({user_id: user_id, target_id: target_id, sanction_type: type}).all
 		@sanctions.each do |sanction|
-			if (sanction.end_time >= Time.now.to_i)
+			if (sanction.end_time >= Time.now.to_i || sanction.sanction_type == 3)
 				return true
 			end
 		end
@@ -67,6 +67,6 @@ class ApplicationController < ActionController::Base
 	end
 	def after_sign_in_path_for(resource)
 		"/#show_user/" + current_user.id.to_s
-	  end
+	end
 end
 

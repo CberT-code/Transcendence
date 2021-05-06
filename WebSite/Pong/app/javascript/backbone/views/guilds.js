@@ -40,7 +40,7 @@ ViewGuilds = Backbone.View.extend(
 				function (data) 
 				{
 					if (data == 'error-1')
-						notification("error", "The guild name can't be empty or contain specials characters");
+						notification("error", "The guild name can't be empty or contain specials characters or bigger than 20 characters");
 					else if (data == 'error-2')
 						notification("error", "The guild story can't be empty or contain specials characters");
 					else if (data == 'error-3')
@@ -54,11 +54,7 @@ ViewGuilds = Backbone.View.extend(
 					else if (data == 'error-7')
 						notification("error", "The guild anagramme can't be empty or contain specials characters");
 					else
-					{
-						$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
-						$("#header-wars").toggle();
 						window.location.href = "#show_guild/" + data ;
-					}
 				},
 				'text'
 			);
@@ -72,22 +68,18 @@ ViewGuilds = Backbone.View.extend(
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
 				success: function (data)
 				{
-					console.log("info : " + data.info);
-					if (data.status == "error")
-					{
+					if (data.status == "error"){
 						notification("error", "Your team needs a leader. Give them a new leader before leaving...");
 						$("#guild_id_admin").css("display", "inline");
 						$("#exec_change_admin").css("display", "inline");
 					}
-					else if (data.status == '2')
-					{
-						$("#header-wars").toggle();
+					else if (data.status == '2'){
 						Backbone.history.loadUrl();
 					}
-					else
-					{
-						$('#header-guild').attr('onClick',"window.location='/#guilds'")
-						$("#header-wars").toggle();
+					else if (data.status == "error-wars"){
+						notification("error", "Guild in wars, please wait the end of the war");
+					}
+					else{
 						window.location.href = "#guilds";
 					}
 				},
@@ -124,8 +116,6 @@ ViewGuilds = Backbone.View.extend(
 				}
 				else
 				{
-					$('#header-guild').attr('onClick',"window.location='/#guilds'")
-					$("#header-wars").toggle();
 					Backbone.history.loadUrl();
 				}
 			},
@@ -164,8 +154,6 @@ ViewGuilds = Backbone.View.extend(
 				else if (data == 'error_alreadyinguild')
 					notification("error", "You're already in a guild.");
 				else {
-					$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
-					$("#header-wars").toggle();
 					Backbone.history.loadUrl();
 				}
 
@@ -214,7 +202,7 @@ ViewGuilds = Backbone.View.extend(
 					data.forEach(
 						function(guild) {
 							i += 1;
-							$("#guild-list").append("<div id='guild'><div id='position'><p>" + i + "</p></div><div id='information'><p>" + guild[0].name + "</p></div><div id='information'><p>" + guild[0].nbmember + "</p></div><div id='action' onClick=\"window.location='/#show_guild/" + guild[0].id +"'\"><p>voir</p></div></div>");
+							$("#guild-list").append("<div id='guild'><div id='position'><p>" + i + "</p></div><div id='information'><p>" + guild[0].name + "</p></div><div id='information'><p>" + guild[0].nbmember + "</p></div><div id='action' onClick=\"window.location='/#show_guild/" + guild[0].id +"'\"><p>see</p></div></div>");
 						}
 					);
 				}

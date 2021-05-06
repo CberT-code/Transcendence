@@ -91,7 +91,6 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 				$("main").html("<div id='content-error'>" + ($(data).find("#content-error").html()) + "</div>");
 			else{
 				$("main").html("<div id='content-guild'>" + ($(data).find("#content-guild").html()) + "</div>");
-				$("#line-war").hide();
 			}
 		});
 	},
@@ -117,7 +116,11 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	// WARS
 	wars: function() {
 		$.get("/wars").then(function(data){
-			$("main").html("<div id='content-wars'>" + ($(data).find("#content-wars").html()) + "</div>");
+			if ($(data).find("#content-error_guild").length != 0)
+				$("main").html("<div id='content-error_guild'>" + ($(data).find("#content-error_guild").html()) + "</div>");
+			else
+				$("main").html("<div id='content-wars'>" + ($(data).find("#content-wars").html()) + "</div>");
+			
 		});
 	},
 	new_war: function() {

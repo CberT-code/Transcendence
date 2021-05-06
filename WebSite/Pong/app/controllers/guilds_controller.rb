@@ -8,7 +8,7 @@ class GuildsController < ApplicationController
 	end
 
 	def index
-		@guilds = Guild.where(["deleted = ?", false]);
+		@guilds = Guild.where(["deleted = ?", false]).order(:points).reverse_order;
 	end
 
 	def new
@@ -21,7 +21,7 @@ class GuildsController < ApplicationController
 		if (current_user.guild_id) then
 			render 'error/403', :status => :unauthorized
 		end
-		if (params[:guildname] == "" || !safestr(params[:guildname]))
+		if (params[:guildname] == "" || !safestr(params[:guildname]) || params[:guildname].length > 20)
 			render html: "error-1";
 		elsif (params[:anagramme].length > 5 || Guild.find_by_anagramme(params[:anagramme]))
 			render html: "error-6";
@@ -55,7 +55,7 @@ class GuildsController < ApplicationController
 			end
 			@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
 			if (@guild.deleted == true)
-				render 'error/403', :status => :unauthorized;
+				render "/pages/error-404"
 			end
 			@user = current_user;
 			@my_guild = @guild.id == current_user.guild_id ? 1 : 0;
@@ -85,6 +85,8 @@ class GuildsController < ApplicationController
 		@officer = (@guild.officers.include?current_user.id) ? 1 : 0
 		if @guild.id_admin == @usertodelete.id && @guild.users.count != 1
 			render json: {status: "error", info: "Trying to delete admin"}
+		elsif @guild.war_id != nil
+			render json: {status: "error", info: "Guild in wars, please wait the end of the war"}
 		elsif @usertodelete.id == current_user.id && @guild.users.count != 1
 			@guild.officers.delete(@usertodelete.id)
 			@usertodelete.update({guild_id: nil})
@@ -172,6 +174,7 @@ class GuildsController < ApplicationController
 	end
 
 	def officer
+		puts params[:id]
 		usertochange = User.find_by_id(params[:id]);
 		guild = Guild.find_by_id(params[:idguild]);
 		admin = (current_user.role == 1 || guild.id_admin == current_user.id) ? 1 : 0;

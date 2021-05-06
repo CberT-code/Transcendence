@@ -6,10 +6,18 @@
 		<div id="wrapper">
 			<% index = 1%>
 			<% @t_users.each do |t_user| %>
+
+			<%   url = URI.parse(t_user.user.image)
+				req = Net::HTTP.new(url.host, url.port)
+				req.use_ssl = (url.scheme == 'https')
+				path = url.path if url.path.present?
+				res = req.request_head(path || '/')
+			%>
+				<% @img = res.code != "404" ? t_user.user.image : 'https://cdn.intra.42.fr/users/medium_default.png' %>
 				<div class="player" onClick="window.location='/#show_user/<%= t_user.user_id %>'">
 					<div id="left">
 						<div id="icon">
-							<img alt="<%= t_user.user.nickname %> image" src="<%= t_user.user.image %>" onerror="this.src='https://cdn.intra.42.fr/users/medium_default.png';">
+							<img alt="<%= t_user.user.nickname %> image" src="<%= @img %>">
 						</div>
 						<div id="rank">
 							<p>#<%= index %></p>
