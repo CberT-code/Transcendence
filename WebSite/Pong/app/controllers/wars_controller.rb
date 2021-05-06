@@ -58,7 +58,7 @@ class WarsController < ApplicationController
 		@guild1 = Guild.find_by_id(@war.guild1_id);
 		@guild2 = Guild.find_by_id(@war.guild2_id);
 		@inwars = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2])
-		@wars_history = History.where(['war_id = ?', @war.id]);
+		@wars_history = History.where({war_id: @war.id});
 		@list_users1 = User.where({id: @war.team1});
 		@list_users2 = User.where({id: @war.team2});
 	end
