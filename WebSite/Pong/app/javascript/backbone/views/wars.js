@@ -1,6 +1,3 @@
-var war_id = $('#war_data').data('id');
-var tournament_id = $('#war_data').data('tournament_id');
-
 function notification(typef, textf) {
 	var notification = new Noty({ theme: 'mint', type: typef, text: textf });
 	notification.setTimeout(4500);
@@ -183,11 +180,12 @@ ViewWars = Backbone.View.extend(
 		'text'
 	},
 	regular_warMatch_Start: function (e) {
+		var tournament_id = $('#war_data').data('tournamentid');
 		$.post(
 			'/histories/start_game',
 			{
 				'authenticity_token': $('meta[name=csrf-token]').attr('content'),
-				"tournament_id": $("#tournaments_end").val(),
+				"tournament_id": tournament_id,
 				"ranked": true,
 			},
 			function (data) 
@@ -200,7 +198,6 @@ ViewWars = Backbone.View.extend(
 		);
 	},
 	warMatch_Start: function() {
-		console.log("defying enemy guild to a war match!");
 		var tournament_id = $('#war_data').data('tournamentid');
 		var timeout = $('#war_data').data('timeout');
 		var war_id = $('#war_data').data('id');
