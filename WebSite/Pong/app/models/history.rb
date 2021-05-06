@@ -233,7 +233,7 @@ class History < ApplicationRecord
 		if winner.guild
 			winner.guild.points += 10
 			if winner.guild.war && winner.guild.war.allow_ext
-				if winer.guild.war.guild1 == winner.guild
+				if winner.guild.war.guild1 == winner.guild
 					winner.guild.war.points_guild1 += 1
 				else
 					winner.guild.war.points_guild2 += 1
