@@ -17,8 +17,6 @@ class MatchmakingController < ApplicationController
 		war_match = params.fetch(:war_match, false)
 		war_id = params.fetch(:war_id, -1)
 
-		puts "\n\nDuel bool : #{duel}\n\n"
-
 		if User.hasALiveGame(@me) != -1
 			render json: {status: "error", info: "You already have an ongoing game"}
 		elsif duel && opponent_id == -1
