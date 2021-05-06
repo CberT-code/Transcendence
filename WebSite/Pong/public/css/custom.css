@@ -592,6 +592,10 @@ button:hover {
 	transition-duration: 0.5s;
 	background-color: #6e6b6b;
 }
+#content-guilds #element #center #full button{
+	margin-bottom: 35px;
+
+}
 #content-guilds #element button:hover {
 	opacity: 0.7;
 	transition-duration: 0.5s;
@@ -1667,7 +1671,6 @@ background-color: #c51515;
     width: 400px;
     border-radius: 9px;
     background-color: white;
-    border: solid 1px #e1e1e1;
     margin-left: 15px;
     margin-right: 15px;
     margin-bottom: 15px;
@@ -3264,6 +3267,18 @@ background-color: #7BE12B;
 	overflow: hidden;
 }
 #content-error h1{
+	text-transform: uppercase;
+	color: #231f20;
+	font-family: 'Roboto-Thin';
+	font-size: 215%;
+}
+#content-error_guild{
+	height: min-content;
+	width: max-content;
+	margin: auto;
+	overflow: hidden;
+}
+#content-error_guild h1{
 	text-transform: uppercase;
 	color: #231f20;
 	font-family: 'Roboto-Thin';

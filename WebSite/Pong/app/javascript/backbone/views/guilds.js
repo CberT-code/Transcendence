@@ -74,15 +74,12 @@ ViewGuilds = Backbone.View.extend(
 						$("#exec_change_admin").css("display", "inline");
 					}
 					else if (data.status == '2'){
-						$("#header-wars").toggle();
 						Backbone.history.loadUrl();
 					}
 					else if (data.status == "error-wars"){
 						notification("error", "Guild in wars, please wait the end of the war");
 					}
 					else{
-						$('#header-guild').attr('onClick',"window.location='/#guilds'")
-						$("#header-wars").toggle();
 						window.location.href = "#guilds";
 					}
 				},
@@ -119,8 +116,6 @@ ViewGuilds = Backbone.View.extend(
 				}
 				else
 				{
-					$('#header-guild').attr('onClick',"window.location='/#guilds'")
-					$("#header-wars").toggle();
 					Backbone.history.loadUrl();
 				}
 			},
@@ -159,8 +154,6 @@ ViewGuilds = Backbone.View.extend(
 				else if (data == 'error_alreadyinguild')
 					notification("error", "You're already in a guild.");
 				else {
-					$('#header-guild').attr('onClick',"window.location='/#show_guild/" + data + "'");
-					$("#header-wars").toggle();
 					Backbone.history.loadUrl();
 				}
 

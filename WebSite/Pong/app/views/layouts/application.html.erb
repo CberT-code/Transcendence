@@ -28,13 +28,8 @@
 					<button onClick="window.location='/#tchat'">Chat</button>
 					<button onClick="window.location='/#play'" >Play</button>
 					<button onClick="window.location='/#ladder'" >Ladder</button>
-					<% if !current_user.guild_id %>
-						<button id="header-guild" onClick="window.location='/#guilds'">Guilds</button>
-						<button id="header-wars" class="displayOff" onClick="window.location='/#wars'">Wars</button>
-					<% else %>
-						<button id="header-guild" onClick="window.location='/#show_guild/<%= current_user.guild_id %>'">Guilds</button>
-						<button id="header-wars" class="displayOn" onClick="window.location='/#wars'">Wars</button>
-					<% end %>
+					<button onClick="window.location='/#guilds'">Guilds</button>
+					<button onClick="window.location='/#wars'">Wars</button>
 					<button onClick="window.location='/#tournaments'">Tournaments</button>
 					<button id="sign_out"><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></button>
 

@@ -8,7 +8,7 @@ class GuildsController < ApplicationController
 	end
 
 	def index
-		@guilds = Guild.where(["deleted = ?", false]);
+		@guilds = Guild.where(["deleted = ?", false]).order(:points).reverse_order;
 	end
 
 	def new
@@ -47,10 +47,6 @@ class GuildsController < ApplicationController
 	end
 
 	def show
-		if (@me.guild_id == nil)
-			render html: "deleted"
-			return
-		end
 		if (params.has_key?(:id) && is_number?(params[:id]))
 			@guild = Guild.find_by_id(params[:id]);
 			if (@guild == nil)
@@ -59,7 +55,7 @@ class GuildsController < ApplicationController
 			end
 			@officer = (@guild.officers.include?current_user.id) ? 1 : 0;
 			if (@guild.deleted == true)
-				render 'error/403', :status => :unauthorized;
+				render "/pages/error-404"
 			end
 			@user = current_user;
 			@my_guild = @guild.id == current_user.guild_id ? 1 : 0;

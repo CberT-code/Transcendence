@@ -10,8 +10,8 @@ class WarsController < ApplicationController
 	end
 
 	def index
-		if (@guild.id == -1)
-			render "/pages/error-404"
+		if (current_user.guild_id == nil)
+			render "/pages/error-guild"
 			return
 		end
 		@wars_history = War.where(['(guild1_id = ? or guild2_id = ?) and status = ?', @guild.id, @guild.id, 3]);
