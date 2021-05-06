@@ -88,6 +88,7 @@ class MatchmakingController < ApplicationController
 		elsif war
 			if war.ongoingMatch1
 				render json: {status: "error", info: "You cannot start a war match at the moment (send from matchmaking#create)"}
+				return 
 			end
 			timeout = war.timeout
 		else
