@@ -34,9 +34,6 @@ class HistoriesController < ApplicationController
 				winner: @game.host_score > @game.opponent_score ? @game.host_id : @game.opponent_id,
 				loser: @game.host_score < @game.opponent_score ? @game.host_id : @game.opponent_id,
 				w_name: @game.host_score > @game.opponent_score ? @game.host.nickname : @game.opponent.nickname})
-		else
-			# Spectating live game
-			puts "Salut, c'est #{@me.nickname}"
 		end
 	end
 
