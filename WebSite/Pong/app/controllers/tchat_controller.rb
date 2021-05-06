@@ -329,7 +329,7 @@ class TchatController < ApplicationController
 			render html: "1"
 			return
 		end
-		render html: "errror-forbidden", :status => :unauthorized
+		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
 	def removeSanction
