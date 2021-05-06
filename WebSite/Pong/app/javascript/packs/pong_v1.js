@@ -69,7 +69,6 @@ if (status != "ended") {
 				$("#content-game_show #game_show_score").html(data.score);
 			}
 			else if (status == "ready" ) {
-				console.log("game is ready!");
 				var right_pp = "url(\"" + data['right_pp'] + "\")";
 				var left_pp = "url(\"" + data['left_pp'] + "\")";
 				$("#content-game_show #right_PP_show_game").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
@@ -114,7 +113,6 @@ function killListeners() {
 }
 
 function foreverAlone() {
-	console.log(status);
 	if (status == "waiting") {
 		$('#content-game_show #end_game').css('visibility', 'hidden');
 		$('#content-game_show #game').css('visibility', 'visible');
