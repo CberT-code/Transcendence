@@ -191,9 +191,9 @@ class History < ApplicationRecord
 				winner = self.host
 			end
 			if self.war_match
-				self.warMatch(loser, winner)
+				self.warMatch(winner, loser)
 			elsif self.ranked
-				elo = self.rankedGame(loser, winner)
+				elo = self.rankedGame(winner, loser)
 			end
 			winner.stat.victory += 1
 			winner.stat.save!
@@ -208,7 +208,7 @@ class History < ApplicationRecord
 			loser: loser.id, w_name: self.opponent_score !=  -1 ? winner.name : "timeout"})
 	end
 		
-	def warMatch(loser, winner)
+	def warMatch(winner, loser)
 		if loser.guild == self.war.guild1
 			self.war.points_guild2 += 1
 			if self.opponent_score == -1
