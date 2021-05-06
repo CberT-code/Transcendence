@@ -66,6 +66,13 @@ class MatchmakingController < ApplicationController
 		end
 		list.each do |game|
 			if !game.opponent && game.host != @me
+				if game.war
+					if game.war.ongoingMatch1
+						game.war.update(ongoingMatch2: true)
+					else
+						return false
+					end
+				end
 				game.update(opponent: @me, statut: 2)
 				@redis.set("game_#{game.id}", "Waiting for opponent")
 				render json: {status: "ok", info: "Found a game", id: game.id}
@@ -79,6 +86,9 @@ class MatchmakingController < ApplicationController
 		if duel
 			timeout = 15
 		elsif war
+			if war.ongoingMatch1
+				render json: {status: "error", info: "You cannot start a war match at the moment (send from matchmaking#create)"}
+			end
 			timeout = war.timeout
 		else
 			timeout = -1
@@ -87,7 +97,7 @@ class MatchmakingController < ApplicationController
 			duel: duel, opponent: oppo, ranked: ranked, timeout: timeout, statut: duel ? 2 : 0)
 		game.save!
 		if war_match && !duel
-			war.update(ongoingMatch: true)
+			war.update(ongoingMatch1: true)
 			guilds = Guild.where(war_id: war.id)
 			if guilds.first == @me.guild
 				enemy_guild = guilds.last

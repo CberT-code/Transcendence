@@ -4,6 +4,7 @@ class AddSpecsToWar < ActiveRecord::Migration[6.1]
 	add_column :wars, :allow_ext, :boolean, default: true
 	add_column :wars, :forfeitedGames1, :integer, default: 5
 	add_column :wars, :forfeitedGames2, :integer, default: 5
-	add_column :wars, :ongoingMatch, :boolean, default: false
+	add_column :wars, :ongoingMatch1, :boolean, default: false
+	add_column :wars, :ongoingMatch2, :boolean, default: false
   end
 end
