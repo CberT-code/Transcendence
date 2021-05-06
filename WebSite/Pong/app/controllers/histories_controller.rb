@@ -28,6 +28,12 @@ class HistoriesController < ApplicationController
 		if !@game || @game.statut == -1
 			render "/pages/error-404"
 			return
+		elsif @game.statut == 3
+			ActionCable.server.broadcast("pong_#{@game.id}",
+				{status: "ended",
+				winner: @game.host_score > @game.opponent_score ? @game.host_id : @game.opponent_id,
+				loser: @game.host_score < @game.opponent_score ? @game.host_id : @game.opponent_id,
+				w_name: @game.host_score > @game.opponent_score ? @game.host.nickname : @game.opponent.nickname})
 		end
 	end
 
