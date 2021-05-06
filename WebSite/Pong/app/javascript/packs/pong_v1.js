@@ -2,8 +2,13 @@ var game_id = $('#game_data').data('id');
 var user_id = $('#game_data').data('player');
 var host_id = $('#game_data').data('host');
 var opponent_id = $('#game_data').data('opponent');
+var host_name = $('#game_data').data('hostname');
+var oppo_name = $('#game_data').data('opponame');
+var left = $('#game_data').data('scoreleft');
+var right = $('#game_data').data('scoreright');
 var status = $('#game_data').data('status');
 var keys = [0, 0];
+var actionCable;
 
 import consumer from "../channels/consumer"
 
@@ -37,38 +42,22 @@ else if (status == "ended") {
 	$('#content-game_show #game').css('visibility', 'hidden');
 	$('#content-game_show #end_game').css('visibility', 'visible');
 	$('#content-game_show #alone').hide();
+	endgame(left > right ? host_id : opponent_id,
+			left < right ? host_id : opponent_id, 0,
+			right == -1 ? "timeout" : (left > right ? host_name : oppo_name))
 }
 
 if (status != "ended") {
-	var actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: game_id}, {
+	actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: game_id}, {
 		connected() {
 			if (user_id == host_id || user_id == opponent_id) {
-				$(document).keydown(function(event) {
-					if (event.key == 'q' || event.key == 'z')
-						keys[0] = 1;
-					else if (event.key == 'a' || event.key == 's')
-						keys[1] = 1;
-					else
-						console.log("You pressed |" + event.key + "|");
-					sendMove(actionCable);
-				});
-				$(document).keyup(function(event) {
-					if (event.key == 'q' || event.key == 'z')
-						keys[0] = 0;
-					else if (event.key == 'a' || event.key == 's')
-						keys[1] = 0;
-					sendMove(actionCable);
-				});
-			}
-			else {
-				console.log("Streaming live game " + game_id);
-				console.log("host : " + host_id);
-				console.log("opponent : " + opponent_id);
+				document.addEventListener('keydown', keyDown);
+				document.addEventListener('keyup', keyUp);
 			}
 		},
 
 		disconnected() {
-				console.log("Disconnected from PongChannel, room " + game_id + " status " + status);
+				killListeners();
 			},
 
 		received(data) {
@@ -93,15 +82,35 @@ if (status != "ended") {
 				$('#content-game_show #alone').hide();
 				endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 				actionCable.unsubscribe();
+				killListeners();
 			}
 			else if (status == "deleted") {
+				killListeners();
 				actionCable.unsubscribe();
-			}
-			else {
-				console.log("Rceived data when it shoudn't have. Status : " + status);
 			}
 		}
 	});
+}
+
+function keyUp(event) {
+	if (event.key == 'Z' || event.key == 'z' || event.key == 'w' || event.key == 'W' || event.key == "ArrowUp")
+		keys[0] = 0;
+	else if (event.key == 'S' || event.key == 's' || event.key == "ArrowDown")
+		keys[1] = 0;
+	sendMove(actionCable);
+}
+
+function keyDown(event) {
+	if (event.key == 'Z' || event.key == 'z' || event.key == 'w' || event.key == 'W' || event.key == "ArrowUp")
+		keys[0] = 1;
+	else if (event.key == 'S' || event.key == 's' || event.key == "ArrowDown")
+		keys[1] = 1;
+	sendMove(actionCable);
+}
+
+function killListeners() {
+	document.removeEventListener('keyup', keyUp);
+	document.removeEventListener('keydown', keyDown);
 }
 
 function foreverAlone() {
@@ -110,7 +119,6 @@ function foreverAlone() {
 		$('#content-game_show #end_game').css('visibility', 'hidden');
 		$('#content-game_show #game').css('visibility', 'visible');
 		$('#content-game_show #alone').hide();
-		console.log("sending alone request");
 		$.post(
 			'/histories/forever_alone/' + game_id,
 			{'authenticity_token': $('meta[name=csrf-token]').attr('content') },
@@ -135,11 +143,13 @@ function sendMove(socket) {
 }
 
 function endgame(winner, loser, elo, w_name) {
-	console.log("Game ended, there will be a nice endgame animation, yay");
 	$('#content-game_show #game').css('visibility', 'hidden');
 	$('#content-game_show #end_game').css('visibility', 'visible');
 	var msg = "";
-	if (user_id == winner) {
+	if (w_name == "timeout") {
+		msg = "<p class=\"p_end_game\">Enemy forfeited!</p>"
+	}
+	else if (user_id == winner) {
 		msg = "<p class=\"p_end_game\">You Won !</p>";
 		if (elo != "0") {
 			msg += "<p> +" + elo + " points!</p>";
@@ -152,9 +162,6 @@ function endgame(winner, loser, elo, w_name) {
 			msg += "<p class=\"p_end_game\"> -" + elo + " points!</p>";
 		}
 	}
-	else if (w_name == "Timeout") {
-		msg = "<p class=\"p_end_game\">Enemy forfeited!</p>"
-	}
 	else {
 		msg = "<p class=\"p_end_game\">" + w_name + " Won!</p>";
 	}
@@ -162,34 +169,40 @@ function endgame(winner, loser, elo, w_name) {
 }
 
 function display(left_y, right_y, ball_x, ball_y, score) {
-	$("#content-game_show #left_player").css({"top": left_y});
-    $("#content-game_show #right_player").css({"top": right_y});
-    $("#content-game_show #ball").css({"left": ball_x, "top": ball_y});
-    $("#content-game_show #game_show_score").html(score);
+	if ($(document).find('#content-game_show').length != 0) {
+		$("#content-game_show #left_player").css({"top": left_y});
+		$("#content-game_show #right_player").css({"top": right_y});
+		$("#content-game_show #ball").css({"left": ball_x, "top": ball_y});
+		$("#content-game_show #game_show_score").html(score);
+	}
 }
 
 function resize_game() {
 	var width = window.innerWidth;
 	var height = window.innerHeight;
-	if (width < 550) {
-		$('#content-game_show #end_game').css('font-size', '2vh');
+	if ($('#content-game_show').find("#end_game").length != 0) {
+		if (width < 550) {
+			$('#content-game_show #end_game').css('font-size', '2vh');
+		}
+		else if (width < 900) {
+			$('#content-game_show #end_game').css('font-size', '5vh');
+		}
+		else if (width < 1300) {
+			$('#content-game_show #end_game').css('font-size', '8vh');
+		}
+		else {
+			$('#content-game_show #end_game').css('font-size', '11vh');
+		}
 	}
-	else if (width < 900) {
-		$('#content-game_show #end_game').css('font-size', '5vh');
-	}
-	else if (width < 1300) {
-		$('#content-game_show #end_game').css('font-size', '8vh');
-	}
-	else {
-		$('#content-game_show #end_game').css('font-size', '11vh');
-	}
-	if (width < 2.5 * height) {
-		document.querySelector("#content-game_show #wrapper_box").style.width = (width * 0.7) + "px";
-		document.querySelector("#content-game_show #wrapper_box").style.height = (width * 0.28) + "px";
-	}
-	else {
-		document.querySelector("#content-game_show #wrapper_box").style.width = (height * 1.75) + "px";
-		document.querySelector("#content-game_show #wrapper_box").style.height = (height * 0.7) + "px";
+	if ($('#content-game_show').find("#wrapper_box").length != 0) {
+		if (width < 2.5 * height) {
+			document.querySelector("#content-game_show #wrapper_box").style.width = (width * 0.7) + "px";
+			document.querySelector("#content-game_show #wrapper_box").style.height = (width * 0.28) + "px";
+		}
+		else {
+			document.querySelector("#content-game_show #wrapper_box").style.width = (height * 1.75) + "px";
+			document.querySelector("#content-game_show #wrapper_box").style.height = (height * 0.7) + "px";
+		}
 	}
 }
 

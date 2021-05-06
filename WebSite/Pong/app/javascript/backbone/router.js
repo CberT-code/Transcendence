@@ -33,8 +33,8 @@ window.app.ApplicationRouter = Backbone.Router.extend({
 	"show_game/:id": "show_game",
 	},
 	home: function() {
-		$.get("/").then(function(data){
-		$("main").html("<div id='content-home'>" + ($(data).find("#content-home").html()) + "</div>");
+		$.get("/users/0").then(function(data){
+		$("main").html("<div id='content-user'>" + ($(data).find("#content-user").html()) + "</div>");
 		});
 	},
 

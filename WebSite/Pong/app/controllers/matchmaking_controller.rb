@@ -17,13 +17,15 @@ class MatchmakingController < ApplicationController
 		war_match = params.fetch(:war_match, false)
 		war_id = params.fetch(:war_id, -1)
 
-		if User.hasALiveGame(@me) == true
+		puts "\n\nDuel bool : #{duel}\n\n"
+
+		if User.hasALiveGame(@me) != -1
 			render json: {status: "error", info: "You already have an ongoing game"}
 		elsif duel && opponent_id == -1
 			render json: {status: "error", info: "invalid opponent_id"}
 		elsif duel && User.isOnline(opponent_id) == "offline"
 			render json: {status: "error", info: "Opponent is unavaible"}
-		elsif duel && User.hasALiveGame(opponent_id) == true
+		elsif duel && User.hasALiveGame(opponent_id) != -1
 			render json: {status: "error", info: "Opponent already has an ongoing game"}
 		elsif !duel && opponent_id != -1
 			render json: {status: "error", info: "You cannot choose an opponent if the game is not a duel"}
@@ -66,7 +68,7 @@ class MatchmakingController < ApplicationController
 		end
 		list.each do |game|
 			puts game.id
-			if !game.opponent
+			if !game.opponent && game.host != @me
 				game.update(opponent: @me, statut: 2)
 				@redis.set("game_#{game.id}", "Waiting for opponent")
 				render json: {status: "ok", info: "Found a game", id: game.id}

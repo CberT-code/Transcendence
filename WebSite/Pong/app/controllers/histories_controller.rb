@@ -125,7 +125,7 @@ class HistoriesController < ApplicationController
 	def clean_list(id)
 		History.all.each do |game|
 			if (!game.opponent && game.host == current_user && game.id != id.to_i) ||
-					game.statut == -1 
+					game.statut == -1 || (game.host == game.opponent && game.host == current_user)
 				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
 				puts "Deleting game #{game.id} status : #{game.statut} (#{id} excluded)"
 				@redis.set("game_#{game.id}", "deleted")

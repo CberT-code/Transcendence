@@ -2,9 +2,13 @@
 	<div id="center">
 		<%= stylesheet_link_tag "pong_v1.css" %>
 		<%= content_tag :div, '', id: 'game_data', data: {status: @game.statut == 2 ? 
-							"running" : @game.statut == 3 ? "ended" : "Waiting for opponent", id: @game.id,
-							player: @me.id, host: @game.host_id,
-							opponent: @game.opponent ? @game.opponent_id : -1} %>
+							"running" : @game.statut == 3 ? "ended" : "Waiting for opponent",
+							id: @game.id, player: @me.id, host: @game.host_id,
+							opponent: @game.opponent ? @game.opponent_id : -1,
+							hostname: @game.host.nickname,
+							opponame: @game.opponent ? @game.opponent.nickname : "someone",
+							scoreleft: @game.host_score,
+							scoreright: @game.opponent_score } %>
 		<% g_class = "" %>
 		<% if @game.ranked %>
 			<% if @game.war_match%>
@@ -57,6 +61,6 @@
 		<% if @game.opponent == nil && !@game.war_match && !@game.duel %>
 			<button id="alone" class="back-black">J'ai pas d'amis</button>
 		<% end %>
-		<%= javascript_pack_tag 'pong_v1' %>
+		<%= javascript_pack_tag "pong_v1" %>
 	</div>
 </div>

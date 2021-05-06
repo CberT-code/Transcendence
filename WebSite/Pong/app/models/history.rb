@@ -172,8 +172,14 @@ class History < ApplicationRecord
 
 	def endGame
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
-		redis.set("player_#{self.host_id}", "online")
-		redis.set("player_#{self.opponent_id}", "online")
+		host = redis.get("player_#{self.host_id}")
+		oppo = redis.get("player_#{self.opponent_id}")
+		if (host && host != "offline")
+			redis.set("player_#{self.host_id}", "online")
+		end
+		if (oppo && oppo != "offline")
+			redis.set("player_#{self.opponent_id}", "online")
+		end
 		redis.del("game_#{self.id}")
 		elo = 0
 		if self.statut == 3
@@ -199,7 +205,7 @@ class History < ApplicationRecord
 		end
 		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended",
 			elo: elo.to_i, winner: winner.id,
-			loser: loser.id, w_name: winner.name})
+			loser: loser.id, w_name: self.opponent_score !=  -1 ? winner.name : "timeout"})
 	end
 		
 	def warMatch(loser, winner)
