@@ -12,6 +12,7 @@ class History < ApplicationRecord
 		time_left = self.timeout
 		while time_left != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
 			time = Time.now
+			puts "time left : #{time_left}"
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
 				score: "Waiting for opponent#{waiting[frame % 4]}", frame: frame})
 			while Time.now.to_f <= time.to_f + 1
@@ -70,7 +71,7 @@ class History < ApplicationRecord
 				frame: frame, status: status, left_y: "#{player[0]}%", right_y: "#{player[1]}%",
 				ball_x: "#{ball[0]}%", ball_y: "#{ball[1]}%",
 				score: "#{score[0]} - #{score[1]}" })
-			while Time.now.to_f <= time.to_f +	0.0417
+			while Time.now.to_f <= time.to_f +	0.02
 				sleep 1.0/500.0
 			end
 			frame += 1
@@ -233,6 +234,7 @@ class History < ApplicationRecord
 					self.war.status = 3
 					winner.guild.points += self.war.points
 					loser.guild.points -= self.war.points
+					loser.guild.points = loser.guild.points < 0 ? 0 : loser.guild.points
 					winner.guild.war_id = nil
 					loser.guild.war_id = nil
 					winner.guild.save
@@ -247,6 +249,7 @@ class History < ApplicationRecord
 					self.war.status = 3
 					winner.guild.points += self.war.points
 					loser.guild.points -= self.war.points
+					loser.guild.points = loser.guild.points < 0 ? 0 : loser.guild.points
 					winner.guild.war_id = nil
 					loser.guild.war_id = nil
 					winner.guild.save

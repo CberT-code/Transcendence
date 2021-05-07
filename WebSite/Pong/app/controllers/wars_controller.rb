@@ -25,7 +25,7 @@ class WarsController < ApplicationController
 		end
 		@wars = History.new
 		@list_guild = Guild.where(['nbmember >= ?', 5]);
-		@list_tournament = Tournament.all();
+		@list_tournament = Tournament.where(status: 1);
 	end
 
 	def edit
@@ -58,7 +58,7 @@ class WarsController < ApplicationController
 		@guild1 = Guild.find_by_id(@war.guild1_id);
 		@guild2 = Guild.find_by_id(@war.guild2_id);
 		@inwars = War.where(['(guild1_id = ? or guild2_id = ?) and (status = ? or status = ?)', current_user.guild_id, current_user.guild_id, 1, 2])
-		@wars_history = History.where({war_id: @war.id});
+		@wars_history = History.where({war_id: @war.id, statut: 3});
 		@list_users1 = User.where({id: @war.team1});
 		@list_users2 = User.where({id: @war.team2});
 	end
@@ -67,6 +67,10 @@ class WarsController < ApplicationController
 		@war = War.find_by_id(params[:war_id]);
 		@guild = Guild.find_by_id(@war.guild2_id);
 		@guild1 = Guild.find_by_id(@war.guild1_id);
+		if (@admin == 0)
+			render html: 'error_notadmin';
+			return
+		end
 		if (!@guild1.war_id && !@guild.war_id)
 			if (@admin && @war && @war.guild2_id == @guild.id && @war.status == 0)
 				@guild.update({war_id: @war.id});
@@ -81,6 +85,10 @@ class WarsController < ApplicationController
 
 	def destroy
 		@war = War.find_by_id(params[:war_id]);
+		if (@admin == 0)
+			render html: 'error_notadmin';
+			return
+		end
 		if (@admin && @war && (@war.guild1_id == @guild.id || @war.guild2_id == @guild.id) && @war.status == 0)
 			@war.destroy;
 		else

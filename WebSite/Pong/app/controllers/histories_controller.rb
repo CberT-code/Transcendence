@@ -18,7 +18,7 @@ class HistoriesController < ApplicationController
 		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
 		@spectate = History.where({statut: 2}).select("ranked", "tournament_id", "war_id", "host_id", "opponent_id", "id")
 		@date = DateTime.new(1902,1,1,1,1,1);
-		@tournament = Tournament.where(["(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current]);
+		@tournament = Tournament.where({status: 1});
 	end
 
 	def show

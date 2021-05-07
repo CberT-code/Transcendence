@@ -73,7 +73,7 @@ trnmt_list = [
 ]
   
 trnmt_list.each do |name, desc, pts, speed, start, endd|
-	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd)
+	Tournament.create(name: name, description: desc, maxpoints: pts, speed: speed, start: start, end: endd, status: 1)
 end 
 
 user_list.each do |uid, name, guild|
