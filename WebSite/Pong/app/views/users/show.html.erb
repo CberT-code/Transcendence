@@ -41,9 +41,9 @@
 							<%= f.text_field :otp, placeholder: "Enter OTP here"%>
 						<% end %>
 					</div>
-					<button class="green_button" id="otp_confirm_button">Confirm OTP</button>
-					<button class="green_button" id="otp_enable">Enable 2FA</button>
-					<button class="green_button" id="otp_disable_button">Disable 2FA</button>
+					<button class="green_button border-radius" id="otp_confirm_button">Confirm OTP</button>
+					<button class="green_button border-radius" id="otp_enable">Enable 2FA</button>
+					<button class="green_button border-radius" id="otp_disable_button">Disable 2FA</button>
 				</div>
 			</div>
 		<% end %>
@@ -82,21 +82,21 @@
 				<% end %>
 				<div class="element-line">
 				<% if (@current == 1 || @admin == 1) && @user.deleted == false %>
-					<button class="back-red" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
+					<button class="back-red border-radius" id="delete_user" ><i class="fas fa-trash-alt"></i> Delete account</button><br/>
 				<% end %>
 				</div>
 				<div class="element-line">
 				<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
-					<button class="back-red" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
+					<button class="back-red border-radius" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
 				<% elsif @admin == 1 && @user.banned == true %>
-					<button class="back-red" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
+					<button class="back-red border-radius" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
 				<% end %>
 				</div>
 				<div class="element-line">
 				<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
-					<button class="back-blue" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
+					<button class="back-blue border-radius" id="add_friend" ><i class="fas fa-user-friends"></i> Add Friend</button>
 				<% elsif @current != 1 && (@me.friends.include?@user.id) && @user.deleted == false %>
-					<button class="back-red" id="del_friend" value="<%= @user.id %>"><i class="fas fa-user-friends"></i> Remove Friend</button>
+					<button class="back-red border-radius" id="del_friend" value="<%= @user.id %>"><i class="fas fa-user-friends"></i> Remove Friend</button>
 				<% end %>
 				</div>
 			</div>
@@ -107,25 +107,36 @@
 					<h2>Friends</h2>
 				</div>
 				<div id="container">
-					<% @user.friends.each do |friend_id| %>
-						<% friend = User.find_by_id(friend_id); %>
-						<% if friend != nil %>
-							<div id="line">
-								<% if friend.isOnline() == "online" %>
-									<p><span class="text-bold text-green"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-									<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
-									<%= form_for :tournaments do |f| %>
-										<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
-									<% end %>
-								<% elsif friend.isOnline() == "in_game" %>
-									<p><span class="text-bold text-orange"><%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-									<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
-								<% else %>
-									<p><span class="text-bold text-red"> <%= friend.nickname %></span><button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button></p>
-								<% end %>
-							</div>
+					<div id="friends">
+						<% @user.friends.each do |friend_id| %>
+							<% friend = User.where({ id: friend_id}).select("nickname", "id").first; %>
+							<% if friend != nil %>
+								<div id="friend">
+									<div id="status">
+										<% if friend.isOnline() == "online" %>
+										<i class="fas fa-check-circle"></i>
+										<% else %>
+										<i class="fas fa-moon"></i>
+										<% end %>
+									</div>
+									<div id="username">
+										<p><%= friend.nickname %></p>
+									</div>
+									<div id="action">
+										<% if friend.isOnline() == "in_game" %>
+										<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
+										<% else %>
+										<%= form_for :tournaments do |f| %>
+											<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+										<% end %>
+										<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
+										<% end %>
+										<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
+									</div>
+								</div>
+							<% end %>
 						<% end %>
-					<% end %>
+					</div>
 				</div>
 			</div>
 		<% end %>
