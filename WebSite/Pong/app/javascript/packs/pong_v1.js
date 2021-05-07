@@ -59,7 +59,7 @@ if (status != "ended") {
 
 		disconnected() {
 			console.log('DISCONNECTED '+ game_id);
-				killListeners();
+				killListeners(actionCable);
 			},
 
 		received(data) {
@@ -82,11 +82,11 @@ if (status != "ended") {
 				$('#content-game_show #game').css('visibility', 'hidden');
 				$('#content-game_show #alone').hide();
 				endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
+				killListeners(actionCable);
 				actionCable.unsubscribe();
-				killListeners();
 			}
 			else if (status == "deleted") {
-				killListeners();
+				killListeners(actionCable);
 				actionCable.unsubscribe();
 			}
 		}
@@ -109,9 +109,10 @@ function keyDown(event) {
 	sendMove(actionCable);
 }
 
-function killListeners() {
+function killListeners(socket) {
 	document.removeEventListener('keyup', keyUp);
 	document.removeEventListener('keydown', keyDown);
+	socket.send({player: user_id, move: "online"});
 }
 
 function foreverAlone() {

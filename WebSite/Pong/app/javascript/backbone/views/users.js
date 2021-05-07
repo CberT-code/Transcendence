@@ -144,6 +144,7 @@ ViewAccount = Backbone.View.extend({
 	duel_game_user: function (e) {
 		var id_opponent = $(e.currentTarget).val();
 		console.log("opppnent : " + id_opponent);
+		console.log($("#tournaments_end").val());
 		$.post(
 			'/histories/start_game',
 			{

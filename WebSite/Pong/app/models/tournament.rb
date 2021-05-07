@@ -11,7 +11,7 @@ class Tournament < ApplicationRecord
 	end
 
 	def available
-		if !self.end || !self.start || (self.start < Time.now && Time.now < self.end)
+		if self.status == 1
 			return true
 		end
 		return false
