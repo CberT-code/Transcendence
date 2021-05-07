@@ -6,8 +6,10 @@ class TchatController < ApplicationController
 			if @me.locked
 				render "/pages/otp"
 			end
+			History.clean_list(-1, current_user)
 		end
 	end
+
 	def index
 		@channels = Channel.all.order("id")
 		@channel = Array.new

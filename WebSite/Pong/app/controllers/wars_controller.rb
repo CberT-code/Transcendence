@@ -6,6 +6,7 @@ class WarsController < ApplicationController
 			end
 			@guild = Guild.find_by_id(current_user.guild_id);
 			@admin = (current_user.role == 1 || @guild.id_admin == current_user.id || (@guild.officers.include?current_user.id)) ? 1 : 0;
+			History.clean_list(-1, current_user)
 		end
 	end
 

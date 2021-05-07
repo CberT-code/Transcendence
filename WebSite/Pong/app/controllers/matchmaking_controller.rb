@@ -10,6 +10,7 @@ class MatchmakingController < ApplicationController
 	end
 
 	def start
+		History.clean_list(-1, current_user)
 		tournament_id = params.fetch(:tournament_id, 1)
 		ranked = params.fetch(:ranked, false)
 		duel = params.fetch(:duel, false)

@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
 	before_action do |sign_n_out|
 		start_conditions()
+		History.clean_list(-1, current_user)
 	end
 
 	before_action :otp_login, only: [:show, :index]
@@ -71,6 +72,8 @@ class UsersController < ApplicationController
 			if (@user == nil && params[:id] != "0")
 				render "/pages/error-404"
 				return
+			else 
+				@user = current_user
 			end
 		else
 			@user = current_user

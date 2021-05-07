@@ -9,22 +9,21 @@ class History < ApplicationRecord
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 		waiting = Array["&emsp;", " .&ensp;", " ..&nbsp;", " ..."]
 		frame = 0
-		time_left = self.timeout
+		time_left = self.timeout != -1 ? self.timeout : 30
 		while time_left != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
 			time = Time.now
-			puts "time left : #{time_left}"
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
 				score: "Waiting for opponent#{waiting[frame % 4]}", frame: frame})
-			while Time.now.to_f <= time.to_f + 1
-				sleep 1.0/200.0
-			end
+			sleep 1
+			puts frame
+			puts redis.get("game_#{self.id}")
 			if time_left != -1
 				time_left -= 1
 			end
 			frame += 1
 		end
 		if time_left == 0
-			if self.duel
+			if self.duel || self.timeout == -1
 				self.update(statut: -1)
 			else
 				self.update(opponent: self.host.guild.enemy_guild().admin,
@@ -293,5 +292,20 @@ class History < ApplicationRecord
 		t_loser.elo -= elo.to_i
 		t_loser.save!
 		return elo
+	end
+
+	def self.clean_list(id, user)
+		if user != nil
+			redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
+			user.hosted_games.all.each do |game|
+				if (!game.opponent && game.id != id.to_i) ||
+						game.statut == -1 || (game.host == game.opponent)
+					ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
+					redis.set("game_#{game.id}", "deleted")
+					redis.del("game_#{game.id}")
+					game.destroy
+				end
+			end
+		end
 	end
 end
