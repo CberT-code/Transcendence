@@ -5,7 +5,7 @@ class Guild < ApplicationRecord
 
 	def notifyWarTimeStart(text = "Winter is coming")
 		self.users.each do |user|
-			ActionCable.server.broadcast("presence_#{user.id}", {info: text, type: "warTimeNotif", color: "green" })
+			ActionCable.server.broadcast("presence_#{user.id}", {info: text, type: "warTimeNotif", color: "green", war_id: self.war_id})
 		end
 	end
 
