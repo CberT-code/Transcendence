@@ -92,31 +92,39 @@ class UsersController < ApplicationController
 	def update
 		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @admin == 1 )
-			if (params.has_key?(:checked) && (params[:checked] == "true" || params[:checked] == "false"))
-				User.find_by_id(@user.id).update({available: params[:checked]});
-				render html: "success";
-			elsif (params.has_key?(:username))
-				if (!safestr(params[:username]))
-					render html: "special-characters"
-				elsif (params[:username] == "")
-					render html: "error-incomplete";
-				elsif (params[:username].length > 20)
-					render html: "error-size";
-				elsif (!User.find_by_nickname(params[:username]))
-					@user.update({nickname: params[:username]});
+		if (@user)
+			if (@current == 1 || @admin == 1)
+				if (params.has_key?(:checked) && (params[:checked] == "true" || params[:checked] == "false"))
+					User.find_by_id(@user.id).update({available: params[:checked]});
 					render html: "success";
-				else
-					render html: "error-username_exist";
+					return 
+				elsif (params.has_key?(:username))
+					if (!safestr(params[:username]))
+						render html: "special-characters"
+						return
+					elsif (params[:username] == "")
+						render html: "error-incomplete"
+						return
+					elsif (params[:username].length > 20)
+						render html: "error-size"
+						return
+					elsif (!User.find_by_nickname(params[:username]))
+						@user.update({nickname: params[:username]});
+						render html: "success"
+						return
+					else
+						render html: "error-username_exist"
+						return
+					end
 				end
+			else
+				render html: "error-forbidden";
 			end
-		else
-			render html: "error-forbidden";
 		end
 	end
 
 	def destroy
-		@user = User.where({id: params[:id]}).select("nickname", "image", "email", "deleted", "id").first
+		@user = User.where({id: params[:id]}).select("nickname", "image", "email", "deleted", "id", "guild_id").first
 		if (@user)
 			@current = current_user.id == @user.id ? 1 : 0;
 			if (@current == 1 || @admin == 1)
