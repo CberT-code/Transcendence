@@ -77,6 +77,7 @@ function handleData(data) {
 					}
 				);
 			})
+			interval_kill_notif = setInterval(kill_notif, 20000);
 		}
 	}
 }
