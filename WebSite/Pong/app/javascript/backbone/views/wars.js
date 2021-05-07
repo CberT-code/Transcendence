@@ -201,8 +201,6 @@ ViewWars = Backbone.View.extend(
 		var tournament_id = $('#war_data').data('tournamentid');
 		var timeout = $('#war_data').data('timeout');
 		var war_id = $('#war_data').data('id');
-		console.log("tournament " + tournament_id);
-		console.log("timeout : " + timeout);
 		$.post(
 			'/histories/start_game',
 			{
