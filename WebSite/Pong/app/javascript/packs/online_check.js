@@ -5,9 +5,11 @@ var interval_kill_notif;
 var interval_id_check = setInterval(check_id, 1000);
 var online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
 	connected() {
+		console.log("Connectetd " + id);
 	},
 
 	  disconnected() {
+		console.log("DISConnectetd " + id);
 	},
 
 	received(data) {
@@ -31,7 +33,9 @@ function handleData(data) {
 	else {
 		$('#notif_banner').html('');
 		$('#notif_banner').html(data.info);
-		$('#notif_banner').toggle();
+		$('#notif_banner').css({'display' : 'block'});
+		console.log("show banner");
+		console.log(data);
 		$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center', 'font-weight' : '1000', 'font-size' : '25px'});
 		if (data.type == "duel") {
 			console.log(data.info);
@@ -48,7 +52,7 @@ function handleData(data) {
 			$('#notif_banner').click(function(){
 				$('#notif_banner').off('click');
 				$('#notif_banner').html('');
-				window.location.href = '/#show_war/' + data.id;
+				window.location.href = '/#show_war/' + data.war_id;
 			});
 			interval_kill_notif = setInterval(kill_notif, 15000);
 		}
@@ -87,9 +91,11 @@ function check_id() {
 		id = $('#player_data_general').data('id');
 		online_check = consumer.subscriptions.create({ channel: "PresenceChannel", room: id}, {
 			connected() {
+				console.log("Connectetd " + id);
 			},
 		
 			disconnected() {
+				console.log("DISConnectetd " + id);
 			},
 		
 			received(data) {
@@ -105,5 +111,7 @@ function check_id() {
 function kill_notif() {
 	$('#notif_banner').off('click');
 	$('#notif_banner').html('');
+	$('#notif_banner').css({'display' : 'none'});
+	console.log("kill banner");
 	clearInterval(interval_kill_notif);
 }

@@ -64,6 +64,9 @@ class War < ApplicationRecord
 	def self.startwartime
 		warsstatus2 = War.where(['status = ?', 2])
 		warsstatus2.each do |war|
+			puts "Notifying guild members for war #{war.id}"
+			war.guild1.notifyWarTimeStart("WarTime has started, be ready !")
+			war.guild2.notifyWarTimeStart("WarTime has started, be ready !")
 			war.update({wartime: true})
 		end
 	end
