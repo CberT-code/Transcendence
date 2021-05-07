@@ -41,6 +41,8 @@ class MatchmakingController < ApplicationController
 			render json: {status: "error", info: "Invalid war_id"}
 		elsif war_match && War.isAvailable(war_id) == false
 			render json: {status: "error", info: "You cannot start a war match at the moment"}
+		elsif war_match && War.isWarrior(@me)
+			render json: {status: "error", info: "You are not part of a war team"}
 		else
 			tr = Tournament.find_by_id(tournament_id)
 			oppo = User.find_by_id(opponent_id)
@@ -67,7 +69,7 @@ class MatchmakingController < ApplicationController
 		list.each do |game|
 			if !game.opponent && game.host != @me
 				if game.war
-					if game.war.ongoingMatch1
+					if game.war.ongoingMatch1 && @me.guild != game.host.guild
 						game.war.update(ongoingMatch2: true)
 					else
 						return false
@@ -90,7 +92,7 @@ class MatchmakingController < ApplicationController
 				render json: {status: "error", info: "You cannot start a war match at the moment (send from matchmaking#create)"}
 				return 
 			end
-			timeout = war.timeout
+			timeout = 20
 		else
 			timeout = -1
 		end
