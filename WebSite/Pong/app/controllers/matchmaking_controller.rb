@@ -42,7 +42,7 @@ class MatchmakingController < ApplicationController
 			render json: {status: "error", info: "Invalid war_id"}
 		elsif war_match && War.isAvailable(war_id) == false
 			render json: {status: "error", info: "You cannot start a war match at the moment"}
-		elsif war_match && War.isWarrior(@me)
+		elsif war_match && !War.isWarrior(@me)
 			render json: {status: "error", info: "You are not part of a war team"}
 		else
 			tr = Tournament.find_by_id(tournament_id)

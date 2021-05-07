@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 	before_action do
 		@me = current_user
 		@redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
+		@redis.set("player_#{@me.id}", "online")
 	end
 	protect_from_forgery with: :exception
 

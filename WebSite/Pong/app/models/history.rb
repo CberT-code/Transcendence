@@ -175,7 +175,7 @@ class History < ApplicationRecord
 	def reset(player, ball, score, speed)
 		ball[0] = 49.1
 		ball[1] = 49.3
-		ball[2] += rand(-30..30).to_f / 100
+		ball[2] = rand(-50..50).to_f / 100
 		ball[2] = ball[2] + Math::PI * rand(0..1)
 		ball[3] = speed
 		player[0] = 37
@@ -262,7 +262,7 @@ class History < ApplicationRecord
 	def rankedGame(winner, loser)
 		if winner.guild
 			winner.guild.points += 10
-			if winner.guild.war && winner.guild.war.allow_ext
+			if winner.guild.war && War.isWarrior(winner)
 				if winner.guild.war.guild1 == winner.guild
 					winner.guild.war.points_guild1 += 1
 				else

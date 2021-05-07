@@ -35,7 +35,6 @@ function handleData(data) {
 		$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center', 'font-weight' : '1000', 'font-size' : '25px'});
 		if (data.type == "duel") {
 			console.log(data.info);
-			$('#notif_banner').toggle();
 			$('#notif_banner').off('click');
 			$('#notif_banner').click(function(){
 				$('#notif_banner').html('');
@@ -46,7 +45,6 @@ function handleData(data) {
 		}
 		else if (data.type == "warTimeNotif") {
 			$('#notif_banner').off('click');
-			$('#notif_banner').toggle();
 			$('#notif_banner').click(function(){
 				$('#notif_banner').off('click');
 				$('#notif_banner').html('');
@@ -55,7 +53,6 @@ function handleData(data) {
 			interval_kill_notif = setInterval(kill_notif, 15000);
 		}
 		else if (data.type == "warMatchRequest") {
-			$('#notif_banner').toggle();
 			$('#notif_banner').off('click');
 			$('#notif_banner').click(function(){
 				$('#notif_banner').html('');
@@ -108,5 +105,6 @@ function check_id() {
 function kill_notif() {
 	$('#notif_banner').off('click');
 	$('#notif_banner').html('');
+	$('#notif_banner').toggle();
 	clearInterval(interval_kill_notif);
 }
