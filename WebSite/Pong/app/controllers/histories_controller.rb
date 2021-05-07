@@ -10,7 +10,7 @@ class HistoriesController < ApplicationController
 	end
 	
 	def index
-		clean_list(-1)
+		History.clean_list(-1, current_user)
 		@me = current_user
 		
 		hosted = @me.hosted_games.all
@@ -23,7 +23,7 @@ class HistoriesController < ApplicationController
 
 	def show
 		id = params.fetch(:id, -1)
-		clean_list(id)
+		History.clean_list(id, current_user)
 		@game = History.find_by_id(id)
 		if !@game || @game.statut == -1
 			render "/pages/error-404"
@@ -87,18 +87,6 @@ class HistoriesController < ApplicationController
 			@redis.set("game_#{game.id}", "ready")
 			game.run()
 			render json: {status: "ok", info: "Had fun alone?"}
-		end
-	end
-
-	def clean_list(id)
-		History.all.each do |game|
-			if (!game.opponent && game.host == current_user && game.id != id.to_i) ||
-					game.statut == -1 || (game.host == game.opponent && game.host == current_user)
-				ActionCable.server.broadcast("pong_#{game.id}", {status: "deleted"})
-				@redis.set("game_#{game.id}", "deleted")
-				@redis.del("game_#{game.id}")
-				game.destroy
-			end
 		end
 	end
 end

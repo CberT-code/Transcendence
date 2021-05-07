@@ -4,6 +4,7 @@ class TournamentsController < ApplicationController
 			if @me.locked
 				render "/pages/otp"
 			end
+			History.clean_list(-1, current_user)
 		end
 	end
 
