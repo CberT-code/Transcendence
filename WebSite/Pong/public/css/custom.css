@@ -405,6 +405,7 @@ button:hover {
 	overflow: hidden;
 	border-radius: 9px;
 	background-color: #ccc;
+	margin-bottom: 15px;
 	color: #231f20;
 }
 #content-user #corp #element #container #friend #status {
