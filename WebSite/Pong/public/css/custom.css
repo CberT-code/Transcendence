@@ -403,7 +403,7 @@ button:hover {
 	margin-left: auto;
 	margin-right: auto;
 	overflow: hidden;
-	border-radius: 9px;
+	border-radius: 3px;
 	background-color: #ccc;
 	margin-bottom: 15px;
 	color: #231f20;
@@ -438,9 +438,17 @@ button:hover {
 	width: 100%;
 	overflow: hidden;
 }
+#content-user #corp #element #container #friend #action #buttons {
+	display: flex;
+	overflow: hidden;
+	height: min-content;
+	width: 100%;
+}
 #content-user #corp #element #container #friend #action form {
 	margin: 0px;
 	padding: 0px;
+	height: min-content;
+	width: 100%;
 	overflow: hidden;
 }
 #content-user #corp #element #container .border-radius {
@@ -460,7 +468,7 @@ button:hover {
 }
 #content-user #corp #element #container #friend #action button {
 	height: 100%;
-	width: 100%;
+	width: 50%;
 	overflow: hidden;
 	margin: 0px;
 	transition-duration: 0.5s;
