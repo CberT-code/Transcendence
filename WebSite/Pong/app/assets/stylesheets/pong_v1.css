@@ -62,7 +62,7 @@
     height: 25%;
     top: 37.5%;
     position: absolute;
-    background-color: white;
+    background-color: blue;
     z-index: 3;
 }
 
@@ -71,6 +71,7 @@
 }
 
 #content-game_show #right_player{
+    background-color: red;
     left: 98%;
 }
 
@@ -100,7 +101,6 @@
     width: 70%;
     margin: auto;
     border-radius: 100%;
-    background-color:  white;
     background-size: 100% 100%;
 }
 
