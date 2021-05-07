@@ -4,7 +4,7 @@
 		<div class="types">
 		<%= form_for :tournaments do |f| %>
 			<%= f.select :end, options_for_select(@tournament.map{
-				|u| [u.name, u.id] if TournamentUser.where(["tournament_id = ? and user_id = ?", u.id, current_user.id]).count > 0 }.reject(&:nil?), :selected => 1) %>
+				|u| [u.name, u.id] if TournamentUser.where({tournament_id: u.id, user_id: current_user.id }).count > 0 }.reject(&:nil?), :selected => 1) %>
 			<% end %>
 		</div>
 		<div id="buttons">
