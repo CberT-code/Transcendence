@@ -68,8 +68,8 @@ function handleData(data) {
 						if (game.status == "error")
 							notification("error", game.info);
 						else {
-							notification("success", "Starting game #" + data.id);
-							window.location.href = "#show_game/" + data.id.toString();
+							notification("success", "Starting game #" + game.id);
+							window.location.href = "#show_game/" + game.id;
 						}
 					}
 				);
