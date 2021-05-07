@@ -36,6 +36,7 @@ class History < ApplicationRecord
 	end
 
 	def run
+		puts "game is running"
 		frame = 0
 		move = Array["static", "static"]
 		player = Array[37, 37]
@@ -192,7 +193,11 @@ class History < ApplicationRecord
 		end
 		if (oppo != nil && oppo != "offline")
 			redis.set("player_#{self.opponent_id}", "online")
-		end
+		end 
+		puts self.opponent_id
+		puts oppo
+		puts "Players status after redis update : --#{redis.get("player_#{self.host_id}")} --"
+		puts "Players status after redis update : -- #{redis.get("player_#{self.opponent_id}")}--"
 		redis.del("game_#{self.id}")
 		elo = 0
 		if self.statut == 3

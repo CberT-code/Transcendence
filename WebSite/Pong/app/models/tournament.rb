@@ -11,7 +11,7 @@ class Tournament < ApplicationRecord
 	end
 
 	def available
-		if !self.end || !self.start || (self.start < Time.now && Time.now < self.end)
+		if self.status == 1
 			return true
 		end
 		return false
@@ -34,18 +34,17 @@ class Tournament < ApplicationRecord
 	end
 
 	def self.statustournament
-		# tournamentsend = Tournament.where(["status = ? AND CAST(\"end\" AS DATE) = ? ", 1, DateTime.now.to_date])
-		tournamentsend = Tournament.where(["status = ?", 1])
+		tournamentsend = Tournament.where({status: 1}).where.not({end: nil})
 		tournamentsend.each do |tournament|
 			time = Time.now - tournament.end
-			if (time > 0)
-				# t_user = TournamentUser.where(["MAX(elo) AND tournament_id = ? ", tournament.id]).first
+			if (time >= 0)
 				t_user = TournamentUser.where(["tournament_id = ?", tournament.id]).sort_by { |u| [u.elo]}.reverse.first
-				stat = Stat.find_by_id(t_user.user.stat_id)
-				stat.update({tournament: stat.tournament + 1})
-				stat.save
-				tournament.update({status: 2})
-				# tournament.delete
+				if (t_user)
+					stat = Stat.find_by_id(t_user.user.stat_id)
+					stat.update({tournament: stat.tournament + 1})
+					stat.save
+				end
+					tournament.update({status: 2})
 			end
 		end
 		@tournamentsstart = Tournament.where(["status = ? AND CAST(\"start\" AS DATE) = ? ", 0, DateTime.now.to_date])

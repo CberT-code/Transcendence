@@ -42,6 +42,8 @@ class User < ApplicationRecord
 							port: ENV['REDIS_PORT'],
 							db:   ENV['REDIS_DB'])
 		status = redis.get("player_#{self.id}")
+		puts "Un joli truc avant"
+		puts status
 		if (status == "static" || status == "up" || status == "down")
 			return "in_game"
 		elsif status != nil

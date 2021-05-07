@@ -4,15 +4,17 @@
 			<h1>Users list</h1>
 		</div>
 		<div id="list">
+		<% i = 1 %>
 			<% @Users.each do |user| %>
 				<div id="user">
 					<div id="id">
-						<p># <%= user.id %></p>
+						<p># <%= i %></p>
 					</div>
 					<div id="username">
 						<p><%= user.nickname %></p>
 					</div>
 					<button onClick="window.location='/#show_user/<%= user.id %>'">See</button>
+						<%i += 1 %>
 				</div>
 			<% end %>
 		</div>	

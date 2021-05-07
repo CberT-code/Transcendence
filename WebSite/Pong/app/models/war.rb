@@ -83,20 +83,15 @@ class War < ApplicationRecord
 		return true
 	end
 
-	def self.isWarrior(uid)
-		user = User.find_by_id(uid)
-		if (!user || !user.guild || !user.guild.war)
+	def self.isWarrior(user)
+		if !user.guild || !user.guild.war
 			return false
 		end
-		user.guild.war.team1.each do |id|
-			if id == uid
-				return true
-			end
+		if user.guild.war.team1.include?user.id
+			return true
 		end
-		user.guild.war.team2.each do |id|
-			if id == uid
-				return true
-			end
+		if user.guild.war.team2.include?user.id
+			return true
 		end
 		return false
 	end
