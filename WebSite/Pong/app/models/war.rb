@@ -83,6 +83,24 @@ class War < ApplicationRecord
 		return true
 	end
 
+	def self.isWarrior(uid)
+		user = User.find_by_id(uid)
+		if (!user || !user.guild || !user.guild.war)
+			return false
+		end
+		user.guild.war.team1.each do |id|
+			if id == uid
+				return true
+			end
+		end
+		user.guild.war.team2.each do |id|
+			if id == uid
+				return true
+			end
+		end
+		return false
+	end
+
 	def self.canDuel(host, opponent)
 		if !opponent || !host
 			return false
@@ -91,6 +109,7 @@ class War < ApplicationRecord
 				host.guild.war == opponent.guild.war &&
 				host.guild.war.start < Time.now &&
 				Time.now < host.guild.war.end && 
+				host.war.statut == 2 && 
 				(host.guild.war.team1.include?(host.id) ||
 					host.guild.war.team2.include?(host.id)) &&
 				(opponent.guild.war.team1.include?(opponent.id) ||

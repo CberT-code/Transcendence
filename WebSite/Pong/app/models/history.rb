@@ -116,11 +116,11 @@ class History < ApplicationRecord
 		tpi = 2 * pi
 		if ball[0] <= 2
 			dheight = ball[1] - player[0]
-			if dheight <= 24.1 && dheight >= -0.9
+			if dheight <= 24.5 && dheight >= -1.4
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = ball[0] * -1 + 2
-				ball[2] += (dheight - 11.6) / (300)
+				ball[2] += (dheight - 11) / (300)
 				if move[0] == "up" && player[0] > 0
 					ball[2] += 0.2
 				elsif move[0] == "down" && player[0] < 75
@@ -133,7 +133,7 @@ class History < ApplicationRecord
 			end
 		elsif ball[0] >= 96.6
 			dheight = ball[1] - player[1]
-			if dheight <= 24.1 && dheight >= -0.9
+			if dheight <= 24.5 && dheight >= -1.4
 				ball[2] = (pi - ball[2] + tpi) % tpi
 				ball[3] *= 1.02
 				ball[0] = 193.2 - ball[0]
@@ -156,6 +156,19 @@ class History < ApplicationRecord
 		end
 		if ball[3] > 80
 			ball[3] = 80
+		end
+		maxAngle(ball)
+	end
+
+	def maxAngle(ball)
+		if ball[2] > (Math::PI / 2) - 0.15 && ball[2] < Math::PI / 2
+			ball[2] = Math::PI / 2 - 0.15
+		elsif ball[2] < (Math::PI / 2) + 0.15 && ball[2] >= Math::PI / 2
+			ball[2] = Math::PI / 2 + 0.15
+		elsif ball[2] > (3 * Math::PI / 2) - 0.15 && ball[2] < (3 * Math::PI / 2)
+			ball[2] = (3 * Math::PI / 2) - 0.15
+		elsif ball[2] < Math::PI + 0.15 && ball[2] >= (3 * Math::PI / 2)
+			ball[2] = (3 * Math::PI / 2) + 0.15
 		end
 	end
 	
@@ -204,8 +217,7 @@ class History < ApplicationRecord
 			loser = self.host
 		end
 		if self.war
-			self.war.update(ongoingMatch1: false)
-			self.war.update(ongoingMatch2: false)
+			self.war.update(ongoingMatch1: false, ongoingMatch2: false)
 		end
 		ActionCable.server.broadcast("pong_#{self.id}", {status: "ended",
 			elo: elo.to_i, winner: winner.id,
