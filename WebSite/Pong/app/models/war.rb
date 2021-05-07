@@ -109,7 +109,7 @@ class War < ApplicationRecord
 				host.guild.war == opponent.guild.war &&
 				host.guild.war.start < Time.now &&
 				Time.now < host.guild.war.end && 
-				host.war.statut == 2 && 
+				host.guild.war.status == 2 && 
 				(host.guild.war.team1.include?(host.id) ||
 					host.guild.war.team2.include?(host.id)) &&
 				(opponent.guild.war.team1.include?(opponent.id) ||

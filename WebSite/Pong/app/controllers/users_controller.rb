@@ -72,7 +72,7 @@ class UsersController < ApplicationController
 			if (@user == nil && params[:id] != "0")
 				render "/pages/error-404"
 				return
-			else 
+			elsif @user == nil
 				@user = current_user
 			end
 		else
