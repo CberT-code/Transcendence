@@ -217,7 +217,7 @@ ViewWars = Backbone.View.extend(
 				if (data.status == "error")
 					notification("error", data.info + " - " + tournament_id);
 				else {
-					notification("succes", "Starting game #" + data.id);
+					notification("success", "Starting game #" + data.id);
 					window.location.href = "#show_game/" + data.id.toString();
 				}
 			}
