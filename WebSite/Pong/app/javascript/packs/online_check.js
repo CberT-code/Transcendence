@@ -34,6 +34,8 @@ function handleData(data) {
 		$('#notif_banner').toggle();
 		$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center', 'font-weight' : '1000', 'font-size' : '25px'});
 		if (data.type == "duel") {
+			console.log(data.info);
+			$('#notif_banner').toggle();
 			$('#notif_banner').off('click');
 			$('#notif_banner').click(function(){
 				$('#notif_banner').html('');
