@@ -465,6 +465,9 @@ button:hover {
 	overflow-x: hidden;
 	scrollbar-width: none;
 }
+#content-user #corp #container-history #history::-webkit-scrollbar {
+    display: none;
+}
 #content-user #corp #container-history #history #game {
 	width: 75%;
 	overflow: hidden;
@@ -3289,4 +3292,57 @@ background-color: #7BE12B;
 }
 #content-war .big-element #corp::-webkit-scrollbar {
     display: none;
+}
+#content-login {
+	min-height: 100%;
+	width: max-content;
+	overflow: hidden;
+	margin: auto;
+	text-align: center;
+}
+#content-login #title {
+	height: 85px;
+	width: 100%;
+	overflow: hidden;
+	display: flex;
+}
+#content-login #title h1 {
+	font-size: 135%;
+    margin: auto;
+    color: #231f20;
+    font-family: "Roboto-BoldItalic";
+    border-bottom: solid 2px #231f20;
+    padding-bottom: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+    text-transform: uppercase;
+}
+#content-login a {
+	height: max-content;
+	width: max-content;
+	overflow: hidden;
+	margin: auto;
+	padding: 0px;
+	text-decoration: none;
+	color: white;
+}
+#content-login button {
+	overflow: hidden;
+	border: none;
+	text-decoration: none;
+	text-transform: uppercase;
+	color: white;
+	background-color: #231f20;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	padding-left: 42px;
+	padding-right: 42px;
+	height: min-content;
+	width: max-content;
+	cursor: pointer;
+	margin: auto;
+	outline: none;
+	border-radius: 9px;
+	font-family: "Roboto-Medium";
+	font-size: 105%;
 }

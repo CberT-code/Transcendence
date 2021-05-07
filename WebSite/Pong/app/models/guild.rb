@@ -13,7 +13,7 @@ class Guild < ApplicationRecord
 		self.users.each do |user|
 			ActionCable.server.broadcast("presence_#{user.id}", {info: "We have been challenged! Click to accept",
 				war_id: self.war_id,
-				tournament_id: self.tournament_id,
+				tournament_id: self.war.tournament_id,
 				type: "warMatchRequest", color: "red" })
 		end
 	end

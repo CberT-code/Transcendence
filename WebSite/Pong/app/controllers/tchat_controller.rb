@@ -324,7 +324,7 @@ class TchatController < ApplicationController
 			render html: "1"
 			return
 		end
-		render html: "errror-forbidden", :status => :unauthorized
+		render html: "error-forbidden", :status => :unauthorized
 		return
 	end
 	def removeSanction
@@ -354,7 +354,7 @@ class TchatController < ApplicationController
 			@messages.each do |element|
 				@tmp = User.find_by_id(element.user_id)
 				if (Sanctions.where({user_id: @user_id,target_id: @target_id,sanction_type: 3}).count == 0)
-					@ret.push({"id" => element.id, "author" => @tmp.nickname, "author_id" => element.user_id, "guild" => (@tmp.guild_id ? @tmp.guild.name : ""), "block" => (element.user_id != current_user.id ? 1 : 2), "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "admin" => (element.user_id == current_user.id ? 1 : 2)})
+					@ret.push({"id" => element.id, "author" => @tmp.nickname, "author_id" => element.user_id, "guild" => (@tmp.guild_id ? @tmp.guild.anagramme : ""), "block" => (element.user_id != current_user.id ? 1 : 2), "content" => element.message, "date" => element.create_time.strftime("%d/%m/%Y"), "admin" => (element.user_id == current_user.id ? 1 : 2)})
 				end
 			end
 			render json: @ret
@@ -399,8 +399,12 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@user_id = params[:user_id]
-		Sanctions.create(:sanction_type=> 3, :user_id=> current_user.id, target_id: @user_id.to_i, :create_time=> Date.today, :end_time => 999999999)
+		@user_id = params[:user_id].to_i
+		if (@user_id == current_user.id)
+			render html: "2"
+			return
+		end
+		Sanctions.create(:sanction_type=> 3, :user_id=> current_user.id, target_id: @user_id, :create_time=> Date.today, :end_time => 999999999)
 		render html: "1"
 		return
 	end

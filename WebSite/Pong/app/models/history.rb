@@ -174,10 +174,10 @@ class History < ApplicationRecord
 		redis = Redis.new(url: ENV['REDIS_URL'], port: ENV['REDIS_PORT'], db: ENV['REDIS_DB'])
 		host = redis.get("player_#{self.host_id}")
 		oppo = redis.get("player_#{self.opponent_id}")
-		if (host && host != "offline")
+		if (host != nil && host != "offline")
 			redis.set("player_#{self.host_id}", "online")
 		end
-		if (oppo && oppo != "offline")
+		if (oppo != nil && oppo != "offline")
 			redis.set("player_#{self.opponent_id}", "online")
 		end
 		redis.del("game_#{self.id}")
@@ -218,7 +218,13 @@ class History < ApplicationRecord
 			if self.opponent_score == -1
 				self.war.forfeitedGames1 -= 1
 				if self.war.forfeitedGames1 == 0
-					#end war
+					self.war.status = 3
+					winner.guild.points += self.war.points
+					loser.guild.points -= self.war.points
+					winner.guild.war_id = nil
+					loser.guild.war_id = nil
+					winner.guild.save
+					loser.guild.save
 				end
 			end
 		else
@@ -226,7 +232,13 @@ class History < ApplicationRecord
 			if self.opponent_score == -1
 				self.war.forfeitedGames2 -= 1
 				if self.war.forfeitedGames2 == 0
-					#end war
+					self.war.status = 3
+					winner.guild.points += self.war.points
+					loser.guild.points -= self.war.points
+					winner.guild.war_id = nil
+					loser.guild.war_id = nil
+					winner.guild.save
+					loser.guild.save
 				end
 			end
 		end
@@ -262,7 +274,7 @@ class History < ApplicationRecord
 		t_winner.wins += 1
 		t_winner.elo += elo.to_i
 		t_winner.save!
-		t_loser.defeats += 1
+		t_loser.losses += 1
 		t_loser.elo -= elo.to_i
 		t_loser.save!
 		return elo

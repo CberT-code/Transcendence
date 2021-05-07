@@ -87,6 +87,6 @@ Rails.application.configure do
   config.web_console.whitelisted_ips = '172.24.0.1'
 
   #Disable logging
-  config.logger = Logger.new('/dev/null')
-  config.log_level = :unknown
+#   config.logger = Logger.new('/dev/null')
+#   config.log_level = :unknown
 end

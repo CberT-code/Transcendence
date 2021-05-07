@@ -16,7 +16,7 @@ class HistoriesController < ApplicationController
 		hosted = @me.hosted_games.all
 		foreign = @me.foreign_games.all
 		@games = (hosted + foreign).sort_by { |k| k.updated_at}.reverse!
-		@spectate = History.where({statut: 2})
+		@spectate = History.where({statut: 2}).select("ranked", "tournament_id", "war_id", "host_id", "opponent_id", "id")
 		@date = DateTime.new(1902,1,1,1,1,1);
 		@tournament = Tournament.where(["(start < ?) OR ('end' > ? AND start < ?)", @date, DateTime.current, DateTime.current]);
 	end
@@ -42,6 +42,7 @@ class HistoriesController < ApplicationController
 		ret = ""
 		if (!game)
 			render json: {status: "error", info: "Invalid game_id"}
+			return
 		elsif @me == game.host
 			if !game.host_ready
 				game.update(host_ready: true)
@@ -66,6 +67,7 @@ class HistoriesController < ApplicationController
 			end
 		else
 			render json: {status: "ok", info: "You are identified as spectator"}
+			return
 		end
 		if ret == "timeout"
 			render json: {status: ret, info: "Game timed out!"}
