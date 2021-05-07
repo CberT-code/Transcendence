@@ -51,12 +51,14 @@ if (status != "ended") {
 	actionCable = consumer.subscriptions.create({ channel: "PongChannel", room: game_id}, {
 		connected() {
 			if (user_id == host_id || user_id == opponent_id) {
+				console.log('CONNECTED '+ game_id);
 				document.addEventListener('keydown', keyDown);
 				document.addEventListener('keyup', keyUp);
 			}
 		},
 
 		disconnected() {
+			console.log('DISCONNECTED '+ game_id);
 				killListeners();
 			},
 

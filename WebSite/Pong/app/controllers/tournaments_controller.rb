@@ -38,7 +38,7 @@ class TournamentsController < ApplicationController
 				render html: "error-4";
 			elsif (params[:maxpoints].to_i < 1 || params[:maxpoints].to_i > 15)
 				render html: "error-5";
-			elsif (params[:speed].to_i < 1 || params[:speed].to_i > 6)
+			elsif (params[:speed].to_i < 1 || params[:speed].to_i > 3)
 				render html: "error-6";
 			else
 				@tournament = Tournament.new;

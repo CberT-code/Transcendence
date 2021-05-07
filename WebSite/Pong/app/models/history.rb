@@ -70,7 +70,7 @@ class History < ApplicationRecord
 				frame: frame, status: status, left_y: "#{player[0]}%", right_y: "#{player[1]}%",
 				ball_x: "#{ball[0]}%", ball_y: "#{ball[1]}%",
 				score: "#{score[0]} - #{score[1]}" })
-			while Time.now.to_f <= time.to_f +	0.0417
+			while Time.now.to_f <= time.to_f +	0.02
 				sleep 1.0/500.0
 			end
 			frame += 1
