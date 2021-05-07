@@ -36,6 +36,8 @@ ViewWars = Backbone.View.extend(
 				{
 					if (data == "error-accept")
 						notification("error", "You cant decline this request...");
+					else if (data == 'error_notadmin')
+						notification("error", "Sorry you're not admin of the guild");
 					else{
 						window.location.href = "#edit_war/" + data ;
 					}
@@ -60,6 +62,8 @@ ViewWars = Backbone.View.extend(
 				{
 					if (data == "error-delete")
 						notification("error", "You cant decline this request...");
+					else if (data == 'error_notadmin')
+						notification("error", "Sorry you're not admin of the guild");
 					else{
 						Backbone.history.loadUrl();
 					}

@@ -12,6 +12,7 @@ class History < ApplicationRecord
 		time_left = self.timeout
 		while time_left != 0 && redis.get("game_#{self.id}") == "Waiting for opponent"
 			time = Time.now
+			puts "time left : #{time_left}"
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
 				score: "Waiting for opponent#{waiting[frame % 4]}", frame: frame})
 			while Time.now.to_f <= time.to_f + 1
@@ -27,7 +28,7 @@ class History < ApplicationRecord
 				self.update(statut: -1)
 			else
 				self.update(opponent: self.host.guild.enemy_guild().admin,
-					opponnent_score: -1, statut: 3)
+					opponent_score: -1, statut: 3)
 			end
 			self.endGame()
 			return "timeout"
@@ -233,6 +234,7 @@ class History < ApplicationRecord
 					self.war.status = 3
 					winner.guild.points += self.war.points
 					loser.guild.points -= self.war.points
+					loser.guild.points = loser.guild.points < 0 ? 0 : loser.guild.points
 					winner.guild.war_id = nil
 					loser.guild.war_id = nil
 					winner.guild.save
@@ -247,6 +249,7 @@ class History < ApplicationRecord
 					self.war.status = 3
 					winner.guild.points += self.war.points
 					loser.guild.points -= self.war.points
+					loser.guild.points = loser.guild.points < 0 ? 0 : loser.guild.points
 					winner.guild.war_id = nil
 					loser.guild.war_id = nil
 					winner.guild.save

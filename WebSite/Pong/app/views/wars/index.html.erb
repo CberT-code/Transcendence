@@ -8,7 +8,7 @@
 			<% end %>
 		</div>
 		<div class="break"></div>
-		<% if @wars_request.count > 0 && @guild.war_id == nil %>
+		<% if @wars_request.count > 0 && @guild.war_id == nil && @admin == 1 %>
 			<div id="big-element">
 				<div id="title">
 					<h2>War Request</h2>
