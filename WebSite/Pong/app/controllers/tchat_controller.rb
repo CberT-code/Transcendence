@@ -50,7 +50,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 		else
 			@user_id = current_user.id
-			@title = params[:title]
+			@title = CGI.escapeHTML(params[:title])
 			@type = CGI.escapeHTML(params[:type]).to_i
 			@date = Date.today
 			if (!safestr(@title))
@@ -70,7 +70,7 @@ class TchatController < ApplicationController
 		if (!params[:id])
 			render html: "error-forbidden", :status => :unauthorized
 		else
-			@id = CGI.escapeHTML(params[:id])
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			if (@datas && (@datas.user_id == @user_id || current_user.role == 1 || @datas.type_channel == 2))
@@ -85,7 +85,7 @@ class TchatController < ApplicationController
 		if (!params[:id] || !params[:key])
 			render html: "error-forbidden", :status => :unauthorized
 		else
-			@id = CGI.escapeHTML(params[:id])
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
@@ -105,10 +105,10 @@ class TchatController < ApplicationController
 		if (!params[:id] || !params[:key] || !params[:message])
 			render html: "error-fobidden", :status => :unauthorized
 		else
-			@id = CGI.escapeHTML(params[:id])
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@key = CGI.escapeHTML(params[:key])
 			@message = CGI.escapeHTML(params[:message])
-			@user_id = current_user.id.to_s
+			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
 			@date = Date.today
@@ -130,7 +130,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@channel_id = params[:channel_id]
+		@channel_id = CGI.escapeHTML(params[:channel_id]).to_i
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@channel_id)
 		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
@@ -167,7 +167,7 @@ class TchatController < ApplicationController
 			render html: "error-fobidden", :status => :unauthorized
 			return
 		end
-		@id = CGI.escapeHTML(params[:id])
+		@id = CGI.escapeHTML(params[:id]).to_i
 		@message = Messages.find_by_id(@id)
 		if (@message)
 			if (@message.user_id == current_user.id || current_user.role == 1)
@@ -184,7 +184,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		else
-			@id = CGI.escapeHTML(params[:id])
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
@@ -207,7 +207,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@channelId = CGI.escapeHTML(params[:channelId])
+		@channelId = CGI.escapeHTML(params[:channelId]).to_i
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@channelId)
 		if (@datas && (@datas.user_id == current_user.id || current_user.role == 1))
@@ -224,7 +224,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@id = params[:id]
+		@id = CGI.escapeHTML(params[:id]).to_i
 		@user_id = current_user.id
 		@datas = Channel.find_by_id(@id)
 		if (@datas)
@@ -243,9 +243,9 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@newAdmin = params[:newAdmin]
+		@newAdmin = CGI.escapeHTML(params[:newAdmin])
 		@user_id = current_user.id
-		@channel_id = params[:channel_id]
+		@channel_id = CGI.escapeHTML(params[:channel_id]).to_i
 		@datas = Channel.find_by_id(@channel_id)
 		@user_info = User.find_by_nickname(@newAdmin)
 		if (@datas && (@datas.user_id == @user_id || current_user.role == 1))
@@ -265,8 +265,8 @@ class TchatController < ApplicationController
 			render html: "error-fobidden", :status => :unauthorized
 			return
 		else
-			@id = params[:id]
-			@key = params[:key]
+			@id = CGI.escapeHTML(params[:id]).to_i
+			@key = CGI.escapeHTML(params[:key])
 			@user_id = current_user.id
 			@channel = Channel.find_by_id_and_key(@id, @key)
 			if (@channel)
@@ -293,8 +293,8 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@type = params[:type]
-		@channel_id = params[:id]
+		@type = CGI.escapeHTML(params[:type]).to_i
+		@channel_id = CGI.escapeHTML(params[:id]).to_i
 		@datas = Sanctions.where(user_id: @channel_id, sanction_type: @type).all()
 		@channel = Channel.find_by_id(@channel_id)
 		if (@datas && @channel && (@channel.user_id == current_user.id || current_user.role == 1))
@@ -314,7 +314,7 @@ class TchatController < ApplicationController
 			render html: "error-forbidden", :status => :unauthorized
 			return
 		end
-		@channel_id = CGI.escapeHTML(params[:id])
+		@channel_id = CGI.escapeHTML(params[:id]).to_i
 		@nickname = CGI.escapeHTML(params[:nickname])
 		@type = CGI.escapeHTML(params[:type]).to_i
 		@time = CGI.escapeHTML(params[:time]).to_i
@@ -334,10 +334,10 @@ class TchatController < ApplicationController
 	end
 	def removeSanction
 		if (params[:id])
-			@id = params[:id]
+			@id = CGI.escapeHTML(params[:id]).to_i
 			@sanction = Sanctions.find_by_id(@id)
 			@channel = @sanction ? Channel.find_by_id(@sanction.user_id) : -1
-			if (@channel != -1 && (current_user.id == @channel.user_id || current_user.role == 1))
+			if (@channel != -1 && @channel && (current_user.id == @channel.user_id || current_user.role == 1))
 				@sanction.destroy
 				render html: "1"
 				return
@@ -352,7 +352,7 @@ class TchatController < ApplicationController
 			return
 		end
 		@user_id = current_user.id
-		@target_id = params[:target_id]
+		@target_id = CGI.escapeHTML(params[:target_id]).to_i
 		@messages = Messages.where({user_id: current_user.id, target_id: @target_id, message_type: 2}).all.or(Messages.where({user_id: @target_id, target_id: current_user.id, message_type: 2}).all)
 		if (@messages)
 			@ret = Array.new
