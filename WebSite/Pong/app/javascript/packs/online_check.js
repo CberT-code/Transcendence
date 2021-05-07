@@ -31,7 +31,7 @@ function handleData(data) {
 	else {
 		$('#notif_banner').html('');
 		$('#notif_banner').html(data.info);
-		$('#notif_banner').toggle();
+		$('#notif_banner').toggle('slow');
 		$('#notif_banner').css({'background-color' : data.color, 'text-align' : 'center', 'font-weight' : '1000', 'font-size' : '25px'});
 		if (data.type == "duel") {
 			console.log(data.info);
@@ -105,6 +105,6 @@ function check_id() {
 function kill_notif() {
 	$('#notif_banner').off('click');
 	$('#notif_banner').html('');
-	$('#notif_banner').toggle();
+	$('#notif_banner').toggle('slow');
 	clearInterval(interval_kill_notif);
 }
