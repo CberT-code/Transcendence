@@ -27,7 +27,7 @@ class History < ApplicationRecord
 				self.update(statut: -1)
 			else
 				self.update(opponent: self.host.guild.enemy_guild().admin,
-					opponnent_score: -1, statut: 3)
+					opponent_score: -1, statut: 3)
 			end
 			self.endGame()
 			return "timeout"
