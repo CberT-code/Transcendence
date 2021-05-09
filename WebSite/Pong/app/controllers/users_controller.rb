@@ -95,89 +95,105 @@ class UsersController < ApplicationController
 	def update
 		@user = User.find_by_id(params[:id])
 		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @admin == 1 )
-			if (params.has_key?(:checked) && (params[:checked] == "true" || params[:checked] == "false"))
-				User.find_by_id(@user.id).update({available: params[:checked]});
-				render html: "success";
-			elsif (params.has_key?(:username))
-				if (!safestr(params[:username]))
-					render html: "special-characters"
-				elsif (params[:username] == "")
-					render html: "error-incomplete";
-				elsif (params[:username].length > 20)
-					render html: "error-size";
-				elsif (!User.find_by_nickname(params[:username]))
-					@user.update({nickname: params[:username]});
+		if (@user)
+			if (@current == 1 || @admin == 1)
+				if (params.has_key?(:checked) && (params[:checked] == "true" || params[:checked] == "false"))
+					User.find_by_id(@user.id).update({available: params[:checked]});
 					render html: "success";
-				else
-					render html: "error-username_exist";
+					return 
+				elsif (params.has_key?(:username))
+					if (!safestr(params[:username]))
+						render html: "special-characters"
+						return
+					elsif (params[:username] == "")
+						render html: "error-incomplete"
+						return
+					elsif (params[:username].length > 20)
+						render html: "error-size"
+						return
+					elsif (!User.find_by_nickname(params[:username]))
+						@user.update({nickname: params[:username]});
+						render html: "success"
+						return
+					else
+						render html: "error-username_exist"
+						return
+					end
 				end
+			else
+				render html: "error-forbidden";
 			end
-		else
-			render html: "error-forbidden";
 		end
 	end
 
 	def destroy
-		@user = User.find_by_id(params[:id])
-		@current = current_user.id == @user.id ? 1 : 0;
-		if (@current == 1 || @admin == 1)
-			if (@user.guild_id)
-				render html: "error-inguild";
-			else
-				@nb = User.where(["email LIKE '%%@unknown.fr' "]).count
-				@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
-				@user.save
-				if (@current == 1)
-					sign_out current_user
+		@user = User.where({id: params[:id]}).select("nickname", "image", "email", "deleted", "id", "guild_id").first
+		if (@user)
+			@current = current_user.id == @user.id ? 1 : 0;
+			if (@current == 1 || @admin == 1)
+				if (@user.guild_id)
+					render html: "error-inguild";
+				else
+					@nb = User.where(["email LIKE '%%@unknown.fr' "]).count
+					@user.update({nickname: "unknown", image: nil, email: @nb.to_s + "@unknown.fr", deleted: true})
+					@user.save
+					if (@current == 1)
+						sign_out current_user
+					end
 				end
+			else
+				render html: "error-forbidden";
 			end
-		else
-			render html: "error-forbidden";
 		end
 	end
 
 	def addfriend
-		@user = User.find_by_id(params[:id]);
-		if (!(@me.friends.include?@user.id) && @user.id != current_user.id)
-			@me.friends.push(@user.id)
-			@me.save
-			render html: 1;
-		else
-			render html: 2;
+		@user = User.where({id: params[:id]}).select("id").first;
+		if (@user)
+			if (!(@me.friends.include?@user.id) && @user.id != current_user.id)
+				@me.friends.push(@user.id)
+				@me.save
+				render html: 1;
+			else
+				render html: 2;
+			end
 		end
 	end
 
 	def delfriend
-		@user = User.find_by_id(params[:id]);
-		if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
-			@me.friends.delete(@user.id)
-			@me.save
-			render html: 1;
-		else
-			render html: 2;
+		@user = User.where({id: params[:id]}).select("id").first;
+		if (@user)
+			if ((@me.friends.include?@user.id) && (@user.id != current_user.id))
+				@me.friends.delete(@user.id)
+				@me.save
+				render html: 1;
+			else
+				render html: 2;
+			end
 		end
 	end
 	def ban
-		@user = User.find_by_id(params[:id]);
-		if (@user.guild_id)
-			render html: "error-inguild";
-		else
-			if (@me.role == 1)
-				if (@user.banned == true)
-					render html: "error-banned"
-				else
-					@user.update({banned: true})
-					render html: "success"
-				end
+		@user = User.where({id: params[:id]}).select("guild_id", "banned").first;
+		if (@user)
+			if (@user.guild_id)
+				render html: "error-inguild";
 			else
-				render html: "error_admin"
+				if (@me.role == 1)
+					if (@user.banned == true)
+						render html: "error-banned"
+					else
+						@user.update({banned: true})
+						render html: "success"
+					end
+				else
+					render html: "error_admin"
+				end
 			end
 		end
 	end
 	def unban
-		@user = User.find_by_id(params[:id]);
-		if (@me.role == 1)
+		@user = User.where({id: params[:id]}).select("banned").first;
+		if (@me.role == 1 && @user)
 			if (@user.banned == false)
 				render html: "error-unbanned"
 			else

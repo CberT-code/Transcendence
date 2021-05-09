@@ -124,14 +124,19 @@
 									</div>
 									<div id="action">
 										<% if friend.isOnline() == "in_game" %>
-										<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
+										<div id="button">
+											<button id="watch_game_user" class="back-green" value="<%= friend.findLiveGame() %>">Live</button>
+											<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
+										</div>
 										<% else %>
 										<%= form_for :tournaments do |f| %>
 											<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
 										<% end %>
-										<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
+										<div id="buttons">
+											<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
+											<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
+										</div>
 										<% end %>
-										<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
 									</div>
 								</div>
 							<% end %>
