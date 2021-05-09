@@ -84,9 +84,9 @@ Rails.application.configure do
   ActionCable.server.config.logger = Logger.new(nil)
   
   # Enable console 
-  config.web_console.whitelisted_ips = '172.24.0.1'
+#   config.web_console.whitelisted_ips = '172.24.0.1'
 
   #Disable logging
-#   config.logger = Logger.new('/dev/null')
-#   config.log_level = :unknown
+  config.logger = Logger.new('/dev/null')
+  config.log_level = :unknown
 end

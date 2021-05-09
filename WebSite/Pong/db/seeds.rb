@@ -69,7 +69,7 @@ user_list = [ 			# [ UID, name, guild, role ]
 
 @date = DateTime.new(1902,1,1,1,1,1);
 trnmt_list = [
-	["Ping Pong", "11 points to win", 11, 3.0, @date, nil],
+	["Ping Pong", "11 points to win", 11, 1.0, @date, nil],
 ]
   
 trnmt_list.each do |name, desc, pts, speed, start, endd|

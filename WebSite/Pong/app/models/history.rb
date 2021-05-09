@@ -15,8 +15,6 @@ class History < ApplicationRecord
 			ActionCable.server.broadcast("pong_#{self.id}", {status: "waiting",
 				score: "Waiting for opponent#{waiting[frame % 4]}", frame: frame})
 			sleep 1
-			puts frame
-			puts redis.get("game_#{self.id}")
 			if time_left != -1
 				time_left -= 1
 			end
@@ -36,7 +34,6 @@ class History < ApplicationRecord
 	end
 
 	def run
-		puts "game is running"
 		frame = 0
 		move = Array["static", "static"]
 		player = Array[37, 37]
@@ -194,10 +191,6 @@ class History < ApplicationRecord
 		if (oppo != nil && oppo != "offline")
 			redis.set("player_#{self.opponent_id}", "online")
 		end 
-		puts self.opponent_id
-		puts oppo
-		puts "Players status after redis update : --#{redis.get("player_#{self.host_id}")} --"
-		puts "Players status after redis update : -- #{redis.get("player_#{self.opponent_id}")}--"
 		redis.del("game_#{self.id}")
 		elo = 0
 		if self.statut == 3
