@@ -47,6 +47,10 @@ class TchatController < ApplicationController
 			@title = CGI.escapeHTML(params[:title])
 			@type = CGI.escapeHTML(params[:type]).to_i
 			@date = Date.today
+			if (@title.length == 0 || @title.length > 45)
+				render html: "error-forbidden", :status => :unauthorized
+				return
+			end
 			if (!safestr(@title))
 				render html: "3"
 				return
@@ -106,6 +110,10 @@ class TchatController < ApplicationController
 			@id = CGI.escapeHTML(params[:id]).to_i
 			@key = CGI.escapeHTML(params[:key])
 			@message = CGI.escapeHTML(params[:message])
+			if (@message.length == 0 || @message.length > 90)
+				render html: "error-forbidden", :status => :unauthorized
+				return
+			end
 			@user_id = current_user.id
 			@datas = Channel.find_by_id(@id)
 			@sanction = Sanctions.find_by_user_id_and_target_id(@datas.id, @user_id)
@@ -372,6 +380,10 @@ class TchatController < ApplicationController
 		end
 		@target_id = CGI.escapeHTML(params[:target_id])
 		@message = CGI.escapeHTML(params[:message])
+		if (@message.length == 0 || @message.length > 90)
+			render html: "error-forbidden", :status => :unauthorized
+			return
+		end
 		@date = Date.today
 		Messages.create(:user_id=> current_user.id, :create_time=> @date, :message=> @message, :target_id=> @target_id, :message_type=> 2)
 		render html: "1"
