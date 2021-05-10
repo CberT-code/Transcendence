@@ -1,6 +1,5 @@
 var otp = $('#content-user #player_data').data('otp');
 
-console.log("otp data : " + otp);
 if (otp) {
 	$('#content-user #otp_disable_form').show();
 	$('#content-user #otp_disable_button').show();

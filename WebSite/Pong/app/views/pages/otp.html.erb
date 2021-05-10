@@ -17,11 +17,13 @@
 <div id="content-history">
 <div id="content-game">
 <div id="content-game_show">
-<%= form_for :otp_login, remote: true do |f| %>
-<%= f.text_field :otp, placeholder: "Enter OTP!"%>
-<% end %>
-<button id="send_otp" class="green_button">Log in!</button>
-<script type="text/javascript" src="/js/otp_login.js"></script>
+<div id="otp_login">
+	<%= form_for :otp_login, remote: true do |f| %>
+		<%= f.text_field :otp, placeholder: "Enter OTP!" %>
+	<% end %>
+	<button id="send_otp" class="green_button">Log in!</button>
+	<script type="text/javascript" src="/js/otp_login.js"></script>
+</div>
 </div>
 </div>
 </div>

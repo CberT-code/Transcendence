@@ -32,6 +32,8 @@ class MatchmakingController < ApplicationController
 			render json: {status: "error", info: "Unavailable tournament"}
 		elsif Tournament.tUserExists(tournament_id, @me.id) == false
 			render json: {status: "error", info: "You have not joined this tournament"}
+		elsif duel && Tournament.tUserExists(tournament_id, opponent_id) == false
+			render json: {status: "error", info: "Opponent has not joined this tournament"}
 		elsif opponent_id != -1 && Tournament.tUserExists(tournament_id, opponent_id) == false
 			render json: {status: "error", info: "Opponent has not joined this tournament"}
 		elsif duel && ranked
