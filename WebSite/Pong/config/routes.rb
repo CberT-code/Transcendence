@@ -81,5 +81,4 @@ Rails.application.routes.draw do
 	# post "/histories/timeout/:id", to: "matchmaking#timeout"
 	post "/histories/start_game", to: "matchmaking#start"
 	post "/histories/readyCheck/:id", to: "histories#readyCheck"
-	post "/histories/forever_alone/:id", to: "histories#forever_alone"
 end

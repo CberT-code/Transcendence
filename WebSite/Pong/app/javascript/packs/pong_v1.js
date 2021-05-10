@@ -31,17 +31,12 @@ $.post(
 		}
 	},
 );
-if ($('#content-game_show').find("#alone").length != 0) {
-	document.querySelector("#content-game_show #alone").addEventListener("click", foreverAlone, false);
-}
-else if (status == "ready" || status == "running") {
+if (status == "ready" || status == "running") {
 	$('#content-game_show #game').css('visibility', 'visible');
-	$('#content-game_show #alone').hide();
 }
 else if (status == "ended") {
 	$('#content-game_show #game').css('visibility', 'hidden');
 	$('#content-game_show #end_game').css('visibility', 'visible');
-	$('#content-game_show #alone').hide();
 	endgame(left > right ? host_id : opponent_id,
 			left < right ? host_id : opponent_id, 0,
 			right == -1 ? "timeout" : (left > right ? host_name : oppo_name))
@@ -76,11 +71,9 @@ if (status != "ended") {
 				$("#content-game_show #right_PP_show_game").css("background-image", right_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 				$("#content-game_show #left_PP_show_game").css("background-image", left_pp + ", url(\'https://cdn.intra.42.fr/users/medium_default.png\')");
 				$('#content-game_show #game').css('visibility', 'visible');
-				$('#content-game_show #alone').hide();
 			}
 			else if (status == "ended") {
 				$('#content-game_show #game').css('visibility', 'hidden');
-				$('#content-game_show #alone').hide();
 				endgame(data['winner'], data['loser'], data['elo'], data['w_name']);
 				killListeners(actionCable);
 				actionCable.unsubscribe();
@@ -113,23 +106,6 @@ function killListeners(socket) {
 	document.removeEventListener('keyup', keyUp);
 	document.removeEventListener('keydown', keyDown);
 	socket.send({player: user_id, move: "online"});
-}
-
-function foreverAlone() {
-	if (status == "waiting") {
-		$('#content-game_show #end_game').css('visibility', 'hidden');
-		$('#content-game_show #game').css('visibility', 'visible');
-		$('#content-game_show #alone').hide();
-		$.post(
-			'/histories/forever_alone/' + game_id,
-			{'authenticity_token': $('meta[name=csrf-token]').attr('content') },
-			function (data) 
-			{
-				if (data.status == "error")
-					notification("error", data.info);
-			},
-		);
-	}
 }
 
 function sendMove(socket) {
