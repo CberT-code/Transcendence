@@ -3443,3 +3443,33 @@ background-color: #7BE12B;
 	font-family: "Roboto-Medium";
 	font-size: 105%;
 }
+
+#otp_login {
+	position: absolute;
+	width: 300px;
+	top: 400px;
+	height: 40px;
+	left: calc(50% - 150px);
+}
+
+#otp_login form input {
+	height: 40px;
+	border: none;
+	border-right: none;
+    border-left: none;
+	border-bottom: solid 2px #231f20;
+	background-color: transparent;
+	text-align: center;
+	font-family: "Roboto-Thin";
+	font-size: 105%;
+	padding-left: 25px;
+	padding-right: 25px;
+}
+
+#otp_login #send_otp {
+	position: absolute;
+	background-color: black;
+	width: 100px;
+	top: 0px;
+	left: calc(50% + 150px);
+}

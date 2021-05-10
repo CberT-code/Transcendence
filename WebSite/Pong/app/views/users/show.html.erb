@@ -86,11 +86,11 @@
 				<% end %>
 				</div>
 				<div class="element-line">
-				<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
-					<button class="back-red border-radius" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
-				<% elsif @admin == 1 && @user.banned == true %>
-					<button class="back-red border-radius" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
-				<% end %>
+					<% if (@admin == 1 && @user.banned == false) && @user.deleted == false %>
+						<button class="back-red border-radius" id="ban_user" ><i class="fas fa-trash-alt"></i> Ban account</button><br/>
+					<% elsif @admin == 1 && @user.banned == true %>
+						<button class="back-red border-radius" id="unban_user" ><i class="fas fa-trash-alt"></i> Unban account</button><br/>
+					<% end %>
 				</div>
 				<div class="element-line">
 				<% if @current != 1 && !(@me.friends.include?@user.id) && @user.deleted == false %>
@@ -108,6 +108,9 @@
 				</div>
 				<div id="container">
 					<div id="friends">
+						<%= form_for :tournaments do |f| %>
+							<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
+						<% end %>
 						<% @user.friends.each do |friend_id| %>
 							<% friend = User.where({ id: friend_id}).select("nickname", "id").first; %>
 							<% if friend != nil %>
@@ -129,9 +132,6 @@
 											<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
 										</div>
 										<% else %>
-										<%= form_for :tournaments do |f| %>
-											<%= f.select :end, options_for_select(@tournament.map{|u| [u.name, u.id]}, :selected => 1) %>
-										<% end %>
 										<div id="buttons">
 											<button id="duel_game_user" class="back-green" value="<%= friend.id %>">Duel!</button>
 											<button id="del_friend" value="<%= friend.id %>"><i class="fas fa-times"></i></button>
@@ -179,5 +179,5 @@
 		</div>
 	<% end %>
 	</div>
-<script type="text/javascript" src="js/show_hide_otp.js"></script>
+<script type="text/javascript" src="/js/show_hide_otp.js"></script>
 </div>
